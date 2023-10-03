@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"
+     viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1, .cls-5 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: #e3f1e6;
+      }
+
+      .cls-5 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(0 0)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>punct_mag_01</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="punct_mag_01">
+        <g class="cls-2">
+          <rect class="cls-3" width="60" height="60"/>
+          <polyline class="cls-4"
+                    points="11.25 28.75 11.25 50 48.75 50 48.75 28.62 46.25 30 46.25 43.75 13.75 43.75 13.75 30"/>
+          <polyline class="cls-5"
+                    points="11.25 28.75 11.25 50 48.75 50 48.75 28.62 46.25 30 46.25 43.75 13.75 43.75 13.75 30"/>
+          <g class="cls-2">
+            <path class="cls-4"
+                  d="M40,25a5,5,0,0,1-10,0,5,5,0,0,1-10,0,5,5,0,0,1-10,0l1.25-15h37.5L50,25a5,5,0,0,1-10,0"
+                  transform="translate(0 0)"/>
+            <path class="cls-5"
+                  d="M40,25a5,5,0,0,1-10,0,5,5,0,0,1-10,0,5,5,0,0,1-10,0l1.25-15h37.5L50,25a5,5,0,0,1-10,0Z"
+                  transform="translate(0 0)"/>
+            <line class="cls-5" x1="20" y1="25" x2="20" y2="10"/>
+            <line class="cls-5" x1="30" y1="43.75" x2="30" y2="10"/>
+            <line class="cls-5" x1="40" y1="25" x2="40" y2="10"/>
+            <line class="cls-5" x1="10" y1="25" x2="50" y2="25"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

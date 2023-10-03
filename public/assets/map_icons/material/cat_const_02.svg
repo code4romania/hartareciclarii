@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="37.21" height="39"
+     viewBox="0 0 37.21 39">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(-11.39 -10.5)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>cat_const_02</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="cat_const_02">
+        <g class="cls-2">
+          <rect class="cls-3" x="3.78" y="0.5" width="1.62" height="29.11"/>
+          <rect class="cls-4" x="3.78" y="0.5" width="1.62" height="29.11"/>
+          <g class="cls-2">
+            <path class="cls-3" d="M16,40.11H12S11.14,49,16,49s4-8.89,4-8.89H16" transform="translate(-11.39 -10.5)"/>
+            <path class="cls-4" d="M16,40.11H12S11.14,49,16,49s4-8.89,4-8.89H16" transform="translate(-11.39 -10.5)"/>
+            <rect class="cls-3" x="15.71" y="16" width="4" height="16"/>
+            <rect class="cls-4" x="15.71" y="16" width="4" height="16"/>
+            <rect class="cls-3" x="16.71" y="8" width="2" height="8"/>
+            <rect class="cls-4" x="16.71" y="8" width="2" height="8"/>
+            <path class="cls-3" d="M33.11,12.5l-1,1h-6s-5,0-5,5a7.64,7.64,0,0,1,5-2c1,0,2,2,2,2h2l1-2h1l1,1h3v-5Z"
+                  transform="translate(-11.39 -10.5)"/>
+            <path class="cls-4" d="M33.11,12.5l-1,1h-6s-5,0-5,5a7.64,7.64,0,0,1,5-2c1,0,2,2,2,2h2l1-2h1l1,1h3v-5Z"
+                  transform="translate(-11.39 -10.5)"/>
+            <polygon class="cls-3" points="34.71 12 31.71 12 28.71 12 26.71 25 31.71 25 36.71 25 34.71 12"/>
+            <polygon class="cls-4" points="34.71 12 31.71 12 28.71 12 26.71 25 31.71 25 36.71 25 34.71 12"/>
+            <line class="cls-4" x1="31.71" y1="21" x2="31.71" y2="27"/>
+            <rect class="cls-3" x="30.71" y="27" width="2" height="8"/>
+            <rect class="cls-4" x="30.71" y="27" width="2" height="8"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

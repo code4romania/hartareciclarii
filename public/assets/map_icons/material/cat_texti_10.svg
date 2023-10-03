@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36.76" height="30.92"
+     viewBox="0 0 36.76 30.92">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(-11.62 -16.54)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>cat_texti_10</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="cat_texti_10">
+        <g class="cls-2">
+          <g class="cls-2">
+            <path class="cls-3"
+                  d="M36.31,17.09C34.69,19.53,30,20.14,30,20.14s-4.69-.61-6.31-3.05a22.82,22.82,0,0,0-11.57,2.23l2.44,6.51L18.62,25V47H41.38V25l4.06.82,2.44-6.51a22.82,22.82,0,0,0-11.57-2.23"
+                  transform="translate(-11.62 -16.54)"/>
+            <path class="cls-4"
+                  d="M36.31,17.09C34.69,19.53,30,20.14,30,20.14s-4.69-.61-6.31-3.05a22.82,22.82,0,0,0-11.57,2.23l2.44,6.51L18.62,25V47H41.38V25l4.06.82,2.44-6.51A22.82,22.82,0,0,0,36.31,17.09Z"
+                  transform="translate(-11.62 -16.54)"/>
+            <path class="cls-4" d="M36.31,17.09s-4.49,1.12-12.62,0" transform="translate(-11.62 -16.54)"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

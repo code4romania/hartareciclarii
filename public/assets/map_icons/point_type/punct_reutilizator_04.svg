@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"
+     viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1, .cls-5 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: #e3f1e6;
+      }
+
+      .cls-5 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(0 0)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>punct_reutilizator_04</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="punct_reutilizator_04">
+        <g class="cls-2">
+          <rect class="cls-3" width="60" height="60"/>
+          <polygon class="cls-4" points="30 51.88 50 41.88 50 31.88 30 41.88 32.48 45.52 30 51.88"/>
+          <polygon class="cls-5" points="30 51.88 50 41.88 50 31.88 30 41.88 32.48 45.52 30 51.88"/>
+          <line class="cls-5" x1="10" y1="31.88" x2="36.67" y2="38.54"/>
+          <line class="cls-5" x1="50" y1="31.88" x2="23.33" y2="25.21"/>
+          <polygon class="cls-4"
+                   points="35.06 19.25 35.06 23 41.31 11.5 35.06 5.5 35.06 9.25 10 21.88 10 31.88 35.06 19.25"/>
+          <polygon class="cls-5"
+                   points="35.06 19.25 35.06 23 41.31 11.5 35.06 5.5 35.06 9.25 10 21.88 10 31.88 35.06 19.25"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

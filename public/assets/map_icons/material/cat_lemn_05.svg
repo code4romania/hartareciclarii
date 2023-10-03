@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="43.91" height="39.05"
+     viewBox="0 0 43.91 39.05">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(391.95 1189.53)">
+      <rect class="cls-1" x="-400" y="-1200" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>cat_lemn_05</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="cat_lemn_05">
+        <g class="cls-2">
+          <rect class="cls-3" x="2.5" y="14.55" width="29.59" height="21"/>
+          <g class="cls-2">
+            <path class="cls-3"
+                  d="M-373.4-1169.18a1.25,1.25,0,0,1-1.26,1.25,1.26,1.26,0,0,1-1.26-1.25,1.26,1.26,0,0,1,1.26-1.26,1.25,1.25,0,0,1,1.26,1.26"
+                  transform="translate(391.95 1189.53)"/>
+            <path class="cls-4"
+                  d="M-373.4-1169.18a1.25,1.25,0,0,1-1.26,1.25,1.26,1.26,0,0,1-1.26-1.25,1.26,1.26,0,0,1,1.26-1.26A1.25,1.25,0,0,1-373.4-1169.18Z"
+                  transform="translate(391.95 1189.53)"/>
+            <path class="cls-3"
+                  d="M-373.4-1159.18a1.25,1.25,0,0,1-1.26,1.25,1.26,1.26,0,0,1-1.26-1.25,1.26,1.26,0,0,1,1.26-1.26,1.25,1.25,0,0,1,1.26,1.26"
+                  transform="translate(391.95 1189.53)"/>
+            <path class="cls-4"
+                  d="M-373.4-1159.18a1.25,1.25,0,0,1-1.26,1.25,1.26,1.26,0,0,1-1.26-1.25,1.26,1.26,0,0,1,1.26-1.26A1.25,1.25,0,0,1-373.4-1159.18Z"
+                  transform="translate(391.95 1189.53)"/>
+            <line class="cls-4" x1="0.5" y1="14.55" x2="34.09" y2="14.55"/>
+            <line class="cls-4" x1="2.5" y1="25.55" x2="32.09" y2="25.55"/>
+            <line class="cls-4" x1="2.5" y1="35.55" x2="32.09" y2="35.55"/>
+            <line class="cls-4" x1="2.5" y1="14.55" x2="2.5" y2="38.55"/>
+            <line class="cls-4" x1="32.09" y1="14.55" x2="32.09" y2="38.55"/>
+            <rect class="cls-3" x="-355.86" y="-1189.5" width="2" height="39"
+                  transform="translate(699.51 1047.16) rotate(-15.93)"/>
+            <rect class="cls-4" x="-355.86" y="-1189.5" width="2" height="39"
+                  transform="translate(699.51 1047.16) rotate(-15.93)"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

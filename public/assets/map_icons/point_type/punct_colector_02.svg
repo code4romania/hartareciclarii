@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"
+     viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-5 {
+        fill: #e3f1e6;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>punct_colector_02</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="punct_colector_02">
+        <g class="cls-2">
+          <rect class="cls-3" width="60" height="60"/>
+          <g class="cls-2">
+            <path class="cls-4" d="M46.28,22.13V40.59s0,6.16,7.41,6.16"/>
+            <path class="cls-4" d="M15.65,13.25H26.77c3.49,0,5.81,12.58,6,13.79"/>
+            <path class="cls-5"
+                  d="M40.7,37l1.93-2.08V28.67l-9.7-1.61-.13,0L15.65,24.46V13.25H11.88c-3.39,0-3.16,8.88-3.16,8.88v1.93l-2.41,1V39.53l2.41,1.54"/>
+            <path class="cls-4"
+                  d="M40.7,37l1.93-2.08V28.67l-9.7-1.61-.13,0L15.65,24.46V13.25H11.88c-3.39,0-3.16,8.88-3.16,8.88v1.93l-2.41,1V39.53l2.41,1.54"/>
+            <path class="cls-5"
+                  d="M42.45,41.07A5.68,5.68,0,0,0,37,35.4H14.4a5.68,5.68,0,0,0,0,11.36H37a5.68,5.68,0,0,0,5.46-5.67"/>
+            <path class="cls-4"
+                  d="M42.45,41.07A5.68,5.68,0,0,0,37,35.4H14.4a5.68,5.68,0,0,0,0,11.36H37A5.68,5.68,0,0,0,42.45,41.07Z"/>
+            <path class="cls-4" d="M17.59,41.07a3.19,3.19,0,1,1-3.19-3.19A3.19,3.19,0,0,1,17.59,41.07Z"/>
+            <path class="cls-4" d="M40,41.07a3.19,3.19,0,1,1-3.19-3.19A3.19,3.19,0,0,1,40,41.07Z"/>
+            <line class="cls-4" x1="46.28" y1="31.38" x2="20.99" y2="31.38"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

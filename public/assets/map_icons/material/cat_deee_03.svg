@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="39.75" height="41"
+     viewBox="0 0 39.75 41">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(-10.13 -9.5)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>cat_deee_03</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="cat_deee_03">
+        <g class="cls-2">
+          <g class="cls-2">
+            <path class="cls-3" d="M28.63,50h-16a2,2,0,0,1-2-2V12a2,2,0,0,1,2-2h16a2,2,0,0,1,2,2V48a2,2,0,0,1-2,2"
+                  transform="translate(-10.13 -9.5)"/>
+            <rect class="cls-4" x="0.5" y="0.5" width="20" height="40" rx="2" ry="2"/>
+            <line class="cls-4" x1="0.5" y1="13" x2="20.5" y2="13"/>
+            <line class="cls-4" x1="3" y1="10.5" x2="9.25" y2="10.5"/>
+            <line class="cls-4" x1="3" y1="15.5" x2="9.25" y2="15.5"/>
+            <rect class="cls-3" x="20.5" y="16" width="18.75" height="16.25"/>
+            <rect class="cls-4" x="20.5" y="16" width="18.75" height="16.25"/>
+            <rect class="cls-4" x="23" y="32.25" width="3.75" height="3.75"/>
+            <line class="cls-4" x1="33" y1="36" x2="20.5" y2="36"/>
+            <path class="cls-3" d="M46,22a6,6,0,1,0-8.57,5.4v3.85h5.14V27.4A6,6,0,0,0,46,22"
+                  transform="translate(-10.13 -9.5)"/>
+            <path class="cls-4" d="M46,22a6,6,0,1,0-8.57,5.4v3.85h5.14V27.4A6,6,0,0,0,46,22Z"
+                  transform="translate(-10.13 -9.5)"/>
+            <path class="cls-3" d="M41,35.5H39a1,1,0,0,1-1-1V31.25h4V34.5a1,1,0,0,1-1,1"
+                  transform="translate(-10.13 -9.5)"/>
+            <path class="cls-4" d="M41,35.5H39a1,1,0,0,1-1-1V31.25h4V34.5A1,1,0,0,1,41,35.5Z"
+                  transform="translate(-10.13 -9.5)"/>
+            <polyline class="cls-3" points="27.3 13.36 29.02 11.64 30.73 13.36 32.45 11.64"/>
+            <polyline class="cls-4" points="27.3 13.36 29.02 11.64 30.73 13.36 32.45 11.64"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

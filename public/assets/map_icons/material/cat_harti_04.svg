@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="41"
+     viewBox="0 0 38 41">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke: #004667;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(-11 -9.5)">
+      <rect class="cls-1" width="60" height="60"/>
+    </clipPath>
+  </defs>
+  <title>cat_harti_04</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g id="cat_harti_04">
+        <g class="cls-2">
+          <rect class="cls-3" x="0.5" y="7.5" width="24" height="33"/>
+          <rect class="cls-4" x="0.5" y="7.5" width="24" height="33"/>
+          <rect class="cls-3" x="24.5" y="12.5" width="13" height="25"/>
+          <rect class="cls-4" x="24.5" y="12.5" width="13" height="25"/>
+          <line class="cls-4" x1="37.5" y1="12.5" x2="23.5" y2="0.5"/>
+          <line class="cls-4" x1="8.33" y1="7.5" x2="16.5" y2="0.5"/>
+          <polygon class="cls-4" points="0.5 21.28 5.78 26.56 24.5 7.5 0.5 21.28"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
