@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-06 18:56:50
+ * @Last Modified time: 2023-10-06 19:14:19
  */
 
 namespace App\Models;
@@ -26,7 +26,7 @@ class ActionLog extends Model
 
     public static function logAction(Collection $action): ?self
     {
-        if ($action->get('action') == 'created' || (!empty($action->get('old_values')) && empty($action->get('new_values'))))
+        if ($action->get('action') == 'created' || (!empty($action->get('old_values')) && !empty($action->get('new_values'))))
         {
             $item = new self();
             $item->model = $action->get('model');
