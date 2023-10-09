@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-06 18:52:36
+ * @Last Modified time: 2023-10-09 18:24:20
  */
 
 namespace App\Models;
@@ -243,6 +243,24 @@ class MapPoint extends Model
         if ($this->getMaterials)
         {
             return implode(',', $this->getMaterials->pluck('name')->toArray());
+        }
+
+        return '-';
+    }
+
+    public function getMaterialsIconAttribute($value)
+    {
+        if ($this->getMaterials)
+        {
+            $icons = $this->getMaterials->pluck('icon')->toArray();
+            $state = '<div style="display:inline-flex">';
+            foreach ($icons as $icon)
+            {
+                $state .= __("<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>");
+            }
+            $state = rtrim($state) . '</div>';
+
+            return $state;
         }
 
         return '-';
@@ -533,4 +551,43 @@ class MapPoint extends Model
 
             return $result;
         }
+
+        public function getGroupAttribute($value)
+        {
+            if ($this->getGroup)
+            {
+                $this->getGroup->name;
+            }
+
+            return '-';
+        }
+
+    public function getStatusBadgeAttribute($value)
+    {
+        if ($this->getIssues->count() > 0)
+        {
+            $color = 'danger';
+        }
+        if ((int) $this->status === 1)
+        {
+            $color = 'success';
+        }
+
+        $color = 'warning';
+        if ($this->getIssues->count() > 0)
+        {
+            $text = __('map_points.issues_found');
+        }
+        if ((int) $this->status === 1)
+        {
+            $text = __('map_points.verified');
+        }
+
+        $text = __('map_points.requires_verification');
+        $badge = '<x-filament::badge color="' . $color . '">
+			    ' . $text . '
+			</x-filament::badge>';
+
+        return $badge;
+    }
 }

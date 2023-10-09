@@ -71,7 +71,10 @@ class CreatePuncteHarta extends CreateRecord implements HasForms
                         ->schema([
                             Select::make('type')
                                 ->label('Tip punct')
-                                ->options(MapPointTypeModel::query()->pluck('display_name', 'id'))
+                                ->options(function (callable $get)
+                                {
+                                    return MapPointTypeModel::query()->where('service_id', $get('service'))->pluck('display_name', 'id');
+                                })
                                 ->required(),
                             Select::make('materials')
                                 ->label('Materiale')

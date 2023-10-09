@@ -8,12 +8,18 @@ use Filament\Navigation\NavigationItem;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        // tap($this->app->isLocal(), function (bool $shouldBeEnabled)
+        // {
+        //     Model::preventLazyLoading($shouldBeEnabled);
+        //     Model::preventAccessingMissingAttributes($shouldBeEnabled);
+        // });
         Filament::serving(function ()
         {
             Filament::registerNavigationGroups([

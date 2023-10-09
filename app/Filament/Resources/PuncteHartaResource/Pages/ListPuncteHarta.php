@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\PuncteHartaResource\Pages;
 
 use App\Filament\Resources\PuncteHartaResource;
-use App\Models\MapPointType as MapPointTypeModel;
+use App\Models\MapPointService as MapPointServiceModel;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
@@ -21,13 +21,13 @@ class ListPuncteHarta extends ListRecords
 
     public function getTabs(): array
     {
-        $types = MapPointTypeModel::get();
+        $services = MapPointServiceModel::get();
         $tabs = [];
-        foreach ($types as $type)
+        foreach ($services as $service)
         {
-            $tabs[$type->type_name] = Tab::make($type->display_name)->modifyQueryUsing(function ($query) use ($type)
+            $tabs[$service->name] = Tab::make($service->display_name)->modifyQueryUsing(function ($query) use ($service)
             {
-                return $query->where('point_type_id', $type->id);
+                return $query->where('service_id', $service->id);
             });
         }
 
