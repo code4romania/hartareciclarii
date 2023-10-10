@@ -19,7 +19,7 @@ class SearchDuplicates extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command to find duplicates';
 
     /**
      * Execute the console command.

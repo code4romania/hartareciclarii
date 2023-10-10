@@ -4,11 +4,12 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-03 20:27:58
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-03 21:02:52
+ * @Last Modified time: 2023-10-10 10:34:59
  */
 
 namespace App\Http\Controllers;
 
+use App\Models\ImportExport as ImportExportModel;
 use App\Models\MapPoint as MapPointModel;
 use Filament\Notifications\Notification;
 
@@ -43,5 +44,14 @@ class MapPointsController extends Controller
     public function mapView($point_id)
     {
         dd(__METHOD__, $point_id);
+    }
+
+    public function downloadXlsxExample()
+    {
+        $xls = ImportExportModel::downloadMapPointSample();
+        header('Content-type:application/xlsx');
+        header("Content-Disposition:attachment;filename={$xls['filename']}");
+        echo base64_decode($xls['content']);
+        die();
     }
 }

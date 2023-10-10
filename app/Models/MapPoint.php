@@ -4,14 +4,16 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-09 18:24:20
+ * @Last Modified time: 2023-10-10 15:25:44
  */
 
 namespace App\Models;
 
 use App\Models\ActionLog as ActionLogModel;
+use App\Models\MapPointField as MapPointFieldModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointIssues as MapPointIssuesModel;
+use App\Models\MapPointService as MapPointServiceModel;
 use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\MaterialToMapPoint as MaterialToMapPointModel;
@@ -242,7 +244,7 @@ class MapPoint extends Model
     {
         if ($this->getMaterials)
         {
-            return implode(',', $this->getMaterials->pluck('name')->toArray());
+            return implode(';', $this->getMaterials->pluck('name')->toArray());
         }
 
         return '-';
@@ -589,5 +591,71 @@ class MapPoint extends Model
 			</x-filament::badge>';
 
         return $badge;
+    }
+
+    public function getService()
+    {
+        return $this->hasOne(MapPointServiceModel::class, 'id', 'service_id');
+    }
+
+    public static function createFromArray(array $data): self
+    {
+        $record = new self();
+        $record->service_id = data_get($data, 'service_id');
+        $record->point_type_id = data_get($data, 'type_id');
+        $record->lat = data_get($data, 'lat');
+        $record->lon = data_get($data, 'lon');
+        $record->location = \DB::raw('GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")');
+        $record->created_by = data_get($data, 'created_by');
+        $record->point_source = data_get($data, 'point_source', 'user');
+        $record->status = 0;
+
+        $record->save();
+
+        foreach (MapPointFieldModel::all() as $field)
+        {
+            if ($field->field_name == 'county')
+            {
+                continue;
+            }
+            $fields[] = collect([
+                'field_type_id' => $field->id,
+                'recycling_point_id' => $record->id,
+                'value' => data_get($data, $field->field_name),
+            ]);
+        }
+        $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
+        if (!empty($judet))
+        {
+            $fields[] = collect([
+                'field_type_id' => 2,
+                'recycling_point_id' => $record->id,
+                'value' => $judet[0]->name,
+            ]);
+        }
+        if (!empty($fields))
+        {
+            MapPointToFieldModel::addValuesToPoint($fields);
+        }
+
+        if (!empty(data_get($data, 'materials')))
+        {
+            foreach (data_get($data, 'materials') as $material_id)
+            {
+                $item = MaterialToMapPointModel::firstOrCreate(['material_id'=>$material_id, 'recycling_point_id'=>$record->id]);
+            }
+        }
+        $action = collect([
+            'model' => self::class,
+            'model_id'=> $record->id,
+            'user_id' => data_get($data, 'created_by'),
+            'action' => 'created',
+            'old_values' => [],
+            'new_values' => [],
+        ]);
+
+        ActionLogModel::logAction($action);
+
+        return $record;
     }
 }
