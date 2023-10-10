@@ -89,7 +89,10 @@ class ImportResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton()->hidden(function ($record)
+                {
+                    return $record->status != 0;
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
