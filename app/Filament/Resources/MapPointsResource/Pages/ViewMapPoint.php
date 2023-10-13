@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\PuncteHartaResource\Pages;
+namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\PuncteHartaResource;
+use App\Filament\Resources\MapPointsResource;
 use App\Models\ActionLog as ActionLogModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointType as MapPointTypeModel;
@@ -12,6 +12,7 @@ use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
@@ -25,13 +26,19 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\HtmlString;
 
-class ViewPunctHarta extends ViewRecord implements HasTable, HasActions
+class ViewMapPoint extends ViewRecord implements HasTable, HasActions
 {
     use InteractsWithTable;
 
-    protected static string $resource = PuncteHartaResource::class;
+    protected static string $resource = MapPointsResource::class;
 
     protected static string $view = 'filament.resources.puncte-harta-resource.pages.view-punct-harta';
+
+    public $lat;
+
+    public $lon;
+
+    public $city;
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
@@ -51,10 +58,18 @@ class ViewPunctHarta extends ViewRecord implements HasTable, HasActions
             ->icon('heroicon-m-pencil-square')
             ->iconButton()
             ->form([
-                TextInput::make('address')->required()->default($this->getRecord()->address),
-                TextInput::make('lat')->required()->default($this->getRecord()->lat),
-                TextInput::make('lon')->required()->default($this->getRecord()->lon),
-                TextInput::make('location_notes')->required()->default($this->getRecord()->location_notes),
+                Section::make('Users')
+                    ->description('Create / update an admin user')
+                    ->schema([
+                        TextInput::make('county')->required()->default($this->getRecord()->county)->disabled(),
+                        TextInput::make('city')->required()->default($this->getRecord()->city)->disabled(),
+                        TextInput::make('address')->required()->default($this->getRecord()->address),
+                        TextInput::make('lat')->required()->default($this->getRecord()->lat),
+                        TextInput::make('lon')->required()->default($this->getRecord()->lon),
+                        TextInput::make('location_notes')->required()->default($this->getRecord()->location_notes),
+                    ])
+                    ->columns(2),
+
             ])
             ->action(function ($data)
             {
@@ -201,11 +216,6 @@ class ViewPunctHarta extends ViewRecord implements HasTable, HasActions
     public function getSubHeading(): string | Htmlable
     {
         return $this->getRecord()->getType->display_name . ' ' . $this->getRecord()->managed_by;
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->whereHas('roles');
     }
 
     public function table(Table $table): Table

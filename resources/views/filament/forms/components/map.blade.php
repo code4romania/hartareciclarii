@@ -1,7 +1,5 @@
-
-
 <style type="text/css">
-	#recycle-point-view-on-map { min-height: 360px; }
+	#recycle-point-map { min-height: 360px; }
 </style>
 
 <div x-data="{ state: $wire.$entangle('lat') }">
@@ -14,23 +12,18 @@
     <input type="hidden" id="input_city" x-model="state" />
 </div>
 
-<div wire:ignore id="recycle-point-view-on-map"></div>
+<div wire:ignore id="recycle-point-map"></div>
 
 <script>
-
-	latitude = 44.4268;
-	longitude = 26.1025;
+	latitude = {{ config('services.maps.defaults.latitude') }};
+	longitude = {{ config('services.maps.defaults.longitude') }};
 	map = null
 	event = new Event('input');
 	function getLocation() {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(initMap);
-		}else{
-			initMap();
-		}
+		initMap();
 	}
 	function initMap(){
-		map = L.map('recycle-point-view-on-map').setView([latitude, longitude], 16);
+		map = L.map('recycle-point-map').setView([latitude, longitude], 16);
 		setInterval(function() {
 			map.invalidateSize();
 		}, 200);
@@ -121,8 +114,4 @@
 	document.addEventListener("DOMContentLoaded", () => {
 		getLocation()
 	})
-
-
-
-
 </script>

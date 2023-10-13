@@ -7,8 +7,28 @@
 	])
 	>
      <style type="text/css">
-     	#recycle-point-view-on-map { min-height: 360px; }
+     	#recycle-point-view-on-map { min-height: 360px; z-index: 1; }
+     	.edit-map-point{
+     		margin: 0 auto;
+			  display: grid;
+			  gap: 1rem;
 
+			  grid-auto-rows: minmax(25pc, auto);
+     	}
+     	@media (min-width: 600px) {
+		  .edit-map-point { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (min-width: 900px) {
+		  .edit-map-point {
+		  	grid-template-columns: 1fr 3fr;
+		  }
+		}
+		.material-tags{
+			display: flex;flex-direction: row; display: flex;flex-direction: row;flex-wrap: wrap;
+		}
+		.material-tags div{
+			margin-left:5px;
+		}
      </style>
 
 @php
@@ -43,7 +63,7 @@
 </x-filament::badge>
 
 
-    <div class="grid mb-8  md:mb-12 md:grid-cols-3" style="grid-template-columns: 1fr 3fr;grid-auto-rows: minmax(25pc, auto);grid-gap: 10px;">
+    <div class="edit-map-point grid mb-8  md:mb-12 md:grid-cols-3" style="">
     	<div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
 			<h5 class=" flex items-center text-xl font-medium text-gray-900 dark:text-white">Localizare
 				{{ $this->editLocationAction }}
@@ -91,7 +111,15 @@
 		        </div>
 		        <div>
 		            <label for="materials" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materiale colectate</label>
-		            <input value="{{ $record->materials }}" type="text" disabled="true" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+		            <div class="material-tags" style="">
+						@foreach($record->getMaterials as $material)
+			            	<x-filament::badge>
+	                            {{ $material->name }}
+
+	                        </x-filament::badge>
+			            @endforeach
+		            </div>
+
 		        </div>
 		        <div>
 		            <label for="managed_by" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Administrat de:</label>

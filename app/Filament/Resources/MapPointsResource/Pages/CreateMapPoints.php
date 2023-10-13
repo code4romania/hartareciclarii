@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\PuncteHartaResource\Pages;
+namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\PuncteHartaResource;
+use App\Filament\Resources\MapPointsResource;
 use App\Models\ActionLog as ActionLogModel;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointService as MapPointServiceModel;
@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
-class CreatePuncteHarta extends CreateRecord implements HasForms
+class CreateMapPoints extends CreateRecord implements HasForms
 {
     use InteractsWithForms;
 
@@ -39,7 +39,7 @@ class CreatePuncteHarta extends CreateRecord implements HasForms
 
     public $city;
 
-    protected static string $resource = PuncteHartaResource::class;
+    protected static string $resource = MapPointsResource::class;
 
     protected function getRedirectUrl(): string
     {

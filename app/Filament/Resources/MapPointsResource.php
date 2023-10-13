@@ -2,8 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PuncteHartaResource\Pages;
-use App\Forms\Components\MapInput;
+use App\Filament\Resources\MapPointsResource\Pages;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointService as MapPointServiceModel;
@@ -31,7 +30,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
-class PuncteHartaResource extends Resource
+class MapPointsResource extends Resource
 {
     protected static ?string $model = MapPointModel::class;
 
@@ -61,9 +60,7 @@ class PuncteHartaResource extends Resource
                                 ->options(MapPointServiceModel::query()->pluck('display_name', 'id'))
                                 ->required(),
                             TextInput::make('address')->disabled(),
-                            MapInput::make('map_2'),
-                            ViewField::make('map')
-                                ->view('filament.forms.components.map'),
+                            ViewField::make('map')->view('filament.forms.components.map'),
                         ]),
                     Wizard\Step::make('Detalii punct')
                         ->schema([
@@ -208,7 +205,7 @@ class PuncteHartaResource extends Resource
                     {
                         return $record->status == 0;
                     }),
-                Tables\Actions\EditAction::make()->label(__('map_points.buttons.edit')),
+                // Tables\Actions\EditAction::make()->label(__('map_points.buttons.edit')),
                 Tables\Actions\DeleteAction::make()->label(__('map_points.buttons.delete')),
             ]);
         }
@@ -324,10 +321,10 @@ class PuncteHartaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPuncteHarta::route('/'),
-            'create' => Pages\CreatePuncteHarta::route('/create'),
-            'edit' => Pages\EditPuncteHarta::route('/{record}/edit'),
-            'view' => Pages\ViewPunctHarta::route('/{record}'),
+            'index' => Pages\ListMapPoints::route('/'),
+            'create' => Pages\CreateMapPoints::route('/create'),
+            'edit' => Pages\EditMapPoints::route('/{record}/edit'),
+            'view' => Pages\ViewMapPoint::route('/{record}'),
 
         ];
     }
@@ -349,7 +346,7 @@ class PuncteHartaResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->manageble();
+        return parent::getEloquentQuery()->manageble()->with('getIssues', 'getMaterials', 'getFields');
     }
 
     public static function getNavigationBadge(): ?string

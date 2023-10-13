@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\PuncteHartaResource\Pages;
+namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\PuncteHartaResource;
+use App\Filament\Resources\MapPointsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditPuncteHarta extends EditRecord
+class EditMapPoints extends EditRecord
 {
-    protected static string $resource = PuncteHartaResource::class;
+    protected static string $resource = MapPointsResource::class;
 
     protected function getHeaderActions(): array
     {

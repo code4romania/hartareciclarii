@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\PuncteHartaResource\Pages;
+namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\PuncteHartaResource;
+use App\Filament\Resources\MapPointsResource;
 use App\Models\MapPointService as MapPointServiceModel;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
 
-class ListPuncteHarta extends ListRecords
+class ListMapPoints extends ListRecords
 {
-    protected static string $resource = PuncteHartaResource::class;
+    protected static string $resource = MapPointsResource::class;
 
     protected function getHeaderActions(): array
     {
