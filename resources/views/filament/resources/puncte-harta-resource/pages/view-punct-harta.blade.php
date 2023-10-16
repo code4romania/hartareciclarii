@@ -139,6 +139,20 @@
 		        </div>
 		        <div>
 		            <label for="opening_hours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Orar:</label>
+		            @foreach($record->opening_hours as $day)
+		            	@if($day['startDay'] == $day['endDay'])
+		            		{{ __('common.week_days.'.$day['startDay']) }}:
+		            	@else
+		            		{{ __('common.week_days.'.$day['startDay']) }} - {{ __('common.week_days.'.$day['end_day']) }} <br />
+		            	@endif
+		            	@if($day['closed'])
+		            		{{ __('common.closed') }}
+		            	@else
+		            		{{ $day['startHour'] }}-{{ $day['endHour'] }}
+		            	@endif
+
+		            	<br />
+		            @endforeach
 
 		        </div>
 		        <div>

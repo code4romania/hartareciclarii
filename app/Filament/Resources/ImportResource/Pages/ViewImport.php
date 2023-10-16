@@ -113,7 +113,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
 
                 TextColumn::make('id')->label(__('map_points.id'))->formatStateUsing(function ($state)
                 {
-                    return '<a href="' . \App\Filament\Resources\PuncteHartaResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
+                    return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
                 })->sortable()->searchable()->html(),
                 TextColumn::make('getType.display_name')->label(__('map_points.point_type'))->searchable(),
                 TextColumn::make('managed_by')->label(__('map_points.managed_by'))->sortable()->searchable()->wrap(),

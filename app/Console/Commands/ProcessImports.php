@@ -41,7 +41,7 @@ class ProcessImports extends Command
             foreach ($items as $item)
             {
                 $filePath = storage_path('app/public/' . $item->file);
-                // $item->status = 1;
+                $item->status = 1;
                 $item->started_at = date('Y-m-d H:i:s');
                 $item->save();
                 if (!file_exists($filePath))
@@ -94,11 +94,12 @@ class ProcessImports extends Command
                     $result['failed']['A' . $row] = ['not_data_found'];
                 }
             }
+            $item->status = 2;
+            $item->result = $result;
+            $item->finished_at = date('Y-m-d H:i:s');
+            $item->save();
         }
-        $item->status = 2;
-        $item->result = $result;
-        $item->finished_at = date('Y-m-d H:i:s');
-        $item->save();
+
         $this->info('Done. Failed: ' . \count($result['failed']) . '. Processed: ' . \count($result['processed']) . '. Errors: ' . \count($result['errors']));
     }
 }

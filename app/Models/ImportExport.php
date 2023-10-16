@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-10 15:53:53
+ * @Last Modified time: 2023-10-16 10:21:14
  */
 
 namespace App\Models;
@@ -46,10 +46,7 @@ class ImportExport extends Model
         $spreadsheet->getProperties()->setDescription('Map Point import example');
         $spreadsheet->setActiveSheetIndex(0);
 
-        $data = json_decode('{"items":[{"tip_serviciu":"Colectare separat\u0103 de\u0219euri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.7548866","longitude":"23.5884752","location_notes":"Test notes","type":"Centru de colectare","materials":"Carton;H\u00e2rtie;Flacon plastic (ex: detergent, \u0219ampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A.\/Sucursala Cluj Napoca","website":"http:\/\/rosalgrup.ro","email":"alt@email.com","phone_no":"0744555691","opening_hours":"[{\"start_day\":\"mon\",\"end_day\":\"fri\",\"start_hour\":\"09:00:00\",\"end_hour\":\"18:00:00\"},{\"start_day\":\"sat\",\"end_day\":\"sun\",\"start_hour\":\"11:00:00\",\"end_hour\":\"15:00:00\"}]","observatii":"notite 2","offers_money":1,"offers_transport":1},{"tip_serviciu":"Colectare separat\u0103 de\u0219euri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.755504","longitude":"23.5787266","location_notes":"-","type":"Container stradal","materials":"Carton;H\u00e2rtie;Flacon plastic (ex: detergent, \u0219ampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A.\/Sucursala Cluj Napoca","website":"website","email":"aasdad@asdasd.com","phone_no":"-","opening_hours":"[{\"start_day\":\"mon\",\"end_day\":\"tue\",\"start_hour\":\"10:30:00\",\"end_hour\":\"18:00:00\"}]","observatii":"-","offers_money":1,"offers_transport":1}],"heading":["Tip serviciu","Judet","Oras","Adresa","Latitudine","Longitudine","Notite localizare (private)","Tip punct","Materiale colectate","Adminstrat de","Website","Email","Phone no.","Orar","Observatii","Ofer\u0103 bani","Ofer\u0103 transport"]}', true);
-        // $items = \App\Models\MapPoint::whereHas('getGroup')->with('getFields', 'getType', 'getGroup')->limit(2)->get();
-        // $data = self::_prepareMapPointExport($items);
-        // dd(json_encode($data));
+        $data = json_decode('{"items":[{"tip_serviciu":"Colectare separată deșeuri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.7548866","longitude":"23.5884752","location_notes":"Test notes","type":"Centru de colectare","materials":"Carton;Hârtie;Flacon plastic (ex: detergent, șampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A./Sucursala Cluj Napoca","website":"http://rosalgrup.ro","email":"alt@email.com","phone_no":"0744555691","mon":"09:00-15:00","tue":"09:00-10:00","wed":"09:00-11:00","thu":"09:00-12:00","fri":"09:00-13:00","sat":"09:00-14:00","sun":"-","observatii":"notite 2","offers_money":"da","offers_transport":"Nu"},{"tip_serviciu":"Colectare separată deșeuri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.755504","longitude":"23.5787266","location_notes":"-","type":"Container stradal","materials":"Carton;Hârtie;Flacon plastic (ex: detergent, șampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A./Sucursala Cluj Napoca","website":"website","email":"aasdad@asdasd.com","phone_no":"-","mon":"09:00-15:00","tue":"09:00-10:00","wed":"09:00-11:00","thu":"09:00-12:00","fri":"09:00-13:00","sat":"09:00-14:00","sun":"-","observatii":"-","offers_money":"da","offers_transport":"Nu"}],"heading":["Tip serviciu","Judet","Oras","Adresa","Latitudine","Longitudine","Notite localizare (private)","Tip punct","Materiale colectate","Adminstrat de","Website","Email","Phone no.","Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica","Observatii","Oferă bani","Oferă transport"]}', true);
         $contentArray = array_map(function ($value)
         {
             return ucwords(str_replace('_', ' ', $value));
@@ -61,7 +58,12 @@ class ImportExport extends Model
         $writer->setPreCalculateFormulas(false);
 
         $filename = 'map-point-sample-import.xlsx';
-        $path = storage_path("/tmp/{$filename}");
+        $storage_path = storage_path('/tmp/');
+        if (!file_exists($storage_path))
+        {
+            mkdir($storage_path);
+        }
+        $path = $storage_path . '/' . $filename;
         $writer->save($path);
 
         $returnArr = ['filename' => "$filename", 'content' => base64_encode(file_get_contents($path))];
@@ -235,19 +237,34 @@ class ImportExport extends Model
         $data['website'] = (string) $mapPoint[10];
         $data['email'] = (string) $mapPoint[11];
         $data['phone_no'] = (string) $mapPoint[12];
-        try
+        $days = [
+            'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun',
+        ];
+        for ($i = 0; $i < \count($days); $i++)
         {
-            $opening_hours = json_decode($mapPoint[13], true);
-            $data['opening_hours'] = (array) $opening_hours;
+            $hours = explode('-', preg_replace('/\s+/', '', $mapPoint[13 + $i]));
+            $start_hours = '-';
+            $end_hours = '-';
+            $closed = true;
+            if (\count($hours) > 1 && $hours[1] != '')
+            {
+                $start_hours = $hours[0];
+                $end_hours = $hours[1];
+                $closed = false;
+            }
+            $opening_hours[$days[$i]] = [
+                'startDay' => $days[$i],
+                'endDay' =>  $days[$i],
+                'startHour' => $start_hours,
+                'endHour' => $end_hours,
+                'closed' => $closed,
+            ];
         }
-        catch(\Exception $e)
-        {
-            $data['opening_hours'] = [];
-        }
+        $data['opening_hours'] = (array) $opening_hours;
 
-        $data['notes'] = (string) $mapPoint[14];
-        $data['offers_money'] = (int) $mapPoint[15];
-        $data['offers_transport'] = (int) $mapPoint[15];
+        $data['notes'] = (string) $mapPoint[20];
+        $data['offers_money'] = (strtolower(preg_replace('/\s+/', '', $mapPoint[21])) == 'da') ? 1 : 0;
+        $data['offers_transport'] = (strtolower(preg_replace('/\s+/', '', $mapPoint[22])) == 'da') ? 1 : 0;
 
         return \count($errors) > 0 ? false : true;
     }

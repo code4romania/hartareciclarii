@@ -63,7 +63,7 @@ class CreateMapPoints extends CreateRecord implements HasForms
                                 ->label('Tip punct')
                                 ->options(MapPointServiceModel::query()->pluck('display_name', 'id'))
                                 ->required(),
-                            TextInput::make('address'),
+                            TextInput::make('address')->disabled(),
                             ViewField::make('map')
                                 ->view('filament.forms.components.map'),
                         ]),
