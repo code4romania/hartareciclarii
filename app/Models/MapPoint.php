@@ -659,7 +659,7 @@ class MapPoint extends Model
         return $record;
     }
 	
-	public function getFieldTypes()
+	public function fieldTypes()
 	{
 		return $this->hasManyThrough(
 			MapPointFieldModel::class,
@@ -700,7 +700,7 @@ class MapPoint extends Model
 					{
 						$query->whereIn('material_recycling_point.material_id', (array) $value);
 					}),
-					'field_type_id' => $sql->whereHas('getFieldTypes', function ($query) use ($value)
+					'field_type_id' => $sql->whereHas('fieldTypes', function ($query) use ($value)
 					{
 						$query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
 					}),
