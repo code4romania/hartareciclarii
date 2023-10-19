@@ -25,7 +25,7 @@ class MapPointService extends Model
 		{
 			$extendedFilters['service_types'] = MapPointType::where('service_id', $service_id)->get();
 			$extendedFilters['material_types'] = ($service_id == 1) ? RecycleMaterial::whereNull('parent')->whereNull('is_wildcard')->get() : [];
-			//$extendedFilters['features'] = (new FilterablePointTypes())->where('service_id', $service_id)->fieldTypes()->get();
+			$extendedFilters['features'] = FilterablePointTypes::where('service_id', $service_id)->with('fieldTypes')->get();
 		}
 		
 		return collect($extendedFilters);
