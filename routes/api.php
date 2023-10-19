@@ -1,19 +1,43 @@
 <?php
+	
+	use App\Http\Controllers\Api\AuthController;
+	use App\Http\Controllers\Api\MapController;
+	use App\Http\Controllers\Api\StaticController;
+	use App\Http\Controllers\Api\UserController;
+	use Illuminate\Http\Request;
+	use Illuminate\Support\Facades\Route;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+	/*
+	|--------------------------------------------------------------------------
+	| API Routes
+	|--------------------------------------------------------------------------
+	|
+	| Here is where you can register API routes for your application. These
+	| routes are loaded by the RouteServiceProvider and all of them will
+	| be assigned to the "api" middleware group. Make something great!
+	|
+	*/
+	
+	/**
+	 * Public Routes
+	 */
+	
+	Route::post('/auth/login', [AuthController::class, 'login']);
+	Route::post('/user/register', [UserController::class, 'register']);
+	Route::post('/user/recover', [UserController::class, 'recoverPassword']);
+	Route::post('/user/recover-confirm', [UserController::class, 'recoverPasswordConfirm']);
+	
+	Route::get('/static/filters', [StaticController::class, 'filters']);
+	Route::get('/map/points', [MapController::class, 'points']);
+	Route::get('/map/point/{id_point}', [MapController::class, 'point']);
+	
+	/**
+	 * Protected Routes
+	 */
+	Route::get('/user/profile', [UserController::class, 'profile'])->middleware('auth:sanctum');
+	Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+	
+	Route::get('/user/points', [UserController::class, 'points'])->middleware('auth:sanctum');
+	
+	Route::post('/map/point', [MapController::class, 'create'])->middleware('auth:sanctum');
+	Route::post('/report/problem/{id_point}', [ReportPointController::class, 'create'])->middleware('auth:sanctum');

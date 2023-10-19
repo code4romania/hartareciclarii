@@ -10,10 +10,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class MapPointService extends Model
 {
     protected $table = 'recycling_point_services';
 
     protected $fillable = ['name'];
+	
+	public static function getExtendedFilters(int $service_id) : Collection
+	{
+		$extendedFilters = [];
+		if ($service_id > 0)
+		{
+			$extendedFilters['service_types'] = MapPointType::where('service_id', $service_id)->get();
+			$extendedFilters['material_types'] = ($service_id == 1) ? RecycleMaterial::whereNull('parent')->whereNull('is_wildcard')->get() : [];
+			//$extendedFilters['features'] = (new FilterablePointTypes())->where('service_id', $service_id)->fieldTypes()->get();
+		}
+		
+		return collect($extendedFilters);
+	}
 }

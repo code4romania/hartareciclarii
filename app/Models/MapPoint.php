@@ -658,4 +658,59 @@ class MapPoint extends Model
 
         return $record;
     }
+	
+	public function getFieldTypes()
+	{
+		return $this->hasManyThrough(
+			MapPointFieldModel::class,
+			MapPointToFieldModel::class,
+			'recycling_point_id',
+			'id',
+			'id',
+			'field_type_id'
+		);
+	}
+	
+	/**
+	 * Returns the list of available map points for the given filters
+	 * @param array $filters
+	 *
+	 * @return Collection
+	 */
+	public static function getFilteredMapPoints(array $filters) : Collection
+	{
+		$sql = self::
+			select(
+				'recycling_points.id',
+				'recycling_points.lat',
+				'recycling_points.lon',
+				'recycling_points.location',
+			)
+			->where('status', 1);
+		
+		if (!empty($filters))
+		{
+			foreach ($filters as $key => $value)
+			{
+				foreach ($filters as $key => $value)
+				{
+					match ($key)
+					{
+						'service_id' => $sql->where('recycling_points.service_id', $value),
+						'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
+						'material_type_id' => $sql->whereHas('getMaterials', function ($query) use ($value)
+						{
+							$query->whereIn('material_recycling_point.material_id', (array) $value);
+						}),
+						'field_type_id' => $sql->whereHas('getFieldTypes', function ($query) use ($value)
+						{
+							$query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
+						}),
+					};
+				}
+			}
+		}
+		
+		return $sql->get();
+	}
 }
