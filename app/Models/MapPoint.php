@@ -692,22 +692,19 @@ class MapPoint extends Model
 		{
 			foreach ($filters as $key => $value)
 			{
-				foreach ($filters as $key => $value)
+				match ($key)
 				{
-					match ($key)
+					'service_id' => $sql->where('recycling_points.service_id', $value),
+					'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
+					'material_type_id' => $sql->whereHas('getMaterials', function ($query) use ($value)
 					{
-						'service_id' => $sql->where('recycling_points.service_id', $value),
-						'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
-						'material_type_id' => $sql->whereHas('getMaterials', function ($query) use ($value)
-						{
-							$query->whereIn('material_recycling_point.material_id', (array) $value);
-						}),
-						'field_type_id' => $sql->whereHas('getFieldTypes', function ($query) use ($value)
-						{
-							$query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
-						}),
-					};
-				}
+						$query->whereIn('material_recycling_point.material_id', (array) $value);
+					}),
+					'field_type_id' => $sql->whereHas('getFieldTypes', function ($query) use ($value)
+					{
+						$query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
+					}),
+				};
 			}
 		}
 		
