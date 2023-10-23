@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-10 14:01:50
+ * @Last Modified time: 2023-10-23 13:09:25
  */
 
 namespace App\Models;
@@ -17,7 +17,7 @@ class MapPointField extends Model
 {
     protected $table = 'field_types';
 
-    public function getType()
+    public function type()
     {
         return $this->hasOne(MapPointTypeModel::class, 'id', 'point_type_id');
     }

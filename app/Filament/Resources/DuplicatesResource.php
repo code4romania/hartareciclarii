@@ -73,7 +73,7 @@ class DuplicatesResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('getType.display_name')->label('Tip puncte')->sortable()->searchable(),
+                TextColumn::make('type.display_name')->label('Tip puncte')->sortable()->searchable(),
                 TextColumn::make('distance')->label('Distance puncte')->sortable(),
             ])
             ->filters([

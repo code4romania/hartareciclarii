@@ -36,5 +36,8 @@ return [
             'longitude' =>26.1025,
         ],
     ],
+    'nominatim'=>[
+        'url'=>'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
+    ],
 
 ];

@@ -35,7 +35,7 @@
     $record = $this->getRecord();
     $color = 'warning';
     $badgeLabel = trans('map_points.requires_verification');
-    if ($record->getIssues->count())
+    if ($record->issues->count())
     {
         $color = 'danger';
     }
@@ -43,7 +43,7 @@
     {
         $color = 'success';
     }
-    if ($record->getIssues->count() > 0)
+    if ($record->issues->count() > 0)
     {
         $badgeLabel = __('map_points.issues_found');
     }
@@ -107,12 +107,12 @@
 		    <form class="space-y-6" action="#">
 		        <div>
 		            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tip punct</label>
-		            <input value="{{ $record->getType->display_name }}" type="email" disabled="true" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+		            <input value="{{ $record->type->display_name }}" type="email" disabled="true" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
 		        </div>
 		        <div>
 		            <label for="materials" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materiale colectate</label>
 		            <div class="material-tags" style="">
-						@foreach($record->getMaterials as $material)
+						@foreach($record->materials as $material)
 			            	<x-filament::badge>
 	                            {{ $material->name }}
 

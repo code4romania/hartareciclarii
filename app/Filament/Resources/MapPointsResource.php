@@ -5,18 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MapPointsResource\Pages;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
-use App\Models\MapPointService as MapPointServiceModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\ViewField;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -27,8 +23,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\HtmlString;
 
 class MapPointsResource extends Resource
 {
@@ -48,94 +42,10 @@ class MapPointsResource extends Resource
     {
         return $form
             ->schema([]);
-
-        return $form
-            ->schema([
-
-                Wizard::make([
-                    Wizard\Step::make('Tip locatie')
-                        ->schema([
-                            Select::make('service')
-                                ->label('Tip punct')
-                                ->options(MapPointServiceModel::query()->pluck('display_name', 'id'))
-                                ->required(),
-                            TextInput::make('address')->disabled(),
-                            ViewField::make('map')->view('filament.forms.components.map'),
-                        ]),
-                    Wizard\Step::make('Detalii punct')
-                        ->schema([
-                            Select::make('type')
-                                ->label('Tip punct')
-                                ->options(MapPointTypeModel::query()->pluck('display_name', 'id'))
-                                ->required(),
-                            Select::make('materials')
-                                ->label('Materiale')
-                                ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
-                                ->multiple()
-                                ->required(),
-                            TextInput::make('managed_by')->required(),
-                            TextInput::make('website'),
-                            TextInput::make('email')->email(),
-                            TextInput::make('phone_no'),
-                            Repeater::make('opening_hours')
-                                ->schema([
-                                    Select::make('start_day')
-                                        ->label('Start day')
-                                        ->options([
-                                            'mon' => __('common.week_days.mon'),
-                                            'tue' => __('common.week_days.tue'),
-                                            'wed' => __('common.week_days.wed'),
-                                            'thu' => __('common.week_days.thu'),
-                                            'fri' => __('common.week_days.fri'),
-                                            'sat' => __('common.week_days.sat'),
-                                            'sun' => __('common.week_days.sun'),
-                                        ]),
-                                    Select::make('end_day')
-                                        ->label('End day')
-                                        ->options([
-                                            'mon' => __('common.week_days.mon'),
-                                            'tue' => __('common.week_days.tue'),
-                                            'wed' => __('common.week_days.wed'),
-                                            'thu' => __('common.week_days.thu'),
-                                            'fri' => __('common.week_days.fri'),
-                                            'sat' => __('common.week_days.sat'),
-                                            'sun' => __('common.week_days.sun'),
-                                        ]),
-                                    TimePicker::make('start_hour')->seconds('false')->hoursStep(1)
-                                        ->minutesStep(10),
-                                    TimePicker::make('end_hour')->seconds('false')->hoursStep(1)
-                                        ->minutesStep(10),
-                                ])
-                                ->columns(4),
-                            Textarea::make('notes'),
-                            Checkbox::make('offers_transport'),
-                            Checkbox::make('offers_money'),
-                            FileUpload::make('image')
-                                ->image()
-                                ->imageEditor()
-                                ->multiple(),
-                        ]),
-                    Wizard\Step::make('Confirma informatiile')
-                        ->schema(function ($get)
-                        {
-                            return self::getContentPreviewDescription($get);
-                        }),
-                ])
-                    ->submitAction(new HtmlString(Blade::render(<<<'BLADE'
-						    <x-filament::button
-						        type="submit"
-						        size="sm"
-						    >
-						        Submit
-						    </x-filament::button>
-						BLADE))),
-            ])->statePath('data');
     }
 
     public static function getContentPreviewDescription($get)
     {
-        // return [];
-
         return [
             TextInput::make('type')->readOnly()->placeholder($get('type') ? MapPointTypeModel::find($get('type'))->display_name : $get('type')),
             Select::make('materials')
@@ -213,9 +123,9 @@ class MapPointsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->label(__('map_points.id'))->sortable()->searchable(),
-                TextColumn::make('getType.display_name')->label(__('map_points.point_type'))->searchable(),
+                TextColumn::make('type.display_name')->label(__('map_points.point_type'))->searchable(),
                 TextColumn::make('managed_by')->label(__('map_points.managed_by'))->sortable()->searchable()->wrap(),
-                TextColumn::make('getMaterials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
+                TextColumn::make('materials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
@@ -236,7 +146,7 @@ class MapPointsResource extends Resource
                 BadgeColumn::make('status')
                     ->color(static function ($state, $record): string
                     {
-                        if ($record->getIssues->count() > 0)
+                        if ($record->issues->count() > 0)
                         {
                             return 'danger';
                         }
@@ -249,7 +159,7 @@ class MapPointsResource extends Resource
                     })
                     ->formatStateUsing(function (string $state, $record)
                     {
-                        if ($record->getIssues->count() > 0)
+                        if ($record->issues->count() > 0)
                         {
                             return __('map_points.issues_found');
                         }
@@ -346,7 +256,7 @@ class MapPointsResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->manageble()->with('getIssues', 'getMaterials', 'getFields');
+        return parent::getEloquentQuery()->manageble()->with('issues', 'materials', 'fields');
     }
 
     public static function getNavigationBadge(): ?string

@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-16 10:21:14
+ * @Last Modified time: 2023-10-23 13:21:45
  */
 
 namespace App\Models;
@@ -98,14 +98,14 @@ class ImportExport extends Model
         foreach ($items as $row)
         {
             $item = [];
-            $item['tip_serviciu'] = $row->getService->display_name;
+            $item['tip_serviciu'] = $row->service->display_name;
             $item['judet'] = $row->county;
             $item['oras'] = $row->city;
             $item['adresa'] = $row->address;
             $item['latitude'] = $row->lat;
             $item['longitude'] = $row->lon;
             $item['location_notes'] = $row->location_notes;
-            $item['type'] = $row->getType->display_name;
+            $item['type'] = $row->type->display_name;
             $item['materials'] = $row->materials;
             $item['managed_by'] = $row->managed_by;
             $item['website'] = $row->website;

@@ -22,37 +22,37 @@ class ListDuplicates extends ListRecords
     // protected static string $view = 'filament.resources.duplicates.list';
     public function getTableQuery(): Builder
     {
-        return static::getModel()::query()->with('firstPoint.getFields', 'secondPoint.getFields', 'secondPoint.getGroup', 'firstPoint.getGroup', 'getType');
+        return static::getModel()::query()->with('firstPoint.fields', 'secondPoint.fields', 'secondPoint.group', 'firstPoint.group', 'type');
     }
 
-        protected function getHeaderActions(): array
-        {
-            return [
-                // Actions\CreateAction::make(),
-            ];
-        }
+    protected function getHeaderActions(): array
+    {
+        return [
+            // Actions\CreateAction::make(),
+        ];
+    }
 
-        public function table(Table $table): Table
-        {
-            return $table
-                ->columns([
-                    Split::make([
-                        TextColumn::make('getType.display_name')->label('Tip puncte')->sortable()->searchable(),
-                        TextColumn::make('distance')->label('Distance puncte')->sortable()->formatStateUsing(fn (string $state): string => __("{$state} m"))->html(),
-                    ]),
-                    Panel::make([])->collapsible()->view('filament.resources.duplicates.list'),
-                ])
-                ->filters([
-                    //
-                ])
-                ->actions([
-                    Tables\Actions\ViewAction::make(),
+    public function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Split::make([
+                    TextColumn::make('type.display_name')->label('Tip puncte')->sortable()->searchable(),
+                    TextColumn::make('distance')->label('Distance puncte')->sortable()->formatStateUsing(fn (string $state): string => __("{$state} m"))->html(),
+                ]),
+                Panel::make([])->collapsible()->view('filament.resources.duplicates.list'),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
 
-                ])
-                ->bulkActions([
-                    // Tables\Actions\BulkActionGroup::make([
-                    //     Tables\Actions\DeleteBulkAction::make(),
-                    // ]),
-                ]);
-        }
+            ])
+            ->bulkActions([
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
+            ]);
+    }
 }

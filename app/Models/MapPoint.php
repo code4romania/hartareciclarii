@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-16 10:13:02
+ * @Last Modified time: 2023-10-23 14:32:52
  */
 
 namespace App\Models;
@@ -31,12 +31,12 @@ class MapPoint extends Model
 
     protected $hidden = ['location'];
 
-    public function getType()
+    public function type()
     {
         return $this->hasOne(MapPointTypeModel::class, 'id', 'point_type_id');
     }
 
-    public function getFields()
+    public function fields()
     {
         return $this->hasMany(
             MapPointToFieldModel::class,
@@ -45,7 +45,7 @@ class MapPoint extends Model
         );
     }
 
-    public function getCounty()
+    public function county()
     {
         return $this->hasOne(
             MapPointToFieldModel::class,
@@ -56,9 +56,9 @@ class MapPoint extends Model
 
     public function getNotesAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 10)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first())
         {
-            return $this->getFields->where('field_type_id', 10)->first()->value;
+            return $this->fields->where('field_type_id', 10)->first()->value;
         }
 
         return '-';
@@ -66,9 +66,9 @@ class MapPoint extends Model
 
     public function getCityAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 1)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 1)->first())
         {
-            return $this->getFields->where('field_type_id', 1)->first()->value;
+            return $this->fields->where('field_type_id', 1)->first()->value;
         }
 
         return '-';
@@ -76,9 +76,9 @@ class MapPoint extends Model
 
     public function getAddressAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 4)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 4)->first())
         {
-            return $this->getFields->where('field_type_id', 4)->first()->value;
+            return $this->fields->where('field_type_id', 4)->first()->value;
         }
 
         return '-';
@@ -86,9 +86,9 @@ class MapPoint extends Model
 
     public function getPhoneNoAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 12)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 12)->first())
         {
-            return $this->getFields->where('field_type_id', 12)->first()->value;
+            return $this->fields->where('field_type_id', 12)->first()->value;
         }
 
         return '-';
@@ -96,9 +96,9 @@ class MapPoint extends Model
 
     public function getDetailsAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 10)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first())
         {
-            return $this->getFields->where('field_type_id', 10)->first()->value;
+            return $this->fields->where('field_type_id', 10)->first()->value;
         }
 
         return '-';
@@ -106,15 +106,15 @@ class MapPoint extends Model
 
     public function getOpeningHoursAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 7)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 7)->first())
         {
-            return json_decode($this->getFields->where('field_type_id', 7)->first()->value, true);
+            return json_decode($this->fields->where('field_type_id', 7)->first()->value, true);
         }
 
         return [];
     }
 
-    public function getMaterials()
+    public function materials()
     {
         return $this->hasManyThrough(
             RecycleMaterialModel::class,
@@ -126,7 +126,7 @@ class MapPoint extends Model
         );
     }
 
-    public function getIssues()
+    public function issues()
     {
         return $this->hasMany(
             MapPointIssuesModel::class,
@@ -135,7 +135,7 @@ class MapPoint extends Model
         );
     }
 
-    public function getGroup()
+    public function group()
     {
         return $this->belongsTo(
             MapPointGroupModel::class,
@@ -186,12 +186,12 @@ class MapPoint extends Model
             'model_id'=> $this->id,
             'user_id' => auth()->user()->id,
             'action' => 'change_group',
-            'old_values' => ['group'=>($this->getGroup) ? $this->getGroup->name : ''],
+            'old_values' => ['group'=>($this->group) ? $this->group->name : ''],
 
         ]);
-        $this->getGroup()->associate($group_id);
+        $this->group()->associate($group_id);
         $this->save();
-        $action->put('new_values', ['group'=>$this->getGroup->name]);
+        $action->put('new_values', ['group'=>$this->group->name]);
 
         ActionLogModel::logAction($action);
 
@@ -200,9 +200,9 @@ class MapPoint extends Model
 
     public function getWebsiteAttribute($value)
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 9)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 9)->first())
         {
-            return $this->getFields->where('field_type_id', 9)->first()->value;
+            return $this->fields->where('field_type_id', 9)->first()->value;
         }
 
         return '-';
@@ -212,9 +212,9 @@ class MapPoint extends Model
 
     public function getManagedByAttribute($value)
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 3)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 3)->first())
         {
-            return $this->getFields->where('field_type_id', 3)->first()->value;
+            return $this->fields->where('field_type_id', 3)->first()->value;
         }
 
         return '-';
@@ -222,9 +222,9 @@ class MapPoint extends Model
 
     public function getLocationNotesAttribute($value)
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 13)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 13)->first())
         {
-            return $this->getFields->where('field_type_id', 13)->first()->value;
+            return $this->fields->where('field_type_id', 13)->first()->value;
         }
 
         return '-';
@@ -232,29 +232,29 @@ class MapPoint extends Model
 
     public function getEmailAttribute($value)
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 8)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 8)->first())
         {
-            return $this->getFields->where('field_type_id', 8)->first()->value;
+            return $this->fields->where('field_type_id', 8)->first()->value;
         }
 
         return '-';
     }
 
-    public function getMaterialsAttribute($value)
-    {
-        if ($this->getMaterials)
-        {
-            return implode(';', $this->getMaterials->pluck('name')->toArray());
-        }
+    // public function getMaterialsAttribute($value)
+    // {
+    //     if ($this->materials)
+    //     {
+    //         return implode(';', $this->materials->pluck('name')->toArray());
+    //     }
 
-        return '-';
-    }
+    //     return '-';
+    // }
 
     public function getMaterialsIconAttribute($value)
     {
-        if ($this->getMaterials)
+        if ($this->materials)
         {
-            $icons = $this->getMaterials->pluck('icon')->toArray();
+            $icons = $this->materials->pluck('icon')->toArray();
             $state = '<div style="display:inline-flex">';
             foreach ($icons as $icon)
             {
@@ -270,9 +270,9 @@ class MapPoint extends Model
 
     public function getCountyAttribute()
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 2)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 2)->first())
         {
-            return $this->getFields->where('field_type_id', 2)->first()->value;
+            return $this->fields->where('field_type_id', 2)->first()->value;
         }
 
         return '-';
@@ -280,9 +280,9 @@ class MapPoint extends Model
 
     public function getOffersTransportAttribute(): int
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 6)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 6)->first())
         {
-            if (strtolower($this->getFields->where('field_type_id', 6)->first()->value) == 'nu')
+            if (strtolower($this->fields->where('field_type_id', 6)->first()->value) == 'nu')
             {
                 return 0;
             }
@@ -295,9 +295,9 @@ class MapPoint extends Model
 
     public function getOffersMoneyAttribute(): int
     {
-        if ($this->getFields->isNotEmpty() && $this->getFields->where('field_type_id', 5)->first())
+        if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 5)->first())
         {
-            if (strtolower($this->getFields->where('field_type_id', 5)->first()->value) == 'nu')
+            if (strtolower($this->fields->where('field_type_id', 5)->first()->value) == 'nu')
             {
                 return 0;
             }
@@ -330,7 +330,7 @@ class MapPoint extends Model
         )->where('model', \get_called_class());
     }
 
-    public function getAddress()
+    public function address()
     {
         return $this->hasOne(
             MapPointToFieldModel::class,
@@ -339,7 +339,7 @@ class MapPoint extends Model
         )->whereFieldTypeId(4);
     }
 
-    public function getLocationNotes()
+    public function locationNotes()
     {
         return $this->hasOne(
             MapPointToFieldModel::class,
@@ -419,7 +419,7 @@ class MapPoint extends Model
         {
             if ($field == 'materials')
             {
-                $materials = $this->getMaterials->pluck('id')->toArray();
+                $materials = $this->materials->pluck('id')->toArray();
                 $new_materials = $data->get('materials');
 
                 if (array_diff($materials, $new_materials) || array_diff($new_materials, $materials))
@@ -439,9 +439,9 @@ class MapPoint extends Model
             }
             elseif ($field == 'type')
             {
-                if ($this->getType->id != $data->get('type'))
+                if ($this->type->id != $data->get('type'))
                 {
-                    $old_values[$field] = $this->getType->display_name;
+                    $old_values[$field] = $this->type->display_name;
                     $new_values[$field] = MapPointTypeModel::find($data->get('type'))->display_name;
                 }
             }
@@ -554,19 +554,19 @@ class MapPoint extends Model
             return $result;
         }
 
-        public function getGroupAttribute($value)
-        {
-            if ($this->getGroup)
-            {
-                $this->getGroup->name;
-            }
+        // public function getGroupAttribute($value)
+        // {
+        //     if ($this->group)
+        //     {
+        //         $this->group->name;
+        //     }
 
-            return '-';
-        }
+        //     return '-';
+        // }
 
     public function getStatusBadgeAttribute($value)
     {
-        if ($this->getIssues->count() > 0)
+        if ($this->issues->count() > 0)
         {
             $color = 'danger';
         }
@@ -576,7 +576,7 @@ class MapPoint extends Model
         }
 
         $color = 'warning';
-        if ($this->getIssues->count() > 0)
+        if ($this->issues->count() > 0)
         {
             $text = __('map_points.issues_found');
         }
@@ -593,7 +593,7 @@ class MapPoint extends Model
         return $badge;
     }
 
-    public function getService()
+    public function service()
     {
         return $this->hasOne(MapPointServiceModel::class, 'id', 'service_id');
     }
@@ -658,56 +658,56 @@ class MapPoint extends Model
 
         return $record;
     }
-	
-	public function fieldTypes()
-	{
-		return $this->hasManyThrough(
-			MapPointFieldModel::class,
-			MapPointToFieldModel::class,
-			'recycling_point_id',
-			'id',
-			'id',
-			'field_type_id'
-		);
-	}
-	
-	/**
-	 * Returns the list of available map points for the given filters
-	 * @param array $filters
-	 *
-	 * @return Collection
-	 */
-	public static function getFilteredMapPoints(array $filters) : Collection
-	{
-		$sql = self::
-			select(
-				'recycling_points.id',
-				'recycling_points.lat',
-				'recycling_points.lon',
-				'recycling_points.location',
-			)
-			->where('status', 1);
-		
-		if (!empty($filters))
-		{
-			foreach ($filters as $key => $value)
-			{
-				match ($key)
-				{
-					'service_id' => $sql->where('recycling_points.service_id', $value),
-					'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
-					'material_type_id' => $sql->whereHas('getMaterials', function ($query) use ($value)
-					{
-						$query->whereIn('material_recycling_point.material_id', (array) $value);
-					}),
-					'field_type_id' => $sql->whereHas('fieldTypes', function ($query) use ($value)
-					{
-						$query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
-					}),
-				};
-			}
-		}
-		
-		return $sql->get();
-	}
+
+    public function fieldTypes()
+    {
+        return $this->hasManyThrough(
+            MapPointFieldModel::class,
+            MapPointToFieldModel::class,
+            'recycling_point_id',
+            'id',
+            'id',
+            'field_type_id'
+        );
+    }
+
+    /**
+     * Returns the list of available map points for the given filters.
+     * @param array $filters
+     *
+     * @return Collection
+     */
+    public static function getFilteredMapPoints(array $filters): Collection
+    {
+        $sql = self::
+            select(
+                'recycling_points.id',
+                'recycling_points.lat',
+                'recycling_points.lon',
+                'recycling_points.location',
+            )
+                ->where('status', 1);
+
+        if (!empty($filters))
+        {
+            foreach ($filters as $key => $value)
+            {
+                match ($key)
+                {
+                    'service_id' => $sql->where('recycling_points.service_id', $value),
+                    'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
+                    'material_type_id' => $sql->whereHas('materials', function ($query) use ($value)
+                    {
+                        $query->whereIn('material_recycling_point.material_id', (array) $value);
+                    }),
+                    'field_type_id' => $sql->whereHas('fieldTypes', function ($query) use ($value)
+                    {
+                        $query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
+                    }),
+                };
+            }
+        }
+
+        return $sql->get();
+    }
 }

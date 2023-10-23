@@ -115,9 +115,9 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                 {
                     return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
                 })->sortable()->searchable()->html(),
-                TextColumn::make('getType.display_name')->label(__('map_points.point_type'))->searchable(),
+                TextColumn::make('type.display_name')->label(__('map_points.point_type'))->searchable(),
                 TextColumn::make('managed_by')->label(__('map_points.managed_by'))->sortable()->searchable()->wrap(),
-                TextColumn::make('getMaterials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
+                TextColumn::make('materials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
@@ -133,12 +133,12 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                 TextColumn::make('county')->label(__('map_points.county'))->sortable()->searchable(),
                 TextColumn::make('city')->label(__('map_points.city'))->sortable()->searchable(),
                 TextColumn::make('address')->label(__('map_points.address'))->sortable()->searchable()->wrap(),
-                TextColumn::make('getGroup.name')->label(__('map_points.group'))->sortable()->searchable()->wrap(),
+                TextColumn::make('group.name')->label(__('map_points.group'))->sortable()->searchable()->wrap(),
 
                 BadgeColumn::make('status')
                     ->color(static function ($state, $record): string
                     {
-                        if ($record->getIssues->count() > 0)
+                        if ($record->issues->count() > 0)
                         {
                             return 'danger';
                         }
@@ -151,7 +151,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                     })
                     ->formatStateUsing(function (string $state, $record)
                     {
-                        if ($record->getIssues->count() > 0)
+                        if ($record->issues->count() > 0)
                         {
                             return __('map_points.issues_found');
                         }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Notifications\Livewire\DatabaseNotifications;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
@@ -28,9 +29,20 @@ class AppServiceProvider extends ServiceProvider
                     // ->icon('heroicon-s-cog')
                     ->collapsed(),
             ]);
+
+            Filament::registerNavigationItems([
+
+                NavigationItem::make('Lista rapoarte')
+                    ->url('/admin/reports')
+                    ->icon('heroicon-o-presentation-chart-line')
+                    ->activeIcon('heroicon-s-presentation-chart-line')
+                    ->group('Rapoarte')
+                    ->sort(2),
+            ]);
         });
         Filament::registerNavigationGroups([
             'Harta' => NavigationGroup::make()->label(__('nav.harta')),
+            'Rapoarte' => NavigationGroup::make()->label(__('nav.reports')),
             'Settings' => NavigationGroup::make()->label(__('nav.settings')),
         ]);
     }

@@ -16,6 +16,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Tables\Columns\TextColumn;
@@ -58,21 +59,26 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
             ->icon('heroicon-m-pencil-square')
             ->iconButton()
             ->form([
-                Section::make('Users')
-                    ->description('Create / update an admin user')
+                Section::make('Location')
+                    ->description('Update map point location')
                     ->schema([
                         TextInput::make('county')->required()->default($this->getRecord()->county)->disabled(),
                         TextInput::make('city')->required()->default($this->getRecord()->city)->disabled(),
                         TextInput::make('address')->required()->default($this->getRecord()->address),
-                        TextInput::make('lat')->required()->default($this->getRecord()->lat),
-                        TextInput::make('lon')->required()->default($this->getRecord()->lon),
+                        // TextInput::make('lat')->required()->default($this->getRecord()->lat),
+                        // TextInput::make('lon')->required()->default($this->getRecord()->lon),
                         TextInput::make('location_notes')->required()->default($this->getRecord()->location_notes),
+
                     ])
                     ->columns(2),
+                ViewField::make('map')->view('filament.forms.components.map'),
 
             ])
             ->action(function ($data)
             {
+                $data['lat'] = $this->lat;
+                $data['lon'] = $this->lon;
+                $data['city'] = $this->city;
                 $this->getRecord()->updateAddress(collect($data));
             });
     }
@@ -86,12 +92,12 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                 Select::make('type')
                     ->label('Tip punct')
                     ->options(MapPointTypeModel::query()->pluck('display_name', 'id'))
-                    ->default($this->getRecord()->getType->id)
+                    ->default($this->getRecord()->type->id)
                     ->required(),
                 Select::make('materials')
                     ->label('Materiale')
                     ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
-                    ->default($this->getRecord()->getMaterials->pluck('id')->toArray())
+                    ->default($this->getRecord()->materials->pluck('id')->toArray())
                     ->multiple()
                     ->required(),
                 TextInput::make('managed_by')->required()->default($this->getRecord()->managed_by),
@@ -123,7 +129,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                                 'sat' => __('common.week_days.sat'),
                                 'sun' => __('common.week_days.sun'),
                             ])
-                            // ->default($this->getRecord()->getMaterials->pluck('id')->toArray())
+                            // ->default($this->getRecord()->materials->pluck('id')->toArray())
                             ->required(),
                         TimePicker::make('start_hour')->seconds('false')->hoursStep(1)
                             ->minutesStep(10),
@@ -215,7 +221,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
 
     public function getSubHeading(): string | Htmlable
     {
-        return $this->getRecord()->getType->display_name . ' ' . $this->getRecord()->managed_by;
+        return $this->getRecord()->type->display_name . ' ' . $this->getRecord()->managed_by;
     }
 
     public function table(Table $table): Table
