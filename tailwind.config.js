@@ -6,5 +6,9 @@ export default {
         './app/Filament/**/*.php',
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        "./resources/js/**/*.{vue,js,ts,jsx,tsx}",
     ],
+    corePlugins: {
+        visibility: false,
+    }
 }
