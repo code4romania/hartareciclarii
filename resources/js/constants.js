@@ -58,12 +58,34 @@ export const CONSTANTS =
 			DICTIONARY_RECYCLING: `Dicționar reciclare`,
 			GUIDE_A_Z: `Ghiz A-Z`,
 			FAQ: `FAQ`,
-			MY_ACCOUNT: `Contul meu`
+			MY_ACCOUNT: `Contul meu`,
+			LOGOUT: `Logout`,
+			MY_PROFILE: `Profilul meu`,
 		},
 		LOCATION:
 		{
 			NOTICE: `Serviciile de localizare nu sunt pornite pe acest dispozitiv. Pentru o localizare mai corectă, porniți serviciul localizare din setări.`,
 			SETTINGS: `SETĂRI`,
+		},
+		AUTH:
+		{
+			EMAIL: `Email`,
+			EMAIL_PLACEHOLDER: `Adresa de email`,
+			PASSWORD: `Parola`,
+			PASSWORD_PLACEHOLDER: `Parola`,
+			RECOVER: `Am uitat parola`,
+			NEXT_STEP: `Următorul pas`,
+			LOGIN_BUTTON: `Intră în cont`,
+			LOGIN_FORM_TITLE: `Intră în cont`,
+			RECOVER_FORM_TITLE: `Recuperare parolă`,
+			REGISTER_FORM_TITLE: `Crează-ți un cont`,
+			REGISTER_LABEL: `Nu ai cont Harta Reciclării?`,
+			REGISTER_LABEL_LINK: `Crează-ți unul acum`,
+			ERROR: `Email sau parolă invalide!`,
+		},
+		API:
+		{
+			invalid_credentials: `Email sau parolă incorecte!`
 		},
     }
 };
