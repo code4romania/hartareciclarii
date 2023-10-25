@@ -65,7 +65,7 @@
 				</l-map>
 			</div>
 			<div
-				class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-green-800 px-3 py-2 text-white"
+				class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
 				:class="{'hidden': hasApprovedLocation}"
 			>
 				<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
@@ -117,7 +117,7 @@ export default
 			longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
 			points: {},
 			icon: L.icon({
-				iconUrl: '/assets/images/logo.png',
+				iconUrl: '/assets/images/punct_benzinarie.svg',
 				iconSize: [100, 37],
 				iconAnchor: [16, 37]
 			}),
