@@ -113,8 +113,8 @@ export default
 			isAuthenticated: false,
 			open: false,
 			zoom: 13,
-			latitude: 46.755504,
-			longitude: 23.5787266,
+			latitude: CONSTANTS.DEFAULT_LOCATION.LATITUDE,
+			longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
 			points: {},
 			icon: L.icon({
 				iconUrl: '/assets/images/logo.png',
@@ -153,7 +153,6 @@ export default
 		},
 		getUserInfo ()
 		{
-			this.userInfoLoading = true;
 			const session = localStorage.getItem('userSession');
 			if (session)
 			{
