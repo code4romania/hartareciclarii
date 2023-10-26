@@ -333,7 +333,6 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
     public function getTableColumns(): array
     {
         $header = [];
-        // dd($this->groupedBy);
         switch($this->groupedBy)
         {
             case 'service_type':
