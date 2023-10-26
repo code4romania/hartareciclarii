@@ -948,27 +948,85 @@ INSERT INTO `recycling_point_types` (`id`, `service_id`, `type_name`, `display_n
 (39, 9, 'altele_altele', 'Altele', NULL, NULL, NULL);
 -- Dumping structure for table harta_reciclarii.reported_point_issues
 DROP TABLE IF EXISTS `reported_point_issues`;
-CREATE TABLE IF NOT EXISTS `reported_point_issues` (
-                                                       `id` int NOT NULL AUTO_INCREMENT,
-                                                       `point_id` int NOT NULL,
-                                                       `reporter_id` int DEFAULT NULL,
-                                                       `status` int DEFAULT NULL,
-                                                       `type` int DEFAULT NULL,
-                                                       `material_issue` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `material_issue_missing` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `material_issue_extra` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `collection_decline_reason` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `description` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-    `created_at` datetime DEFAULT NULL,
-    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `reported_point_issues_chk_1` CHECK (json_valid(`material_issue`)),
-    CONSTRAINT `reported_point_issues_chk_2` CHECK (json_valid(`material_issue_missing`)),
-    CONSTRAINT `reported_point_issues_chk_3` CHECK (json_valid(`material_issue_extra`)),
-    CONSTRAINT `reported_point_issues_chk_4` CHECK (json_valid(`collection_decline_reason`))
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `reported_point_issues` (
+                                         `id` INT(10) NOT NULL AUTO_INCREMENT,
+                                         `point_id` INT(10) NOT NULL,
+                                         `latitude` FLOAT(10,8) NOT NULL DEFAULT '0.00000000',
+	`longitude` FLOAT(10,8) NOT NULL DEFAULT '0.00000000',
+	`reporter_id` INT(10) NULL DEFAULT NULL,
+	`status` INT(10) NULL DEFAULT NULL,
+	`reported_point_issue_type_id` INT(10) NULL DEFAULT NULL,
+	`material_issue` JSON NULL DEFAULT NULL,
+	`material_issue_missing` JSON NULL DEFAULT NULL,
+	`material_issue_extra` JSON NULL DEFAULT NULL,
+	`collection_decline_reason` JSON NULL DEFAULT NULL,
+	`description` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`created_at` DATETIME NULL DEFAULT NULL,
+	`updated_at` DATETIME NULL DEFAULT 'CURRENT_TIMESTAMP',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `reported_point_issue_type_id` (`reported_point_issue_type_id`) USING BTREE,
+	CONSTRAINT `reported_point_issues_chk_4` CHECK (json_valid(`collection_decline_reason`)),
+	CONSTRAINT `reported_point_issues_chk_3` CHECK (json_valid(`material_issue_extra`)),
+	CONSTRAINT `reported_point_issues_chk_2` CHECK (json_valid(`material_issue_missing`)),
+	CONSTRAINT `reported_point_issues_chk_1` CHECK (json_valid(`material_issue`))
+)
+    COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
 
--- Data exporting was unselected.
+DROP TABLE IF EXISTS `reported_point_issue_images`;
+CREATE TABLE `reported_point_issue_images` (
+   `id` INT(10) NOT NULL AUTO_INCREMENT,
+   `reported_point_issue_id` INT(10) NOT NULL,
+   `title` VARCHAR(250) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_general_ci',
+   `file` VARCHAR(250) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_general_ci',
+   `created_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+   `updated_at` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+   PRIMARY KEY (`id`) USING BTREE,
+   INDEX `reported_point_issue_id` (`reported_point_issue_id`) USING BTREE
+)
+    COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
+
+-- Dumping structure for table harta_reciclarii.reported_point_issue_types
+DROP TABLE IF EXISTS `reported_point_issue_types`;
+CREATE TABLE IF NOT EXISTS `reported_point_issue_types` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `accept_images` tinyint NOT NULL DEFAULT '0',
+    `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+    `created_at` datetime NOT NULL,
+    `updated_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table harta_reciclarii.reported_point_issue_types: ~7 rows (approximately)
+INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `created_at`, `updated_at`) VALUES
+  (1, 0, 'Adresa nu este corectă', '2023-10-27 00:19:10', '2023-10-27 00:19:43'),
+  (2, 0, 'Locația punctului pe hartă nu este corectă', '2023-10-27 00:19:19', '2023-10-27 00:19:43'),
+  (3, 1, 'Materialele colectate nu sunt corecte', '2023-10-27 00:19:28', '2023-10-27 00:19:43'),
+  (4, 0, 'Programul nu este corect', '2023-10-27 00:19:36', '2023-10-27 00:19:43'),
+  (5, 1, 'Containerul nu funcționează sau nu este bine întreținut', '2023-10-27 00:19:43', '2023-10-27 00:19:43'),
+  (6, 0, 'Mi s-a refuzat preluarea deșeului', '2023-10-27 00:19:49', '2023-10-27 00:19:43'),
+  (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43');
+
+-- Dumping structure for table harta_reciclarii.reported_point_issue_type_items
+DROP TABLE IF EXISTS `reported_point_issue_type_items`;
+CREATE TABLE IF NOT EXISTS `reported_point_issue_type_items` (
+     `id` int NOT NULL AUTO_INCREMENT,
+     `reported_point_issue_type_id` int NOT NULL DEFAULT '0',
+     `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+    `created_at` datetime NOT NULL,
+    `updated_at` datetime NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `reported_point_issue_type_id` (`reported_point_issue_type_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table harta_reciclarii.reported_point_issue_type_items: ~0 rows (approximately)
+INSERT INTO `reported_point_issue_type_items` (`id`, `reported_point_issue_type_id`, `title`, `created_at`, `updated_at`) VALUES
+  (1, 3, 'Unele materiale listate în descriere nu se colectează în realitate', '2023-10-27 00:33:02', '2023-10-27 00:33:04'),
+  (2, 3, 'Lipsesc materiale colectate din descriere', '2023-10-27 00:33:15', '2023-10-27 00:33:18'),
+  (3, 3, 'Altă problemă', '2023-10-27 00:33:31', '2023-10-27 00:33:32'),
+  (4, 6, 'Susțin că nu preiau tipul de deșeu pe care am vrut să îl predau', '2023-10-27 00:33:32', '2023-10-27 00:33:32'),
+  (5, 6, 'Cantitatea sau modul de prezentare/ împachetare al deșeului a fost cosiderat neadecvat', '2023-10-27 00:34:00', '2023-10-27 00:34:02'),
+  (6, 6, 'Altă problemă', '2023-10-27 00:34:16', '2023-10-27 00:34:17');
+
 
 -- Dumping structure for table harta_reciclarii.reports
 DROP TABLE IF EXISTS `reports`;
