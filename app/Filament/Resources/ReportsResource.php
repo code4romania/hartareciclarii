@@ -6,6 +6,7 @@ use App\Filament\Resources\ReportsResource\Pages;
 use App\Models\Report as ReportModel;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ReportsResource extends Resource
@@ -22,48 +23,20 @@ class ReportsResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('created_at')
-                    ->label(__('report.column.created_at'))
-                    ->formatStateUsing(fn ($record) => $record->created_at->toFormattedDateTime())
-                    ->toggleable()
-                    ->sortable(),
-
-                TextColumn::make('type')
-                    ->label(__('report.column.type'))
-                    ->enum(Type::options())
-                    ->toggleable(),
-
                 TextColumn::make('title')
                     ->label(__('report.column.title'))
-                    ->wrap()
-                    ->toggleable()
-                    ->searchable(),
-
-                TextColumn::make('indicators')
-                    ->label(__('report.column.indicators'))
-                    ->formatStateUsing(fn (Report $record) => Str::limit($record->indicators_list, 100, '...'))
-                    ->wrap()
-                    ->toggleable(),
-
-                TextColumn::make('segments.age')
-                    ->label(__('report.column.age'))
-                    ->formatStateUsing(fn ($state) => static::segmentsList('age', $state))
-                    ->wrap()
-                    ->toggleable(),
-
-                TextColumn::make('segments.gender')
-                    ->label(__('report.column.gender'))
-                    ->formatStateUsing(fn ($state) => static::segmentsList('gender', $state))
-                    ->wrap()
-                    ->toggleable(),
+                    ->html(),
+                TextColumn::make('created_at')
+                    ->label(__('report.column.created_at'))
+                    ->formatStateUsing(fn ($record) => $record->created_at->toString())
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->iconButton(),
-            ])
-            ->defaultSort('id', 'desc');
+            ]);
     }
 
     protected static function segmentsList(string $group, string $segments): string

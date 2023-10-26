@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-23 16:34:22
+ * @Last Modified time: 2023-10-23 19:54:39
  */
 return [
     'column' => [
@@ -20,6 +20,8 @@ return [
         'county' => 'Judet',
         'range_start' => 'Adaugat incepand cu',
         'range_end'=> 'Adaugat sfarsind cu',
+        'title' => 'Titlu raport',
+        'created_at' => 'Creat',
     ],
     'action' => [
         'generate'=> 'Genereaza raport',

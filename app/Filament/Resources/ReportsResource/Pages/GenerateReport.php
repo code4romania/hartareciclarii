@@ -20,6 +20,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 // use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -469,11 +470,17 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
         $data = $this->data;
         $actions = [
             TableAction::make('save-report')->label(__('report.action.save_report'))->icon('heroicon-m-check')
+                ->form([
+                    TextInput::make('title')
+                        ->label('Titlu raport')
+                        ->required(),
+                ])
                 ->action(function (array $data): void
                 {
                     $report = new Report();
                     $report->form_data = $this->data;
                     $report->results = $this->getEloquentQuery()->get();
+                    $report->title = $data['title'];
                     $report->save();
                     Notification::make()
                         ->title('Report saved')

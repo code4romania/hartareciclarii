@@ -4,7 +4,7 @@
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-23 16:41:59
+ * @Last Modified time: 2023-10-23 19:46:59
  */
 
 namespace App\Models;
