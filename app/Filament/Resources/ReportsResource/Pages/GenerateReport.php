@@ -406,7 +406,6 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
             {
                 return $this->shouldGenerate;
             }),
-
         ];
 
         return $table
