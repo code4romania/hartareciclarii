@@ -23,6 +23,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class MapPointsResource extends Resource
 {
@@ -177,6 +180,25 @@ class MapPointsResource extends Resource
             ->actions([
                 ActionGroup::make($actions),
             ])
+            ->headerActions(
+                [
+                    ExportAction::make()->exports([
+                        ExcelExport::make('table')->fromTable()
+                            ->except([
+                                'materials.getParent.icon',
+                            ])
+                            ->withColumns([
+                                Column::make('materials')
+                                    ->formatStateUsing(function ($state)
+                                    {
+                                        $records = collect($state);
+
+                                        return implode(',', $records->pluck('name')->toArray());
+                                    }),
+                            ]),
+                    ]),
+                ]
+            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
 
