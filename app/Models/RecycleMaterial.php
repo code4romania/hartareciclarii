@@ -10,10 +10,12 @@
 namespace App\Models;
 
 use App\Models\RecycleMaterialAlias as RecycleMaterialAliasModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RecycleMaterial extends Model
 {
+	use HasFactory;
     protected $table = 'materials';
 
     protected $fillable = ['name'];

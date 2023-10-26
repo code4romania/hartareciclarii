@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #e3f1e6;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #004667;
+        stroke-linejoin: round;
+      }
+
+      .cls-3 {
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <title>punct_benzinarie</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Layer_1-2" data-name="Layer 1">
+      <g>
+        <rect class="cls-1" width="60" height="60"/>
+        <g>
+          <path class="cls-2" d="M20.13,8.63V51.37H39.87V8.63ZM36.81,24.35H23.19V11.81H36.81Z"/>
+          <path class="cls-3"
+                d="M39.86,13.82l6.75,5.64V31c0,7.46,5.18,16.74-1.88,16.74-2.78,0-2.6-2.38-2.6-2.38V31.74H39.87"/>
+          <polyline class="cls-3" points="44.68 17.85 44.68 20.63 42.97 21.77 42.97 26.79 46.49 26.79"/>
+          <line class="cls-3" x1="10.95" y1="51.37" x2="49.05" y2="51.37"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

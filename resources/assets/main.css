@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.cursor-pointer
+{
+    cursor: pointer;
+}
+
+.leaflet-container
+{
+    z-index: 1;
+}
