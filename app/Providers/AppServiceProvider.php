@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                     ->activeIcon('heroicon-s-presentation-chart-line')
                     ->group('Rapoarte')
                     ->sort(2)
-                    ->hidden(!auth()->user()->can('view_reports')),
+                    ->hidden(auth()->user() && !auth()->user()->can('view_reports')),
             ]);
         });
         Filament::registerNavigationGroups([
