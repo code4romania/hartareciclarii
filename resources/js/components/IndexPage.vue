@@ -1,7 +1,7 @@
 <template>
-	<left-sidebar>
-
-	</left-sidebar>
+	<left-sidebar
+        :has-results="false"
+    ></left-sidebar>
 
 	<div
 		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-72': open}"

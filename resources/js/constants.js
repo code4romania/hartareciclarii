@@ -48,12 +48,19 @@ export const CONSTANTS =
         SIDEBAR:
         {
             SEARCH_POINT_LABEL: `Caută un punct`,
+            SEARCH_MATERIAL_LABEL: `Caută material`,
             SEARCH_POINT_PLACEHOLDER: `Exemplu căutare`,
             SERVICE_TYPE_LABEL: `Tip serviciu`,
+            MATERIAL_TYPE_LABEL: `Material colectat selectiv`,
+            COLLECTION_POINT_TYPE_LABEL: `Tip punct de colectare`,
             CLEAR_FILTERS_LABEL: `Șterge filtre`,
 			SEARCH: `Caută`,
 			FILTERS: `Filtre`,
 			FILTERS_TITLE: `FILTREAZĂ REZULTATELE`,
+            RESULTS: `Rezultate`,
+            NO_RESULTS_FOUND_FIRST_PART: `Nu a fost gasit niciun rezultat pentru`,
+            NO_RESULTS_FOUND_SECOND_PART: `Folositi un alt termen de cautare`,
+            SEE_ALL_POINTS: `Vezi toate punctele`
         },
 		TOP_MENU:
 		{
