@@ -2,6 +2,7 @@ export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
+	NOMINATIM_URL: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
 	DEFAULT_LOCATION:{
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266

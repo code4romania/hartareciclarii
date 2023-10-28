@@ -28,6 +28,7 @@
 	Route::post('/user/recover-confirm', [UserController::class, 'recoverPasswordConfirm']);
 	
 	Route::get('/static/filters', [StaticController::class, 'filters']);
+	Route::post('/static/image', [StaticController::class, 'upload']);
 	
 	Route::get('/map/nomenclatures', [MapController::class, 'nomenclatures']);
 	Route::get('/map/points', [MapController::class, 'points']);
