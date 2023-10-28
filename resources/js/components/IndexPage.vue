@@ -1,10 +1,11 @@
 <template>
 	<left-sidebar
         :has-results="hasResults"
+		@filtersChanged="getMapPoints($event)"
     ></left-sidebar>
 
 	<div
-		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-72': open}"
+		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-96': open}"
 	>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
 		<main class="">
 			<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
@@ -173,8 +174,9 @@ export default
 				this.isAuthenticated = false;
 			}
 		},
-		getMapPoints()
+		getMapPoints(filters)
 		{
+			console.log(`filters`, filters);
 			axios
 				.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.INFO)
 				.then((response) =>
@@ -209,7 +211,7 @@ export default
 			this.getUserInfo();
 		});
 		this.getUserInfo();
-		this.getMapPoints();
+		this.getMapPoints({});
 	}
 };
 </script>

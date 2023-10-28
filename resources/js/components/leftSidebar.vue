@@ -41,7 +41,7 @@
 
 	<!-- Static sidebar for desktop -->
 	<div
-		class="fixed w-full z-10 inset-y-0  lg:w-72 flex-col bg-white"
+		class="fixed w-full z-10 inset-y-0  lg:w-96 flex-col bg-white"
         ref="filtersBox"
 		:class="{'flex': open, 'hidden': !open}"
 	>
@@ -91,7 +91,7 @@
                     </h3>
                     <!-- Filter section, show/hide based on section state. -->
                     <div id="filter-section-service" class="pt-4 pb-6 border-b">
-                        <div class="space-y-4">
+                        <div class="space-y-1">
                             <template v-for="filter of filters.filters">
                                 <div class="flex items-center">
                                     <input
@@ -122,7 +122,7 @@
 
                     <div class="px-6 pb-6">
                         <div id="filter-section-service" class="pt-4 pb-6 border-b">
-                            <div class="space-y-4">
+                            <div class="space-y-1">
                                 <template v-for="collectionPointFilter of getFilter('service_types')">
                                     <div class="flex items-center">
                                         <input
@@ -166,7 +166,7 @@
 
                     <div class="px-6 pb-6">
                         <div id="filter-section-service" class="pt-4 pb-6 border-b">
-                            <div class="space-y-4">
+                            <div class="space-y-1">
                                 <template v-for="materialFilter of materialTypesFilters">
                                     <div class="flex items-center">
                                         <input
@@ -182,7 +182,7 @@
                                             :for="'material_filter_' + materialFilter.id"
                                         >{{ materialFilter.name }}</label>
                                     </div>
-                                    <template v-for="childrenMaterialFilter of materialFilter.childrens">
+                                    <template v-for="childrenMaterialFilter of materialFilter.children">
                                         <div class="flex items-center ml-8">
                                             <input
                                                 :id="'material_filter_' + childrenMaterialFilter.id"
@@ -278,7 +278,8 @@ export default {
             searchParamsForFilters: {
                 search_key: '',
                 service_id: null
-            }
+            },
+			collectedFilters: {}
 		};
 	},
     mounted() {
@@ -299,24 +300,27 @@ export default {
             for (const filter of _.get(this, ['filters', 'extended_filters', filterType], [])) {
                 if (!filter.parent) {
                     let filterToAppend = filter;
-                    filterToAppend.childrens = [];
+                    filterToAppend.children = [];
                     for (const childrenFilter of _.get(this, ['filters', 'extended_filters', filterType], [])) {
                         if (childrenFilter.parent === filter.id) {
-                            filterToAppend.childrens.push(childrenFilter);
+                            filterToAppend.children.push(childrenFilter);
                         }
                     }
                     this.materialTypesFilters.push(filterToAppend);
                 }
             }
+			this.collectedFilters.material_type_id = this.materialTypesFilters;
         },
         serviceFilterChanged(filterId) {
             if (filterId === this.searchParamsForFilters.service_id) {
                 this.searchParamsForFilters.service_id = null;
+				this.collectedFilters.service_id = null;
                 this.getFilters();
                 return;
             }
 
             this.searchParamsForFilters.service_id = filterId
+			this.collectedFilters.service_id = filterId;
             this.getFilters();
         },
         materialFilterChanged(filter, isParent) {
@@ -324,37 +328,43 @@ export default {
                 if (this.selectedMaterialTypes.includes(filter.id)) {
                     this.selectedMaterialTypes = this.selectedMaterialTypes.filter(item => item !== filter.id)
 
-                    for (const child of filter.childrens) {
+                    for (const child of filter.children) {
                         if (this.selectedMaterialTypes.includes(child.id)) {
                             this.selectedMaterialTypes = this.selectedMaterialTypes.filter(item => item !== child.id)
                         }
                     }
+					this.collectedFilters.material_type_id = this.selectedMaterialTypes;
                     return;
                 }
 
                 this.selectedMaterialTypes.push(filter.id);
-                for (const child of filter.childrens) {
+                for (const child of filter.children) {
                     this.selectedMaterialTypes.push(child.id);
                 }
 
+				this.collectedFilters.material_type_id = this.selectedMaterialTypes;
                 return;
             }
 
 
             if (this.selectedMaterialTypes.includes(filter.id)) {
                 this.selectedMaterialTypes = this.selectedMaterialTypes.filter(item => item !== filter.id)
+				this.collectedFilters.material_type_id = this.selectedMaterialTypes;
                 return;
             }
 
             this.selectedMaterialTypes.push(filter.id);
+			//this.collectedFilters.material_type_id = this.selectedMaterialTypes;
         },
         collectionPointFilterChanged(filter) {
             if (this.selectedCollectionPointsTypes.includes(filter.id)) {
                 this.selectedCollectionPointsTypes = this.selectedCollectionPointsTypes.filter(item => item !== filter.id)
+				this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
                 return;
             }
 
             this.selectedCollectionPointsTypes.push(filter.id);
+			this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
         },
         getFilters() {
             const loader = this.$loading.show({
@@ -397,11 +407,11 @@ export default {
 
                 let parentsToDelete = [];
                 for (const materialTypeFilterKey in this.materialTypesFilters) {
-                    if (_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'childrens'], []).length) {
-                        this.materialTypesFilters[materialTypeFilterKey].childrens = this.materialTypesFilters[materialTypeFilterKey].childrens
+                    if (_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'children'], []).length) {
+                        this.materialTypesFilters[materialTypeFilterKey].children = this.materialTypesFilters[materialTypeFilterKey].children
                             .filter(item => item.name.includes(this.materialFilterLiveSearch))
                     }
-                    if (!_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'childrens'], []).length) {
+                    if (!_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'children'], []).length) {
                         if (!this.materialTypesFilters[materialTypeFilterKey].name.includes(this.materialFilterLiveSearch)) {
                             parentsToDelete.push(materialTypeFilterKey);
                         }
@@ -417,6 +427,16 @@ export default {
                 this.materialTypesFilters = newFilters;
             }
         }
+	},
+	watch: {
+		collectedFilters: {
+			handler: function (newVal)
+			{
+				this.$emit('filters-changed', this.collectedFilters);
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 };
 </script>
