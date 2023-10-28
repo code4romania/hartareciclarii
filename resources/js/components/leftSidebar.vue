@@ -230,7 +230,7 @@
             </span>
 
 			<div class="px-6 py-3 border-t absolute bottom-0 bg-white w-full">
-				<button class="flex items-center justify-center text-red-700 w-full" type="button">
+				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
 					{{ CONSTANTS.LABELS.SIDEBAR.CLEAR_FILTERS_LABEL }}
 				</button>
@@ -383,8 +383,8 @@ export default {
             }
         },
         resetFilters() {
-            //todo: inca nu stiu ce trebuie facut aici, daca facem aici ceva sau pasam ceva la componenta parinte
-            //trebuie cumva si parintele sa afle de acest reset ca sa puna props-ul hasResults = true
+			this.searchParamsForFilters = {};
+			this.filters.extended_filters = {};
         },
         materialLiveSearch() {
             this.selectedMaterialTypes = [];

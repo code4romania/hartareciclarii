@@ -1,6 +1,6 @@
 <template>
 	<left-sidebar
-        :has-results="false"
+        :has-results="hasResults"
     ></left-sidebar>
 
 	<div
@@ -122,7 +122,8 @@ export default
 				iconAnchor: [16, 37]
 			}),
 			iconSize: 100,
-			hasApprovedLocation: false
+			hasApprovedLocation: false,
+			hasResults: false
 
 		};
 	},
@@ -179,6 +180,10 @@ export default
 				.then((response) =>
 				{
 					this.points = _.get(response, 'data.points', {});
+					if (Object.keys(this.points).length > 0)
+					{
+						this.hasResults = true;
+					}
 				}).catch((err) =>
 			{
 				console.log(err);
