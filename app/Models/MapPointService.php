@@ -9,6 +9,7 @@
 
 namespace App\Models;
 
+use App\Models\MapPointToField as MapPointToFieldModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -24,10 +25,19 @@ class MapPointService extends Model
 		if ($service_id > 0)
 		{
 			$extendedFilters['service_types'] = MapPointType::where('service_id', $service_id)->get();
-			$extendedFilters['material_types'] = RecycleMaterial::getAvailableMaterialsOnServiceId($service_id);
+			$extendedFilters['material_types'] = ($service_id == 1) ? RecycleMaterial::getAvailableMaterialsOnServiceId($service_id) : [];
 			$extendedFilters['features'] = FilterablePointTypes::where('service_id', $service_id)->with('fieldTypes')->get();
 		}
 		
 		return collect($extendedFilters);
+	}
+	
+	public function pointTypes()
+	{
+		return $this->hasMany(
+			MapPointType::class,
+			'service_id',
+			'id',
+		);
 	}
 }

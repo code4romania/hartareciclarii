@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ReportsResource\Pages;
 
 use App\Contracts\Pages\WithTabs;
+use App\Exports\ReportsExport;
 use App\Filament\Resources\ReportsResource;
 use App\Filament\Resources\ReportsResource\Concerns;
 use App\Models\County as CountyModel;
@@ -18,8 +19,8 @@ use Filament\Actions\Action as FormAction;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Section;
 // use Filament\Resources\Pages\CreateRecord;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
@@ -35,8 +36,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasActions
 {
@@ -230,7 +230,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
             switch($filter)
             {
                 case 'service_type':
-                    $query->whereIn('service_id', $value);
+                    $query->whereIn('recycling_points.service_id', $value);
                     break;
                 case 'point_type':
                     $query->whereIn('point_type_id', $value);
@@ -275,7 +275,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
             case 'service_type':
                 $query->join('recycling_point_services', 'recycling_points.service_id', '=', 'recycling_point_services.id');
                 $select[] = 'recycling_point_services.display_name as grouped_by';
-                $query->groupBy('service_id');
+                $query->groupBy('recycling_points.service_id');
                 break;
             case 'point_type':
                 $query->join('recycling_point_types', 'recycling_points.point_type_id', '=', 'recycling_point_types.id');
@@ -394,18 +394,20 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 {
                     return $this->shouldGenerate;
                 }),
-            ExportAction::make()->exports([
-                ExcelExport::make('table')->fromTable()
-                    ->except([
-                        'materials.getParent.icon',
-                    ])
-                    ->withColumns([
-
-                    ]),
-            ])->visible(function ($record): bool
-            {
-                return $this->shouldGenerate;
-            }),
+            TableAction::make('export_report')->label(__('report.action.export'))->icon('heroicon-m-arrow-down-tray')
+                ->form([
+                    TextInput::make('title')
+                        ->label('Titlu raport')
+                        ->required(),
+                ])
+                ->action(function (array $data)
+                {
+                    return Excel::download(new ReportsExport($this->getEloquentQuery()->get(), $this->getTableColumns()), $data['title'] . '.xlsx');
+                })
+                ->visible(function ($record): bool
+                {
+                    return $this->shouldGenerate;
+                }),
 
         ];
 

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `acl_permissions` (
                                                  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
     `guard_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `acl_permissions_name_guard_name_unique` (`name`,`guard_name`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `acl_roles` (
                                            `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
     `guard_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `acl_roles_name_guard_name_unique` (`name`,`guard_name`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `field_types` (
     `icon` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `field_type` enum('detail_text','navigation_link','boolean_value','web_link','tel_link','email_link','schedule') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'detail_text',
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `field_type_recycling_point` (
                                                             `upvotes` int NOT NULL DEFAULT '0',
                                                             `downvotes` int NOT NULL DEFAULT '0',
                                                             `created_at` timestamp NULL DEFAULT NULL,
-                                                            `updated_at` timestamp NULL DEFAULT NULL,
+                                                            `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                                             PRIMARY KEY (`id`),
     KEY `field_type_idx` (`field_type_id`),
     KEY `recycling_point_idx` (`recycling_point_id`),
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `filterable_field_types` (
                                                         `service_id` int NOT NULL,
                                                         `field_type_id` int NOT NULL,
                                                         `created_at` timestamp NULL DEFAULT NULL,
-                                                        `updated_at` timestamp NULL DEFAULT NULL,
+                                                        `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                                         PRIMARY KEY (`id`),
     KEY `filterable_field_types_service_id_field_type_id_index` (`service_id`,`field_type_id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -239,8 +239,8 @@ CREATE TABLE IF NOT EXISTS `imports` (
     `status` int DEFAULT '0',
     `result` text COLLATE utf8mb4_general_ci,
     `created_by` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `started_at` timestamp NULL DEFAULT NULL,
     `finished_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
@@ -321,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `materials` (
     `parent` int unsigned DEFAULT NULL,
     `is_wildcard` tinyint(1) DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `external_material_id` int DEFAULT NULL,
     `external_url` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`id`),
@@ -418,8 +418,8 @@ CREATE TABLE IF NOT EXISTS `material_aliases` (
                                                   `id` int unsigned NOT NULL AUTO_INCREMENT,
                                                   `parent` int unsigned NOT NULL,
                                                   `alias` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    `created_at` datetime DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `material_aliases_parent_foreign` (`parent`),
     CONSTRAINT `material_aliases_parent_foreign` FOREIGN KEY (`parent`) REFERENCES `materials` (`id`)
@@ -558,7 +558,7 @@ CREATE TABLE IF NOT EXISTS `material_recycling_point` (
                                                           `upvotes` int NOT NULL DEFAULT '0',
                                                           `downvotes` int NOT NULL DEFAULT '0',
                                                           `created_at` timestamp NULL DEFAULT NULL,
-                                                          `updated_at` timestamp NULL DEFAULT NULL,
+                                                          `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                                           PRIMARY KEY (`id`),
     KEY `material_id_idx` (`material_id`),
     KEY `recycling_point_idx` (`recycling_point_id`),
@@ -722,7 +722,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
     `data` text COLLATE utf8mb4_general_ci NOT NULL,
     `read_at` timestamp NULL DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -763,7 +763,7 @@ CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
     `last_used_at` timestamp NULL DEFAULT NULL,
     `expires_at` timestamp NULL DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
     KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
@@ -778,8 +778,8 @@ CREATE TABLE IF NOT EXISTS `recycle_point_activity` (
                                                         `recycle_point_id` int DEFAULT NULL,
                                                         `activity` text COLLATE utf8mb4_general_ci NOT NULL,
                                                         `id_user` int DEFAULT NULL,
-                                                        `created_at` datetime DEFAULT NULL,
-                                                        `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                                        `created_at` timestamp NULL DEFAULT NULL,
+                                                        `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                                         PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -793,8 +793,8 @@ CREATE TABLE IF NOT EXISTS `recycle_point_duplicates` (
                                                           `recycle_point_2` int DEFAULT NULL,
                                                           `distance` float DEFAULT NULL,
                                                           `point_type_id` int DEFAULT NULL,
-                                                          `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                                          `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                                          `created_at` timestamp NULL DEFAULT NULL,
+                                                          `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                                           PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -819,7 +819,7 @@ CREATE TABLE IF NOT EXISTS `recycling_points` (
     `service_id` int DEFAULT NULL,
     `created_by` int DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `recycling_points_lat_index` (`lat`),
     KEY `recycling_points_lon_index` (`lon`),
@@ -847,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `recycling_points_groups` (
                                                          `id` int unsigned NOT NULL AUTO_INCREMENT,
                                                          `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `recycling_points_lat_index` (`name`) USING BTREE
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -861,8 +861,8 @@ CREATE TABLE IF NOT EXISTS `recycling_point_images` (
                                                         `recycling_point_id` int NOT NULL DEFAULT '0',
                                                         `created_by` int NOT NULL DEFAULT '0',
                                                         `file` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`) USING BTREE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -876,7 +876,7 @@ CREATE TABLE IF NOT EXISTS `recycling_point_services` (
     `display_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
     `icon` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -901,7 +901,7 @@ CREATE TABLE IF NOT EXISTS `recycling_point_types` (
     `display_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
     `icon` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -946,29 +946,89 @@ INSERT INTO `recycling_point_types` (`id`, `service_id`, `type_name`, `display_n
 (37, 7, 'donatii_centre', 'Centre de donații', NULL, NULL, NULL),
 (38, 8, 'targuri_troc_targuri', 'Târguri', NULL, NULL, NULL),
 (39, 9, 'altele_altele', 'Altele', NULL, NULL, NULL);
+
+
 -- Dumping structure for table harta_reciclarii.reported_point_issues
 DROP TABLE IF EXISTS `reported_point_issues`;
-CREATE TABLE IF NOT EXISTS `reported_point_issues` (
-                                                       `id` int NOT NULL AUTO_INCREMENT,
-                                                       `point_id` int NOT NULL,
-                                                       `reporter_id` int DEFAULT NULL,
-                                                       `status` int DEFAULT NULL,
-                                                       `type` int DEFAULT NULL,
-                                                       `material_issue` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `material_issue_missing` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `material_issue_extra` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `collection_decline_reason` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-                                                       `description` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-    `created_at` datetime DEFAULT NULL,
-    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `reported_point_issues_chk_1` CHECK (json_valid(`material_issue`)),
-    CONSTRAINT `reported_point_issues_chk_2` CHECK (json_valid(`material_issue_missing`)),
-    CONSTRAINT `reported_point_issues_chk_3` CHECK (json_valid(`material_issue_extra`)),
-    CONSTRAINT `reported_point_issues_chk_4` CHECK (json_valid(`collection_decline_reason`))
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `reported_point_issues` (
+                                         `id` INT(10) NOT NULL AUTO_INCREMENT,
+                                         `point_id` INT(10) NOT NULL,
+                                         `latitude` FLOAT(10,8) NOT NULL DEFAULT '0.00000000',
+	`longitude` FLOAT(10,8) NOT NULL DEFAULT '0.00000000',
+	`reporter_id` INT(10) NULL DEFAULT NULL,
+	`status` INT(10) NULL DEFAULT NULL,
+	`reported_point_issue_type_id` INT(10) NULL DEFAULT NULL,
+	`material_issue` JSON NULL DEFAULT NULL,
+	`material_issue_missing` JSON NULL DEFAULT NULL,
+	`material_issue_extra` JSON NULL DEFAULT NULL,
+	`collection_decline_reason` JSON NULL DEFAULT NULL,
+	`description` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `reported_point_issue_type_id` (`reported_point_issue_type_id`) USING BTREE,
+	CONSTRAINT `reported_point_issues_chk_4` CHECK (json_valid(`collection_decline_reason`)),
+	CONSTRAINT `reported_point_issues_chk_3` CHECK (json_valid(`material_issue_extra`)),
+	CONSTRAINT `reported_point_issues_chk_2` CHECK (json_valid(`material_issue_missing`)),
+	CONSTRAINT `reported_point_issues_chk_1` CHECK (json_valid(`material_issue`))
+)
+    COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
 
--- Data exporting was unselected.
+DROP TABLE IF EXISTS `reported_point_issue_images`;
+CREATE TABLE `reported_point_issue_images` (
+   `id` INT(10) NOT NULL AUTO_INCREMENT,
+   `reported_point_issue_id` INT(10) NOT NULL,
+   `title` VARCHAR(250) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_general_ci',
+   `file` VARCHAR(250) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_general_ci',
+   `created_at` datetime NOT NULL,
+   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`) USING BTREE,
+   INDEX `reported_point_issue_id` (`reported_point_issue_id`) USING BTREE
+)
+    COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
+
+-- Dumping structure for table harta_reciclarii.reported_point_issue_types
+DROP TABLE IF EXISTS `reported_point_issue_types`;
+CREATE TABLE IF NOT EXISTS `reported_point_issue_types` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `accept_images` tinyint NOT NULL DEFAULT '0',
+    `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+    `created_at` timestamp NOT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table harta_reciclarii.reported_point_issue_types: ~7 rows (approximately)
+INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `created_at`, `updated_at`) VALUES
+  (1, 0, 'Adresa nu este corectă', '2023-10-27 00:19:10', '2023-10-27 00:19:43'),
+  (2, 0, 'Locația punctului pe hartă nu este corectă', '2023-10-27 00:19:19', '2023-10-27 00:19:43'),
+  (3, 1, 'Materialele colectate nu sunt corecte', '2023-10-27 00:19:28', '2023-10-27 00:19:43'),
+  (4, 0, 'Programul nu este corect', '2023-10-27 00:19:36', '2023-10-27 00:19:43'),
+  (5, 1, 'Containerul nu funcționează sau nu este bine întreținut', '2023-10-27 00:19:43', '2023-10-27 00:19:43'),
+  (6, 0, 'Mi s-a refuzat preluarea deșeului', '2023-10-27 00:19:49', '2023-10-27 00:19:43'),
+  (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43');
+
+-- Dumping structure for table harta_reciclarii.reported_point_issue_type_items
+DROP TABLE IF EXISTS `reported_point_issue_type_items`;
+CREATE TABLE IF NOT EXISTS `reported_point_issue_type_items` (
+     `id` int NOT NULL AUTO_INCREMENT,
+     `reported_point_issue_type_id` int NOT NULL DEFAULT '0',
+     `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+    `created_at` timestamp NOT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `reported_point_issue_type_id` (`reported_point_issue_type_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table harta_reciclarii.reported_point_issue_type_items: ~0 rows (approximately)
+INSERT INTO `reported_point_issue_type_items` (`id`, `reported_point_issue_type_id`, `title`, `created_at`, `updated_at`) VALUES
+  (1, 3, 'Unele materiale listate în descriere nu se colectează în realitate', '2023-10-27 00:33:02', '2023-10-27 00:33:04'),
+  (2, 3, 'Lipsesc materiale colectate din descriere', '2023-10-27 00:33:15', '2023-10-27 00:33:18'),
+  (3, 3, 'Altă problemă', '2023-10-27 00:33:31', '2023-10-27 00:33:32'),
+  (4, 6, 'Susțin că nu preiau tipul de deșeu pe care am vrut să îl predau', '2023-10-27 00:33:32', '2023-10-27 00:33:32'),
+  (5, 6, 'Cantitatea sau modul de prezentare/ împachetare al deșeului a fost cosiderat neadecvat', '2023-10-27 00:34:00', '2023-10-27 00:34:02'),
+  (6, 6, 'Altă problemă', '2023-10-27 00:34:16', '2023-10-27 00:34:17');
+
 
 -- Dumping structure for table harta_reciclarii.reports
 DROP TABLE IF EXISTS `reports`;
@@ -977,8 +1037,8 @@ CREATE TABLE IF NOT EXISTS `reports` (
                                          `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
     `form_data` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
     `results` longtext COLLATE utf8mb4_general_ci,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+    `created_at` timestamp NOT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -999,7 +1059,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `last_login_ip` int unsigned NOT NULL DEFAULT '1',
     `last_login_date` timestamp NULL DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `users_hr_email_unique` (`email`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1015,7 +1075,7 @@ CREATE TABLE IF NOT EXISTS `users_facebook` (
     `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
     `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `users_facebook_email_unique` (`email`),
     KEY `users_facebook_user_hr_id_index` (`user_hr_id`)

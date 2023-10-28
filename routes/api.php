@@ -28,8 +28,13 @@
 	Route::post('/user/recover-confirm', [UserController::class, 'recoverPasswordConfirm']);
 	
 	Route::get('/static/filters', [StaticController::class, 'filters']);
+	
+	Route::get('/map/nomenclatures', [MapController::class, 'nomenclatures']);
 	Route::get('/map/points', [MapController::class, 'points']);
 	Route::get('/map/point/{id_point}', [MapController::class, 'point']);
+	
+	Route::post('/map/points', [MapController::class, 'create']);
+	Route::post('/report/problem/{id_point}', [ReportPointController::class, 'create']);
 	
 	/**
 	 * Protected Routes
@@ -38,6 +43,3 @@
 	Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 	
 	Route::get('/user/points', [UserController::class, 'points'])->middleware('auth:sanctum');
-	
-	Route::post('/map/point', [MapController::class, 'create'])->middleware('auth:sanctum');
-	Route::post('/report/problem/{id_point}', [ReportPointController::class, 'create'])->middleware('auth:sanctum');
