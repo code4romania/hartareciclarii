@@ -42,12 +42,13 @@ COPY \
     package-lock.json \
     tailwind.config.js \
     vite.config.js \
-    .env \
     ./
 
 RUN npm ci --no-audit --ignore-scripts
 
 COPY --from=vendor /var/www /build
+
+ENV VITE_API_URL="https://harta-reciclarii.staging.heroesof.tech/api"
 
 
 RUN npm run build
