@@ -14,7 +14,7 @@
             <div class="space-y-1 mb-3">
                 <Combobox
                     as="div"
-                    v-on:update:model-value="stepRequestBody.service = $event.id"
+                    v-on:update:model-value="stepRequestBody.service_id = $event.id"
                 >
                     <ComboboxLabel
                         class="block text-sm font-medium leading-6 text-gray-900 required"
@@ -60,7 +60,7 @@
                     </div>
                 </Combobox>
 
-                <template v-if="getError('service')">
+                <template v-if="getError('service_id')">
                     <div class="rounded-md bg-red-50 p-4 mb-2">
                         <div class="flex">
                             <div class="flex-shrink-0">
@@ -84,7 +84,7 @@
                 <div class="mt-2">
                     <input
                         id="address"
-                        v-model="stepRequestBody.address"
+                        v-model="stepRequestBody.field_types.address"
                         @keyup.enter="getLatLonOfAddress"
                         :placeholder="CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_PLACEHOLDER"
                         class="block w-full rounded-md border border-gray-300 py-1.5 text-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -109,6 +109,7 @@
             </div>
 
             <div
+                :class="{'inactiveMap': !Object.keys(point).length}"
                 class="space-y-1 mb-3 map h-screen w-full bg-green-900"
                 style="height: 350px;"
                 v-if="loadMap"
@@ -128,7 +129,7 @@
                     >
                         <p @click="">
                             <button
-                                :disabled="!stepRequestBody.address.length"
+                                :disabled="!stepRequestBody.field_types.address.length"
                                 id="login_button"
                                 class="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                 type="button"
@@ -256,10 +257,12 @@ export default {
             mapIsActive: false,
             loadMap: true,
             stepRequestBody: {
-                service: null,
-                address: '',
+                service_id: null,
+                field_types: {
+                    address: '',
+                },
                 lat: null,
-                lon: null,
+                lng: null,
             },
         };
     },
@@ -269,9 +272,6 @@ export default {
     methods: {
         closeModal() {
             this.$emit('close');
-        },
-        markerClicked(id) {
-            console.log(`clicked on marker`, id);
         },
         getError(key) {
             return _.get(this, ['errors', key], false);
@@ -313,7 +313,7 @@ export default {
             };
 
             this.stepRequestBody.lat = this.point.lat;
-            this.stepRequestBody.lon = this.point.lon;
+            this.stepRequestBody.lng = this.point.lon;
 
             let url = CONSTANTS.NOMINATIM_URL_DETAILS;
             url = _.replace(url, '{lat}', this.point.lat);
@@ -324,13 +324,20 @@ export default {
                     url,
                 )
                 .then((response) => {
-                    this.stepRequestBody.address = response.data.display_name
+                    this.stepRequestBody.field_types.address = response.data.display_name
                 })
                 .catch((err) => {});
         },
         getLatLonOfAddress() {
+            this.point = {};
+            this.stepRequestBody.lat = null;
+            this.stepRequestBody.lng = null;
+
+            this.latitude = null;
+            this.longitude = null;
+
             let url = CONSTANTS.NOMINATIM_URL_POINTS;
-            url = _.replace(url, '{search}', this.stepRequestBody.address);
+            url = _.replace(url, '{search}', this.stepRequestBody.field_types.address);
 
             axios
                 .get(
@@ -338,6 +345,7 @@ export default {
                 )
                 .then((response) => {
                     if (!_.get(response, 'data.0.lat', false)) {
+                        alert(CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.ADDRESS_NOT_FOUND)
                         return;
                     }
 
@@ -347,10 +355,10 @@ export default {
                     }
 
                     //remove the below line to not change the address typed by user
-                    this.stepRequestBody.address = _.get(response, 'data.0.display_name', this.stepRequestBody.address);
+                    this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
 
                     this.stepRequestBody.lat = this.point.lat;
-                    this.stepRequestBody.lon = this.point.lon;
+                    this.stepRequestBody.lng = this.point.lon;
 
                     this.latitude = this.point.lat;
                     this.longitude = this.point.lon;
@@ -360,14 +368,14 @@ export default {
         validate() {
             this.errors = {};
 
-            if (!_.get(this, 'stepRequestBody.service', false)) {
-                this.errors.service = true;
+            if (!_.get(this, 'stepRequestBody.service_id', false)) {
+                this.errors.service_id = true;
             }
-            if (!_.get(this, 'stepRequestBody.address', '').length) {
+            if (!_.get(this, 'stepRequestBody.field_types.address', '').length) {
                 this.errors.address = true;
             }
             if (!_.get(this, 'stepRequestBody.lat', '')
-                || !_.get(this, 'stepRequestBody.lon', '')
+                || !_.get(this, 'stepRequestBody.lng', '')
             ) {
                 this.errors.point = true;
             }

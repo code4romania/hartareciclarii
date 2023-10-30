@@ -43,7 +43,7 @@ export const CONSTANTS =
             {
                 INFO: `/map/points`,
                 DETAILS: `/map/point/{id}`,
-                CREATE: `/map/point`,
+                CREATE: `/map/points`,
                 REPORT: `/report/problem/{id}`,
             }
         },
@@ -102,7 +102,9 @@ export const CONSTANTS =
         ADD_POINT: {
             TITLE: `Adauga un nou punct pe harta`,
             NEXT_STEP: `Urmatorul pas`,
+            FINISH_STEPS: `Adauga punct`,
             CANCEL: `Renunta`,
+            BACK: `Inapoi`,
             FIRST_STEP: {
                 SUBTITLE: `Pasul 1/3 - Tip si locatie`,
                 EXACT_ADDRESS_LABEL: `Adresa exacta`,
@@ -110,10 +112,11 @@ export const CONSTANTS =
                 ADJUST_POINT_ON_MAP: `Ajusteaza punctul pe harta`,
                 SERVICE_TYPE_REQUIRED: `Tip serviciu este obligatoriu!`,
                 ADDRESS_REQUIRED: `Adresa este obligatorie!`,
-                POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`
+                POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`,
+                ADDRESS_NOT_FOUND: `Nu s-a putut gasi adresa!`
             },
             SECOND_STEP: {
-                SUBTITLE: `Pasul 2/3 - Tip si locatie`,
+                SUBTITLE: `Pasul 2/3 - Detalii punct`,
                 POINT_TYPE: `Tip punct`,
                 POINT_TYPE_REQUIRED: `Tip punct este obligatoriu!`,
                 COLLECTED_MATERIALS: `Materiale colectate`,
@@ -122,6 +125,8 @@ export const CONSTANTS =
                 ADMINISTRATION_PLACEHOLDER: `Institutia care administreaza punctul`,
                 UNKNOWN_ADMINISTRATION: `Nu stiu`,
                 PROGRAM: `Orar`,
+                DAYS: `Zile`,
+                HOURS: `Ore`,
                 PROGRAM_PLACEHOLDER: `Zilele si intervalul orar de funtionare`,
                 UNKNOWN_PROGRAM: `Nu stiu`,
                 OFFERS_MONEY: `Ofera bani?`,
@@ -130,6 +135,20 @@ export const CONSTANTS =
                 OBSERVATIONS_PLACEHOLDER: `Alte detalii despre locatie sau despre modul de oferire al serviciului`,
                 ADD_PICTURE: `Adauga poze`,
                 ADD_PICTURE_SUBTITLE: `Orice fel de poze sugestive sau utile pentru a identifica locatia sau punctul adaugat`,
+                WEBSITE: `Website`,
+                EMAIL: `Email`,
+                PHONE: `Phone`
+            },
+            THIRD_STEP: {
+                SUBTITLE: `Pasul 3/3 - Confirma informatiile`,
+                ADDRESS: `Adresa`,
+                PROGRAM: `Program`,
+                COLLECTED_MATERIALS: `Materiale colectate`,
+                OBSERVATIONS: `Observatii`,
+                OFFERS_SHIP: `Ofera transport`,
+                DOESNT_OFFERS_SHIP: `Nu ofera transport`,
+                OFFERS_MONEY: `Ofera bani`,
+                DOESNT_OFFERS_MONEY: `NU ofera bani`,
                 WEBSITE: `Website`,
                 EMAIL: `Email`,
                 PHONE: `Phone`
