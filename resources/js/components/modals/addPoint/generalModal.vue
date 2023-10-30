@@ -10,20 +10,30 @@
             <div class="fixed inset-0 z-50 w-screen overflow-y-auto">
                 <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
                     <div
-                        class="relative transform flex flex-col rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full sm:max-w-lg sm:p-6 h-[80vh] overflow-auto">
+                        class="relative transform flex flex-col rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full sm:max-w-lg sm:p-6 h-[80vh] overflow-auto" id="containerWithScroll">
                         <first-step
-                            v-if="activeStep === 'first'"
+                            v-show="activeStep === 'first'"
                             :nomenclatures="nomenclatures"
                             @close="closeModal();"
                             @stepFinished="stepFinished($event)"
                         ></first-step>
                         <second-step
-                            v-if="activeStep === 'second'"
+                            v-show="activeStep === 'second'"
                             :nomenclatures="nomenclatures"
                             :previous-step-body="requestBody"
                             @close="closeModal();"
                             @stepFinished="stepFinished($event)"
+                            @backToStep="activeStep = $event"
                         ></second-step>
+                        <third-step
+                            :active-step="activeStep"
+                            v-show="activeStep === 'third'"
+                            :nomenclatures="nomenclatures"
+                            :previous-step-body="requestBody"
+                            @close="closeModal();"
+                            @stepFinished="savePoint($event)"
+                            @backToStep="activeStep = $event"
+                        ></third-step>
                     </div>
                 </div>
             </div>
@@ -38,13 +48,15 @@ import {CONSTANTS} from "@/constants";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import firstStep from "./firstStep.vue";
 import secondStep from "./secondStep.vue";
-import axios from "axios";
+import thirdStep from "./thirdStep.vue";
+import axios, {HttpStatusCode} from "axios";
 import _ from "lodash";
 
 export default {
     components: {
         firstStep,
         secondStep,
+        thirdStep,
         DesktopFilterCloseIcon,
         Dialog,
         DialogPanel,
@@ -77,7 +89,6 @@ export default {
     data() {
         return {
             activeStep: 'first',
-            //activeStep: 'second',
             nomenclatures: {},
             requestBody: {},
         };
@@ -88,6 +99,9 @@ export default {
     methods: {
         closeModal() {
             this.$emit('close');
+        },
+        resetModal() {
+            this.$emit('reset');
         },
         getNomenclatureValues() {
             axios
@@ -100,8 +114,37 @@ export default {
                 .catch((err) => {});
         },
         stepFinished(stepData) {
+            const myDiv = document.getElementById('containerWithScroll');
+            myDiv.scrollTop = 0;
+
             this.activeStep = stepData.nextStep
+
+            let mergedFieldTypes = false;
+            if (_.has(this, 'requestBody.field_types')
+                && _.has(stepData, 'body.field_types')
+            ) {
+                mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
+            }
+
             this.requestBody = {...this.requestBody, ...stepData.body}
+
+            if (mergedFieldTypes) {
+                this.requestBody.field_types = mergedFieldTypes;
+            }
+        },
+        savePoint() {
+            axios
+                .post(
+                    CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.CREATE,
+                    this.requestBody
+                )
+                .then((response) => {
+                    if (_.get(response, 'status', 0) === HttpStatusCode.Ok) {
+                        this.closeModal();
+                        this.resetModal();
+                    }
+                })
+                .catch((err) => {});
         }
     }
 };

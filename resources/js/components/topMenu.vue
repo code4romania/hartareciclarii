@@ -107,10 +107,12 @@
 	</login-modal>
 
     <add-point-modal
+        v-if="!resetPointModal"
 		:is-open="isAddPointModalOpen"
 		:user-info="userInfo"
 		:is-authenticated="isAuthenticated"
 		@close="isAddPointModalOpen=false"
+		@reset="resetAddPointModal()"
 	>
 	</add-point-modal>
 	<!--
@@ -168,7 +170,8 @@ export default
 		return {
 			isLoginModalOpen: false,
 			isAddPointModalOpen: false,
-			active: false
+			active: false,
+            resetPointModal: false
 		};
 	},
 	computed: {
@@ -179,6 +182,12 @@ export default
 	},
 	methods:
 	{
+        resetAddPointModal() {
+            this.resetPointModal = true;
+            setTimeout(() => {
+                this.resetPointModal = false;
+            }, 100);
+        },
 		goToDictionary()
 		{
 			location.href = 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all';
