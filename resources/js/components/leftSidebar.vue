@@ -309,7 +309,6 @@ export default {
                     this.materialTypesFilters.push(filterToAppend);
                 }
             }
-			this.collectedFilters.material_type_id = this.materialTypesFilters;
         },
         serviceFilterChanged(filterId) {
             if (filterId === this.searchParamsForFilters.service_id) {

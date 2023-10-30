@@ -677,16 +677,31 @@ class MapPoint extends Model
      *
      * @return Collection
      */
-    public static function getFilteredMapPoints(array $filters): Collection
+    public static function getFilteredMapPoints(array $filters, array $bounds): Collection
     {
+		if (empty($bounds))
+		{
+			return collect([]);
+		}
+		
+		$polygon = [
+			$bounds['northEast']['lat'].' '.$bounds['northEast']['lng'],
+			$bounds['northWest']['lat'].' '.$bounds['northWest']['lng'],
+			$bounds['southWest']['lat'].' '.$bounds['southWest']['lng'],
+			$bounds['southEast']['lat'].' '.$bounds['southEast']['lng'],
+			$bounds['northEast']['lat'].' '.$bounds['northEast']['lng'],
+		];
+		$boundarySearch = "ST_WITHIN(POINT(recycling_points.lat, recycling_points.lon), ST_GEOMETRYFROMTEXT('POLYGON((".implode(", ", $polygon)."))')) AS in_bounds";
         $sql = self::
             select(
                 'recycling_points.id',
                 'recycling_points.lat',
                 'recycling_points.lon',
                 'recycling_points.location',
-            )
-                ->where('status', 1);
+				\DB::raw($boundarySearch)
+			)
+			->having('in_bounds', '=', 1)
+			->where('status', 1);
 
         if (!empty($filters))
         {

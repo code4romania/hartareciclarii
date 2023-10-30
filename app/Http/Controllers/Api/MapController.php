@@ -19,10 +19,11 @@ class MapController extends Controller
 	public function points(Request $request)
 	{
 		$filters = $request->get('filters', []);
+		$bounds = $request->get('bounds', []);
 		return response()
 			->json(
 			[
-				'points' => MapPoint::getFilteredMapPoints($filters)
+				'points' => MapPoint::getFilteredMapPoints($filters, $bounds)
 			]);
 	}
 	
