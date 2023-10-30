@@ -62,12 +62,20 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                 Section::make('Location')
                     ->description('Update map point location')
                     ->schema([
-                        TextInput::make('county')->required()->default($this->getRecord()->county)->disabled(),
-                        TextInput::make('city')->required()->default($this->getRecord()->city)->disabled(),
-                        TextInput::make('address')->required()->default($this->getRecord()->address),
+                        TextInput::make('county')
+							->required()
+							->default($this->getRecord()->county)->disabled(),
+                        TextInput::make('city')
+							->required()
+							->default($this->getRecord()->city)->disabled(),
+                        TextInput::make('address')
+							->required()
+							->default($this->getRecord()->address),
                         // TextInput::make('lat')->required()->default($this->getRecord()->lat),
                         // TextInput::make('lon')->required()->default($this->getRecord()->lon),
-                        TextInput::make('location_notes')->required()->default($this->getRecord()->location_notes),
+                        TextInput::make('location_notes')
+							->required()
+							->default($this->getRecord()->location_notes),
 
                     ])
                     ->columns(2),
@@ -90,54 +98,53 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
             ->iconButton()
             ->form([
                 Select::make('type')
-                    ->label('Tip punct')
+					->label(__('map_points.point_type_alt'))
                     ->options(MapPointTypeModel::query()->pluck('display_name', 'id'))
                     ->default($this->getRecord()->type->id)
                     ->required(),
                 Select::make('materials')
-                    ->label('Materiale')
+					->label(__('map_points.materials'))
                     ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
                     ->default($this->getRecord()->materials->pluck('id')->toArray())
                     ->multiple()
                     ->required(),
-                TextInput::make('managed_by')->required()->default($this->getRecord()->managed_by),
-                TextInput::make('website')->required()->default($this->getRecord()->website),
-                TextInput::make('email')->required()->default($this->getRecord()->email)->email(),
-                TextInput::make('phone_no')->required()->default($this->getRecord()->phone_no),
+                TextInput::make('managed_by')
+					->required()
+					->default($this->getRecord()->managed_by),
+                TextInput::make('website')
+					->required()
+					->default($this->getRecord()->website),
+                TextInput::make('email')
+					->required()
+					->default($this->getRecord()->email)->email(),
+                TextInput::make('phone_no')
+					->required()
+					->default($this->getRecord()->phone_no),
                 Repeater::make('opening_hours')
                     ->schema([
                         Select::make('start_day')
                             ->label('Start day')
-                            ->options([
-                                'mon' => __('common.week_days.mon'),
-                                'tue' => __('common.week_days.tue'),
-                                'wed' => __('common.week_days.wed'),
-                                'thu' => __('common.week_days.thu'),
-                                'fri' => __('common.week_days.fri'),
-                                'sat' => __('common.week_days.sat'),
-                                'sun' => __('common.week_days.sun'),
-                            ])
+							->options(__('common.week_days'))
                             ->required(),
                         Select::make('end_day')
                             ->label('End day')
-                            ->options([
-                                'mon' => __('common.week_days.mon'),
-                                'tue' => __('common.week_days.tue'),
-                                'wed' => __('common.week_days.wed'),
-                                'thu' => __('common.week_days.thu'),
-                                'fri' => __('common.week_days.fri'),
-                                'sat' => __('common.week_days.sat'),
-                                'sun' => __('common.week_days.sun'),
-                            ])
+							->options(__('common.week_days'))
                             // ->default($this->getRecord()->materials->pluck('id')->toArray())
                             ->required(),
-                        TimePicker::make('start_hour')->seconds('false')->hoursStep(1)
+                        TimePicker::make('start_hour')
+							->seconds('false')
+							->hoursStep(1)
                             ->minutesStep(10),
-                        TimePicker::make('end_hour')->seconds('false')->hoursStep(1)
+                        TimePicker::make('end_hour')
+							->seconds('false')
+							->hoursStep(1)
                             ->minutesStep(10),
-                    ])->default($this->getRecord()->opening_hours)
+                    ])
+					->default($this->getRecord()->opening_hours)
                     ->columns(4),
-                TextInput::make('notes')->required()->default($this->getRecord()->notes),
+                TextInput::make('notes')
+					->required()
+					->default($this->getRecord()->notes),
                 Checkbox::make('offers_transport')->default($this->getRecord()->offers_transport),
                 Checkbox::make('offers_money')->default($this->getRecord()->offers_money),
             ])
@@ -153,13 +160,15 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
         if (auth()->user()->can('manage_map_points'))
         {
             $actions = array_merge($actions, [
-                Action::make('validate-point')->label(__('map_points.buttons.change_status'))->icon('heroicon-m-check')
+                Action::make('validate-point')
+					->label(__('map_points.buttons.change_status'))
+					->icon('heroicon-m-check')
                     ->action(function (array $data, Collection $records): void
                     {
                         $this->record->changeStatus();
 
                         Notification::make()
-                            ->title('Point saved successfully')
+                            ->title(__('map_points.point_save_success'))
                             ->success()
                             ->send();
                     })
@@ -168,7 +177,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                     ->label(__('map_points.buttons.set_group'))
                     ->form([
                         Select::make('group_id')
-                            ->label('Group')
+							->label(__('map_points.buttons.group'))
                             ->options(MapPointGroupModel::query()->pluck('name', 'id'))
                             ->required(),
                     ])
@@ -177,7 +186,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                         $this->record->changeGroup($data['group_id']);
 
                         Notification::make()
-                            ->title('Point saved successfully')
+                            ->title(__('map_points.point_save_success'))
                             ->success()
                             ->send();
                     })
@@ -229,32 +238,42 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
         return $table
             ->query(ActionLogModel::whereModel(\get_class($this->getRecord()))->whereModelId($this->getRecord()->id)->orderBy('created_at', 'desc'))
             ->columns([
-                TextColumn::make('user_id')->formatStateUsing(function (string $state, $record)
-                {
-                    if ($record->user_id > 0)
-                    {
-                        $user = UserModel::find($record->user_id);
-                    }
-                    else
-                    {
-                        $user = new UserModel();
-                        $user->name = 'System';
-                    }
-
-                    return "[{$record->user_id}] {$user->name}";
-                })->html(),
-                TextColumn::make('action')->formatStateUsing(function (string $state, $record)
-                {
-                    return trans('actions.' . $record->action);
-                })->html(),
-                TextColumn::make('old_values')->formatStateUsing(function (string $state, $record)
-                {
-                    return ActionLogModel::formatValuesText($record, 'old_values');
-                })->wrap()->html(),
-                TextColumn::make('new_values')->formatStateUsing(function (string $state, $record)
-                {
-                    return ActionLogModel::formatValuesText($record, 'new_values');
-                })->wrap()->html(),
+                TextColumn::make('user_id')
+					->formatStateUsing(function (string $state, $record)
+					{
+						if ($record->user_id > 0)
+						{
+							$user = UserModel::find($record->user_id);
+						}
+						else
+						{
+							$user = new UserModel();
+							$user->name = 'System';
+						}
+	
+						return "[{$record->user_id}] {$user->name}";
+					})
+					->html(),
+                TextColumn::make('action')
+					->formatStateUsing(function (string $state, $record)
+					{
+						return trans('actions.' . $record->action);
+					})
+					->html(),
+                TextColumn::make('old_values')
+					->formatStateUsing(function (string $state, $record)
+					{
+						return ActionLogModel::formatValuesText($record, 'old_values');
+					})
+					->wrap()
+					->html(),
+                TextColumn::make('new_values')
+					->formatStateUsing(function (string $state, $record)
+					{
+						return ActionLogModel::formatValuesText($record, 'new_values');
+					})
+					->wrap()
+					->html(),
                 TextColumn::make('created_at'),
 
             ]);

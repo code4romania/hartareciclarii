@@ -33,57 +33,79 @@ class ImportResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('file')->sortable()->searchable(),
-                TextColumn::make('createdBy.fullname')->sortable()->searchable(),
-                TextColumn::make('created_at')->sortable()->searchable(),
-                TextColumn::make('started_at')->sortable()->searchable(),
-                TextColumn::make('finished_at')->sortable()->searchable(),
-                TextColumn::make('processed')->sortable()->searchable()->getStateUsing(
-                    static function ($record): string
-                    {
-                        try
-                        {
-                            return \count($record->result['processed']);
-                        }
-                        catch(\Exception  $e)
-                        {
-                            return 0;
-                        }
-                    }
-                )->html(),
-                TextColumn::make('failed')->sortable()->searchable()->getStateUsing(
-                    static function ($record): string
-                    {
-                        try
-                        {
-                            return \count($record->result['failed']);
-                        }
-                        catch(\Exception  $e)
-                        {
-                            return 0;
-                        }
-                    }
-                )->html(),
-                TextColumn::make('status')->sortable()->searchable()->formatStateUsing(function ($state, $record)
-                {
-                    if ($state == 2 && \count($record->result['errors']))
-                    {
-                        $errors = '';
-                        foreach ($record->result['errors'] as $err)
-                        {
-                            $errors .= __('import.' . $err);
-                        }
-
-                        return $errors;
-                    }
-
-                    return match ($state)
-                    {
-                        0 => 'Pending',
-                        1 => 'Processing',
-                        2 => '<a href="' . self::getUrl('view_report', ['record'=>$record->id]) . '">View report</a>',
-                    };
-                })->html(),
+                TextColumn::make('file')
+					->sortable()
+					->searchable(),
+                TextColumn::make('createdBy.fullname')
+					->sortable()
+					->searchable(),
+                TextColumn::make('created_at')
+					->sortable()
+					->searchable(),
+                TextColumn::make('started_at')
+					->sortable()
+					->searchable(),
+                TextColumn::make('finished_at')
+					->sortable()
+					->searchable(),
+                TextColumn::make('processed')
+					->sortable()
+					->searchable()
+					->getStateUsing(
+						static function ($record): string
+						{
+							try
+							{
+								return \count($record->result['processed']);
+							}
+							catch(\Exception  $e)
+							{
+								return 0;
+							}
+						}
+                	)
+					->html(),
+                TextColumn::make('failed')
+					->sortable()
+					->searchable()
+					->getStateUsing(
+						static function ($record): string
+						{
+							try
+							{
+								return \count($record->result['failed']);
+							}
+							catch(\Exception  $e)
+							{
+								return 0;
+							}
+						}
+					)
+					->html(),
+                TextColumn::make('status')
+					->sortable()
+					->searchable()
+					->formatStateUsing(function ($state, $record)
+					{
+						if ($state == 2 && \count($record->result['errors']))
+						{
+							$errors = '';
+							foreach ($record->result['errors'] as $err)
+							{
+								$errors .= __('import.' . $err);
+							}
+	
+							return $errors;
+						}
+	
+						return match ($state)
+						{
+							0 => __('import.status.pending'),
+							1 => __('import.status.processing'),
+							2 => '<a href="' . self::getUrl('view_report', ['record'=>$record->id]) . '">' . __('import.status.view') . '</a>',
+						};
+					})
+					->html(),
             ])
             ->filters([
                 //

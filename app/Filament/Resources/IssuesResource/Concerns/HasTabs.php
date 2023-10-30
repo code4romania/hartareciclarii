@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\IssuesResource\Pages\Concerns;
+namespace App\Filament\Resources\IssuesResource\Concerns;
 
 use App\Concerns\TabbedLayout;
 // use App\Filament\Resources\ReportsResource\Pages\GenerateReport;

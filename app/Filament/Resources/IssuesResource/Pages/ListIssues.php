@@ -14,9 +14,9 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
-class ListIssues extends Page implements WithTabs, HasForms, HasTable, HasActions
+class ListIssues extends Page implements HasForms, HasTable, HasActions
 {
-    use Concerns\HasTabs;
+    //use Concerns\HasTabs;
 
     use InteractsWithFormActions;
 
@@ -50,7 +50,10 @@ class ListIssues extends Page implements WithTabs, HasForms, HasTable, HasAction
             )
             ->paginated(false)
             ->columns($this->getTableColumns())
-            ->view('filament.resources.reports-resource.pages.view', ['data'=>$this->data, 'header'=>$this->getTableColumns()]);
+            ->view('filament.resources.reports-resource.pages.view', [
+				'data'=>$this->data,
+				'header'=>$this->getTableColumns()
+			]);
         // ->view('filament-tables::index');
     }
 }

@@ -37,7 +37,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
 
     public function getSubHeading(): string | Htmlable
     {
-        return 'Import initiat de ' . $this->getRecord()->createdBy->fullname . ' la ' . $this->getRecord()->created_at . ' finalizat la ' . $this->getRecord()->finished_at;
+		return sprintf(__('imports.sub_heading'), $this->getRecord()->createdBy->fullname, $this->getRecord()->created_at, $this->getRecord()->finished_at);
     }
 
     protected function getHeaderActions(): array
@@ -47,14 +47,18 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
         $failed = (isset($record->result['failed'])) ? \count($record->result['failed']) : 0;
         $processed = (isset($record->result['processed'])) ? \count($record->result['processed']) : 0;
         $actions = array_merge($actions, [
-            Action::make('failed')->label('Neimportate (' . $failed . ')')->icon('heroicon-m-check')
+            Action::make('failed')
+				->label(sprintf(__('imports.not_imported'), $failed))
+				->icon('heroicon-m-check')
                 ->hidden(function () use ($failed)
                 {
                     return $this->view_type == 'failed' || $failed == 0;
                 })
                 ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record'=>$record->id]) . '?show=failed')
                 ->color('danger'),
-            Action::make('processed')->label('Importate (' . $processed . ')')->icon('heroicon-m-check')
+            Action::make('processed')
+				->label(sprintf(__('imports.imported'), $processed))
+				->icon('heroicon-m-check')
                 ->hidden(function () use ($processed)
                 {
                     return $this->view_type == 'processed' || $processed == 0;
@@ -69,7 +73,8 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
     protected function getPostFormSchema(): array
     {
         return [
-            TextInput::make('title')->required(),
+            TextInput::make('title')
+				->required(),
         ];
     }
 
@@ -87,7 +92,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
     {
         $record = $this->getRecord();
 
-        $title = 'Import Report #' . $this->getRecord()->id;
+        $title = __('imports.import_record_label'). $this->getRecord()->id;
 
         return new HtmlString($title);
     }
@@ -111,13 +116,27 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
             ->query(MapPointModel::query()->whereIn('id', array_values($this->data)))
             ->columns([
 
-                TextColumn::make('id')->label(__('map_points.id'))->formatStateUsing(function ($state)
-                {
-                    return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
-                })->sortable()->searchable()->html(),
-                TextColumn::make('type.display_name')->label(__('map_points.point_type'))->searchable(),
-                TextColumn::make('managed_by')->label(__('map_points.managed_by'))->sortable()->searchable()->wrap(),
-                TextColumn::make('materials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
+                TextColumn::make('id')
+					->label(__('map_points.id'))
+					->formatStateUsing(function ($state)
+					{
+						return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
+					})
+					->sortable()
+					->searchable()
+					->html(),
+                TextColumn::make('type.display_name')
+					->label(__('map_points.point_type'))
+					->searchable(),
+                TextColumn::make('managed_by')
+					->label(__('map_points.managed_by'))
+					->sortable()
+					->searchable()
+					->wrap(),
+                TextColumn::make('materials.getParent.icon')
+					->label(__('map_points.materials'))
+					->sortable()
+					->searchable()
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
@@ -129,11 +148,26 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                         $state = rtrim($state) . '</div>';
 
                         return $state;
-                    })->html(),
-                TextColumn::make('county')->label(__('map_points.county'))->sortable()->searchable(),
-                TextColumn::make('city')->label(__('map_points.city'))->sortable()->searchable(),
-                TextColumn::make('address')->label(__('map_points.address'))->sortable()->searchable()->wrap(),
-                TextColumn::make('group.name')->label(__('map_points.group'))->sortable()->searchable()->wrap(),
+                    })
+					->html(),
+                TextColumn::make('county')
+					->label(__('map_points.county'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('city')
+					->label(__('map_points.city'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('address')
+					->label(__('map_points.address'))
+					->sortable()
+					->searchable()
+					->wrap(),
+                TextColumn::make('group.name')
+					->label(__('map_points.group'))
+					->sortable()
+					->searchable()
+					->wrap(),
 
                 BadgeColumn::make('status')
                     ->color(static function ($state, $record): string
