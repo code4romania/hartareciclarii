@@ -9,7 +9,11 @@ export default {
         './vendor/filament/**/*.blade.php',
         "./resources/js/**/*.{vue,js,ts,jsx,tsx}",
     ],
+    plugins: [
+        require('@tailwindcss/forms'),
+    ],
     corePlugins: {
+
       //  visibility: false,
     }
 }

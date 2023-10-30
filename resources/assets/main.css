@@ -11,3 +11,7 @@
 {
     z-index: 1;
 }
+
+.required:after {
+    content:"*";
+}

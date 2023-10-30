@@ -409,7 +409,7 @@ export default {
                 for (const materialTypeFilterKey in this.materialTypesFilters) {
                     if (_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'children'], []).length) {
                         this.materialTypesFilters[materialTypeFilterKey].children = this.materialTypesFilters[materialTypeFilterKey].children
-                            .filter(item => item.name.includes(this.materialFilterLiveSearch))
+                            .filter(item => item.name.toLowerCase().includes(this.materialFilterLiveSearch))
                     }
                     if (!_.get(this, ['materialTypesFilters', materialTypeFilterKey, 'children'], []).length) {
                         if (!this.materialTypesFilters[materialTypeFilterKey].name.includes(this.materialFilterLiveSearch)) {
