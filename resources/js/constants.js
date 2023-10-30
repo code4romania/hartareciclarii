@@ -2,7 +2,8 @@ export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
-	NOMINATIM_URL: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
+	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
+	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
 	DEFAULT_LOCATION:{
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266
@@ -31,7 +32,10 @@ export const CONSTANTS =
             FILTERS:
             {
                 FILTERS: `/static/filters`
-            }
+            },
+            NOMENCLATURES: {
+                GET: `/map/nomenclatures`
+            },
         },
         MAP:
         {
@@ -95,6 +99,42 @@ export const CONSTANTS =
 			REGISTER_LABEL_LINK: `Crează-ți unul acum`,
 			ERROR: `Email sau parolă invalide!`,
 		},
+        ADD_POINT: {
+            TITLE: `Adauga un nou punct pe harta`,
+            NEXT_STEP: `Urmatorul pas`,
+            CANCEL: `Renunta`,
+            FIRST_STEP: {
+                SUBTITLE: `Pasul 1/3 - Tip si locatie`,
+                EXACT_ADDRESS_LABEL: `Adresa exacta`,
+                EXACT_ADDRESS_PLACEHOLDER: `Introdu adresa exacta a punctului`,
+                ADJUST_POINT_ON_MAP: `Ajusteaza punctul pe harta`,
+                SERVICE_TYPE_REQUIRED: `Tip serviciu este obligatoriu!`,
+                ADDRESS_REQUIRED: `Adresa este obligatorie!`,
+                POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`
+            },
+            SECOND_STEP: {
+                SUBTITLE: `Pasul 2/3 - Tip si locatie`,
+                POINT_TYPE: `Tip punct`,
+                POINT_TYPE_REQUIRED: `Tip punct este obligatoriu!`,
+                COLLECTED_MATERIALS: `Materiale colectate`,
+                COLLECTED_MATERIALS_REQUIRED: `Materiale colectate este obligatoriu!`,
+                ADMINISTRATION: `Administrat de`,
+                ADMINISTRATION_PLACEHOLDER: `Institutia care administreaza punctul`,
+                UNKNOWN_ADMINISTRATION: `Nu stiu`,
+                PROGRAM: `Orar`,
+                PROGRAM_PLACEHOLDER: `Zilele si intervalul orar de funtionare`,
+                UNKNOWN_PROGRAM: `Nu stiu`,
+                OFFERS_MONEY: `Ofera bani?`,
+                OFFERS_SHIP: `Ofera transport?`,
+                OBSERVATIONS: `Observatii`,
+                OBSERVATIONS_PLACEHOLDER: `Alte detalii despre locatie sau despre modul de oferire al serviciului`,
+                ADD_PICTURE: `Adauga poze`,
+                ADD_PICTURE_SUBTITLE: `Orice fel de poze sugestive sau utile pentru a identifica locatia sau punctul adaugat`,
+                WEBSITE: `Website`,
+                EMAIL: `Email`,
+                PHONE: `Phone`
+            }
+        },
 		API:
 		{
 			invalid_credentials: `Email sau parolă incorecte!`
