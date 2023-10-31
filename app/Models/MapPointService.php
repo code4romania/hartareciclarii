@@ -9,6 +9,7 @@
 
 namespace App\Models;
 
+use App\Models\MapPointToField as MapPointToFieldModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -29,5 +30,14 @@ class MapPointService extends Model
 		}
 		
 		return collect($extendedFilters);
+	}
+	
+	public function pointTypes()
+	{
+		return $this->hasMany(
+			MapPointType::class,
+			'service_id',
+			'id',
+		);
 	}
 }

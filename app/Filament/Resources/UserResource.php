@@ -32,8 +32,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Users')
-                    ->description('Create / update an admin user')
+                Section::make(__('users.label'))
+                    ->description(__('users.heading'))
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -61,9 +61,15 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('email')->sortable()->searchable(),
-                TextColumn::make('created_at')->sortable()->searchable(),
+                TextColumn::make('name')
+					->sortable()
+					->searchable(),
+                TextColumn::make('email')
+					->sortable()
+					->searchable(),
+                TextColumn::make('created_at')
+					->sortable()
+					->searchable(),
             ])
             ->filters([
                 //

@@ -36,7 +36,7 @@ class CreateImport extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'Adauga o lista de import de format .xlsx';
+		return __('imports.import_map_points_label');
     }
 
     protected function handleRecordCreation(array $data): Model

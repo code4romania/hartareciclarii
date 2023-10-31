@@ -29,8 +29,8 @@ class RecycleMaterialsResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Recycle materials')
-                    ->description('Create / update a recycle material')
+                Section::make(__('materials.label'))
+                    ->description(__('materials.heading'))
                     ->schema([
                         TextInput::make('name')->required()->unique(ignoreRecord: true),
                         Select::make('getParent')
@@ -54,10 +54,18 @@ class RecycleMaterialsResource extends Resource
             ->columns([
                 TextColumn::make('icon')
                     ->formatStateUsing(fn (string $state): string => __("<img src='{$state}'>"))->html(),
-                TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('order')->sortable()->searchable(),
-                TextColumn::make('getParent.name')->sortable()->searchable(),
-                TextColumn::make('created_at')->sortable()->searchable(),
+                TextColumn::make('name')
+					->sortable()
+					->searchable(),
+                TextColumn::make('order')
+					->sortable()
+					->searchable(),
+                TextColumn::make('getParent.name')
+					->sortable()
+					->searchable(),
+                TextColumn::make('created_at')
+					->sortable()
+					->searchable(),
             ])
             ->filters([
                 //

@@ -8,13 +8,13 @@
  */
 return [
     'week_days' => [
-        'mon' => 'Luni',
-        'tue' => 'Marti',
-        'wed' => 'Miercuri',
-        'thu' => 'Joi',
-        'fri' => 'Vineri',
-        'sat' => 'Sambata',
-        'sun' => 'Duminica',
+        'mon' => 'Monday',
+        'tue' => 'Tuesday',
+        'wed' => 'Wednesday',
+        'thu' => 'Thursday',
+        'fri' => 'Friday',
+        'sat' => 'Saturday',
+        'sun' => 'Sunday',
     ],
-    'closed' => 'Inchis',
+    'closed' => 'Closed',
 ];

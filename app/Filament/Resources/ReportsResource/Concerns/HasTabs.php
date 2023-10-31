@@ -13,7 +13,7 @@ namespace App\Filament\Resources\ReportsResource\Concerns;
 
 use App\Concerns\TabbedLayout;
 use App\Filament\Resources\ReportsResource\Pages\GenerateReport;
-use App\Filament\Resources\ReportsResource\Pages\ListReports;
+use App\Filament\Resources\ReportsResource\Pages\ListIssues;
 use App\Filament\Resources\ReportsResource\Pages\ViewReport;
 use Filament\Navigation\NavigationItem;
 

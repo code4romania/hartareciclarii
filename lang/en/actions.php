@@ -7,10 +7,10 @@
  * @Last Modified time: 2023-10-06 09:57:03
  */
 return [
-    'change_status' => '<strong>Schimbare status</strong>',
+    'change_status' => '<strong>Change status</strong>',
     'status'=>[
-        '1' => 'Verificat',
-        '0' => 'Necesita verificare',
+        '1' => 'Verified',
+        '0' => 'Need verification',
     ],
     'lat' => '<strong>Latitude</strong>',
     'lon' => '<strong>Longitude</strong>',
@@ -19,12 +19,12 @@ return [
     'website' => '<strong>Website</strong>',
     'email' => '<strong>Email</strong>',
     'notes' => '<strong>Notes</strong>',
-    'opening_hours' => '<strong>Orar</strong><',
-    'start_day' => '<strong>De </strong>',
-    'end_day' => '<strong>Pana </strong>',
-    'location_update' => '<strong>Update locatie</strong>',
-    'details_update' => '<strong>Update detalii</strong>',
-    'materials' => '<strong>Materiale</strong>',
-    'phone_no' => '<strong>Telefon</strong>',
+    'opening_hours' => '<strong>Schedule</strong><',
+    'start_day' => '<strong>From </strong>',
+    'end_day' => '<strong>Until </strong>',
+    'location_update' => '<strong>Update location</strong>',
+    'details_update' => '<strong>Update details</strong>',
+    'materials' => '<strong>Materials</strong>',
+    'phone_no' => '<strong>Phone no</strong>',
 
 ];

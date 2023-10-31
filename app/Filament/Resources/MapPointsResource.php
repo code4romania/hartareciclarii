@@ -50,52 +50,72 @@ class MapPointsResource extends Resource
     public static function getContentPreviewDescription($get)
     {
         return [
-            TextInput::make('type')->readOnly()->placeholder($get('type') ? MapPointTypeModel::find($get('type'))->display_name : $get('type')),
+            TextInput::make('type')
+				->readOnly()
+				->placeholder($get('type') ? MapPointTypeModel::find($get('type'))->display_name : $get('type')),
             Select::make('materials')
-                ->label('Materiale')
+                ->label(__('map_points.materials'))
                 ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
                 ->default($get('materials'))
                 ->multiple(),
-            TextInput::make('address')->label('Address')->readOnly()->default($get('address')),
-            TextInput::make('address_2')->label('Address')->readOnly()->default($get('map')),
-            TextInput::make('managed_by')->label('Managed by')->readOnly()->default($get('managed_by')),
-            TextInput::make('website')->label('Website')->readOnly()->default($get('website')),
-            TextInput::make('email')->label('Email')->readOnly()->default($get('email')),
-            TextInput::make('phone_no')->label('Phone no')->readOnly()->default($get('phone_no')),
+            TextInput::make('address')
+				->label(__('map_points.address'))
+				->readOnly()
+				->default($get('address')),
+            TextInput::make('address_2')
+				->label(__('map_points.address'))
+				->readOnly()
+				->default($get('map')),
+            TextInput::make('managed_by')
+				->label(__('map_points.managed_by'))
+				->readOnly()
+				->default($get('managed_by')),
+            TextInput::make('website')
+				->label(__('map_points.website'))
+				->readOnly()
+				->default($get('website')),
+            TextInput::make('email')
+				->label(__('map_points.email'))
+				->readOnly()
+				->default($get('email')),
+            TextInput::make('phone_no')
+				->label(__('map_points.phone_no'))
+				->readOnly()
+				->default($get('phone_no')),
             Repeater::make('opening_hours')
                 ->schema([
                     Select::make('start_day')
-                        ->label('Start day')
-                        ->options([
-                            'mon' => __('common.week_days.mon'),
-                            'tue' => __('common.week_days.tue'),
-                            'wed' => __('common.week_days.wed'),
-                            'thu' => __('common.week_days.thu'),
-                            'fri' => __('common.week_days.fri'),
-                            'sat' => __('common.week_days.sat'),
-                            'sun' => __('common.week_days.sun'),
-                        ]),
+						->label(__('map_points.start_day'))
+                        ->options(__('common.week_days')),
                     Select::make('end_day')
-                        ->label('End day')
-                        ->options([
-                            'mon' => __('common.week_days.mon'),
-                            'tue' => __('common.week_days.tue'),
-                            'wed' => __('common.week_days.wed'),
-                            'thu' => __('common.week_days.thu'),
-                            'fri' => __('common.week_days.fri'),
-                            'sat' => __('common.week_days.sat'),
-                            'sun' => __('common.week_days.sun'),
-                        ]),
+						->label(__('map_points.end_day'))
+						->options(__('common.week_days')),
                     // >pluck('id')->toArray())
-                    TimePicker::make('start_hour')->label('Opening time')->seconds('false')->hoursStep(1)
-                        ->minutesStep(10)->readOnly(),
-                    TimePicker::make('end_hour')->label('Closing time')->seconds('false')->hoursStep(1)
-                        ->minutesStep(10)->readOnly(),
-                ])->default($get('opening_hours'))
+                    TimePicker::make('start_hour')
+						->label(__('map_points.opening_time'))
+						->seconds('false')
+						->hoursStep(1)
+                        ->minutesStep(10)
+						->readOnly(),
+                    TimePicker::make('end_hour')
+						->label(__('map_points.closing_time'))
+						->seconds('false')
+						->hoursStep(1)
+                        ->minutesStep(10)
+						->readOnly(),
+                ])
+				->default($get('opening_hours'))
                 ->columns(4),
-            Textarea::make('notes')->label('Notes')->readOnly()->default($get('notes')),
-            Checkbox::make('offers_transport')->label('Offers transport')->default($get('notes')),
-            Checkbox::make('offers_money')->label('Offers money')->default($get('notes')),
+            Textarea::make('notes')
+				->label(__('map_points.notes'))
+				->readOnly()
+				->default($get('notes')),
+            Checkbox::make('offers_transport')
+				->label(__('map_points.offers_transport'))
+				->default($get('notes')),
+            Checkbox::make('offers_money')
+				->label(__('map_points.offers_money'))
+				->default($get('notes')),
 
         ];
     }
@@ -103,15 +123,21 @@ class MapPointsResource extends Resource
     public static function table(Table $table): Table
     {
         $actions = [
-            Tables\Actions\ViewAction::make()->label(__('map_points.buttons.details'))->icon('heroicon-m-eye'),
-            Tables\Actions\LinkAction::make('view-on-map')->label(__('map_points.buttons.view_on_map'))->icon('heroicon-m-map')
+            Tables\Actions\ViewAction::make()
+				->label(__('map_points.buttons.details'))
+				->icon('heroicon-m-eye'),
+            Tables\Actions\Action::make('view-on-map')
+				->label(__('map_points.buttons.view_on_map'))
+				->icon('heroicon-m-map')
                 ->url(fn (MapPointModel $record): string => route('map_points.map-view', $record)),
 
         ];
         if (auth()->user()->can('manage_map_points'))
         {
             $actions = array_merge($actions, [
-                Tables\Actions\LinkAction::make('validate-point')->label(__('map_points.buttons.validate'))->icon('heroicon-m-check')
+                Tables\Actions\Action::make('validate-point')
+					->label(__('map_points.buttons.validate'))
+					->icon('heroicon-m-check')
                     ->url(fn (MapPointModel $record): string => route('map-points.validate', $record))
                     ->requiresConfirmation()
                     ->visible(function ($record): bool
@@ -125,10 +151,22 @@ class MapPointsResource extends Resource
 
         return $table
             ->columns([
-                TextColumn::make('id')->label(__('map_points.id'))->sortable()->searchable(),
-                TextColumn::make('type.display_name')->label(__('map_points.point_type'))->searchable(),
-                TextColumn::make('managed_by')->label(__('map_points.managed_by'))->sortable()->searchable()->wrap(),
-                TextColumn::make('materials.getParent.icon')->label(__('map_points.materials'))->sortable()->searchable()
+                TextColumn::make('id')
+					->label(__('map_points.id'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('type.display_name')
+					->label(__('map_points.point_type'))
+					->searchable(),
+                TextColumn::make('managed_by')
+					->label(__('map_points.managed_by'))
+					->sortable()
+					->searchable()
+					->wrap(),
+                TextColumn::make('materials.getParent.icon')
+					->label(__('map_points.materials'))
+					->sortable()
+					->searchable()
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
@@ -140,11 +178,26 @@ class MapPointsResource extends Resource
                         $state = rtrim($state) . '</div>';
 
                         return $state;
-                    })->html(),
-                TextColumn::make('county')->label(__('map_points.county'))->sortable()->searchable(),
-                TextColumn::make('city')->label(__('map_points.city'))->sortable()->searchable(),
-                TextColumn::make('address')->label(__('map_points.address'))->sortable()->searchable()->wrap(),
-                TextColumn::make('getGroup.name')->label(__('map_points.group'))->sortable()->searchable()->wrap(),
+                    })
+					->html(),
+                TextColumn::make('county')
+					->label(__('map_points.county'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('city')
+					->label(__('map_points.city'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('address')
+					->label(__('map_points.address'))
+					->sortable()
+					->searchable()
+					->wrap(),
+                TextColumn::make('getGroup.name')
+					->label(__('map_points.group'))
+					->sortable()
+					->searchable()
+					->wrap(),
 
                 BadgeColumn::make('status')
                     ->color(static function ($state, $record): string

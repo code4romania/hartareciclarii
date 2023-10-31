@@ -1,10 +1,11 @@
 <template>
-	<left-sidebar>
-
-	</left-sidebar>
+	<left-sidebar
+        :has-results="hasResults"
+		@filtersChanged="setFilters($event)"
+    ></left-sidebar>
 
 	<div
-		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-72': open}"
+		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-96': open}"
 	>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
 		<main class="">
 			<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
@@ -46,7 +47,10 @@
 					ref="map"
 					:center="[latitude, longitude]"
 					:zoom="zoom"
-					@ready="init"
+					@ready="initMap"
+					@update:zoom="zoomEvent($event)"
+					@update:center="centerEvent($event)"
+					@update:bounds="boundsEvent($event)"
 					:use-global-leaflet="false"
 				>
 					<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
@@ -57,7 +61,7 @@
 						>
 							<l-icon
 								:icon-size="dynamicSize"
-								icon-url="/assets/images/logo.png" >
+								icon-url="/assets/images/pin.png" >
 							</l-icon>
 						</l-marker>
 					</template>
@@ -117,12 +121,15 @@ export default
 			longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
 			points: {},
 			icon: L.icon({
-				iconUrl: '/assets/images/punct_benzinarie.svg',
-				iconSize: [100, 37],
-				iconAnchor: [16, 37]
+				iconUrl: '/assets/images/pin.png',
+				iconSize: [48, 64],
+				iconAnchor: [48, 64]
 			}),
-			iconSize: 100,
-			hasApprovedLocation: false
+			iconSize: 48,
+			hasApprovedLocation: false,
+			hasResults: false,
+			filters: {},
+			bounds: {}
 
 		};
 	},
@@ -148,6 +155,7 @@ export default
 			const error = (err) =>
 			{
 				console.log(error)
+				this.getMapPoints();
 			};
 			navigator.geolocation.getCurrentPosition(success, error);
 		},
@@ -172,17 +180,97 @@ export default
 				this.isAuthenticated = false;
 			}
 		},
-		getMapPoints()
+		getMapPoints(filters = {})
 		{
 			axios
-				.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.INFO)
+				.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.INFO, {
+					params: {
+						bounds: this.bounds,
+						filters: this.filters,
+						lat: this.latitude,
+						lng: this.longitude
+					}
+				})
 				.then((response) =>
 				{
 					this.points = _.get(response, 'data.points', {});
+					console.log(this.points);
+					if (Object.keys(this.points).length > 0)
+					{
+						this.hasResults = true;
+					}
 				}).catch((err) =>
 			{
 				console.log(err);
 			});
+		},
+		initMap()
+		{
+			this.map = this.$refs.map.leafletObject;
+			this.bounds = {
+				northEast: {
+					lat: this.map.getBounds().getNorthEast().lat,
+					lng: this.map.getBounds().getNorthEast().lng,
+				},
+				northWest: {
+					lat: this.map.getBounds().getNorthWest().lat,
+					lng: this.map.getBounds().getNorthWest().lng,
+				},
+				southWest: {
+					lat: this.map.getBounds().getSouthWest().lat,
+					lng: this.map.getBounds().getSouthWest().lng,
+				},
+				southEast: {
+					lat: this.map.getBounds().getSouthEast().lat,
+					lng: this.map.getBounds().getSouthEast().lng,
+				},
+			};
+			this.getMapPoints();
+		},
+		setFilters(event)
+		{
+			if (Object.keys(event).length > 0)
+			{
+				this.filters = event;
+				this.getMapPoints();
+			}
+		},
+		zoomEvent(event)
+		{
+			if (event != this.zoom)
+			{
+				this.getMapPoints();
+			}
+
+			this.zoom = event;
+		},
+		centerEvent(event)
+		{
+			this.latitude = event.lat;
+			this.longitude = event.lng;
+
+			this.getMapPoints();
+		},
+		boundsEvent(event)
+		{
+			this.bounds = {
+				northEast: {
+					lat: event.getNorthEast().lat,
+					lng: event.getNorthEast().lng,
+				},
+				northWest: {
+					lat: event.getNorthWest().lat,
+					lng: event.getNorthWest().lng,
+				},
+				southWest: {
+					lat: event.getSouthWest().lat,
+					lng: event.getSouthWest().lng,
+				},
+				southEast: {
+					lat: event.getSouthEast().lat,
+					lng: event.getSouthEast().lng,
+				}
+			};
 		}
 	},
 	computed: {
@@ -192,7 +280,7 @@ export default
 		},
 		dynamicSize ()
 		{
-			return [this.iconSize, this.iconSize / 2.15];
+			return [this.iconSize, this.iconSize * 1.25];
 		}
 	},
 	mounted()
@@ -204,7 +292,6 @@ export default
 			this.getUserInfo();
 		});
 		this.getUserInfo();
-		this.getMapPoints();
 	}
 };
 </script>

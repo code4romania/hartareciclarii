@@ -29,11 +29,10 @@ class PermissionsResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Permissions')
-                    ->description('Create / update a permission')
+                Section::make(__('permissions.label'))
+                    ->description(__('permissions.heading'))
                     ->schema([
                         TextInput::make('name')->required()->unique(ignoreRecord: true),
-
                     ]),
 
             ]);
@@ -43,9 +42,15 @@ class PermissionsResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('guard_name')->sortable()->searchable(),
-                TextColumn::make('created_at')->sortable()->searchable(),
+                TextColumn::make('name')
+					->sortable()
+					->searchable(),
+                TextColumn::make('guard_name')
+					->sortable()
+					->searchable(),
+                TextColumn::make('created_at')
+					->sortable()
+					->searchable(),
             ])
             ->filters([
                 //
