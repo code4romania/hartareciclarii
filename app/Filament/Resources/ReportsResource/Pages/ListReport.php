@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-21 13:06:49
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-21 13:06:55
+ * @Last Modified time: 2023-10-31 09:01:26
  */
 
 namespace App\Filament\Resources\ReportsResource\Pages;
@@ -20,7 +20,7 @@ class ListReport extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // Actions\CreateAction::make(),
         ];
     }
 }

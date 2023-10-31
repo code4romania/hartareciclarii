@@ -16,11 +16,12 @@ use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use App\Models\Report;
+use Filament\Actions\Action;
 use Filament\Actions\Action as FormAction;
 use Filament\Actions\Contracts\HasActions;
+// use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Radio;
-// use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -37,6 +38,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
 class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasActions
@@ -70,6 +72,14 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
         $this->fillForm();
         $this->data['should_generate'] = false;
         $this->data['is_grouped'] = false;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('view_list')->label(__('report.action.view_list'))->url('/admin/reports'),
+
+        ];
     }
 
     protected function authorizeAccess(): void
@@ -385,7 +395,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 {
                     $report = new Report();
                     $report->form_data = $this->data;
-                    $report->results = $this->getEloquentQuery()->get();
+                    $report->results = $this->formatResults($this->getEloquentQuery()->get());
                     $report->title = $data['title'];
                     $report->save();
                     Notification::make()
@@ -431,5 +441,28 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
 				'header'=>$this->getTableColumns()
 			]);
         // ->view('filament-tables::index');
+    }
+
+    public function formatResults(Collection $items): Collection
+    {
+        $values = [];
+        $columns = [];
+        foreach ($this->getTableColumns() as $column)
+        {
+            $columns[] = $column->getLabel();
+        }
+        $returnArr['header'] = $columns;
+        foreach($columns as $column)
+        {
+            $record = $items->where('grouped_by', $column)->first();
+            $value = 0;
+            if($record):
+                $value = $record->total;
+            endif;
+            $values[] = $value;
+        }
+        $returnArr['results'] = $values;
+
+        return collect($returnArr);
     }
 }

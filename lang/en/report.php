@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-27 11:47:42
+ * @Last Modified time: 2023-10-31 09:00:50
  */
 return [
     'column' => [
@@ -24,10 +24,12 @@ return [
         'created_at' => 'Created',
     ],
     'action' => [
-        'generate'=> 'Generate report',
-        'reset'=>'Reset report',
-        'save_report' => 'Save report',
-        'export' => 'Export',
+        'generate'=> 'Genereaza raport',
+        'reset'=>'Reseteaza raportul',
+        'save_report' => 'Salveaza raportul',
+        'export' => 'Exporta',
+        'view_list' => 'Vezi lista',
+
     ],
     'section'=>[
         'generator' => 'Generate report',
