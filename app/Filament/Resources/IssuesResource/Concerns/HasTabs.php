@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-21 13:00:01
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-26 18:03:58
+ * @Last Modified time: 2023-10-31 09:07:35
  */
 
 declare(strict_types=1);
@@ -13,8 +13,6 @@ namespace App\Filament\Resources\IssuesResource\Pages\Concerns;
 
 use App\Concerns\TabbedLayout;
 // use App\Filament\Resources\ReportsResource\Pages\GenerateReport;
-// use App\Filament\Resources\ReportsResource\Pages\ListReports;
-// use App\Filament\Resources\ReportsResource\Pages\ViewReport;
 use Filament\Navigation\NavigationItem;
 
 trait HasTabs
