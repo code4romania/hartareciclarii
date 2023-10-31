@@ -29,7 +29,6 @@ return [
         'save_report' => 'Salveaza raportul',
         'export' => 'Exporta',
         'view_list' => 'Vezi lista',
-
     ],
     'section'=>[
         'generator' => 'Generate report',
