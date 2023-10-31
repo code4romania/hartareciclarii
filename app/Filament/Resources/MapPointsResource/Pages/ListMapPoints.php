@@ -15,7 +15,9 @@ class ListMapPoints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label(__('map_points.buttons.create'))->icon('heroicon-m-plus'),
+            Actions\CreateAction::make()
+				->label(__('map_points.buttons.create'))
+				->icon('heroicon-m-plus'),
         ];
     }
 

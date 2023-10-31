@@ -23,4 +23,21 @@ class StaticController extends Controller
 				'extended_filters' => MapPointService::getExtendedFilters((int) $service_id),
 			]);
 	}
+	
+	public function upload(Request $request)
+	{
+		$this->validate($request, [
+			'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
+		]);
+		$image_path = $request->file('image');
+		$file = \hash('sha256', $image_path->getClientOriginalName().time()).'.'.pathinfo($image_path->getClientOriginalName(), PATHINFO_EXTENSION);
+		
+		$image = $image_path->store('point_images');
+		
+		return response()
+			->json(
+				[
+					'image' => $image
+				]);
+	}
 }

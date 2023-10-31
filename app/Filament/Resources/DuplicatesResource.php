@@ -29,8 +29,6 @@ class DuplicatesResource extends Resource
 
     public static function table(Table $table): Table
     {
-        dd($table);
-
         return $table
             ->columns([
                 //
@@ -73,8 +71,13 @@ class DuplicatesResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('type.display_name')->label('Tip puncte')->sortable()->searchable(),
-                TextColumn::make('distance')->label('Distance puncte')->sortable(),
+                TextColumn::make('type.display_name')
+					->label(__('duplicates.type'))
+					->sortable()
+					->searchable(),
+                TextColumn::make('distance')
+					->label(__('duplicates.distance'))
+					->sortable(),
             ])
             ->filters([
                 //
@@ -93,12 +96,12 @@ class DuplicatesResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return 'Duplicate';
+        return __('duplicates.label');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return 'Duplicate';
+		return __('duplicates.label');
     }
 
     public static function getNavigationBadge(): ?string

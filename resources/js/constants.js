@@ -2,6 +2,8 @@ export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
+	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
+	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
 	DEFAULT_LOCATION:{
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266
@@ -30,7 +32,10 @@ export const CONSTANTS =
             FILTERS:
             {
                 FILTERS: `/static/filters`
-            }
+            },
+            NOMENCLATURES: {
+                GET: `/map/nomenclatures`
+            },
         },
         MAP:
         {
@@ -38,7 +43,7 @@ export const CONSTANTS =
             {
                 INFO: `/map/points`,
                 DETAILS: `/map/point/{id}`,
-                CREATE: `/map/point`,
+                CREATE: `/map/points`,
                 REPORT: `/report/problem/{id}`,
             }
         },
@@ -48,12 +53,19 @@ export const CONSTANTS =
         SIDEBAR:
         {
             SEARCH_POINT_LABEL: `Caută un punct`,
+            SEARCH_MATERIAL_LABEL: `Caută material`,
             SEARCH_POINT_PLACEHOLDER: `Exemplu căutare`,
             SERVICE_TYPE_LABEL: `Tip serviciu`,
+            MATERIAL_TYPE_LABEL: `Material colectat selectiv`,
+            COLLECTION_POINT_TYPE_LABEL: `Tip punct de colectare`,
             CLEAR_FILTERS_LABEL: `Șterge filtre`,
 			SEARCH: `Caută`,
 			FILTERS: `Filtre`,
 			FILTERS_TITLE: `FILTREAZĂ REZULTATELE`,
+            RESULTS: `Rezultate`,
+            NO_RESULTS_FOUND_FIRST_PART: `Nu a fost gasit niciun rezultat pentru`,
+            NO_RESULTS_FOUND_SECOND_PART: `Folositi un alt termen de cautare`,
+            SEE_ALL_POINTS: `Vezi toate punctele`
         },
 		TOP_MENU:
 		{
@@ -87,6 +99,61 @@ export const CONSTANTS =
 			REGISTER_LABEL_LINK: `Crează-ți unul acum`,
 			ERROR: `Email sau parolă invalide!`,
 		},
+        ADD_POINT: {
+            TITLE: `Adauga un nou punct pe harta`,
+            NEXT_STEP: `Urmatorul pas`,
+            FINISH_STEPS: `Adauga punct`,
+            CANCEL: `Renunta`,
+            BACK: `Inapoi`,
+            FIRST_STEP: {
+                SUBTITLE: `Pasul 1/3 - Tip si locatie`,
+                EXACT_ADDRESS_LABEL: `Adresa exacta`,
+                EXACT_ADDRESS_PLACEHOLDER: `Introdu adresa exacta a punctului`,
+                ADJUST_POINT_ON_MAP: `Ajusteaza punctul pe harta`,
+                SERVICE_TYPE_REQUIRED: `Tip serviciu este obligatoriu!`,
+                ADDRESS_REQUIRED: `Adresa este obligatorie!`,
+                POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`,
+                ADDRESS_NOT_FOUND: `Nu s-a putut gasi adresa!`
+            },
+            SECOND_STEP: {
+                SUBTITLE: `Pasul 2/3 - Detalii punct`,
+                POINT_TYPE: `Tip punct`,
+                POINT_TYPE_REQUIRED: `Tip punct este obligatoriu!`,
+                COLLECTED_MATERIALS: `Materiale colectate`,
+                COLLECTED_MATERIALS_REQUIRED: `Materiale colectate este obligatoriu!`,
+                ADMINISTRATION: `Administrat de`,
+                ADMINISTRATION_PLACEHOLDER: `Institutia care administreaza punctul`,
+                UNKNOWN_ADMINISTRATION: `Nu stiu`,
+                PROGRAM: `Orar`,
+                DAYS: `Zile`,
+                HOURS: `Ore`,
+                PROGRAM_PLACEHOLDER: `Zilele si intervalul orar de funtionare`,
+                UNKNOWN_PROGRAM: `Nu stiu`,
+                OFFERS_MONEY: `Ofera bani?`,
+                OFFERS_SHIP: `Ofera transport?`,
+                OBSERVATIONS: `Observatii`,
+                OBSERVATIONS_PLACEHOLDER: `Alte detalii despre locatie sau despre modul de oferire al serviciului`,
+                ADD_PICTURE: `Adauga poze`,
+                ADD_PICTURE_SUBTITLE: `Orice fel de poze sugestive sau utile pentru a identifica locatia sau punctul adaugat`,
+                WEBSITE: `Website`,
+                EMAIL: `Email`,
+                PHONE: `Phone`
+            },
+            THIRD_STEP: {
+                SUBTITLE: `Pasul 3/3 - Confirma informatiile`,
+                ADDRESS: `Adresa`,
+                PROGRAM: `Program`,
+                COLLECTED_MATERIALS: `Materiale colectate`,
+                OBSERVATIONS: `Observatii`,
+                OFFERS_SHIP: `Ofera transport`,
+                DOESNT_OFFERS_SHIP: `Nu ofera transport`,
+                OFFERS_MONEY: `Ofera bani`,
+                DOESNT_OFFERS_MONEY: `NU ofera bani`,
+                WEBSITE: `Website`,
+                EMAIL: `Email`,
+                PHONE: `Phone`
+            }
+        },
 		API:
 		{
 			invalid_credentials: `Email sau parolă incorecte!`

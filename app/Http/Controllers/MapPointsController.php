@@ -41,11 +41,6 @@ class MapPointsController extends Controller
         return redirect(\URL::previous());
     }
 
-    public function mapView($point_id)
-    {
-        dd(__METHOD__, $point_id);
-    }
-
     public function downloadXlsxExample()
     {
         $xls = ImportExportModel::downloadMapPointSample();

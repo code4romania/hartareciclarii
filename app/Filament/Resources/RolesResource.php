@@ -30,8 +30,8 @@ class RolesResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('User roles')
-                    ->description('Create / update a user role')
+                Section::make(__('permissions.role_label'))
+                    ->description(__('permissions.role_heading'))
                     ->schema([
                         TextInput::make('name')->required()->unique(ignoreRecord: true),
                         Select::make('permissions')

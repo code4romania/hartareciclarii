@@ -8,20 +8,20 @@
  */
 return [
     'column' => [
-        'service_type' => 'Tip serviciu',
-        'point_type' => 'Tip punct',
-        'materials' => 'Materiale (pentru CSID)',
-        'location' => 'Locatie',
-        'admin' => 'Administratori',
+        'service_type' => 'Service type',
+        'point_type' => 'Point type',
+        'materials' => 'Materials (fost CSID)',
+        'location' => 'Location',
+        'admin' => 'Administrators',
         'status' => 'Status',
-        'date_from' => 'Adaugat in perioada',
-        'fields' => 'Caracteristici',
-        'city' => 'Oras',
-        'county' => 'Judet',
-        'range_start' => 'Adaugat incepand cu',
-        'range_end'=> 'Adaugat sfarsind cu',
-        'title' => 'Titlu raport',
-        'created_at' => 'Creat',
+        'date_from' => 'Added in period',
+        'fields' => 'Options',
+        'city' => 'City',
+        'county' => 'County',
+        'range_start' => 'Added starting with',
+        'range_end'=> 'Added ending with',
+        'title' => 'Report title',
+        'created_at' => 'Created',
     ],
     'action' => [
         'generate'=> 'Genereaza raport',
@@ -31,12 +31,12 @@ return [
         'view_list' => 'Vezi lista',
     ],
     'section'=>[
-        'generator' => 'Genereaza raport',
+        'generator' => 'Generate report',
     ],
     'header'=>[
-        'list' => 'Lista rapoarte',
+        'list' => 'Reports list',
     ],
     'placeholder' => [
-        'select_one' => 'Selecteaza o optiune',
+        'select_one' => 'Select an option',
     ],
 ];

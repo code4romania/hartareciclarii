@@ -11,3 +11,12 @@
 {
     z-index: 1;
 }
+
+.required:after {
+    content:"*";
+}
+
+.inactiveMap {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}

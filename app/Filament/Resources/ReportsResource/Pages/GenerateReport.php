@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ReportsResource\Pages;
 
 use App\Contracts\Pages\WithTabs;
+use App\Enums\MapPointTypes;
 use App\Exports\ReportsExport;
 use App\Filament\Resources\ReportsResource;
 use App\Filament\Resources\ReportsResource\Concerns;
@@ -130,7 +131,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
     {
         return $form
             ->schema([
-                Section::make('Filtreaza datele dupa: ')
+                Section::make(__('report.section.filter_dates_by'))
                     ->schema([
                         Select::make('filters.service_type')
                             ->label(__('report.column.service_type'))
@@ -163,12 +164,14 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                         Select::make('filters.status')
                             ->label(__('report.column.status'))
                             ->placeholder(__('report.placeholder.select_one'))
-                            ->options([-1=>'Orice status', 0=>'Necesita verifcare', 1=>'Verificat'])
+                            ->options(__('report.column.status_options'))
                             ->multiple()
                             ->reactive()
                             ->preload(),
-                        DatePicker::make('filters.range.0')->label(__('report.column.range_start')),
-                        DatePicker::make('filters.range.1')->label(__('report.column.range_end')),
+                        DatePicker::make('filters.range.0')
+							->label(__('report.column.range_start')),
+                        DatePicker::make('filters.range.1')
+							->label(__('report.column.range_end')),
 
                         Select::make('filters.fields')
                             ->label(__('report.column.fields'))
@@ -176,7 +179,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                             ->options([0=>'Ce punem aici?']),
                     ])
                     ->columns(4),
-                Section::make('Grupeaza informatiile in tabel dupa: ')
+				Section::make(__('report.section.group_info_by'))
                     ->schema([
                         Radio::make('group')
                             ->options([
@@ -254,7 +257,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 case 'location':
                     $query->whereHas('fields', function ($q) use ($value)
                     {
-                        $q->where('field_type_id', 1);
+                        $q->where('field_type_id', MapPointTypes::City);
                         $q->whereIn('value', $value);
                     });
                     break;
@@ -306,7 +309,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 $query->join('field_type_recycling_point as fields', function ($join)
                 {
                     $join->on('fields.recycling_point_id', '=', 'recycling_points.id')
-                        ->where('fields.field_type_id', '1');
+                        ->where('fields.field_type_id', MapPointTypes::City);
                 });
                 $select[] = 'fields.value as city_id';
                 $select[] = 'fields.value as grouped_by';
@@ -317,7 +320,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 $query->join('field_type_recycling_point as county', function ($join)
                 {
                     $join->on('county.recycling_point_id', '=', 'recycling_points.id')
-                        ->where('county.field_type_id', '2');
+                        ->where('county.field_type_id', MapPointTypes::County);
                 });
                 $select[] = 'county.value as county_id';
                 $select[] = 'county.value as grouped_by';
@@ -355,7 +358,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 $header = RecycleMaterialModel::all()->pluck('name');
                 break;
             case 'city':
-                $header = MapPointToFieldModel::where('field_type_id', 1)->groupBy('value')->get()->pluck('value');
+                $header = MapPointToFieldModel::where('field_type_id', MapPointTypes::City)->groupBy('value')->get()->pluck('value');
                 break;
             case 'county':
                 $header = CountyModel::all()->pluck('name');
@@ -385,7 +388,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
             TableAction::make('save-report')->label(__('report.action.save_report'))->icon('heroicon-m-check')
                 ->form([
                     TextInput::make('title')
-                        ->label('Titlu raport')
+                        ->label(__('report.column.title'))
                         ->required(),
                 ])
                 ->action(function (array $data): void
@@ -396,7 +399,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                     $report->title = $data['title'];
                     $report->save();
                     Notification::make()
-                        ->title('Report saved')
+                        ->title(__('report.action.saved'))
                         ->success()
                         ->send();
                 })
@@ -404,10 +407,12 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 {
                     return $this->shouldGenerate;
                 }),
-            TableAction::make('export_report')->label(__('report.action.export'))->icon('heroicon-m-arrow-down-tray')
+            TableAction::make('export_report')
+				->label(__('report.action.export'))
+				->icon('heroicon-m-arrow-down-tray')
                 ->form([
                     TextInput::make('title')
-                        ->label('Titlu raport')
+                        ->label(__('report.column.title'))
                         ->required(),
                 ])
                 ->action(function (array $data)
@@ -431,7 +436,10 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
             )
             ->paginated(false)
             ->columns($this->getTableColumns())
-            ->view('filament.resources.reports-resource.pages.view', ['data'=>$this->data, 'header'=>$this->getTableColumns()]);
+            ->view('filament.resources.reports-resource.pages.view', [
+				'data'=>$this->data,
+				'header'=>$this->getTableColumns()
+			]);
         // ->view('filament-tables::index');
     }
 

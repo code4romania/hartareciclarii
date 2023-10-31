@@ -1,6 +1,10 @@
 <template>
 	<div class="hidden absolute top-0 end-0 px-4 py-6 z-50 gap-x-3 lg:flex">
-		<button type="button" class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black" v-on:click="addMapPoint()">
+		<button
+            type="button"
+            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
+            v-on:click="addMapPoint()"
+        >
 			<menu-add-point-icon></menu-add-point-icon>
 			{{CONSTANTS.LABELS.TOP_MENU.ADD_POINT}}
 		</button>
@@ -101,6 +105,16 @@
 	>
 
 	</login-modal>
+
+    <add-point-modal
+        v-if="!resetPointModal"
+		:is-open="isAddPointModalOpen"
+		:user-info="userInfo"
+		:is-authenticated="isAuthenticated"
+		@close="isAddPointModalOpen=false"
+		@reset="resetAddPointModal()"
+	>
+	</add-point-modal>
 	<!--
 	<add-map-point-modal>
 
@@ -113,6 +127,7 @@ import {CONSTANTS} from "@/constants.js";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon} from '@heroicons/vue/20/solid';
 import LoginModal from "./modals/loginModal.vue";
+import AddPointModal from "./modals/addPoint/generalModal.vue";
 import MenuDictionaryIcon from "./svg-icons/menuDictionaryIcon.vue";
 import MenuAddPointIcon from "./svg-icons/menuAddPointIcon.vue";
 import MenuFaqIcon from "./svg-icons/menuFaqIcon.vue";
@@ -130,6 +145,7 @@ export default
 		MenuAddPointIcon,
 		MenuDictionaryIcon,
 		LoginModal,
+        AddPointModal,
 		Menu,
 		MenuButton,
 		MenuItem,
@@ -153,7 +169,9 @@ export default
 	{
 		return {
 			isLoginModalOpen: false,
-			active: false
+			isAddPointModalOpen: false,
+			active: false,
+            resetPointModal: false
 		};
 	},
 	computed: {
@@ -164,6 +182,12 @@ export default
 	},
 	methods:
 	{
+        resetAddPointModal() {
+            this.resetPointModal = true;
+            setTimeout(() => {
+                this.resetPointModal = false;
+            }, 100);
+        },
 		goToDictionary()
 		{
 			location.href = 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all';
@@ -174,7 +198,7 @@ export default
 		},
 		addMapPoint()
 		{
-			this.isLoginModalOpen = true;
+			this.isAddPointModalOpen = true;
 		},
 		openLoginModal()
 		{

@@ -22,7 +22,9 @@ class ListDuplicates extends ListRecords
     // protected static string $view = 'filament.resources.duplicates.list';
     public function getTableQuery(): Builder
     {
-        return static::getModel()::query()->with('firstPoint.fields', 'secondPoint.fields', 'secondPoint.group', 'firstPoint.group', 'type');
+        return static::getModel()
+			::query()
+			->with('firstPoint.fields', 'secondPoint.fields', 'secondPoint.group', 'firstPoint.group', 'type');
     }
 
     protected function getHeaderActions(): array
@@ -37,10 +39,19 @@ class ListDuplicates extends ListRecords
         return $table
             ->columns([
                 Split::make([
-                    TextColumn::make('type.display_name')->label('Tip puncte')->sortable()->searchable(),
-                    TextColumn::make('distance')->label('Distance puncte')->sortable()->formatStateUsing(fn (string $state): string => __("{$state} m"))->html(),
+                    TextColumn::make('type.display_name')
+						->label(__('duplicates.type'))
+						->sortable()
+						->searchable(),
+                    TextColumn::make('distance')
+						->label(__('duplicates.distance'))
+						->sortable()
+						->formatStateUsing(fn (string $state): string => __("{$state} m"))
+						->html(),
                 ]),
-                Panel::make([])->collapsible()->view('filament.resources.duplicates.list'),
+                Panel::make([])
+					->collapsible()
+					->view('filament.resources.duplicates.list'),
             ])
             ->filters([
                 //
