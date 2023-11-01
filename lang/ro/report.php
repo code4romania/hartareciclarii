@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-27 11:47:42
+ * @Last Modified time: 2023-10-31 12:28:58
  */
 return [
     'column' => [
@@ -22,11 +22,24 @@ return [
         'range_end'=> 'Adaugat sfarsind cu',
         'title' => 'Titlu raport',
         'created_at' => 'Creat',
-		'status_options' => [
-			-1 => 'Orice status',
-			0 => 'Necesita verifcare',
-			1 => 'Verificat'
-		]
+        'status_options' => [
+            -1 => 'Orice status',
+            0 => 'Necesita verifcare',
+            1 => 'Verificat',
+        ],
+        'issues_options' => [
+            -1 => 'Orice status',
+
+        ],
+        'users_type' => [
+            -1 => 'Orice utilizator',
+            0 => 'Autentificat',
+            1 => 'Neautentificat',
+        ],
+        'county' => 'Judet',
+        'city' => 'Localitate',
+        'user_type' => 'Tip utilizator',
+        'issue_type' => 'Tip problema',
     ],
     'action' => [
         'generate'=> 'Genereaza raport',
@@ -37,13 +50,18 @@ return [
     ],
     'section'=>[
         'generator' => 'Genereaza raport',
-		'filter_dates_by' => 'Filtreaza datele dupa: ',
-		'group_info_by' => 'Grupeaza informatiile in tabel dupa: ',
+        'filter_dates_by' => 'Filtreaza datele dupa: ',
+        'group_info_by' => 'Grupeaza informatiile in tabel dupa: ',
+        'filter_date_range' => 'Perioada',
     ],
     'header'=>[
         'list' => 'Lista rapoarte',
     ],
     'placeholder' => [
         'select_one' => 'Selecteaza o optiune',
+    ],
+    'tabs' => [
+        'map_points' => 'Puncte',
+        'issues' => 'Probleme raportate',
     ],
 ];

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\MapPointsController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,6 +11,7 @@ use App\Http\Controllers\MapPointsController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+use App\Livewire\UsersReport;
 
 Route::get('/', function ()
 {
@@ -26,5 +26,7 @@ Route::prefix('admin')->group(function ()
         Route::get('validate-point/{point_id}', [MapPointsController::class, 'validatePoint'])->name('map-points.validate');
         Route::get('map-view/{point}', [MapPointsController::class, 'mapView'])->name('map_points.map-view');
         Route::get('download-xlsx-example', [MapPointsController::class, 'downloadXlsxExample'])->name('import.xlsx-example');
+        // dd(Route::get('reports/users', UsersReport::class)->name('reports-users'));
+        Route::get('users-reports', UsersReport::class)->name('reports-users');
     });
 });

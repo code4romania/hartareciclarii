@@ -4,6 +4,7 @@ namespace App\Filament\Resources\IssuesResource\Pages;
 
 use App\Contracts\Pages\WithTabs;
 use App\Filament\Resources\IssuesResource;
+use App\Filament\Resources\IssuesResource\Concerns;
 use App\Models\Issue as IssueModel;
 use Filament\Actions;
 use Filament\Actions\Contracts\HasActions;
@@ -14,9 +15,9 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
-class ListIssues extends Page implements HasForms, HasTable, HasActions
+class ListIssues extends Page implements WithTabs, HasForms, HasTable, HasActions
 {
-    //use Concerns\HasTabs;
+    use Concerns\HasTabs;
 
     use InteractsWithFormActions;
 
@@ -51,9 +52,9 @@ class ListIssues extends Page implements HasForms, HasTable, HasActions
             ->paginated(false)
             ->columns($this->getTableColumns())
             ->view('filament.resources.reports-resource.pages.view', [
-				'data'=>$this->data,
-				'header'=>$this->getTableColumns()
-			]);
+                'data'=>$this->data,
+                'header'=>$this->getTableColumns(),
+            ]);
         // ->view('filament-tables::index');
     }
 }

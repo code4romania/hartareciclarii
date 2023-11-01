@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-21 13:00:01
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-23 14:46:23
+ * @Last Modified time: 2023-10-31 14:40:07
  */
 
 declare(strict_types=1);
@@ -12,9 +12,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ReportsResource\Concerns;
 
 use App\Concerns\TabbedLayout;
-use App\Filament\Resources\ReportsResource\Pages\GenerateReport;
-use App\Filament\Resources\ReportsResource\Pages\ListIssues;
-use App\Filament\Resources\ReportsResource\Pages\ViewReport;
 use Filament\Navigation\NavigationItem;
 
 trait HasTabs
@@ -23,19 +20,26 @@ trait HasTabs
 
     public function getTabs(): array
     {
-        return [
-            // NavigationItem::make()
-            //     ->label(__('report.section.generator'))
-            //     // ->icon('icon-none')
-            //     ->url(static::getResource()::getUrl('index'))
-            //     ->isActiveWhen(fn (): bool => static::class === GenerateReport::class)
-            //     ->activeIcon('heroicon-s-home'),
+        $this->type = request()->get('type', 'map_points');
 
-            // NavigationItem::make()
-            //     ->label(__('report.section.list'))
-            //     // ->icon('icon-none')
-            //     ->url(static::getResource()::getUrl('saved'))
-            //     ->isActiveWhen(fn (): bool => \in_array(static::class, [ListReports::class, ViewReport::class])),
+        return [
+            NavigationItem::make()
+                ->label(__('report.tabs.map_points'))
+                // ->icon('icon-none')
+                ->url(static::getResource()::getUrl('index') . '?type=map_points')
+                ->isActiveWhen(fn (): bool => $this->type === 'map_points')
+                ->activeIcon('heroicon-s-home'),
+
+            NavigationItem::make()
+                ->label(__('report.tabs.issues'))
+                // ->icon('icon-none')
+                ->url(static::getResource()::getUrl('index') . '?type=issues')
+                ->isActiveWhen(fn (): bool => $this->type === 'issues'),
+            NavigationItem::make()
+                ->label(__('report.tabs.users'))
+                // ->icon('icon-none')
+                ->url(static::getResource()::getUrl('index') . '?type=users')
+                ->isActiveWhen(fn (): bool => $this->type === 'users'),
         ];
     }
 

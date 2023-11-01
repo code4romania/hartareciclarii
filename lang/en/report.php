@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-31 09:00:50
+ * @Last Modified time: 2023-10-31 11:53:02
  */
 return [
     'column' => [
@@ -22,6 +22,7 @@ return [
         'range_end'=> 'Added ending with',
         'title' => 'Report title',
         'created_at' => 'Created',
+
     ],
     'action' => [
         'generate'=> 'Genereaza raport',
@@ -32,6 +33,7 @@ return [
     ],
     'section'=>[
         'generator' => 'Generate report',
+        'filter_date_range' => 'Date range',
     ],
     'header'=>[
         'list' => 'Reports list',

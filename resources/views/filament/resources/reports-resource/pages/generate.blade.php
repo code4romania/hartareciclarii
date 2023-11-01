@@ -24,7 +24,6 @@
         @endforeach
 
     </x-filament::tabs>
-
     {{ $this->form }}
         <x-filament-actions::actions
 		        :actions="$this->getCachedFormActions()"
