@@ -577,9 +577,21 @@
                         @endphp
                         @foreach($headerLabels as $column)
 							@php
-								$record = $records->where('grouped_by',$column)->first();
+								$value = 0;
+								if(in_array($this->data['group'],['points_added','issues_added'])){
+									$max = explode("-",$column)[0];
+									if((int)$max==0){
+										$max = 99999999999999999999;
+										$min = 101;
+									}
+									$value = $records->where('total','<=',$max)->where('total','>=',$min)->count();
+									$record = null;
+								}else{
+									$record = $records->where('grouped_by',$column)->first();
+								}
+
 							@endphp
-							@php $value = 0 @endphp
+
 							@if($record)
 								@php $value = $record->total @endphp
 							@endif

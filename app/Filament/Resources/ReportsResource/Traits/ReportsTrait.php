@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-31 13:19:59
+ * @Last Modified time: 2023-11-01 09:07:37
  */
 
 namespace App\Filament\Resources\ReportsResource\Traits;
@@ -21,6 +21,8 @@ trait ReportsTrait
     use MapPointsReportTrait;
 
     use IssuesReportTrait;
+
+    use UsersReportTrait;
 
     public $isGrouped = false;
 

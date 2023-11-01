@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-31 12:28:58
+ * @Last Modified time: 2023-11-01 11:39:46
  */
 return [
     'column' => [
@@ -22,6 +22,7 @@ return [
         'range_end'=> 'Adaugat sfarsind cu',
         'title' => 'Titlu raport',
         'created_at' => 'Creat',
+        'range' => 'Perioada',
         'status_options' => [
             -1 => 'Orice status',
             0 => 'Necesita verifcare',
@@ -36,10 +37,21 @@ return [
             0 => 'Autentificat',
             1 => 'Neautentificat',
         ],
+        'activities_options' => [
+            -1 => 'Toate evenimentele',
+            0 => 'Adaugare punct',
+            1 => 'Raportare problema',
+        ],
         'county' => 'Judet',
         'city' => 'Localitate',
         'user_type' => 'Tip utilizator',
         'issue_type' => 'Tip problema',
+        'activity_type' => 'Tip contributie',
+        'issue_status' => 'Status problema',
+        'points_added' => 'Numar puncte adaugate',
+        'issues_added' => 'Numar probleme adaugate',
+        'over_100' => 'Peste 100',
+
     ],
     'action' => [
         'generate'=> 'Genereaza raport',
@@ -63,5 +75,10 @@ return [
     'tabs' => [
         'map_points' => 'Puncte',
         'issues' => 'Probleme raportate',
+        'users' => 'Activitate utilizatori',
+    ],
+    'labels' => [
+        'grouped_by' => 'Grupat: ',
+        'generated_at' => 'Generat la: ',
     ],
 ];
