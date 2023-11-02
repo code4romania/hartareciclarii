@@ -57,12 +57,10 @@
 					<template v-for="(point) of points">
 						<l-marker
 							:lat-lng="[point.lat, point.lon]"
-							@click="markerClicked(point.id)"
+							:ref="`marker_${point.id}`"
+							@click="markerClicked(point.id, point.lat, point.lon)"
+							:icon="getIcon(point.id)"
 						>
-							<l-icon
-								:icon-size="dynamicSize"
-								icon-url="/assets/images/pin.png" >
-							</l-icon>
 						</l-marker>
 					</template>
 
@@ -79,6 +77,11 @@
 			</div>
 		</main>
 	</div>
+	<point-details
+		v-if="pointId > 0"
+		:point_id="pointId"
+	>
+	</point-details>
 </template>
 
 <script>
@@ -94,11 +97,13 @@ import MobileFilterScopeIcon from "./svg-icons/mobileFilterScopeIcon.vue";
 import eventBus from "../eventBus.js";
 import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
+import PointDetails from "./pointDetails.vue";
 
 export default
 {
 	components:
 	{
+		PointDetails,
 		MobileFilterScopeIcon,
 		MobileFilterBurgerIcon,
 		MobileFilterSvgIcon,
@@ -120,24 +125,41 @@ export default
 			latitude: CONSTANTS.DEFAULT_LOCATION.LATITUDE,
 			longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
 			points: {},
-			icon: L.icon({
+			mapIcon: {
 				iconUrl: '/assets/images/pin.png',
 				iconSize: [48, 64],
-				iconAnchor: [48, 64]
-			}),
-			iconSize: 48,
+				iconAnchor: [48, 64],
+				popupAnchor: [-3, -76]
+			},
+			mapIconSelected: {
+				iconUrl: '/assets/images/pin_selected.png',
+				iconSize: [56, 75],
+				iconAnchor: [56, 75],
+				popupAnchor: [-3, -76]
+			},
+			overlayingIcons:{
+				colectare_separata_magazin: {
+					iconUrl: '/assets/images/colectare_separata_magazin.png',
+					iconSize: [48, 64],
+					iconAnchor: [48, 64],
+					popupAnchor: [-3, -76]
+				}
+			},
 			hasApprovedLocation: false,
 			hasResults: false,
 			filters: {},
-			bounds: {}
+			bounds: {},
+			pointId: 0,
 
 		};
 	},
 	methods:
 	{
-		markerClicked(id)
+		markerClicked(id, lat, lng)
 		{
-			console.log(`clicked on marker`, id);
+			this.latitude = lat;
+			this.longitude = lng;
+			this.pointId = id;
 		},
 		requestCurrentLocation()
 		{
@@ -271,6 +293,14 @@ export default
 					lng: event.getSouthEast().lng,
 				}
 			};
+		},
+		getIcon(point)
+		{
+			if (this.pointId === point)
+			{
+				return L.icon(this.mapIconSelected);
+			}
+			return L.icon(this.mapIcon);
 		}
 	},
 	computed: {
@@ -280,7 +310,7 @@ export default
 		},
 		dynamicSize ()
 		{
-			return [this.iconSize, this.iconSize * 1.25];
+			return [this.iconSize, this.iconSize * 1.33];
 		}
 	},
 	mounted()

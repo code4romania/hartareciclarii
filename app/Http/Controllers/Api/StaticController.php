@@ -27,11 +27,18 @@ class StaticController extends Controller
 	public function upload(Request $request)
 	{
 		$this->validate($request, [
-			'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
+			'images' => [
+				'required',
+				'array',
+				'max:10',
+			],
+			'images.*' => [
+				'required',
+				'image',
+				'max_size:4096',
+			],
 		]);
 		$image_path = $request->file('image');
-		$file = \hash('sha256', $image_path->getClientOriginalName().time()).'.'.pathinfo($image_path->getClientOriginalName(), PATHINFO_EXTENSION);
-		
 		$image = $image_path->store('point_images');
 		
 		return response()

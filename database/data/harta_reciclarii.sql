@@ -1064,24 +1064,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     UNIQUE KEY `users_hr_email_unique` (`email`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Data exporting was unselected.
 
--- Dumping structure for table harta_reciclarii.users_facebook
-DROP TABLE IF EXISTS `users_facebook`;
-CREATE TABLE IF NOT EXISTS `users_facebook` (
-                                                `id` int unsigned NOT NULL AUTO_INCREMENT,
-                                                `user_hr_id` int NOT NULL,
-                                                `fbid` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-    `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    `created_at` timestamp NULL DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `users_facebook_email_unique` (`email`),
-    KEY `users_facebook_user_hr_id_index` (`user_hr_id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Data exporting was unselected.
 
 -- Dumping structure for view harta_reciclarii.judete_geo_point_count
 -- Removing temporary table and create final VIEW structure
