@@ -1,45 +1,46 @@
 <template>
 	<div class="absolute bg-white border border-black z-50 top-5 left-10 p-6 w-96">
 		<div class="flex justify-between items-center mb-3.5">
-			<h2 class="font-bold text-2xl">Container Stradal</h2>
+			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M1 13L13 1M1 1L13 13" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
 			</svg>
 		</div>
 
 		<p class="text-xs mb-3.5">
-			Colectare separată deșeuri - administrat de Primaria Targu Mures
+			<span v-if="null !== point.service">
+				{{point.service.display_name}}
+			</span>
+			<span v-if="null !== getField('managed_by')">
+				- {{getField('managed_by').value}}
+			</span>
 		</p>
 
 		<div class="flex items-center justify-between mb-6">
 			<span class="inline-flex items-center rounded-full bg-[#656565] px-4 py-1 text-xs font-medium text-white">Validat</span>
-			<button type="button" class="text-xs underline ">Raporteaza o problema</button>
+			<button type="button" class="text-xs underline" v-on:click="reportProblem();">Raporteaza o problema</button>
 		</div>
 
 		<h3 class="text-sm mb-2 flex items-center gap-x-2 font-semibold">
-			<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M7.99976 0.168457C6.52616 0.169967 5.11336 0.756004 4.07149 1.79792C3.02952 2.8399 2.44349 4.25272 2.44189 5.72619C2.44189 7.79659 3.85296 9.84499 5.48683 12.2165C6.24152 13.3112 7.02216 14.445 7.73323 15.6782V15.6782C7.76932 15.7408 7.82635 15.7887 7.89421 15.8134C7.96213 15.8381 8.03656 15.8381 8.10443 15.8134C8.17235 15.7887 8.22932 15.7408 8.26547 15.6782C8.97672 14.4449 9.7572 13.3121 10.5119 12.2165C12.1461 9.84424 13.5577 7.79611 13.5577 5.72624C13.5562 4.25264 12.9701 2.83984 11.9281 1.79798C10.8862 0.756002 9.47333 0.169976 7.99987 0.168509L7.99976 0.168457ZM10.0064 11.8677C9.33716 12.839 8.64789 13.8395 7.99976 14.9191C7.35153 13.8395 6.66229 12.8391 5.99309 11.8677C4.41749 9.58046 3.05669 7.60526 3.05669 5.72632C3.05669 4.41534 3.57752 3.15806 4.50456 2.23099C5.43159 1.30396 6.68896 0.783124 7.99989 0.783124C9.31083 0.783124 10.5682 1.30391 11.4952 2.23099C12.4222 3.15802 12.9431 4.41526 12.9431 5.72632C12.9431 7.60526 11.5822 9.58046 10.0067 11.8677H10.0064ZM7.99976 2.70499C7.19861 2.70499 6.43029 3.02322 5.86376 3.58972C5.29731 4.15618 4.97897 4.92452 4.97897 5.72559C4.97892 6.52674 5.29709 7.29506 5.86356 7.86159C6.43001 8.4281 7.19836 8.74643 7.99943 8.74654C8.80052 8.74664 9.56889 8.42847 10.1354 7.86206C10.702 7.29566 11.0204 6.52739 11.0205 5.72619C11.0198 4.9252 10.7013 4.15726 10.1349 3.59086C9.5686 3.02446 8.80064 2.7058 7.99971 2.70492L7.99976 2.70499ZM7.99976 8.13219C7.52377 8.13219 7.05845 7.99104 6.66269 7.72656C6.26691 7.46214 5.95848 7.0862 5.77633 6.64646C5.5942 6.20667 5.5466 5.72276 5.63951 5.25592C5.73242 4.7891 5.96169 4.3603 6.29831 4.02374C6.63492 3.68723 7.06383 3.45806 7.53071 3.36524C7.99759 3.27248 8.48144 3.32024 8.92124 3.50248C9.36097 3.68472 9.73681 3.99331 10.0011 4.38915C10.2655 4.78499 10.4065 5.25035 10.4064 5.72635C10.4057 6.36438 10.152 6.97604 9.70078 7.42702C9.24958 7.87811 8.6378 8.13171 7.99984 8.13218L7.99976 8.13219Z" fill="black"/>
-			</svg>
+			<point-details-location-icon></point-details-location-icon>
 			Adresa
 		</h3>
 		<div class="flex justify-between items-center mb-6">
-			<p class="text-xs">str. Petuniilor 23A, Targu Mures, Jud. Mures</p>
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<rect width="24" height="24" rx="4" fill="#656565"/>
-				<rect width="22" height="22" transform="translate(1 1)" fill="#656565"/>
-				<path fill-rule="evenodd" clip-rule="evenodd" d="M20.6682 12.704L12.7042 20.668C12.3742 20.998 11.8462 20.998 11.5162 20.668L3.55219 12.704C3.22219 12.374 3.22219 11.8459 3.55219 11.5159L11.5162 3.55194C11.8462 3.22194 12.3742 3.22194 12.7042 3.55194L20.6682 11.5159C20.9982 11.846 20.9982 12.374 20.6682 12.704ZM16.8402 10.944C16.6422 10.7459 14.2662 8.32596 14.1562 8.21596C14.0022 8.06199 13.8702 8.14993 13.8702 8.36993V10.3499H9.25017C8.37017 10.3499 8.37017 11.2299 8.37017 11.2299V14.7499H10.1302V12.5499C10.1302 12.1099 10.5702 12.1099 10.5702 12.1099H13.8702V14.0899C13.8702 14.3099 14.0241 14.376 14.1341 14.266C14.3102 14.0899 16.6861 11.692 16.8401 11.538C16.9721 11.384 16.9721 11.0761 16.8401 10.944L16.8402 10.944Z" fill="white"/>
-			</svg>
-		</div>
+			<p class="text-xs">{{getField('address').value}}</p>
+			<a v-on:click="goToMap()" class="cursor-pointer">
+				<point-details-address-icon></point-details-address-icon>
+			</a>
 
-		<h3 class="text-sm mb-2 flex items-center gap-x-2 font-semibold">
-			<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M4.57982 1.34962C4.4611 1.35003 4.34732 1.39743 4.26335 1.4814C4.17938 1.56536 4.13204 1.6791 4.13157 1.79787V2.26984H3.36429C2.51187 2.26984 1.81299 2.9722 1.81299 3.82459V15.0957C1.81299 15.9482 2.51184 16.6505 3.36429 16.6505H14.6354C15.4879 16.6505 16.1867 15.9481 16.1867 15.0957V3.82459C16.1867 2.97217 15.4879 2.26984 14.6354 2.26984H13.8717V1.79787C13.8712 1.67851 13.8233 1.5642 13.7386 1.48017C13.6539 1.39609 13.5393 1.34915 13.4199 1.34962C13.301 1.3498 13.1871 1.39708 13.1029 1.48111C13.0188 1.56507 12.9713 1.67893 12.9708 1.79786V2.26984H9.44984V1.79786C9.44937 1.67909 9.40203 1.56536 9.31806 1.48139C9.23409 1.39743 9.1203 1.35002 9.00159 1.34961C8.88224 1.34914 8.76762 1.39608 8.6829 1.48016C8.59817 1.56418 8.5503 1.6785 8.54983 1.79786V2.26983H5.02798V1.79786C5.02751 1.67909 4.98017 1.56536 4.89621 1.48139C4.81224 1.39742 4.69845 1.35002 4.57974 1.34961L4.57982 1.34962ZM3.36429 3.16987H4.13157V3.64185C4.1311 3.76114 4.1781 3.87582 4.26212 3.96054C4.3462 4.04526 4.46046 4.09313 4.57982 4.0936C4.69917 4.09313 4.81343 4.04526 4.89752 3.96054C4.98154 3.87581 5.02853 3.76114 5.02806 3.64185V3.16987H8.54991V3.64185C8.54945 3.76179 8.59691 3.87699 8.68169 3.96177C8.76654 4.04661 8.88173 4.09407 9.00167 4.0936C9.12103 4.09313 9.23528 4.04526 9.31937 3.96054C9.4034 3.87581 9.45039 3.76114 9.44992 3.64185V3.16987H12.9709V3.64185C12.9704 3.76132 13.0175 3.8761 13.1017 3.96083C13.186 4.04562 13.3005 4.09337 13.42 4.09361C13.5399 4.09408 13.6551 4.04662 13.74 3.96177C13.8248 3.87699 13.8722 3.76179 13.8718 3.64185V3.16988H14.6355C15.0049 3.16988 15.2868 3.45528 15.2868 3.82466V5.34956H2.71319V3.82466C2.71319 3.45528 2.99509 3.16988 3.36446 3.16988L3.36429 3.16987ZM2.71302 6.24952H15.2866V15.0958C15.2866 15.4651 15.0047 15.7497 14.6354 15.7497H3.3642C2.99483 15.7497 2.71293 15.4651 2.71293 15.0958L2.71302 6.24952ZM9.00162 7.09942C6.85422 7.09942 5.10192 8.85232 5.10192 11C5.10192 13.1477 6.85422 14.8997 9.00162 14.8997C11.149 14.8997 12.8979 13.1477 12.8979 11C12.8979 8.85232 11.149 7.09942 9.00162 7.09942ZM9.00162 8.00031C10.6624 8.00031 11.9979 9.33853 11.9979 11C11.9979 12.6615 10.6625 13.9988 9.00162 13.9988C7.34082 13.9988 6.00192 12.6615 6.00192 11C6.00192 9.33854 7.34079 8.00031 9.00162 8.00031ZM8.77574 8.99611C8.65638 8.99652 8.54213 9.04439 8.45804 9.12912C8.37401 9.21384 8.32702 9.32851 8.32749 9.44781V11.4079C8.32702 11.5272 8.37401 11.6418 8.45804 11.7265C8.54212 11.8113 8.65638 11.8591 8.77574 11.8596H10.1046C10.2246 11.8601 10.3398 11.8126 10.4246 11.7278C10.5094 11.6429 10.5569 11.5278 10.5564 11.4079C10.5559 11.2885 10.5081 11.1742 10.4233 11.0902C10.3386 11.0061 10.224 10.9591 10.1046 10.9596H9.22749V9.44776C9.22796 9.32782 9.1805 9.21268 9.09571 9.12784C9.01087 9.043 8.89568 8.9956 8.77574 8.99606L8.77574 8.99611Z" fill="black"/>
-			</svg>
-			Program
-		</h3>
-		<div class="flex justify-between items-center mb-6">
-			<p class="text-xs">Luni-Vineri, 08:00-16:00</p>
 		</div>
+		<template v-if="getField('opening_hours')">
+			<h3 class="text-sm mb-2 flex items-center gap-x-2 font-semibold">
+				<point-details-schedule-icon></point-details-schedule-icon>
+				Program
+			</h3>
+			<div class="flex justify-between items-center mb-6">
+				<p class="text-xs">Luni-Vineri, 08:00-16:00</p>
+			</div>
+		</template>
 
 		<h3 class="text-sm mb-2 flex items-center gap-x-2 font-semibold">
 			<svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -190,3 +191,58 @@
 
 	</div> <!-- -->
 </template>
+<script>
+import {CONSTANTS} from "../constants.js";
+import PointDetailsLocationIcon from "./svg-icons/pointDetailsLocationIcon.vue";
+import PointDetailsAddressIcon from "./svg-icons/pointDetailsAddressIcon.vue";
+import PointDetailsScheduleIcon from "./svg-icons/pointDetailsScheduleIcon.vue";
+
+export default
+{
+	props:
+	{
+		point:
+		{
+			type: Object,
+			required: true
+		}
+	},
+	components:
+	{
+		PointDetailsScheduleIcon,
+		PointDetailsAddressIcon,
+		PointDetailsLocationIcon
+	},
+	data ()
+	{
+		return {
+		};
+	},
+	methods:
+		{
+			getField(key)
+			{
+				for (let field of this.point.fields)
+				{
+					console.log(`field element`, field);
+					if ('field' in field && field.field.field_name == key)
+					{
+						return field;
+					}
+				}
+
+				return null;
+			},
+			goToMap()
+			{
+				window.location = 'https://www.google.com/maps?daddr='+this.point.lat+','+this.point.lon+'&amp;ll&zoom=18';
+			}
+		},
+	computed: {
+		CONSTANTS ()
+		{
+			return CONSTANTS
+		}
+	}
+};
+</script>

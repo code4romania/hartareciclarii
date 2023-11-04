@@ -9,6 +9,7 @@
 
 namespace App\Models;
 
+use App\Models\MapPointToField as MapPointToFieldModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -26,6 +27,15 @@ class MapPointToField extends Model
 
         return $item;
     }
+	
+	public function field()
+	{
+		return $this->hasOne(
+			MapPointField::class,
+			'id',
+			'field_type_id',
+		);
+	}
 
     public static function addValuesToPoint($fields): bool
     {

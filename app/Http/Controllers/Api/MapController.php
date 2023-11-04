@@ -44,4 +44,13 @@ class MapController extends Controller
 					'field_types' => MapPointField::all(),
 				]);
 	}
+	
+	public function point(int $id)
+	{
+		return response()
+			->json(
+				[
+					'point' => MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id),
+				]);
+	}
 }

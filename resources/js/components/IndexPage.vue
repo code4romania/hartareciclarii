@@ -54,15 +54,14 @@
 					:use-global-leaflet="false"
 				>
 					<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
-					<template v-for="(point) of points">
-						<l-marker
-							:lat-lng="[point.lat, point.lon]"
-							:ref="`marker_${point.id}`"
-							@click="markerClicked(point.id, point.lat, point.lon)"
-							:icon="getIcon(point.id)"
-						>
-						</l-marker>
-					</template>
+					<l-marker
+						v-for="(point) of points"
+						:lat-lng="[point.lat, point.lon]"
+						:ref="`marker_${point.id}`"
+						@click="markerClicked(point.id, $event)"
+						:icon="getIcon(point.id)"
+					>
+					</l-marker>
 
 				</l-map>
 			</div>
@@ -78,8 +77,8 @@
 		</main>
 	</div>
 	<point-details
-		v-if="pointId > 0"
-		:point_id="pointId"
+		v-if="Object.keys(selectedPoint).length > 0"
+		:point="selectedPoint"
 	>
 	</point-details>
 </template>
@@ -113,7 +112,8 @@ export default
 		LeftSidebar,
 		LMap,
 		LTileLayer,
-		LControlLayers
+		LControlLayers,
+
 	},
 	data ()
 	{
@@ -146,20 +146,35 @@ export default
 				}
 			},
 			hasApprovedLocation: false,
-			hasResults: false,
+			hasResults: true,
 			filters: {},
 			bounds: {},
-			pointId: 0,
+			selectedPoint: {}
 
 		};
 	},
 	methods:
 	{
-		markerClicked(id, lat, lng)
+		markerClicked(id, event)
 		{
-			this.latitude = lat;
-			this.longitude = lng;
-			this.pointId = id;
+			let url = _.replace(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.DETAILS, '{id}', id);
+			this.$nextTick(() => {
+
+				//this.zoom = 14;
+				this.$refs.map.leafletObject.panTo(L.latLng(event.latlng.lat, event.latlng.lng));
+
+			});
+
+			axios
+				.get(url)
+				.then((response) =>
+				{
+					this.selectedPoint = _.get(response, 'data.point', {});
+					console.log(`map point response`, response.data.point);
+				}).catch((err) =>
+				{
+					console.log(err);
+				});
 		},
 		requestCurrentLocation()
 		{
@@ -172,6 +187,10 @@ export default
 				this.longitude = longitude;
 
 				this.hasApprovedLocation = true;
+				this.$nextTick(() => {
+					this.initMap();
+				});
+
 			};
 
 			const error = (err) =>
@@ -216,7 +235,6 @@ export default
 				.then((response) =>
 				{
 					this.points = _.get(response, 'data.points', {});
-					console.log(this.points);
 					if (Object.keys(this.points).length > 0)
 					{
 						this.hasResults = true;
@@ -301,6 +319,23 @@ export default
 				return L.icon(this.mapIconSelected);
 			}
 			return L.icon(this.mapIcon);
+		},
+		addMapMarkers()
+		{
+			/*
+			let markers = L.markerClusterGroup({ chunkedLoading: true });
+
+			for (var i = 0; i < addressPoints.length; i++) {
+				var a = addressPoints[i];
+				var title = a[2];
+				var marker = L.marker(L.latLng(a[0], a[1]), { title: title });
+				marker.bindPopup(title);
+				markers.addLayer(marker);
+			}
+
+			map.addLayer(markers);
+
+			 */
 		}
 	},
 	computed: {
