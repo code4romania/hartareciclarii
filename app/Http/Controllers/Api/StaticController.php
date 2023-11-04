@@ -35,16 +35,19 @@ class StaticController extends Controller
 			'images.*' => [
 				'required',
 				'image',
-				'max_size:4096',
 			],
 		]);
-		$image_path = $request->file('image');
-		$image = $image_path->store('point_images');
+		$images =[];
+		foreach ($request->file('images') as $image)
+		{
+			$images[] = $image->store('point_images');
+		}
+		
 		
 		return response()
 			->json(
 				[
-					'image' => $image
+					'images' => $images
 				]);
 	}
 }
