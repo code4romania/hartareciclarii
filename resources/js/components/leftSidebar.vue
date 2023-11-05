@@ -87,6 +87,11 @@
 			</div>
 
             <span v-if="hasResults">
+				<div
+					class="px-4 pb-4 mb-3 border-b"
+				>
+                    {{totalPoints}} {{ CONSTANTS.LABELS.SIDEBAR.RESULTS }}
+                </div>
                 <div class="px-4 pb-4 mb-3 border-b">
                     <span class="font-medium text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.FILTERS_TITLE }}</span>
                 </div>
@@ -276,6 +281,11 @@ export default {
             required: false,
             default: true
         },
+		totalPoints: {
+			type: Number,
+			required: true,
+			default: 0
+		}
     },
 	data () {
 		return {

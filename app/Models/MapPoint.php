@@ -742,7 +742,7 @@
 					};
 				}
 			}
-			
+			$sql->limit(50);
 			return $sql->get();
 		}
 		

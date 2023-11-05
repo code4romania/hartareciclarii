@@ -1,6 +1,7 @@
 export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
+	APP_DOMAIN: `${import.meta.env.VITE_APP_URL}`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
 	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
 	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
@@ -68,6 +69,16 @@ export const CONSTANTS =
             NO_RESULTS_FOUND_SECOND_PART: `Folositi un alt termen de cautare`,
             SEE_ALL_POINTS: `Vezi toate punctele`
         },
+		DAYS_OF_WEEK:
+		{
+			monday: `Luni`,
+			tuesday: `Marți`,
+			wednesday: `Miercuri`,
+			thursday: `Joi`,
+			friday: `Vineri`,
+			saturday: `Sâmbătă`,
+			sunday: `Duminică`,
+		},
 		TOP_MENU:
 		{
 			ADD_POINT: `Adaugă un punct`,
@@ -162,6 +173,22 @@ export const CONSTANTS =
 		API:
 		{
 			invalid_credentials: `Email sau parolă incorecte!`
+		},
+		POINT_DETAILS:
+		{
+			CLOSED: `Închis`,
+			ADDRESS_LABEL: `Adresa`,
+			SCHEDULE_LABEL: `Program`,
+			REPORT_PROBLEM_LABEL: `Raporteazǎ o problemǎ`,
+			MATERIALS_LABEL: `Materiale colectate`,
+			NOTES_LABEL: `Observații`,
+			TRANSPORT_LABEL: `Oferǎ transport`,
+			MONEY_LABEL: `Oferǎ bani`,
+			WEBSITE_LABEL: `Website`,
+			PHONE_LABEL: `Telefon`,
+			SHARE_LABEL: `Distribuie`,
+			COPY_LABEL: `Copiază`,
+			LINK_COPIED: `URL-ul a fost copiat în clipboard!`,
 		},
     }
 };

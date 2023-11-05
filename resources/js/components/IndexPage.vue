@@ -1,6 +1,7 @@
 <template>
 	<left-sidebar
         :has-results="hasResults"
+		:total-points="totalPoints"
 		@filtersChanged="setFilters($event)"
     ></left-sidebar>
 
@@ -52,13 +53,15 @@
 					@update:center="centerEvent($event)"
 					@update:bounds="boundsEvent($event)"
 					:use-global-leaflet="false"
+					:marker-zoom-animation="true"
 				>
 					<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
 					<l-marker
 						v-for="(point) of points"
 						:lat-lng="[point.lat, point.lon]"
 						:ref="`marker_${point.id}`"
-						@click="markerClicked(point.id, $event)"
+						:name="`marker_${point.id}`"
+						@click="getPoint(point.id, $event)"
 						:icon="getIcon(point.id)"
 					>
 					</l-marker>
@@ -79,6 +82,7 @@
 	<point-details
 		v-if="Object.keys(selectedPoint).length > 0"
 		:point="selectedPoint"
+		@closePointDetails="closePointDetails($event)"
 	>
 	</point-details>
 </template>
@@ -146,6 +150,7 @@ export default
 			},
 			hasApprovedLocation: false,
 			hasResults: true,
+			totalPoints: 0,
 			filters: {},
 			bounds: {},
 			selectedPoint: {}
@@ -154,22 +159,15 @@ export default
 	},
 	methods:
 	{
-		markerClicked(id, event)
+		getPoint(id, event)
 		{
 			let url = _.replace(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.DETAILS, '{id}', id);
-			this.$nextTick(() => {
-
-				//this.zoom = 14;
-				this.$refs.map.leafletObject.panTo(L.latLng(event.latlng.lat, event.latlng.lng));
-
-			});
 
 			axios
 				.get(url)
 				.then((response) =>
 				{
 					this.selectedPoint = _.get(response, 'data.point', {});
-					//console.log(`map point response`, response.data.point);
 				}).catch((err) =>
 				{
 					console.log(err);
@@ -187,7 +185,7 @@ export default
 
 				this.hasApprovedLocation = true;
 				this.$nextTick(() => {
-					this.initMap();
+					this.initMap()
 				});
 
 			};
@@ -222,6 +220,7 @@ export default
 		},
 		getMapPoints(filters = {})
 		{
+			this.points = {};
 			axios
 				.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.INFO, {
 					params: {
@@ -237,7 +236,13 @@ export default
 					if (Object.keys(this.points).length > 0)
 					{
 						this.hasResults = true;
+						this.totalPoints = Object.keys(this.points).length;
 					}
+					else
+					{
+						this.totalPoints = 0;
+					}
+
 					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(this.points).length === 0)
 					{
 						this.hasResults = false;
@@ -289,17 +294,17 @@ export default
 		{
 			if (event != this.zoom)
 			{
-				this.getMapPoints();
+				//this.getMapPoints();
 			}
 
-			this.zoom = event;
+			//this.zoom = event;
 		},
 		centerEvent(event)
 		{
 			this.latitude = event.lat;
 			this.longitude = event.lng;
 
-			this.getMapPoints();
+			//this.getMapPoints();
 		},
 		boundsEvent(event)
 		{
@@ -321,6 +326,8 @@ export default
 					lng: event.getSouthEast().lng,
 				}
 			};
+
+			this.getMapPoints();
 		},
 		getIcon(point)
 		{
@@ -346,6 +353,10 @@ export default
 			map.addLayer(markers);
 
 			 */
+		},
+		closePointDetails()
+		{
+			this.selectedPoint = {};
 		}
 	},
 	computed: {
