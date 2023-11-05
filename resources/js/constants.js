@@ -36,6 +36,7 @@ export const CONSTANTS =
             NOMENCLATURES: {
                 GET: `/map/nomenclatures`
             },
+            IMAGE: `/static/image`
         },
         MAP:
         {
@@ -103,9 +104,12 @@ export const CONSTANTS =
             TITLE: `Adauga un nou punct pe harta`,
             NEXT_STEP: `Urmatorul pas`,
             FINISH_STEPS: `Adauga punct`,
+            SUCCESS_MESSAGE: `Punct adaugat cu succes. Un moderator Harta Reciclarii va valida informatia in cel mai scurt timp`,
             CANCEL: `Renunta`,
             BACK: `Inapoi`,
             FIRST_STEP: {
+                SERVICE_TYPE_PLACEHOLDER: `Selecteaza un tip de punct`,
+                PLACE_PIN: `Plaseaza pinul`,
                 SUBTITLE: `Pasul 1/3 - Tip si locatie`,
                 EXACT_ADDRESS_LABEL: `Adresa exacta`,
                 EXACT_ADDRESS_PLACEHOLDER: `Introdu adresa exacta a punctului`,
@@ -125,6 +129,7 @@ export const CONSTANTS =
                 ADMINISTRATION_PLACEHOLDER: `Institutia care administreaza punctul`,
                 UNKNOWN_ADMINISTRATION: `Nu stiu`,
                 PROGRAM: `Orar`,
+                CLOSED: `Inchis`,
                 DAYS: `Zile`,
                 HOURS: `Ore`,
                 PROGRAM_PLACEHOLDER: `Zilele si intervalul orar de funtionare`,

@@ -201,221 +201,11 @@
             </div>
 
             <span class="border-gray-300 text-neutral-900">{{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.PROGRAM }}</span>
-            <div class="mb-3 flex flex-row mt-3">
-                <Combobox
-                    :disabled="programUnknown"
-                    as="div"
-                    v-model="stepRequestBody.opening_hours.startDay"
-                >
-                    <ComboboxLabel
-                        class="block text-sm font-medium leading- text-gray-900"
-                    >
-                        {{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.DAYS }}
-                    </ComboboxLabel>
-                    <div class="relative mt-2">
-                        <ComboboxInput
-                            :display-value="day"
-                            class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="query = $event.target.value"
-                        />
-                        <ComboboxButton
-                            class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                            <ChevronUpDownIcon aria-hidden="true" class="h-5 w-5 text-gray-400"/>
-                        </ComboboxButton>
+            <program
+                @programChanged="stepRequestBody.program = $event"
+            ></program>
 
-                        <ComboboxOptions
-                            v-if="daysSelectValues.length > 0"
-                            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                        >
-                            <ComboboxOption
-                                v-for="day in daysSelectValues"
-                                :key="day"
-                                v-slot="{ active, selected }"
-                                :value="day"
-                                as="template"
-                            >
-                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
-                                    <span :class="['block truncate', selected && 'font-semibold']">
-                                      {{ day }}
-                                    </span>
-
-                                    <span
-                                        v-if="selected"
-                                        :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']"
-                                    >
-                                    <CheckIcon aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                </li>
-                            </ComboboxOption>
-                        </ComboboxOptions>
-                    </div>
-                </Combobox>
-
-                <Combobox
-                    as="div"
-                    v-model="stepRequestBody.opening_hours.startHour"
-                    :disabled="programUnknown"
-                >
-                    <ComboboxLabel
-                        class="block text-sm font-medium leading- text-gray-900 ml-5"
-                    >
-                        {{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.HOURS }}
-                    </ComboboxLabel>
-                    <div class="relative mt-2 ml-5">
-                        <ComboboxInput
-                            :display-value="hour"
-                            class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="query = $event.target.value"
-                        />
-                        <ComboboxButton
-                            class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                            <ChevronUpDownIcon aria-hidden="true" class="h-5 w-5 text-gray-400"/>
-                        </ComboboxButton>
-
-                        <ComboboxOptions
-                            v-if="hoursSelectValues.length > 0"
-                            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                        >
-                            <ComboboxOption
-                                v-for="hour in hoursSelectValues"
-                                :key="hour"
-                                v-slot="{ active, selected }"
-                                :value="hour"
-                                as="template"
-                            >
-                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
-                                    <span :class="['block truncate', selected && 'font-semibold']">
-                                      {{ hour }}
-                                    </span>
-
-                                    <span
-                                        v-if="selected"
-                                        :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']"
-                                    >
-                                    <CheckIcon aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                </li>
-                            </ComboboxOption>
-                        </ComboboxOptions>
-                    </div>
-                </Combobox>
-            </div>
-
-            <div class="mb-3 flex flex-row mt-3">
-                <Combobox
-                    as="div"
-                    v-model="stepRequestBody.opening_hours.endDay"
-                    :disabled="programUnknown"
-                >
-
-                    <div class="relative mt-2">
-                        <ComboboxInput
-                            :display-value="day"
-                            class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="query = $event.target.value"
-                        />
-                        <ComboboxButton
-                            class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                            <ChevronUpDownIcon aria-hidden="true" class="h-5 w-5 text-gray-400"/>
-                        </ComboboxButton>
-
-                        <ComboboxOptions
-                            v-if="daysSelectValues.length > 0"
-                            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                        >
-                            <ComboboxOption
-                                v-for="day in daysSelectValues"
-                                :key="day"
-                                v-slot="{ active, selected }"
-                                :value="day"
-                                as="template"
-                            >
-                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
-                                    <span :class="['block truncate', selected && 'font-semibold']">
-                                      {{ day }}
-                                    </span>
-
-                                    <span
-                                        v-if="selected"
-                                        :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']"
-                                    >
-                                    <CheckIcon aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                </li>
-                            </ComboboxOption>
-                        </ComboboxOptions>
-                    </div>
-                </Combobox>
-
-                <Combobox
-                    as="div"
-                    v-model="stepRequestBody.opening_hours.endHour"
-                    :disabled="programUnknown"
-                >
-                    <div class="relative mt-2 ml-5">
-                        <ComboboxInput
-                            :display-value="hour"
-                            class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="query = $event.target.value"
-                        />
-                        <ComboboxButton
-                            class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                            <ChevronUpDownIcon aria-hidden="true" class="h-5 w-5 text-gray-400"/>
-                        </ComboboxButton>
-
-                        <ComboboxOptions
-                            v-if="hoursSelectValues.length > 0"
-                            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                        >
-                            <ComboboxOption
-                                v-for="hour in hoursSelectValues"
-                                :key="hour"
-                                v-slot="{ active, selected }"
-                                :value="hour"
-                                as="template"
-                            >
-                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
-                                    <span :class="['block truncate', selected && 'font-semibold']">
-                                      {{ hour }}
-                                    </span>
-
-                                    <span
-                                        v-if="selected"
-                                        :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']"
-                                    >
-                                    <CheckIcon aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                </li>
-                            </ComboboxOption>
-                        </ComboboxOptions>
-                    </div>
-                </Combobox>
-            </div>
-
-            <div class="space-y-1 mb-8">
-                <div class="flex" style="float: right">
-                    <div class="flex h-6 items-center">
-                        <input
-                            @change="programUnknownChanged()"
-                            id="unknownProgram"
-                            aria-describedby="unknownProgram-description"
-                            name="unknownProgram"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                    </div>
-                    <div class="ml-3 text-sm leading-6">
-                        <label
-                            for="unknownProgram"
-                            class="font-medium text-gray-900"
-                        >
-                            {{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.UNKNOWN_PROGRAM }}
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-1 mb-3">
+            <div class="space-y-1 mb-3 mt-5">
                 <Combobox
                     as="div"
                     v-on:update:model-value="stepRequestBody.field_types.offers_money = $event.value"
@@ -534,7 +324,7 @@
                 </div>
             </div>
 
-            <div class="space-y-1 mb-3">
+            <div class="space-y-1 mb-5">
                 <label
                     for="comment"
                     class="block text-sm font-medium leading-6 text-gray-900"
@@ -544,18 +334,13 @@
                 <p class="text-gray-900 sm:text-sm">
                     {{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.ADD_PICTURE_SUBTITLE }}
                 </p>
-                <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                    <div class="text-center">
-                        <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-                        <div class="mt-4 flex text-sm leading-6 text-gray-600">
-                            <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                <span>Upload a file</span>
-                                <input id="file-upload" name="file-upload" multiple type="file" class="sr-only" />
-                            </label>
-                            <p class="pl-1">or drag and drop</p>
-                        </div>
-                        <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                    </div>
+                <div class="mt-5">
+                    <FilePond
+                        allowRemove="false"
+                        allowMultiple="true"
+                        v-bind:server="myServer"
+                        v-on:init="handleFilePondInit"
+                    />
                 </div>
             </div>
 
@@ -584,11 +369,15 @@ import {CONSTANTS} from "@/constants";
 import axios, {HttpStatusCode} from "axios";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
-import eventBus from "../../../eventBus.js";
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 import Treeselect from 'vue3-treeselect'
 import 'vue3-treeselect/dist/vue3-treeselect.css'
-import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
+import Program from './program.vue'
+
+import vueFilePond from 'vue-filepond';
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 
 import {
     Combobox,
@@ -601,6 +390,7 @@ import {
 
 export default {
     components: {
+        Program,
         Combobox,
         ComboboxButton,
         ComboboxInput,
@@ -611,7 +401,8 @@ export default {
         XCircleIcon,
         CheckIcon,
         ChevronUpDownIcon,
-        Treeselect
+        Treeselect,
+        FilePond: vueFilePond(FilePondPluginImagePreview)
     },
     props: {
         nomenclatures: {
@@ -631,9 +422,40 @@ export default {
     data() {
         return {
             errors: {},
+            myFiles: [],
+            myServer: {
+                process: (fieldName, file, metadata, load) => {
+                    let formData = new FormData();
+                    formData.append('images[]', file);
+                    axios
+                        .post(
+                            CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.STATIC.IMAGE,
+                            formData,
+                            {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            }
+                        )
+                        .then((response) => {
+                            if (_.get(response, 'status', 0) === HttpStatusCode.Ok) {
+                                this.stepRequestBody.images.push(_.get(response, 'data.images.0', ''));
+                                load(Date.now())
+                            }
+                        })
+                        .catch((err) => {
+                            //todo: atunci cand sterg un file sa vad ce fac cu el
+                        });
+                },
+                load: (source, load) => {
+                    // simulates loading a file from the server
+                    fetch(source).then(res => res.blob()).then(load);
+                }
+            },
             stepRequestBody: {
                 point_type_id: null,
                 material_recycling_point: [],
+                images: [],
                 field_types: {
                     managed_by: null,
                     website: null,
@@ -652,9 +474,6 @@ export default {
             },
             materialTypesFilters: [],
             administrationUnknown: false,
-            programUnknown: false,
-            daysSelectValues: ['Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri', 'Sambata', 'Duminica'],
-            hoursSelectValues: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'],
             booleanSelect: [
                 {
                     name: 'Da',
@@ -669,6 +488,9 @@ export default {
     },
     mounted() {},
     methods: {
+        handleFilePondInit: function () {
+
+        },
         closeModal() {
             this.$emit('close');
         },
@@ -708,16 +530,6 @@ export default {
                 this.stepRequestBody.field_types.website = null;
                 this.stepRequestBody.field_types.email = null;
                 this.stepRequestBody.field_types.phone_no = null;
-            }
-        },
-        programUnknownChanged() {
-            this.programUnknown = !this.programUnknown;
-
-            if (this.programUnknown) {
-                this.stepRequestBody.opening_hours.startDay = null;
-                this.stepRequestBody.opening_hours.startHour = null;
-                this.stepRequestBody.opening_hours.endDay = null;
-                this.stepRequestBody.opening_hours.endHour = null;
             }
         },
         convertMaterialsFiltersToTree() {
