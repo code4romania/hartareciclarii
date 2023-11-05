@@ -230,7 +230,7 @@
             </span>
 
 			<div class="px-6 py-3 border-t absolute bottom-0 bg-white w-full">
-				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters">
+				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters()">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
 					{{ CONSTANTS.LABELS.SIDEBAR.CLEAR_FILTERS_LABEL }}
 				</button>
@@ -387,13 +387,19 @@ export default {
                 });
         },
         pointLiveSearch() {
-            if (this.searchParamsForFilters.search_key.length % 3 === 0) {
-                this.getFilters();
+            if (this.searchParamsForFilters.search_key.length >= 3)
+			{
+                //this.getFilters();
+				this.collectedFilters.search_key = this.searchParamsForFilters.search_key;
             }
         },
-        resetFilters() {
+        resetFilters()
+		{
 			this.searchParamsForFilters = {};
-			this.filters.extended_filters = {};
+			this.filters = {};
+			this.collectedFilters = {};
+			this.getFilters();
+			this.$emit('filters-changed', this.collectedFilters);
         },
         materialLiveSearch() {
             this.selectedMaterialTypes = [];

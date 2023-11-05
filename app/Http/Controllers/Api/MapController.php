@@ -20,6 +20,7 @@ class MapController extends Controller
 	{
 		$filters = $request->get('filters', []);
 		$bounds = $request->get('bounds', []);
+		
 		return response()
 			->json(
 			[
@@ -30,8 +31,63 @@ class MapController extends Controller
 	public function create(Request $request)
 	{
 		$data = $request->all();
+		$userToken = $request->headers->get('authorization', '');
+		$id_user = null;
+		if ($userToken != "")
+		{
+			if (Auth::guard('sanctum')->check())
+			{
+				$user = Auth::guard('sanctum')->user();
+				if ($user)
+				{
+					$id_user = $user->id;
+				}
+			}
+		}
+		$data['id_user'] = $id_user;
+		
+		$this->validate($request, [
+			'point_type_id' => [
+				'required',
+				'int',
+				'exists:recycling_point_types,id',
+			],
+			'lat' => [
+				'required',
+				'numeric',
+				'between:-90,90'
+			],
+			'lng' => [
+				'required',
+				'numeric',
+				'between:-180,180'
+			],
+			'field_types.managed_by' => [
+				'required',
+				'string'
+			],
+			'field_types.address' => [
+				'required',
+				'string'
+			],
+			'field_types.website' => [
+				'url'
+			],
+			'field_types.email' => [
+				'email'
+			],
+			'material_recycling_point' => [
+				'array'
+			],
+			'material_recycling_point.*' => [
+				'int',
+				'exists:materials,id',
+			]
+		]);
+		
+		$point = MapPoint::create($data);
 		return response()
-			->json($data);
+			->json($point);
 	}
 	
 	public function nomenclatures(Request $request)

@@ -170,7 +170,7 @@ export default
 				.then((response) =>
 				{
 					this.selectedPoint = _.get(response, 'data.point', {});
-					console.log(`map point response`, response.data.point);
+					//console.log(`map point response`, response.data.point);
 				}).catch((err) =>
 				{
 					console.log(err);
@@ -239,6 +239,11 @@ export default
 					{
 						this.hasResults = true;
 					}
+					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(this.points).length === 0)
+					{
+						this.hasResults = false;
+					}
+
 				}).catch((err) =>
 			{
 				console.log(err);
@@ -270,6 +275,12 @@ export default
 		setFilters(event)
 		{
 			if (Object.keys(event).length > 0)
+			{
+				this.filters = event;
+				this.getMapPoints();
+			}
+
+			if (this.hasResults === false)
 			{
 				this.filters = event;
 				this.getMapPoints();
