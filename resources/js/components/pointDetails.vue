@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute bg-white border border-black z-50 top-5 left-10 p-6 w-96 overflow-y-auto min-h-full">
+	<div class="absolute bg-white border border-black z-10 top-5 left-10 p-6 w-96 overflow-y-auto min-h-full">
 		<div class="flex justify-between items-center mb-3.5">
 			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<desktop-filter-close-icon
@@ -68,7 +68,7 @@
 						</div>
 						<template v-if="material.children.length > 0">
 							<div
-								class="flex items-center bg-white text-xs h-8 pe-4 border"
+								class="flex items-center bg-white text-xs h-10 pe-4 border"
 								v-for="child in material.children"
 							>
                             	<span class="flex items-center justify-center w-11"></span>
@@ -148,6 +148,15 @@
 		</div>
 
 	</div> <!-- -->
+
+	<add-report-problem-modal
+		v-if="!resetReportProblemModal"
+		:is-open="isReportProblemModalOpen"
+		:user-info="userInfo"
+		@close="isReportProblemModalOpen=false"
+		@reset="resetReportProblemModal()"
+	>
+	</add-report-problem-modal>
 </template>
 <script>
 import {CONSTANTS} from "../constants.js";
@@ -164,6 +173,8 @@ import PointDetailsWebsiteIcon from "./svg-icons/pointDetailsWebsiteIcon.vue";
 import PointDetailsPhoneIcon from "./svg-icons/pointDetailsPhoneIcon.vue";
 import PointDetailsShareIcon from "./svg-icons/pointDetailsShareIcon.vue";
 import {ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
+import AddReportProblemModal from "./modals/reportProblem/generalModal.vue";
+
 
 
 export default
@@ -179,10 +190,17 @@ export default
 		{
 			type: Object,
 			required: true
+		},
+		userInfo:
+		{
+			type: Object,
+			required: false,
+			default: {}
 		}
 	},
 	components:
 	{
+		AddReportProblemModal,
 		PointDetailsShareIcon,
 		PointDetailsPhoneIcon,
 		PointDetailsWebsiteIcon,
@@ -201,7 +219,9 @@ export default
 	{
 		return {
 			dailySchedule: {},
-			materials: {}
+			materials: {},
+			isReportProblemModalOpen: false,
+			resetReportProblemModal: false,
 		};
 	},
 	methods:
@@ -256,6 +276,16 @@ export default
 				link.setSelectionRange(0, 99999);
 				document.execCommand("copy");
 				alert(CONSTANTS.LABELS.POINT_DETAILS.LINK_COPIED);
+			},
+			reportProblem()
+			{
+				this.isReportProblemModalOpen = true;
+			},
+			resetReportProblemModal() {
+				this.resetReportProblemModal = true;
+				setTimeout(() => {
+					this.resetReportProblemModal = false;
+				}, 100);
 			},
 		},
 	computed: {

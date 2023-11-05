@@ -83,6 +83,7 @@
 		v-if="Object.keys(selectedPoint).length > 0"
 		:point="selectedPoint"
 		:main-materials="mainMaterials"
+		:user-info="userInfo"
 		@closePointDetails="closePointDetails($event)"
 	>
 	</point-details>

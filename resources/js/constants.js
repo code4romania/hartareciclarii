@@ -190,5 +190,50 @@ export const CONSTANTS =
 			COPY_LABEL: `Copiază`,
 			LINK_COPIED: `URL-ul a fost copiat în clipboard!`,
 		},
+		REPORT_PROBLEM:
+		{
+			TITLE: 'Raportează o problemă',
+			CANCEL_BUTTON: 'Renunță',
+			BACK_BUTTON: 'Înapoi',
+			NEXT_STEP: 'Următorul',
+			FINISH_STEP: 'Trimite sugestia',
+			FIRST_STEP:
+			{
+				SUBTITLE: "Ce tip de problemă ai identificat?"
+			},
+			ADDRESS_STEP:
+			{
+				TITLE: "Adresa nu este corectă",
+				SUBTITLE: "Sugereaza o noua adresa sau locatie mai jos, prin modificarea adresei existente și/sau ajustarea punctului pe hartă.",
+				EXACT_ADDRESS_LABEL: `Adresa exacta`,
+				EXACT_ADDRESS_PLACEHOLDER: `Introdu adresa exacta a punctului`,
+				ADJUST_POINT_ON_MAP: `Ajusteaza punctul pe harta`,
+			},
+			MATERIALS_OPTIONS_STEP:
+			{
+				TITLE: "Materialele nu sunt corecte",
+				SUBTITLE: "Care este problema sesizată legată de materiale?",
+				SELECTED_MATERIALS_LABEL: `Unele materiale listate în descriere nu se colectează în realitate`,
+				SELECTED_MATERIALS_MISSING_LABEL: `Lipsesc materiale colectate din descriere`,
+				OTHER_PROBLEM_LABEL: `Altă problemă`,
+			},
+			MATERIALS_NOT_COLLECTED_STEP:
+			{
+				TITLE: "Nu se colectează unele materiale",
+				SUBTITLE: "Care dintre următoarele materiale ați identificat că NU se colectează în realitate?",
+			},
+			MATERIALS_MISSING_STEP:
+			{
+				TITLE: "Lipsesc materiale din descriere",
+				SUBTITLE: "Care dintre următoarele materiale ați identificat că lipsesc din descrierea locației?",
+			},
+			MATERIALS_OTHER_STEP:
+			{
+				TITLE: "Altă problemă",
+				SUBTITLE: "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+				ADD_PHOTOS_TITLE: "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
+				ADD_PHOTOS_LABEL: "Adaugă poze",
+			}
+		}
     }
 };

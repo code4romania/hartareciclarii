@@ -11,12 +11,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class IssueType extends Model
+class IssueTypeItem extends Model
 {
-    protected $table = 'reported_point_issue_types';
-	
-	public function item()
-	{
-		return $this->hasOne(IssueTypeItem::class, 'id', 'reported_point_issue_type_id');
-	}
+    protected $table = 'reported_point_issue_type_items';
 }

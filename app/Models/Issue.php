@@ -14,4 +14,9 @@ use Illuminate\Database\Eloquent\Model;
 class Issue extends Model
 {
     protected $table = 'reported_point_issues';
+	
+	public function type()
+	{
+		return $this->hasOne(IssueType::class, 'id', 'reported_point_issue_type_id');
+	}
 }
