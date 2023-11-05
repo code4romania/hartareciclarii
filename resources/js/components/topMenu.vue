@@ -113,13 +113,36 @@
 		:is-authenticated="isAuthenticated"
 		@close="isAddPointModalOpen=false"
 		@reset="resetAddPointModal()"
+        @pointSaved="showSuccessMessage()"
 	>
 	</add-point-modal>
-	<!--
-	<add-map-point-modal>
 
-	</add-map-point-modal>
-	-->
+    <div
+        v-if="showSaveMessage"
+        class="rounded-md bg-gray-500 p-4"
+        style="width: 50%; margin-left: 25%; top: 85%; position: absolute; z-index: 10"
+    >
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <CheckCircleIcon class="h-5 w-5 text-white" aria-hidden="true" />
+            </div>
+            <div class="ml-3">
+                <p class="text-sm font-medium text-white">{{ CONSTANTS.LABELS.ADD_POINT.SUCCESS_MESSAGE }}</p>
+            </div>
+            <div class="ml-auto pl-3">
+                <div class="-mx-1.5 -my-1.5">
+                    <button
+                        v-on:click="showSaveMessage = false"
+                        type="button"
+                        class="inline-flex rounded-md  p-1.5 text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
+                    >
+                        <span class="sr-only">Dismiss</span>
+                        <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -135,6 +158,8 @@ import MenuMyAccountIcon from "./svg-icons/menuMyAccountIcon.vue";
 import eventBus from "../eventBus.js";
 import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
+import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/20/solid'
+
 export default
 {
 	name: "topMenu",
@@ -150,7 +175,9 @@ export default
 		MenuButton,
 		MenuItem,
 		MenuItems,
-		ChevronDownIcon
+		ChevronDownIcon,
+        CheckCircleIcon,
+        XMarkIcon
 	},
 	props:
 	{
@@ -168,6 +195,7 @@ export default
 	data()
 	{
 		return {
+            showSaveMessage: false,
 			isLoginModalOpen: false,
 			isAddPointModalOpen: false,
 			active: false,
@@ -223,7 +251,13 @@ export default
 				}).catch((err) => {
 
 			});
-		}
+		},
+        showSuccessMessage() {
+            this.showSaveMessage = true;
+            setTimeout(() => {
+                this.showSaveMessage = false;
+            }, 10000);
+        }
 	}
 };
 </script>

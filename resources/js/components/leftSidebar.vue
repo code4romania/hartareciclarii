@@ -6,13 +6,21 @@
 	>
 		<!-- Toggle lg:hidden lg:flex -->
 		<div class="p-4">
-			<button class="rounded bg-gray-50 text-primary w-10 h-10 flex items-center justify-center cursor-pointer" type="button" v-on:click="toggleFilters();">
+			<button
+                class="rounded bg-gray-50 text-primary w-10 h-10 flex items-center justify-center cursor-pointer"
+                type="button"
+                v-on:click="toggleFilters();"
+            >
 				<desktop-filter-burger-icon></desktop-filter-burger-icon>
 			</button>
 		</div>
 
 		<div class="p-4">
-			<button class="text-sm flex items-center flex-col justify-center w-full relative" type="button">
+			<button
+                v-on:click="toggleFilters();"
+                class="text-sm flex items-center flex-col justify-center w-full relative"
+                type="button"
+            >
 				<span
 					class="p-1 rounded-full border-0 bg-green-500 text-end block absolute -top-0.5 end-2"
 					:class="{'hidden': !hasSearchContent, '': hasSearchContent}"
@@ -25,7 +33,11 @@
 		</div>
 
 		<div class="p-4">
-			<button class="text-sm flex items-center flex-col justify-center w-full relative" type="button">
+			<button
+                v-on:click="toggleFilters();"
+                class="text-sm flex items-center flex-col justify-center w-full relative"
+                type="button"
+            >
 				<span
 					class="p-1 rounded-full border-0 bg-green-500 text-end block absolute -top-0.5 end-2"
 					:class="{'hidden': !hasFiltersContent, '': hasFiltersContent}"

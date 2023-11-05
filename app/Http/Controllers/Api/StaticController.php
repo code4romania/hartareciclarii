@@ -23,7 +23,7 @@ class StaticController extends Controller
 				'extended_filters' => MapPointService::getExtendedFilters((int) $service_id),
 			]);
 	}
-	
+
 	public function upload(Request $request)
 	{
 		$this->validate($request, [
@@ -42,8 +42,8 @@ class StaticController extends Controller
 		{
 			$images[] = $image->store('point_images');
 		}
-		
-		
+
+
 		return response()
 			->json(
 				[

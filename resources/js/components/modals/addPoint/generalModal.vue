@@ -23,7 +23,7 @@
                             :previous-step-body="requestBody"
                             @close="closeModal();"
                             @stepFinished="stepFinished($event)"
-                            @backToStep="activeStep = $event"
+                            @backToStep="backToStep($event)"
                         ></second-step>
                         <third-step
                             :active-step="activeStep"
@@ -32,7 +32,7 @@
                             :previous-step-body="requestBody"
                             @close="closeModal();"
                             @stepFinished="savePoint($event)"
-                            @backToStep="activeStep = $event"
+                            @backToStep="backToStep($event)"
                         ></third-step>
                     </div>
                 </div>
@@ -89,6 +89,7 @@ export default {
     data() {
         return {
             activeStep: 'first',
+            //activeStep: 'second',
             nomenclatures: {},
             requestBody: {},
         };
@@ -112,6 +113,12 @@ export default {
                     this.nomenclatures = _.get(response, 'data', {});
                 })
                 .catch((err) => {});
+        },
+        backToStep(step) {
+            const myDiv = document.getElementById('containerWithScroll');
+            myDiv.scrollTop = 0;
+
+            this.activeStep = step;
         },
         stepFinished(stepData) {
             const myDiv = document.getElementById('containerWithScroll');
@@ -142,6 +149,7 @@ export default {
                     if (_.get(response, 'status', 0) === HttpStatusCode.Ok) {
                         this.closeModal();
                         this.resetModal();
+                        this.$emit('pointSaved', true);
                     }
                 })
                 .catch((err) => {});

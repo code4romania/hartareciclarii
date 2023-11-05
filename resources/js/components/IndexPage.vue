@@ -113,8 +113,7 @@ export default
 		LMap,
 		LTileLayer,
 		LControlLayers,
-
-	},
+    },
 	data ()
 	{
 		return {

@@ -12,53 +12,40 @@
 
         <div class="mt-3 sm:mt-5 w-full px-5" v-if="Object.keys(nomenclatures).length">
             <div class="space-y-1 mb-3">
-                <Combobox
+                <Listbox
                     as="div"
-                    v-on:update:model-value="stepRequestBody.service_id = $event.id"
+                    v-model="selectedService"
                 >
-                    <ComboboxLabel
-                        class="block text-sm font-medium leading-6 text-gray-900 required"
-                    >
-                        {{ CONSTANTS.LABELS.SIDEBAR.SERVICE_TYPE_LABEL }}
-                    </ComboboxLabel>
+                    <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.SERVICE_TYPE_LABEL }}</ListboxLabel>
                     <div class="relative mt-2">
-                        <ComboboxInput
-                            :display-value="(service) => service?.display_name"
-                            class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="query = $event.target.value"
-                        />
-                        <ComboboxButton
-                            class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                            <ChevronUpDownIcon aria-hidden="true" class="h-5 w-5 text-gray-400"/>
-                        </ComboboxButton>
+                        <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <span class="block truncate">{{ selectedService.display_name ? selectedService.display_name : CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.SERVICE_TYPE_PLACEHOLDER }}</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </span>
+                        </ListboxButton>
 
-                        <ComboboxOptions
-                            v-if="nomenclatures.services.length > 0"
-                            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                        >
-                            <ComboboxOption
-                                v-for="service in nomenclatures.services"
-                                :key="service.id"
-                                v-slot="{ active, selected }"
-                                :value="service"
-                                as="template"
-                            >
-                                <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
-                                    <span :class="['block truncate', selected && 'font-semibold']">
-                                      {{ service.display_name }}
-                                    </span>
+                        <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                            <ListboxOptions class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                <ListboxOption
+                                    as="template"
+                                    v-for="service in nomenclatures.services"
+                                    :key="service.id"
+                                    :value="service"
+                                    v-slot="{ active, selected }"
+                                >
+                                    <li :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                                        <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ service.display_name }}</span>
 
-                                    <span
-                                        v-if="selected"
-                                        :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']"
-                                    >
-                                    <CheckIcon aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                </li>
-                            </ComboboxOption>
-                        </ComboboxOptions>
+                                        <span v-if="selected" :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+                                            <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                        </span>
+                                    </li>
+                                </ListboxOption>
+                            </ListboxOptions>
+                        </transition>
                     </div>
-                </Combobox>
+                </Listbox>
 
                 <template v-if="getError('service_id')">
                     <div class="rounded-md bg-red-50 p-4 mb-2">
@@ -81,18 +68,27 @@
                 >
                     {{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_LABEL }}
                 </label>
-                <div class="mt-2">
-                    <input
-                        id="address"
-                        v-model="stepRequestBody.field_types.address"
-                        @keyup.enter="getLatLonOfAddress"
-                        :placeholder="CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_PLACEHOLDER"
-                        class="block w-full rounded-md border border-gray-300 py-1.5 text-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        name="email"
-                        required
-                        type="email"
-                    />
-                </div>
+
+                <input
+                    style="width: 68%; display: inline"
+                    id="address"
+                    v-model="stepRequestBody.field_types.address"
+                    @keyup.enter="getLatLonOfAddress"
+                    :placeholder="CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_PLACEHOLDER"
+                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    name="email"
+                    required
+                    type="email"
+                />
+
+                <button
+                    v-on:click="getLatLonOfAddress()"
+                    style="width: 30%; margin-left: 2%"
+                    type="button"
+                    class="bg-indigo-200 -ml-px inline-flex rounded-md bg-white px-3 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-indigo-100 focus:z-10"
+                >
+                    <span class="text-gray-800">{{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.PLACE_PIN }}</span>
+                </button>
 
                 <template v-if="getError('address')">
                     <div class="rounded-md bg-red-50 p-4 mb-2">
@@ -146,7 +142,7 @@
                     >
                         <l-icon
                             :icon-size="dynamicSize"
-                            icon-url="/assets/images/logo.png" >
+                            icon-url="/assets/images/pin_selected.png" >
                         </l-icon>
                     </l-marker>
 
@@ -184,35 +180,21 @@
         </div>
     </div>
 </template>
+
 <script>
 import _ from 'lodash';
 import {CONSTANTS} from "@/constants";
 import axios, {HttpStatusCode} from "axios";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
-import eventBus from "../../../eventBus.js";
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 import {LMap, LTileLayer, LControlLayers, LMarker, LIcon, LControl } from "@vue-leaflet/vue-leaflet";
-
-import {
-    Combobox,
-    ComboboxButton,
-    ComboboxInput,
-    ComboboxLabel,
-    ComboboxOption,
-    ComboboxOptions,
-} from '@headlessui/vue'
+import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
 
 export default {
     components: {
         DesktopFilterCloseIcon,
         XCircleIcon,
-        Combobox,
-        ComboboxButton,
-        ComboboxInput,
-        ComboboxLabel,
-        ComboboxOption,
-        ComboboxOptions,
         CheckIcon,
         ChevronUpDownIcon,
         LIcon,
@@ -220,7 +202,12 @@ export default {
         LMap,
         LTileLayer,
         LControlLayers,
-        LControl
+        LControl,
+        Listbox,
+        ListboxButton,
+        ListboxLabel,
+        ListboxOption,
+        ListboxOptions
     },
     props: {
         nomenclatures: {
@@ -233,7 +220,7 @@ export default {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [this.iconSize, this.iconSize / 2.15];
+            return [64, 64 * 4.15];
         },
         mapOptions() {
             if (!this.mapIsActive) {
@@ -249,6 +236,7 @@ export default {
     },
     data() {
         return {
+            selectedService: {},
             latitude: CONSTANTS.DEFAULT_LOCATION.LATITUDE,
             longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
             zoom: 13,
@@ -391,6 +379,15 @@ export default {
                 nextStep: 'second',
                 body: this.stepRequestBody
             })
+        }
+    },
+    watch: {
+        selectedService: {
+            handler: function (newVal) {
+                this.stepRequestBody.service_id = newVal.id
+            },
+            deep: true,
+            immediate: true
         }
     },
 };
