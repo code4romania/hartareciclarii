@@ -108,6 +108,7 @@ class MapController extends Controller
 			->json(
 				[
 					'point' => MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id),
+					'materials' => RecycleMaterial::whereNull('is_wildcard')->whereNull('parent')->get(),
 				]);
 	}
 }

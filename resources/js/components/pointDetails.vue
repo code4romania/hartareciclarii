@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute bg-white border border-black z-50 top-5 left-10 p-6 w-96">
+	<div class="absolute bg-white border border-black z-50 top-5 left-10 p-6 w-96 overflow-y-auto min-h-full">
 		<div class="flex justify-between items-center mb-3.5">
 			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<desktop-filter-close-icon
@@ -54,78 +54,30 @@
 				{{CONSTANTS.LABELS.POINT_DETAILS.MATERIALS_LABEL}}
 			</h3>
 			<div class="mb-6">
-				<div class="">
-					<div class="flex items-center bg-neutral-100 text-black text-xs h-12 pe-4 border">
-					<span class="flex items-center justify-center w-11">
-						icon
-					</span>
-						<span class="flex ps-3">Hartie & carton</span>
-						<button type="button" class="ml-auto">
-							<!-- Expand icon, show/hide based on section open state. -->
-							<svg class="" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M14.7071 12.7071C14.3166 13.0976 13.6834 13.0976 13.2929 12.7071L10 9.41421L6.70711 12.7071C6.31658 13.0976 5.68342 13.0976 5.29289 12.7071C4.90237 12.3166 4.90237 11.6834 5.29289 11.2929L9.29289 7.29289C9.68342 6.90237 10.3166 6.90237 10.7071 7.29289L14.7071 11.2929C15.0976 11.6834 15.0976 12.3166 14.7071 12.7071Z" fill="#6B7280"/>
-							</svg>
+				<template v-for="material of materials">
+					<div class="">
+						<div class="flex items-center bg-neutral-100 text-black text-xs h-12 pe-4 border">
+							<span class="flex items-center justify-center w-11">
+								<img :src="material.icon" :alt="material.label" class="w-[20px]">
+							</span>
+							<span class="flex ps-3">{{material.label}}</span>
+							<button type="button" class="ml-auto">
+								<chevron-down-icon></chevron-down-icon>
+								<chevron-up-icon class="hidden"></chevron-up-icon>
+							</button>
+						</div>
+						<template v-if="material.children.length > 0">
+							<div
+								class="flex items-center bg-white text-xs h-8 pe-4 border"
+								v-for="child in material.children"
+							>
+                            	<span class="flex items-center justify-center w-11"></span>
+								<span class="flex ps-3 underline">{{ child.label }}</span>
+							</div>
+						</template>
 
-							<!-- Collapse icon, show/hide based on section open state. -->
-							<svg class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 7.29289C5.68342 6.90237 6.31658 6.90237 6.7071 7.29289L9.99999 10.5858L13.2929 7.29289C13.6834 6.90237 14.3166 6.90237 14.7071 7.29289C15.0976 7.68342 15.0976 8.31658 14.7071 8.70711L10.7071 12.7071C10.3166 13.0976 9.68341 13.0976 9.29289 12.7071L5.29289 8.70711C4.90237 8.31658 4.90237 7.68342 5.29289 7.29289Z" fill="#6B7280"/>
-							</svg>
-						</button>
 					</div>
-
-					<div class="flex items-center bg-white text-xs h-8 pe-4 border">
-                            <span class="flex items-center justify-center w-11">
-
-                            </span>
-						<span class="flex ps-3 underline">Hartie</span>
-					</div>
-					<div class="flex items-center bg-white text-xs h-8 pe-4 border">
-                            <span class="flex items-center justify-center w-11">
-
-                            </span>
-						<span class="flex ps-3 underline">Carton</span>
-					</div>
-				</div>
-
-				<div class="">
-					<div class="flex items-center bg-neutral-100 text-black text-xs h-12 pe-4 border">
-                            <span class="flex items-center justify-center w-11">
-                                icon
-                            </span>
-						<span class="flex ps-3">Plastic & PET</span>
-						<button type="button" class="ml-auto">
-							<!-- Expand icon, show/hide based on section open state. -->
-							<svg class="" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M14.7071 12.7071C14.3166 13.0976 13.6834 13.0976 13.2929 12.7071L10 9.41421L6.70711 12.7071C6.31658 13.0976 5.68342 13.0976 5.29289 12.7071C4.90237 12.3166 4.90237 11.6834 5.29289 11.2929L9.29289 7.29289C9.68342 6.90237 10.3166 6.90237 10.7071 7.29289L14.7071 11.2929C15.0976 11.6834 15.0976 12.3166 14.7071 12.7071Z" fill="#6B7280"/>
-							</svg>
-
-							<!-- Collapse icon, show/hide based on section open state. -->
-							<svg class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 7.29289C5.68342 6.90237 6.31658 6.90237 6.7071 7.29289L9.99999 10.5858L13.2929 7.29289C13.6834 6.90237 14.3166 6.90237 14.7071 7.29289C15.0976 7.68342 15.0976 8.31658 14.7071 8.70711L10.7071 12.7071C10.3166 13.0976 9.68341 13.0976 9.29289 12.7071L5.29289 8.70711C4.90237 8.31658 4.90237 7.68342 5.29289 7.29289Z" fill="#6B7280"/>
-							</svg>
-						</button>
-					</div>
-				</div>
-
-				<div class="">
-					<div class="flex items-center bg-neutral-100 text-black text-xs h-12 pe-4 border">
-                            <span class="flex items-center justify-center w-11">
-                                icon
-                            </span>
-						<span class="flex ps-3">Metal & aluminiu</span>
-						<button type="button" class="ml-auto">
-							<!-- Expand icon, show/hide based on section open state. -->
-							<svg class="" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M14.7071 12.7071C14.3166 13.0976 13.6834 13.0976 13.2929 12.7071L10 9.41421L6.70711 12.7071C6.31658 13.0976 5.68342 13.0976 5.29289 12.7071C4.90237 12.3166 4.90237 11.6834 5.29289 11.2929L9.29289 7.29289C9.68342 6.90237 10.3166 6.90237 10.7071 7.29289L14.7071 11.2929C15.0976 11.6834 15.0976 12.3166 14.7071 12.7071Z" fill="#6B7280"/>
-							</svg>
-
-							<!-- Collapse icon, show/hide based on section open state. -->
-							<svg class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 7.29289C5.68342 6.90237 6.31658 6.90237 6.7071 7.29289L9.99999 10.5858L13.2929 7.29289C13.6834 6.90237 14.3166 6.90237 14.7071 7.29289C15.0976 7.68342 15.0976 8.31658 14.7071 8.70711L10.7071 12.7071C10.3166 13.0976 9.68341 13.0976 9.29289 12.7071L5.29289 8.70711C4.90237 8.31658 4.90237 7.68342 5.29289 7.29289Z" fill="#6B7280"/>
-							</svg>
-						</button>
-					</div>
-				</div>
+				</template>
 			</div>
 		</template>
 
@@ -211,12 +163,19 @@ import PointDetailsTransportIcon from "./svg-icons/pointDetailsTransportIcon.vue
 import PointDetailsWebsiteIcon from "./svg-icons/pointDetailsWebsiteIcon.vue";
 import PointDetailsPhoneIcon from "./svg-icons/pointDetailsPhoneIcon.vue";
 import PointDetailsShareIcon from "./svg-icons/pointDetailsShareIcon.vue";
+import {ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
+
 
 export default
 {
 	props:
 	{
 		point:
+		{
+			type: Object,
+			required: true
+		},
+		mainMaterials:
 		{
 			type: Object,
 			required: true
@@ -234,12 +193,15 @@ export default
 		DesktopFilterCloseIcon,
 		PointDetailsScheduleIcon,
 		PointDetailsAddressIcon,
-		PointDetailsLocationIcon
+		PointDetailsLocationIcon,
+		ChevronDownIcon,
+		ChevronUpIcon
 	},
 	data ()
 	{
 		return {
-			dailySchedule: {}
+			dailySchedule: {},
+			materials: {}
 		};
 	},
 	methods:
@@ -307,6 +269,49 @@ export default
 		if (this.getField('opening_hours', 'value'))
 		{
 			this.dailySchedule = JSON.parse(this.getField('opening_hours', 'value'));
+		}
+
+		if (Object.keys(this.point.materials).length > 0)
+		{
+			this.materials = [];
+			let parents = [];
+			for (const filter of _.get(this, ['mainMaterials'], []))
+			{
+				if (!filter.parent)
+				{
+					let filterToAppend =
+					{
+						id: filter.id,
+						label: filter.name,
+						icon: filter.icon,
+						children: []
+					};
+					for (const childrenFilter of _.get(this, ['point', 'materials'], []))
+					{
+						if (childrenFilter.parent === filter.id)
+						{
+							filterToAppend.children.push({
+								id: childrenFilter.id,
+								label: childrenFilter.name,
+							});
+							parents.push(childrenFilter.parent);
+							parents.push(filter.id);
+						}
+					}
+					this.materials.push(filterToAppend);
+				}
+			}
+			let uniqueParents = parents.filter((x, y) => parents.indexOf(x) == y);
+			if (uniqueParents.length > 0)
+			{
+				let temp = this.materials;
+				let filtered  = temp.filter(function(value, index, array)
+				{
+					return uniqueParents.includes(value.id);
+				});
+
+				this.materials = filtered;
+			}
 		}
 	},
 };

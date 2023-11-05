@@ -82,6 +82,7 @@
 	<point-details
 		v-if="Object.keys(selectedPoint).length > 0"
 		:point="selectedPoint"
+		:main-materials="mainMaterials"
 		@closePointDetails="closePointDetails($event)"
 	>
 	</point-details>
@@ -153,7 +154,8 @@ export default
 			totalPoints: 0,
 			filters: {},
 			bounds: {},
-			selectedPoint: {}
+			selectedPoint: {},
+			mainMaterials: {}
 
 		};
 	},
@@ -168,6 +170,7 @@ export default
 				.then((response) =>
 				{
 					this.selectedPoint = _.get(response, 'data.point', {});
+					this.mainMaterials = _.get(response, 'data.materials', {});
 				}).catch((err) =>
 				{
 					console.log(err);
