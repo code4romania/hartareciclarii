@@ -20,14 +20,14 @@ class MapController extends Controller
 	{
 		$filters = $request->get('filters', []);
 		$bounds = $request->get('bounds', []);
-		
+
 		return response()
 			->json(
 			[
 				'points' => MapPoint::getFilteredMapPoints($filters, $bounds)
 			]);
 	}
-	
+
 	public function create(Request $request)
 	{
 		$data = $request->all();
@@ -45,7 +45,7 @@ class MapController extends Controller
 			}
 		}
 		$data['id_user'] = $id_user;
-		
+
 		$this->validate($request, [
 			'point_type_id' => [
 				'required',
@@ -62,19 +62,17 @@ class MapController extends Controller
 				'numeric',
 				'between:-180,180'
 			],
-			'field_types.managed_by' => [
-				'required',
-				'string'
-			],
 			'field_types.address' => [
 				'required',
 				'string'
 			],
 			'field_types.website' => [
-				'url'
+				'url',
+                'nullable'
 			],
 			'field_types.email' => [
-				'email'
+				'email',
+                'nullable'
 			],
 			'material_recycling_point' => [
 				'array'
@@ -84,12 +82,12 @@ class MapController extends Controller
 				'exists:materials,id',
 			]
 		]);
-		
+
 		$point = MapPoint::create($data);
 		return response()
 			->json($point);
 	}
-	
+
 	public function nomenclatures(Request $request)
 	{
 		return response()
@@ -100,7 +98,7 @@ class MapController extends Controller
 					'field_types' => MapPointField::all(),
 				]);
 	}
-	
+
 	public function point(int $id)
 	{
 		return response()
