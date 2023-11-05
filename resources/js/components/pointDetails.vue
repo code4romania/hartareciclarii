@@ -12,7 +12,7 @@
 				{{point.service.display_name}}
 			</span>
 			<span v-if="null !== getField('managed_by')">
-				- {{getField('managed_by').value}}
+				- {{getField('managed_by', 'value')}}
 			</span>
 		</p>
 
@@ -26,13 +26,13 @@
 			Adresa
 		</h3>
 		<div class="flex justify-between items-center mb-6">
-			<p class="text-xs">{{getField('address').value}}</p>
+			<p class="text-xs">{{getField('address', 'value')}}</p>
 			<a v-on:click="goToMap()" class="cursor-pointer">
 				<point-details-address-icon></point-details-address-icon>
 			</a>
 
 		</div>
-		<template v-if="getField('opening_hours')">
+		<template v-if="getField('opening_hours', 'value')">
 			<h3 class="text-sm mb-2 flex items-center gap-x-2 font-semibold">
 				<point-details-schedule-icon></point-details-schedule-icon>
 				Program
@@ -220,14 +220,16 @@ export default
 	},
 	methods:
 		{
-			getField(key)
+			getField(element, key)
 			{
 				for (let field of this.point.fields)
 				{
-					console.log(`field element`, field);
-					if ('field' in field && field.field.field_name == key)
+					if ('field' in field && field.field.field_name == element)
 					{
-						return field;
+						if (key in field)
+						{
+							return field[key];
+						}
 					}
 				}
 
