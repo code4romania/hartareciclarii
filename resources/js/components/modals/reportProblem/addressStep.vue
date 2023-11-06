@@ -303,7 +303,7 @@ export default {
                 return;
 			}
             this.$emit('stepFinished', {
-                nextStep: 'success-finish',
+                nextStep: 'success-address',
                 body: this.stepRequestBody
             })
         },

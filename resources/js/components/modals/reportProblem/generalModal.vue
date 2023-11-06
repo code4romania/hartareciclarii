@@ -28,8 +28,8 @@
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></address-step>
-						<success-finish-step
-							v-if="activeStep === 'success-finish'"
+						<success-address-step
+							v-if="activeStep === 'success-address'"
 							:active-step="activeStep"
 							:map-point="mapPoint"
 							:nomenclatures="nomenclatures"
@@ -37,7 +37,7 @@
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
 							@stepFinished="savePoint($event)"
-						></success-finish-step>
+						></success-address-step>
 						<!--
 						<materials-options-step
 							v-show="activeStep === 'materials-options'"
@@ -128,11 +128,11 @@ import axios, {HttpStatusCode} from "axios";
 import _ from "lodash";
 import firstStep from "./firstStep.vue";
 import AddressStep from "./addressStep.vue";
-import SuccessFinishStep from "./successFinishStep.vue";
+import SuccessAddressStep from "./successAddressStep.vue";
 
 export default {
 	components: {
-		SuccessFinishStep,
+		SuccessAddressStep,
 		AddressStep,
 		firstStep,
 		DesktopFilterCloseIcon,

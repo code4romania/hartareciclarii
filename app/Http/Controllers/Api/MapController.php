@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Issue;
 use App\Models\IssueType;
 use App\Models\MapPoint;
 use App\Models\MapPointField;
@@ -114,6 +115,137 @@ class MapController extends Controller
 					'point' => MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id),
 					'materials' => RecycleMaterial::whereNull('is_wildcard')->whereNull('parent')->get(),
 				]);
+	}
+	
+	public function report(int $point_id, Request $request)
+	{
+		$request->offsetSet('point_id', $point_id);
+		$data = $request->all();
+		$userToken = $request->headers->get('authorization', '');
+		$id_user = null;
+		if ($userToken != "")
+		{
+			if (Auth::guard('sanctum')->check())
+			{
+				$user = Auth::guard('sanctum')->user();
+				if ($user)
+				{
+					$id_user = $user->id;
+				}
+			}
+		}
+		$data['id_user'] = $id_user;
+		
+		$rules = $this->_getIssueValidationRules($data);
+		$this->validate($request, $rules);
+		
+		$point = Issue::createFromArray($data);
+		return response()
+			->json($point);
+	}
+	
+	private function _getIssueValidationRules($data)
+	{
+		$rules['point_id'] =
+		[
+			'required',
+			'int',
+			'exists:recycling_points,id',
+		];
+		
+		$rules['reported_point_issue_type_id'] =
+		[
+			'required',
+			'int',
+			'exists:reported_point_issue_types,id',
+		];
+		
+		switch ($data['reported_point_issue_type_id'])
+		{
+			case 1:
+			case 2:
+				$rules['lat'] =
+				[
+					'required',
+					'numeric',
+					'between:-90,90'
+				];
+			
+				$rules['lng'] =
+				[
+					'required',
+					'numeric',
+					'between:-180,180'
+				];
+			break;
+			case 3:
+				$rules['material_issue_extra'] =
+				[
+					'array',
+				];
+				
+				$rules['material_issue_extra.*'] =
+				[
+					'int',
+					'exists:materials,id',
+				];
+				
+				$rules['material_issue_missing'] =
+				[
+					'array',
+				];
+				
+				$rules['material_issue_missing.*'] =
+				[
+					'int',
+					'exists:materials,id',
+				];
+				
+				$rules['material_issue'] =
+				[
+					'array',
+					'required'
+				];
+				
+				$rules['material_issue.*'] =
+				[
+					'int',
+					'exists:reported_point_issue_type_items,id',
+				];
+			break;
+			
+			case 6:
+				$rules['description'] =
+				[
+					'required',
+					'string'
+				];
+				
+				$rules['collection_decline_reason'] =
+				[
+					'array',
+				];
+				
+				$rules['collection_decline_reason.*'] =
+				[
+					'int',
+					'exists:reported_point_issue_type_items,id',
+				];
+			break;
+			
+			case 4:
+			case 5:
+			case 7:
+				$rules['description'] =
+				[
+					'required',
+					'string'
+				];
+				
+			break;
+		}
+		
+		return $rules;
 	}
 }
 

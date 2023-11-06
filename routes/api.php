@@ -35,7 +35,7 @@
 	Route::get('/map/point/{id_point}', [MapController::class, 'point']);
 	
 	Route::post('/map/points', [MapController::class, 'create']);
-	Route::post('/report/problem/{id_point}', [ReportPointController::class, 'create']);
+	Route::post('/report/problem/{point_id}', [MapController::class, 'report']);
 	
 	/**
 	 * Protected Routes

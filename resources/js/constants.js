@@ -212,7 +212,12 @@ export const CONSTANTS =
 				PLACE_PIN: `Plaseaza pinul`,
 				ADDRESS_REQUIRED: `Adresa este obligatorie!`,
 				POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`,
-				ADDRESS_NOT_FOUND: `Nu s-a putut gasi adresa!`
+				ADDRESS_NOT_FOUND: `Nu s-a putut gasi adresa!`,
+				SUCCESS:
+				{
+					TITLE: `Vă mulțumim pentru sesizare!`,
+					SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+				}
 			},
 			MATERIALS_OPTIONS_STEP:
 			{
