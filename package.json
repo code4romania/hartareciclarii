@@ -9,7 +9,6 @@
         "@headlessui/vue": "^1.7.16",
         "@heroicons/vue": "^2.0.18",
         "axios": "^1.5.1",
-        "leaflet.markercluster": "^1.5.3",
         "filepond": "^4.30.4",
         "filepond-plugin-image-preview": "^4.6.11",
         "lodash": "^4.17.21",
