@@ -193,13 +193,14 @@ export const CONSTANTS =
 		REPORT_PROBLEM:
 		{
 			TITLE: 'Raportează o problemă',
-			CANCEL_BUTTON: 'Renunță',
-			BACK_BUTTON: 'Înapoi',
+			CANCEL: 'Renunță',
+			BACK: 'Înapoi',
 			NEXT_STEP: 'Următorul',
 			FINISH_STEP: 'Trimite sugestia',
 			FIRST_STEP:
 			{
-				SUBTITLE: "Ce tip de problemă ai identificat?"
+				SUBTITLE: "Ce tip de problemă ai identificat?",
+				ISSUE_TYPE_REQUIRED: `Tipul de problemǎ este obligatoriu!`,
 			},
 			ADDRESS_STEP:
 			{
@@ -208,6 +209,10 @@ export const CONSTANTS =
 				EXACT_ADDRESS_LABEL: `Adresa exacta`,
 				EXACT_ADDRESS_PLACEHOLDER: `Introdu adresa exacta a punctului`,
 				ADJUST_POINT_ON_MAP: `Ajusteaza punctul pe harta`,
+				PLACE_PIN: `Plaseaza pinul`,
+				ADDRESS_REQUIRED: `Adresa este obligatorie!`,
+				POINT_REQUIRED: `Pinul pe harta este ogligatoriu!!`,
+				ADDRESS_NOT_FOUND: `Nu s-a putut gasi adresa!`
 			},
 			MATERIALS_OPTIONS_STEP:
 			{

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\IssueType;
 use App\Models\MapPoint;
 use App\Models\MapPointField;
 use App\Models\MapPointService;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\IssueTypeCollection;
 
 class MapController extends Controller
 {
@@ -99,6 +101,8 @@ class MapController extends Controller
 					'services' => MapPointService::with('pointTypes')->get(),
 					'material_recycling_points' => RecycleMaterial::whereNull('is_wildcard')->get(),
 					'field_types' => MapPointField::all(),
+					//'reported_point_issue_types' => IssueTypeCollection::collection(IssueType::all()),
+					'reported_point_issue_types' => IssueType::with('items')->get(),
 				]);
 	}
 
@@ -112,3 +116,4 @@ class MapController extends Controller
 				]);
 	}
 }
+

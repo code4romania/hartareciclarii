@@ -1,80 +1,30 @@
 <template>
     <div class="">
         <div class="flex items-center justify-between">
-            <h3 id="modal-title" class="text-2xl pl-5 py-3">{{ CONSTANTS.LABELS.ADD_POINT.TITLE }}</h3>
+            <h3 id="modal-title" class="text-2xl pl-5 py-3">{{ CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.TITLE }}</h3>
             <button v-on:click="closeModal();">
                 <desktop-filter-close-icon></desktop-filter-close-icon>
             </button>
         </div>
         <div class="flex items-center justify-between">
-            <span class="pl-5 text-sm">{{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.SUBTITLE }}</span>
+            <span class="pl-5 text-sm">{{ CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.SUBTITLE }}</span>
         </div>
 
         <div class="mt-3 sm:mt-5 w-full px-5" v-if="Object.keys(nomenclatures).length">
-            <div class="space-y-1 mb-3">
-                <Listbox
-                    as="div"
-                    v-model="selectedService"
-                >
-                    <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.SERVICE_TYPE_LABEL }}</ListboxLabel>
-                    <div class="relative mt-2">
-                        <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <span class="block truncate">{{ selectedService.display_name ? selectedService.display_name : CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.SERVICE_TYPE_PLACEHOLDER }}</span>
-                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                            </span>
-                        </ListboxButton>
-
-                        <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
-                            <ListboxOptions class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                <ListboxOption
-                                    as="template"
-                                    v-for="service in nomenclatures.services"
-                                    :key="service.id"
-                                    :value="service"
-                                    v-slot="{ active, selected }"
-                                >
-                                    <li :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
-                                        <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ service.display_name }}</span>
-
-                                        <span v-if="selected" :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
-                                            <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </li>
-                                </ListboxOption>
-                            </ListboxOptions>
-                        </transition>
-                    </div>
-                </Listbox>
-
-                <template v-if="getError('service_id')">
-                    <div class="rounded-md bg-red-50 p-4 mb-2">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <XCircleIcon aria-hidden="true" class="h-5 w-5 text-red-400"/>
-                            </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">{{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.SERVICE_TYPE_REQUIRED }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
             <div class="space-y-1 mb-3">
                 <label
                     class="block text-sm font-medium leading-6 text-gray-900 required"
                     for="address"
                 >
-                    {{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_LABEL }}
+                    {{ CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.EXACT_ADDRESS_LABEL }}
                 </label>
 
                 <input
                     style="width: 68%; display: inline"
                     id="address"
-                    v-model="stepRequestBody.field_types.address"
+                    v-model="stepRequestBody.address"
                     @keyup.enter="getLatLonOfAddress"
-                    :placeholder="CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.EXACT_ADDRESS_PLACEHOLDER"
+                    :placeholder="CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.EXACT_ADDRESS_PLACEHOLDER"
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     name="email"
                     required
@@ -87,7 +37,7 @@
                     type="button"
                     class="bg-indigo-200 -ml-px inline-flex rounded-md bg-white px-3 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-indigo-100 focus:z-10"
                 >
-                    <span class="text-gray-800">{{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.PLACE_PIN }}</span>
+                    <span class="text-gray-800">{{ CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.PLACE_PIN }}</span>
                 </button>
 
                 <template v-if="getError('address')">
@@ -97,7 +47,7 @@
                                 <XCircleIcon aria-hidden="true" class="h-5 w-5 text-red-400"/>
                             </div>
                             <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">{{ CONSTANTS.LABELS.ADD_POINT.FIRST_STEP.ADDRESS_REQUIRED }}</h3>
+                                <h3 class="text-sm font-medium text-red-800">{{ CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.ADDRESS_REQUIRED }}</h3>
                             </div>
                         </div>
                     </div>
@@ -105,7 +55,7 @@
             </div>
 
             <div
-                :class="{'inactiveMap': !Object.keys(point).length}"
+                :class="{'inactiveMap': !mapIsActive}"
                 class="space-y-1 mb-3 map h-screen w-full bg-green-900"
                 style="height: 350px;"
                 v-if="loadMap"
@@ -125,7 +75,7 @@
                     >
                         <p @click="">
                             <button
-                                :disabled="!stepRequestBody.field_types.address.length"
+                                :disabled="!stepRequestBody.address.length"
                                 id="login_button"
                                 class="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                 type="button"
@@ -138,7 +88,6 @@
                     <l-marker
                         v-if="Object.keys(point).length"
                         :lat-lng="[point.lat, point.lon]"
-                        @click="markerClicked(point.id)"
                     >
                         <l-icon
                             :icon-size="dynamicSize"
@@ -160,23 +109,22 @@
                     </div>
                 </div>
             </template>
-
-            <div class="py-2 mb-1" style="text-align: end">
-                <button
-                    v-on:click="closeModal()"
-                    type="button"
-                    class="mr-3 rounded bg-white px-2 py-1 text-sm font-semibold text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                    {{ CONSTANTS.LABELS.ADD_POINT.CANCEL }}
-                </button>
-                <button
-                    v-on:click="nextStep()"
-                    type="button"
-                    class="rounded bg-white px-2 py-1 text-sm font-semibold text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                    {{ CONSTANTS.LABELS.ADD_POINT.NEXT_STEP }}
-                </button>
-            </div>
+			<div class="py-2 mb-1 grid grid-cols-2 text-end align-bottom" >
+				<button
+					class="rounded bg-white px-2 py-1 text-sm font-semibold text-gray-600 shadow-sm hover:bg-gray-200 border border-black h-10 mr-3"
+					type="button"
+					v-on:click="closeModal()"
+				>
+					{{ CONSTANTS.LABELS.REPORT_PROBLEM.CANCEL }}
+				</button>
+				<button
+					class="rounded bg-black px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 border border-black h-10"
+					type="button"
+					v-on:click="nextStep()"
+				>
+					{{ CONSTANTS.LABELS.REPORT_PROBLEM.NEXT_STEP }}
+				</button>
+			</div>
         </div>
     </div>
 </template>
@@ -214,13 +162,17 @@ export default {
             type: Object,
             required: true,
         },
+		mapPoint: {
+			type: Object,
+			required: true,
+		}
     },
     computed: {
         CONSTANTS() {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [44, 44 * 1.15];
+            return [36, 48];
         },
         mapOptions() {
             if (!this.mapIsActive) {
@@ -245,17 +197,14 @@ export default {
             mapIsActive: false,
             loadMap: true,
             stepRequestBody: {
-                service_id: null,
-                field_types: {
-                    address: '',
-                },
+                address: '',
                 lat: null,
                 lng: null,
             },
         };
     },
-    mounted() {
-        this.requestCurrentLocation();
+    mounted()
+	{
     },
     methods: {
         closeModal() {
@@ -263,25 +212,6 @@ export default {
         },
         getError(key) {
             return _.get(this, ['errors', key], false);
-        },
-        requestCurrentLocation()
-        {
-            const success = (position) =>
-            {
-                const latitude  = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                this.latitude = latitude;
-                this.longitude = longitude;
-
-                this.hasApprovedLocation = true;
-            };
-
-            const error = (err) =>
-            {
-                console.log(error)
-            };
-            navigator.geolocation.getCurrentPosition(success, error);
         },
         activateMap() {
             this.mapIsActive = true;
@@ -312,20 +242,20 @@ export default {
                     url,
                 )
                 .then((response) => {
-                    this.stepRequestBody.field_types.address = response.data.display_name
+                    this.stepRequestBody.address = response.data.display_name
                 })
                 .catch((err) => {});
         },
         getLatLonOfAddress() {
             this.point = {};
-            this.stepRequestBody.lat = null;
-            this.stepRequestBody.lng = null;
+            //this.stepRequestBody.lat = null;
+            //this.stepRequestBody.lng = null;
 
             this.latitude = null;
             this.longitude = null;
 
             let url = CONSTANTS.NOMINATIM_URL_POINTS;
-            url = _.replace(url, '{search}', this.stepRequestBody.field_types.address);
+            url = _.replace(url, '{search}', this.stepRequestBody.address);
 
             axios
                 .get(
@@ -343,7 +273,7 @@ export default {
                     }
 
                     //remove the below line to not change the address typed by user
-                    this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
+                    this.stepRequestBody.address = _.get(response, 'data.0.display_name', this.stepRequestBody.address);
 
                     this.stepRequestBody.lat = this.point.lat;
                     this.stepRequestBody.lng = this.point.lon;
@@ -356,10 +286,7 @@ export default {
         validate() {
             this.errors = {};
 
-            if (!_.get(this, 'stepRequestBody.service_id', false)) {
-                this.errors.service_id = true;
-            }
-            if (!_.get(this, 'stepRequestBody.field_types.address', '').length) {
+            if (!_.get(this, 'stepRequestBody.address', '').length) {
                 this.errors.address = true;
             }
             if (!_.get(this, 'stepRequestBody.lat', '')
@@ -371,24 +298,51 @@ export default {
             return Object.keys(this.errors).length;
         },
         nextStep() {
-            if (this.validate()) {
+            if (this.validate())
+			{
                 return;
-            }
-
+			}
             this.$emit('stepFinished', {
-                nextStep: 'second',
+                nextStep: 'success-finish',
                 body: this.stepRequestBody
             })
-        }
+        },
+		fillPointInfo()
+		{
+			this.point = {
+				lat: this.mapPoint.lat,
+				lon: this.mapPoint.lon,
+				address: ""
+			};
+
+			for (const field of this.mapPoint.fields)
+			{
+				if (field.field.field_name == 'address')
+				{
+					this.point.address = field.value;
+					this.stepRequestBody.address = field.value;
+				}
+			}
+
+			this.latitude = this.mapPoint.lat;
+			this.longitude = this.mapPoint.lon;
+
+			this.stepRequestBody.lat = this.mapPoint.lon;
+			this.stepRequestBody.lon = this.mapPoint.lon;
+		}
     },
-    watch: {
-        selectedService: {
-            handler: function (newVal) {
-                this.stepRequestBody.service_id = newVal.id
-            },
-            deep: true,
-            immediate: true
-        }
-    },
+	watch: {
+		mapPoint: {
+			handler: function (newVal)
+			{
+				if (_.get(this, ['mapPoint', 'id'], false))
+				{
+					this.fillPointInfo();
+				}
+			},
+			deep: true,
+			immediate: true
+		}
+	},
 };
 </script>

@@ -14,9 +14,15 @@ use Illuminate\Database\Eloquent\Model;
 class IssueType extends Model
 {
     protected $table = 'reported_point_issue_types';
+	protected $casts = [
+		'steps' => 'array'
+	];
 	
-	public function item()
+	protected $fillable = [
+		'id'
+	];
+	public function items()
 	{
-		return $this->hasOne(IssueTypeItem::class, 'id', 'reported_point_issue_type_id');
+		return $this->hasMany(IssueTypeItem::class, 'reported_point_issue_type_id', 'id');
 	}
 }

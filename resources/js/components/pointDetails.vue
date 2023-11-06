@@ -153,6 +153,7 @@
 		v-if="!resetReportProblemModal"
 		:is-open="isReportProblemModalOpen"
 		:user-info="userInfo"
+		:map-point="point"
 		@close="isReportProblemModalOpen=false"
 		@reset="resetReportProblemModal()"
 	>
