@@ -135,7 +135,7 @@
 					id="link"
 					class="block w-full rounded-l-md border-0 py-1.5 text-black ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
 					placeholder="link"
-					:value="generatePointLink()"
+					:value="pointUrl"
 				>
 			</div>
 			<button
@@ -190,6 +190,11 @@ export default
 		mainMaterials:
 		{
 			type: Object,
+			required: true
+		},
+		pointUrl:
+		{
+			type: String,
 			required: true
 		},
 		userInfo:

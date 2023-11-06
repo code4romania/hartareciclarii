@@ -83,6 +83,7 @@
 		v-if="Object.keys(selectedPoint).length > 0"
 		:point="selectedPoint"
 		:main-materials="mainMaterials"
+		:point-url="pointUrl"
 		:user-info="userInfo"
 		@closePointDetails="closePointDetails($event)"
 	>
@@ -156,7 +157,8 @@ export default
 			filters: {},
 			bounds: {},
 			selectedPoint: {},
-			mainMaterials: {}
+			mainMaterials: {},
+			pointUrl: '',
 
 		};
 	},
@@ -172,6 +174,7 @@ export default
 				{
 					this.selectedPoint = _.get(response, 'data.point', {});
 					this.mainMaterials = _.get(response, 'data.materials', {});
+					this.pointUrl = _.get(response, 'data.url', {});
 				}).catch((err) =>
 				{
 					console.log(err);
