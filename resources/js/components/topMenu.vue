@@ -218,11 +218,11 @@ export default
         },
 		goToDictionary()
 		{
-			location.href = 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all';
+			location.href = CONSTANTS.EXTERNAL_URLS.GUIDE;
 		},
 		goToFaq()
 		{
-			location.href = 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/';
+			location.href = CONSTANTS.EXTERNAL_URLS.FAQ;
 		},
 		addMapPoint()
 		{

@@ -9,12 +9,19 @@
 
 namespace App\Models;
 
+use App\Enums\IssueStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Issue extends Model
 {
     protected $table = 'reported_point_issues';
+	protected $casts = [
+		'material_issue' => 'array',
+		'material_issue_missing' => 'array',
+		'material_issue_extra' => 'array',
+		'collection_decline_reason' => 'array',
+	];
 	
 	public function type()
 	{
@@ -26,7 +33,7 @@ class Issue extends Model
 		$issue = new self();
 		$issue->point_id = $data['point_id'];
 		$issue->reporter_id = $data['id_user'];
-		$issue->status = 0;
+		$issue->status = IssueStatus::New;
 		$issue->reported_point_issue_type_id = $data['reported_point_issue_type_id'];
 		$issue->description = self::_fillDescription($data);
 		$issue->created_at = Carbon::now()->toDateTimeString();
@@ -64,7 +71,6 @@ class Issue extends Model
 				}
 			break;
 		}
-		
 		
 		$issue->save();
 		

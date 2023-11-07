@@ -993,20 +993,23 @@ CREATE TABLE IF NOT EXISTS `reported_point_issue_types` (
     `id` int NOT NULL AUTO_INCREMENT,
     `accept_images` tinyint NOT NULL DEFAULT '0',
     `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+    `steps` json NOT NULL,
     `created_at` timestamp NOT NULL,
     `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 -- Dumping data for table harta_reciclarii.reported_point_issue_types: ~7 rows (approximately)
-INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `created_at`, `updated_at`) VALUES
-  (1, 0, 'Adresa nu este corectă', '2023-10-27 00:19:10', '2023-10-27 00:19:43'),
-  (2, 0, 'Locația punctului pe hartă nu este corectă', '2023-10-27 00:19:19', '2023-10-27 00:19:43'),
-  (3, 1, 'Materialele colectate nu sunt corecte', '2023-10-27 00:19:28', '2023-10-27 00:19:43'),
-  (4, 0, 'Programul nu este corect', '2023-10-27 00:19:36', '2023-10-27 00:19:43'),
-  (5, 1, 'Containerul nu funcționează sau nu este bine întreținut', '2023-10-27 00:19:43', '2023-10-27 00:19:43'),
-  (6, 0, 'Mi s-a refuzat preluarea deșeului', '2023-10-27 00:19:49', '2023-10-27 00:19:43'),
-  (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43');
+INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `created_at`, `updated_at`, `steps`) VALUES
+    (1, 0, 'Adresa nu este corectă', '2023-10-27 00:19:10', '2023-10-27 00:19:43', '["address"]'),
+    (2, 0, 'Locația punctului pe hartă nu este corectă', '2023-10-27 00:19:19', '2023-10-27 00:19:43', '["address"]'),
+    (3, 1, 'Materialele colectate nu sunt corecte', '2023-10-27 00:19:28', '2023-10-27 00:19:43', '["materials-options"]'),
+    (4, 0, 'Programul nu este corect', '2023-10-27 00:19:36', '2023-10-27 00:19:43', '["schedule"]'),
+    (5, 1, 'Containerul nu funcționează sau nu este bine întreținut', '2023-10-27 00:19:43', '2023-10-27 00:19:43', '["container"]'),
+    (6, 0, 'Mi s-a refuzat preluarea deșeului', '2023-10-27 00:19:49', '2023-10-27 00:19:43', '["takeover"]'),
+    (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43', '["other-problem"]');
+
 
 -- Dumping structure for table harta_reciclarii.reported_point_issue_type_items
 DROP TABLE IF EXISTS `reported_point_issue_type_items`;

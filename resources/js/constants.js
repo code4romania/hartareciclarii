@@ -9,6 +9,10 @@ export const CONSTANTS =
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266
 	},
+	EXTERNAL_URLS:{
+		GUIDE: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
+		FAQ: 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/'
+	},
 	ROUTES:
     {
 		AUTH:
@@ -218,6 +222,63 @@ export const CONSTANTS =
 					TITLE: `Vă mulțumim pentru sesizare!`,
 					SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
 				}
+			},
+			SCHEDULE_STEP:
+			{
+				TITLE: "Programul nu este corect",
+				SUBTITLE: "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+				DESCRIPTION_NOT_FOUND: `Vǎ rugam completați descrierea problemei!`,
+				SUCCESS:
+				{
+					TITLE: `Vă mulțumim pentru sesizare!`,
+					SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+				}
+			},
+			CONTAINER_STEP:
+			{
+				TITLE: "Containerul nu funcționează",
+				SUBTITLE: "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+				DESCRIPTION_NOT_FOUND: `Vǎ rugam completați descrierea problemei!`,
+				ADD_PHOTOS_TITLE: "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
+				ADD_PHOTOS_LABEL: "Adaugă poze",
+				SUCCESS:
+					{
+						TITLE: `Vă mulțumim pentru sesizare!`,
+						SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+						SUB_TITLE_UNDER_IMAGE: `Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată.`,
+						WEBSITE: `Website`,
+						PHONE: `Telefon`,
+					}
+			},
+			OTHER_PROBLEM_STEP:
+			{
+				TITLE: "Altă problemă",
+				SUBTITLE: "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+				DESCRIPTION_NOT_FOUND: `Vǎ rugam completați descrierea problemei!`,
+				ADD_PHOTOS_TITLE: "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
+				ADD_PHOTOS_LABEL: "Adaugă poze",
+				SUCCESS:
+					{
+						TITLE: `Vă mulțumim pentru sesizare!`,
+						SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+						SUB_TITLE_UNDER_IMAGE: `Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată.`,
+						WEBSITE: `Website`,
+						PHONE: `Telefon`,
+					}
+			},
+			TAKEOVER_STEP:
+			{
+				TITLE: "S-a refuzat preluarea",
+				SUBTITLE: "Care a fost motivul refuzului?",
+				CAPTION: "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+				DESCRIPTION_NOT_FOUND: `Vǎ rugam completați descrierea problemei!`,
+				SUCCESS:
+					{
+						TITLE: `Vă mulțumim pentru sesizare!`,
+						SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+						SUB_TITLE_UNDER_IMAGE: `Între timp, puteți citi mai multe despre ceea ce puteți face atunci când vi se refuză un deșeu să fie preluat, sau cum puteți evita astfel de situații`,
+						GUIDE_LABEL: 'Ghid Reciclare'
+					}
 			},
 			MATERIALS_OPTIONS_STEP:
 			{

@@ -7,23 +7,26 @@
 	</div>
 	<div class="h-screen flex items-center justify-center flex-col">
 		<h3 class="text-2xl pl-5 py-3 text-black font-medium">
-			{{CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.SUCCESS.TITLE}}
+			{{CONSTANTS.LABELS.REPORT_PROBLEM.TAKEOVER_STEP.SUCCESS.TITLE}}
 		</h3>
 		<p class="mt-3 text-center text-sm font-medium text-gray-700">
-			{{CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.SUCCESS.SUB_TITLE}}
+			{{CONSTANTS.LABELS.REPORT_PROBLEM.TAKEOVER_STEP.SUCCESS.SUB_TITLE}}
 		</p>
-		<p class="mt-3">
+		<p class="mt-3 text-center">
 			<success-high-five-icon></success-high-five-icon>
 		</p>
-	</div>
-	<div class="flex items-end justify-center">
-		<button
-			class="rounded bg-black px-2 py-1 w-56 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 border border-black h-10"
-			type="button"
-			v-on:click="closeModal()"
-		>
-			OK
-		</button>
+		<p class="mt-3 text-center text-sm font-medium text-gray-700">
+			{{CONSTANTS.LABELS.REPORT_PROBLEM.TAKEOVER_STEP.SUCCESS.SUB_TITLE_UNDER_IMAGE}}
+		</p>
+		<p class="mt-5 text-center text-sm font-medium text-gray-700">
+			<button
+				class="rounded-lg bg-white px-2 py-1 w-56 text-sm font-medium text-black shadow-sm hover:bg-neutral-100 border border-black h-10"
+				type="button"
+				v-on:click="goToGuide()"
+			>
+				{{CONSTANTS.LABELS.REPORT_PROBLEM.TAKEOVER_STEP.SUCCESS.GUIDE_LABEL}}
+			</button>
+		</p>
 	</div>
 </template>
 
@@ -34,8 +37,6 @@ import axios, {HttpStatusCode} from "axios";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid';
-import {LMap, LTileLayer, LControlLayers, LMarker, LIcon, LControl} from "@vue-leaflet/vue-leaflet";
-import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions} from '@headlessui/vue';
 import SuccessHighFiveIcon from "../../svg-icons/successHighFiveIcon.vue";
 
 export default {
@@ -44,18 +45,7 @@ export default {
 		DesktopFilterCloseIcon,
 		XCircleIcon,
 		CheckIcon,
-		ChevronUpDownIcon,
-		LIcon,
-		LMarker,
-		LMap,
-		LTileLayer,
-		LControlLayers,
-		LControl,
-		Listbox,
-		ListboxButton,
-		ListboxLabel,
-		ListboxOption,
-		ListboxOptions
+		ChevronUpDownIcon
 	},
 	props: {
 		nomenclatures: {
@@ -75,24 +65,7 @@ export default {
 		CONSTANTS ()
 		{
 			return CONSTANTS;
-		},
-		dynamicSize ()
-		{
-			return [44, 44 * 1.15];
-		},
-		mapOptions ()
-		{
-			if (!this.mapIsActive)
-			{
-				return {
-					dragging: false,
-					doubleClickZoom: 0,
-					scrollWheelZoom: 0,
-					zoomControl: false
-				};
-			}
-			return {};
-		},
+		}
 	},
 	data ()
 	{
@@ -121,10 +94,9 @@ export default {
 					.post(
 						CONSTANTS.API_DOMAIN + url,
 						{
-							lat: this.previousStepBody.lat,
-							lng: this.previousStepBody.lng,
-							address: this.previousStepBody.address,
+							description: this.previousStepBody.description,
 							reported_point_issue_type_id: this.previousStepBody.reported_point_issue_type_id,
+							collection_decline_reason: this.previousStepBody.collection_decline_reason,
 						}
 					)
 					.then((response) => {
@@ -135,6 +107,10 @@ export default {
 					.catch((err) => {});
 			}
 
+		},
+		goToGuide()
+		{
+			window.location = CONSTANTS.EXTERNAL_URLS.GUIDE;
 		}
 	},
 	watch: {

@@ -28,16 +28,42 @@
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></address-step>
-						<success-address-step
-							v-if="activeStep === 'success-address'"
+						<schedule-step
+							v-show="activeStep === 'schedule'"
 							:active-step="activeStep"
-							:map-point="mapPoint"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></success-address-step>
+							@stepFinished="stepFinished($event)"
+						></schedule-step>
+						<container-step
+							v-show="activeStep === 'container'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></container-step>
+						<other-problem-step
+							v-show="activeStep === 'other-problem'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></other-problem-step>
+						<takeover-step
+							v-show="activeStep === 'takeover'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></takeover-step>
 						<!--
 						<materials-options-step
 							v-show="activeStep === 'materials-options'"
@@ -75,43 +101,52 @@
 							@close="closeModal();"
 							@stepFinished="savePoint($event)"
 						></materials-other-step>
-						<schedule-step
-							v-show="activeStep === 'schedule'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></schedule-step>
-						<container-step
-							v-show="activeStep === 'container'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></container-step>
-						<takeover-step
-							v-show="activeStep === 'takeover'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></takeover-step>
-						<other-problem-step
-							v-show="activeStep === 'other-problem'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></other-problem-step>
 						-->
+						<success-address-step
+							v-if="activeStep === 'success-address'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-address-step>
+						<success-schedule-step
+							v-if="activeStep === 'success-schedule'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-schedule-step>
+						<success-container-step
+							v-if="activeStep === 'success-container'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-container-step>
+						<success-other-problem-step
+							v-if="activeStep === 'success-other'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-other-problem-step>
+						<success-takeover-step
+							v-if="activeStep === 'success-takeover'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-takeover-step>
 					</div>
 				</div>
 			</div>
@@ -129,9 +164,25 @@ import _ from "lodash";
 import firstStep from "./firstStep.vue";
 import AddressStep from "./addressStep.vue";
 import SuccessAddressStep from "./successAddressStep.vue";
+import ScheduleStep from "./scheduleStep.vue";
+import SuccessScheduleStep from "./successScheduleStep.vue";
+import SuccessContainerStep from "./successContainerStep.vue";
+import ContainerStep from "./containerStep.vue";
+import OtherProblemStep from "./otherProblemStep.vue";
+import SuccessOtherProblemStep from "./successOtherProblemStep.vue";
+import TakeoverStep from "./takeoverStep.vue";
+import SuccessTakeoverStep from "./successTakeoverStep.vue";
 
 export default {
 	components: {
+		SuccessTakeoverStep,
+		TakeoverStep,
+		SuccessOtherProblemStep,
+		OtherProblemStep,
+		ContainerStep,
+		SuccessContainerStep,
+		SuccessScheduleStep,
+		ScheduleStep,
 		SuccessAddressStep,
 		AddressStep,
 		firstStep,
@@ -215,6 +266,7 @@ export default {
 		},
 		stepFinished (stepData)
 		{
+			console.log(`stepFinished`, stepData);
 			const myDiv = document.getElementById('containerWithScroll');
 			myDiv.scrollTop = 0;
 

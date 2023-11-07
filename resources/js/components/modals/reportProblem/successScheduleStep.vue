@@ -7,12 +7,12 @@
 	</div>
 	<div class="h-screen flex items-center justify-center flex-col">
 		<h3 class="text-2xl pl-5 py-3 text-black font-medium">
-			{{CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.SUCCESS.TITLE}}
+			{{CONSTANTS.LABELS.REPORT_PROBLEM.SCHEDULE_STEP.SUCCESS.TITLE}}
 		</h3>
 		<p class="mt-3 text-center text-sm font-medium text-gray-700">
-			{{CONSTANTS.LABELS.REPORT_PROBLEM.ADDRESS_STEP.SUCCESS.SUB_TITLE}}
+			{{CONSTANTS.LABELS.REPORT_PROBLEM.SCHEDULE_STEP.SUCCESS.SUB_TITLE}}
 		</p>
-		<p class="mt-3">
+		<p class="mt-3 text-center">
 			<success-high-five-icon></success-high-five-icon>
 		</p>
 	</div>
@@ -34,8 +34,6 @@ import axios, {HttpStatusCode} from "axios";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid';
-import {LMap, LTileLayer, LControlLayers, LMarker, LIcon, LControl} from "@vue-leaflet/vue-leaflet";
-import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions} from '@headlessui/vue';
 import SuccessHighFiveIcon from "../../svg-icons/successHighFiveIcon.vue";
 
 export default {
@@ -44,18 +42,7 @@ export default {
 		DesktopFilterCloseIcon,
 		XCircleIcon,
 		CheckIcon,
-		ChevronUpDownIcon,
-		LIcon,
-		LMarker,
-		LMap,
-		LTileLayer,
-		LControlLayers,
-		LControl,
-		Listbox,
-		ListboxButton,
-		ListboxLabel,
-		ListboxOption,
-		ListboxOptions
+		ChevronUpDownIcon
 	},
 	props: {
 		nomenclatures: {
@@ -75,24 +62,7 @@ export default {
 		CONSTANTS ()
 		{
 			return CONSTANTS;
-		},
-		dynamicSize ()
-		{
-			return [44, 44 * 1.15];
-		},
-		mapOptions ()
-		{
-			if (!this.mapIsActive)
-			{
-				return {
-					dragging: false,
-					doubleClickZoom: 0,
-					scrollWheelZoom: 0,
-					zoomControl: false
-				};
-			}
-			return {};
-		},
+		}
 	},
 	data ()
 	{
@@ -121,9 +91,7 @@ export default {
 					.post(
 						CONSTANTS.API_DOMAIN + url,
 						{
-							lat: this.previousStepBody.lat,
-							lng: this.previousStepBody.lng,
-							address: this.previousStepBody.address,
+							description: this.previousStepBody.description,
 							reported_point_issue_type_id: this.previousStepBody.reported_point_issue_type_id,
 						}
 					)

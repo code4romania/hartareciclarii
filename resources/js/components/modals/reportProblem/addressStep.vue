@@ -122,7 +122,7 @@
 					type="button"
 					v-on:click="nextStep()"
 				>
-					{{ CONSTANTS.LABELS.REPORT_PROBLEM.NEXT_STEP }}
+					{{ CONSTANTS.LABELS.REPORT_PROBLEM.FINISH_STEP }}
 				</button>
 			</div>
         </div>
