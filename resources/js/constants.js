@@ -284,19 +284,19 @@ export const CONSTANTS =
 			{
 				TITLE: "Materialele nu sunt corecte",
 				SUBTITLE: "Care este problema sesizată legată de materiale?",
-				SELECTED_MATERIALS_LABEL: `Unele materiale listate în descriere nu se colectează în realitate`,
-				SELECTED_MATERIALS_MISSING_LABEL: `Lipsesc materiale colectate din descriere`,
-				OTHER_PROBLEM_LABEL: `Altă problemă`,
+				OPTIONS_NOT_FOUND: `Trebuie selectatǎ cel puțin o opțiune!`
 			},
 			MATERIALS_NOT_COLLECTED_STEP:
 			{
 				TITLE: "Nu se colectează unele materiale",
 				SUBTITLE: "Care dintre următoarele materiale ați identificat că NU se colectează în realitate?",
+				MATERIALS_NOT_FOUND: "Trebuie selectat cel puțin un material!",
 			},
 			MATERIALS_MISSING_STEP:
 			{
 				TITLE: "Lipsesc materiale din descriere",
 				SUBTITLE: "Care dintre următoarele materiale ați identificat că lipsesc din descrierea locației?",
+				MATERIALS_NOT_FOUND: "Trebuie selectat cel puțin un material!",
 			},
 			MATERIALS_OTHER_STEP:
 			{

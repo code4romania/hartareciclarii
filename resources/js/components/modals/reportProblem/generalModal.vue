@@ -33,6 +33,7 @@
 							:active-step="activeStep"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
+							:map-point="mapPoint"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
@@ -42,6 +43,7 @@
 							:active-step="activeStep"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
+							:map-point="mapPoint"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
@@ -51,57 +53,33 @@
 							:active-step="activeStep"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
+							:map-point="mapPoint"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></other-problem-step>
-						<takeover-step
-							v-show="activeStep === 'takeover'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="stepFinished($event)"
-						></takeover-step>
-						<!--
 						<materials-options-step
 							v-show="activeStep === 'materials-options'"
 							:active-step="activeStep"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
+							:map-point="mapPoint"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
-							@stepFinished="savePoint($event)"
+							@stepFinished="stepFinished($event)"
 						></materials-options-step>
-						<materials-not-collected-step
-							v-show="activeStep === 'materials-not-collected'"
+						<material-option-extra-step
+							v-show="activeStep === 'material-option-extra'"
 							:active-step="activeStep"
 							:nomenclatures="nomenclatures"
 							:previous-step-body="requestBody"
+							:map-point="mapPoint"
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></materials-not-collected-step>
-						<materials-missing-step
-							v-show="activeStep === 'materials-missing'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></materials-missing-step>
-						<materials-other-step
-							v-show="activeStep === 'materials-other'"
-							:active-step="activeStep"
-							:nomenclatures="nomenclatures"
-							:previous-step-body="requestBody"
-							@backToStep="backToStep($event)"
-							@close="closeModal();"
-							@stepFinished="savePoint($event)"
-						></materials-other-step>
-						-->
+							@stepFinished="stepFinished($event)"
+						></material-option-extra-step>
+
+
 						<success-address-step
 							v-if="activeStep === 'success-address'"
 							:active-step="activeStep"
@@ -172,9 +150,13 @@ import OtherProblemStep from "./otherProblemStep.vue";
 import SuccessOtherProblemStep from "./successOtherProblemStep.vue";
 import TakeoverStep from "./takeoverStep.vue";
 import SuccessTakeoverStep from "./successTakeoverStep.vue";
+import MaterialsOptionsStep from "./materialsOptionsStep.vue";
+import MaterialOptionExtraStep from "./materialOptionExtraStep.vue";
 
 export default {
 	components: {
+		MaterialOptionExtraStep,
+		MaterialsOptionsStep,
 		SuccessTakeoverStep,
 		TakeoverStep,
 		SuccessOtherProblemStep,
@@ -266,35 +248,52 @@ export default {
 		},
 		stepFinished (stepData)
 		{
-			console.log(`stepFinished`, stepData);
-			const myDiv = document.getElementById('containerWithScroll');
-			myDiv.scrollTop = 0;
-
-			this.activeStep = stepData.nextStep;
 			this.requestBody = {...this.requestBody, ...stepData.body};
 
-			console.log(`stepFinished`, stepData, this.requestBody);
-		},
-		savePoint ()
-		{
-			axios
-				.post(
-					CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.CREATE,
-					this.requestBody
-				)
-				.then((response) =>
+			if (stepData.nextStep == 'material-step')
+			{
+				if (stepData.stepCompleted == 0)
 				{
-					if (_.get(response, 'status', 0) === HttpStatusCode.Ok)
+					let itemType = null;
+					for (const item of this.nomenclatures.reported_point_issue_types)
 					{
-						this.closeModal();
-						this.resetModal();
-						this.$emit('pointSaved', true);
+						if (item.id == this.requestBody.reported_point_issue_type_id)
+						{
+							itemType = item;
+						}
 					}
-				})
-				.catch((err) =>
+
+					let step = null
+					if (null !== itemType)
+					{
+						for (const item of itemType.items)
+						{
+							if (item.id == this.requestBody.material_issue[0])
+							{
+								step = item.step;
+							}
+						}
+					}
+
+					if (null !== step)
+					{
+						this.activeStep = step;
+					}
+				}
+				else
 				{
-				});
-		}
+					console.log('stepData - for next', stepData);
+					return;
+				}
+			}
+			else
+			{
+				const myDiv = document.getElementById('containerWithScroll');
+				myDiv.scrollTop = 0;
+
+				this.activeStep = stepData.nextStep;
+			}
+		},
 	}
 };
 </script>
