@@ -168,7 +168,7 @@ export default {
 			this.$emit('stepFinished', {
 				nextStep: 'material-step',
 				body: this.stepRequestBody,
-				stepCompleted: 0
+				stepCompleted: 'materials-options'
 			});
 		}
 	}

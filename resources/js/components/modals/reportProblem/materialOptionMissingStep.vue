@@ -2,7 +2,7 @@
 	<div class="">
 		<div class="flex items-center justify-between">
 			<h3 id="modal-title" class="text-2xl pl-5 py-3">{{
-					CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_NOT_COLLECTED_STEP.TITLE
+					CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_MISSING_STEP.TITLE
 				}}</h3>
 			<button v-on:click="closeModal();">
 				<desktop-filter-close-icon></desktop-filter-close-icon>
@@ -12,7 +12,7 @@
 			class="flex items-center justify-between flex-col"
 			v-if="items.length > 0"
 		>
-			<span class="pt-10 pb-3 text-sm px-5 w-full">{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_NOT_COLLECTED_STEP.SUBTITLE }}</span>
+			<span class="pt-10 pb-3 text-sm px-5 w-full">{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_MISSING_STEP.SUBTITLE }}</span>
 			<fieldset>
 				<legend class="sr-only"></legend>
 				<template
@@ -33,17 +33,17 @@
 									class="flex h-6 items-center"
 								>
 									<input
-										:id="`material_issue_extra_${child.id}`"
-										:name="`material_issue_extra_[${child.id}]`"
+										:id="`material_issue_missing_${child.id}`"
+										:name="`material_issue_missing_[${child.id}]`"
 										type="checkbox"
 										class="w-4 h-4 text-red-600 bg-gray-100 rounded focus:ring-red-500"
-										v-model="stepRequestBody.material_issue_extra"
+										v-model="stepRequestBody.material_issue_missing"
 										:value="child.id"
 									/>
 								</div>
 								<div class="ml-3">
 									<label
-										:for="`material_issue_extra_${child.id}`"
+										:for="`material_issue_missing_${child.id}`"
 										class="text-gray-700 text-sm font-normal"
 										:class="{ 'line-through': isChecked(child.id) }"
 									>
@@ -56,7 +56,7 @@
 				</template>
 
 			</fieldset>
-			<template v-if="getError('material_issue_extra')">
+			<template v-if="getError('material_issue_missing')">
 				<div class="rounded-md bg-red-50 p-4 mb-2 mt-5 w-full">
 					<div class="flex">
 						<div class="flex-shrink-0">
@@ -64,7 +64,7 @@
 						</div>
 						<div class="ml-3">
 							<h3 class="text-sm font-medium text-red-800">
-								{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_NOT_COLLECTED_STEP.MATERIALS_NOT_FOUND }}</h3>
+								{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_MISSING_STEP.MATERIALS_NOT_FOUND }}</h3>
 						</div>
 					</div>
 				</div>
@@ -176,7 +176,7 @@ export default {
 		return {
 			errors: {},
 			stepRequestBody: {
-				material_issue_extra: []
+				material_issue_missing: []
 			},
 		};
 	},
@@ -196,16 +196,16 @@ export default {
 		{
 			this.errors = {};
 
-			if (_.get(this, 'stepRequestBody.material_issue_extra', []).length < 1)
+			if (_.get(this, 'stepRequestBody.material_issue_missing', []).length < 1)
 			{
-				this.errors.material_issue_extra = true;
+				this.errors.material_issue_missing = true;
 			}
 
 			return Object.keys(this.errors).length;
 		},
 		isChecked(id)
 		{
-			if (_.get(this, 'stepRequestBody.material_issue_extra', []).includes(id))
+			if (_.get(this, 'stepRequestBody.material_issue_missing', []).includes(id))
 			{
 				return true;
 			}
@@ -221,7 +221,7 @@ export default {
 			this.$emit('stepFinished', {
 				nextStep: 'material-step',
 				body: this.stepRequestBody,
-				stepCompleted: 'material-option-extra'
+				stepCompleted: 'material-option-missing'
 			});
 		}
 	}

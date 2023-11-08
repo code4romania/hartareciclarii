@@ -78,6 +78,16 @@
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></material-option-extra-step>
+						<material-option-missing-step
+							v-show="activeStep === 'material-option-missing'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							:map-point="mapPoint"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></material-option-missing-step>
 
 
 						<success-address-step
@@ -152,9 +162,11 @@ import TakeoverStep from "./takeoverStep.vue";
 import SuccessTakeoverStep from "./successTakeoverStep.vue";
 import MaterialsOptionsStep from "./materialsOptionsStep.vue";
 import MaterialOptionExtraStep from "./materialOptionExtraStep.vue";
+import MaterialOptionMissingStep from "./materialOptionMissingStep.vue";
 
 export default {
 	components: {
+		MaterialOptionMissingStep,
 		MaterialOptionExtraStep,
 		MaterialsOptionsStep,
 		SuccessTakeoverStep,
@@ -252,38 +264,37 @@ export default {
 
 			if (stepData.nextStep == 'material-step')
 			{
-				if (stepData.stepCompleted == 0)
+				console.log(`steps data`, this.nomenclatures.reported_point_issue_types, this.requestBody);
+				let availableSteps = [];
+				for (const item of this.nomenclatures.reported_point_issue_types)
 				{
-					let itemType = null;
-					for (const item of this.nomenclatures.reported_point_issue_types)
+					if (item.id == this.requestBody.reported_point_issue_type_id)
 					{
-						if (item.id == this.requestBody.reported_point_issue_type_id)
+						for (const step of item.items)
 						{
-							itemType = item;
-						}
-					}
-
-					let step = null
-					if (null !== itemType)
-					{
-						for (const item of itemType.items)
-						{
-							if (item.id == this.requestBody.material_issue[0])
+							if (this.requestBody.material_issue.includes(step.id))
 							{
-								step = item.step;
+								availableSteps.push(step.step);
 							}
 						}
 					}
+				}
 
-					if (null !== step)
-					{
-						this.activeStep = step;
-					}
+				if (stepData.stepCompleted == 'materials-options')
+				{
+					this.activeStep = availableSteps[0];
 				}
 				else
 				{
-					console.log('stepData - for next', stepData);
-					return;
+					let index = availableSteps.indexOf(stepData.stepCompleted);
+					if (typeof availableSteps[(index + 1)] !== 'undefined')
+					{
+						this.activeStep = availableSteps[(index + 1)];
+					}
+					else
+					{
+						this.activeStep = 'materials-options-finish';
+					}
 				}
 			}
 			else
