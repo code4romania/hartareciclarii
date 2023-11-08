@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IssueTypeItem extends JsonResource
+class IssueTypeItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,11 @@ class IssueTypeItem extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+		return [
 			'id' => $this->id,
-			'title' => $this->title,
 			'reported_point_issue_type_id' => $this->reported_point_issue_type_id,
+			'title' => $this->title,
+			'step' => $this->step
 		];
     }
 }

@@ -12,7 +12,7 @@
 			class="flex items-center justify-between flex-col"
 			v-if="items.length > 0"
 		>
-			<span class="pt-10 pb-3 text-sm px-5 w-full">{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_MISSING_STEP.SUBTITLE }}</span>
+			<span class="pt-10 pb-3 text-sm px-5 w-full" v-html="CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_MISSING_STEP.SUBTITLE"></span>
 			<fieldset>
 				<legend class="sr-only"></legend>
 				<template
@@ -26,28 +26,25 @@
 					<template
 						v-for="child in item.children"
 					>
-							<div
-								class="relative flex items-start"
-							>
-								<div
-									class="flex h-6 items-center"
-								>
+							<div class="relative flex items-start">
+								<div class="flex h-6 items-center">
 									<input
 										:id="`material_issue_missing_${child.id}`"
 										:name="`material_issue_missing_[${child.id}]`"
 										type="checkbox"
-										class="w-4 h-4 text-red-600 bg-gray-100 rounded focus:ring-red-500"
-										v-model="stepRequestBody.material_issue_missing"
+										class="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+										v-model="material_issue_missing_data"
 										:value="child.id"
+										:disabled="child.existing"
+										:class="{'text-gray-700': child.existing, 'text-blue-500': !child.existing}"
 									/>
 								</div>
 								<div class="ml-3">
 									<label
 										:for="`material_issue_missing_${child.id}`"
 										class="text-gray-700 text-sm font-normal"
-										:class="{ 'line-through': isChecked(child.id) }"
 									>
-										{{child.label}}
+										{{child.label}} existing {{child.existing}}
 									</label>
 								</div>
 							</div>
@@ -129,43 +126,39 @@ export default {
 		items()
 		{
 			let materials = [];
-			let parents = [];
-			for (const filter of _.get(this, ['nomenclatures', 'material_recycling_points'], []))
+			this.pointMaterials = [];
+			for (const material of _.get(this, ['mapPoint', 'materials'], []))
 			{
-				if (!filter.parent)
-				{
-					let filterToAppend =
-						{
-							id: filter.id,
-							label: filter.name,
-							icon: filter.icon,
-							children: []
-						};
-					for (const childrenFilter of _.get(this, ['mapPoint', 'materials'], []))
-					{
+				this.pointMaterials.push(material.id);
+				this.material_issue_missing_data.push(material.id);
+			}
+
+			for (const filter of _.get(this, ['nomenclatures', 'material_recycling_points'], [])) {
+				if (!filter.parent) {
+					let filterToAppend = {
+						id: filter.id,
+						label: filter.name,
+						existing: false,
+						children: []
+					};
+					for (const childrenFilter of _.get(this, ['nomenclatures', 'material_recycling_points'], [])) {
 						if (childrenFilter.parent === filter.id)
 						{
+							let existing = false;
+							if (this.pointMaterials.includes(childrenFilter.id))
+							{
+								existing = true;
+							}
+
 							filterToAppend.children.push({
 								id: childrenFilter.id,
 								label: childrenFilter.name,
+								existing: existing
 							});
-							parents.push(childrenFilter.parent);
-							parents.push(filter.id);
 						}
 					}
 					materials.push(filterToAppend);
 				}
-			}
-			let uniqueParents = parents.filter((x, y) => parents.indexOf(x) == y);
-			if (uniqueParents.length > 0)
-			{
-				let temp = materials;
-				let filtered  = temp.filter(function(value, index, array)
-				{
-					return uniqueParents.includes(value.id);
-				});
-
-				materials = filtered;
 			}
 
 			return materials;
@@ -178,6 +171,8 @@ export default {
 			stepRequestBody: {
 				material_issue_missing: []
 			},
+			material_issue_missing_data: [],
+			pointMaterials: []
 		};
 	},
 	mounted ()
@@ -224,6 +219,30 @@ export default {
 				stepCompleted: 'material-option-missing'
 			});
 		}
-	}
+	},
+	watch: {
+		material_issue_missing_data: {
+			handler: function (newVal)
+			{
+				let items = newVal.filter((x, y) => newVal.indexOf(x) == y);
+				this.stepRequestBody.material_issue_missing = [];
+				if (items.length > 0)
+				{
+					for (const item of items)
+					{
+						if (!this.pointMaterials.includes(item))
+						{
+							if (!this.stepRequestBody.material_issue_missing.includes(item))
+							{
+								this.stepRequestBody.material_issue_missing.push(item);
+							}
+						}
+					}
+				}
+			},
+			deep: true,
+			immediate: true
+		}
+	},
 };
 </script>

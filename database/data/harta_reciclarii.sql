@@ -1010,27 +1010,26 @@ INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `creat
     (6, 0, 'Mi s-a refuzat preluarea deșeului', '2023-10-27 00:19:49', '2023-10-27 00:19:43', '["takeover"]'),
     (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43', '["other-problem"]');
 
-
 -- Dumping structure for table harta_reciclarii.reported_point_issue_type_items
-DROP TABLE IF EXISTS `reported_point_issue_type_items`;
 CREATE TABLE IF NOT EXISTS `reported_point_issue_type_items` (
-     `id` int NOT NULL AUTO_INCREMENT,
-     `reported_point_issue_type_id` int NOT NULL DEFAULT '0',
-     `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
-    `created_at` timestamp NOT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `reported_point_issue_type_id` (`reported_point_issue_type_id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ `id` int NOT NULL AUTO_INCREMENT,
+ `reported_point_issue_type_id` int NOT NULL DEFAULT '0',
+ `title` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+ `step` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
+ `created_at` datetime NOT NULL,
+ `updated_at` datetime NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `reported_point_issue_type_id` (`reported_point_issue_type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table harta_reciclarii.reported_point_issue_type_items: ~0 rows (approximately)
-INSERT INTO `reported_point_issue_type_items` (`id`, `reported_point_issue_type_id`, `title`, `created_at`, `updated_at`) VALUES
-  (1, 3, 'Unele materiale listate în descriere nu se colectează în realitate', '2023-10-27 00:33:02', '2023-10-27 00:33:04'),
-  (2, 3, 'Lipsesc materiale colectate din descriere', '2023-10-27 00:33:15', '2023-10-27 00:33:18'),
-  (3, 3, 'Altă problemă', '2023-10-27 00:33:31', '2023-10-27 00:33:32'),
-  (4, 6, 'Susțin că nu preiau tipul de deșeu pe care am vrut să îl predau', '2023-10-27 00:33:32', '2023-10-27 00:33:32'),
-  (5, 6, 'Cantitatea sau modul de prezentare/ împachetare al deșeului a fost cosiderat neadecvat', '2023-10-27 00:34:00', '2023-10-27 00:34:02'),
-  (6, 6, 'Altă problemă', '2023-10-27 00:34:16', '2023-10-27 00:34:17');
+-- Dumping data for table harta_reciclarii.reported_point_issue_type_items: ~6 rows (approximately)
+INSERT INTO `reported_point_issue_type_items` (`id`, `reported_point_issue_type_id`, `title`, `step`, `created_at`, `updated_at`) VALUES
+  (1, 3, 'Unele materiale listate în descriere nu se colectează în realitate', 'material-option-extra', '2023-10-27 00:33:02', '2023-10-27 00:33:04'),
+  (2, 3, 'Lipsesc materiale colectate din descriere', 'material-option-missing', '2023-10-27 00:33:15', '2023-10-27 00:33:18'),
+  (3, 3, 'Altă problemă', 'material-option-other', '2023-10-27 00:33:31', '2023-10-27 00:33:32'),
+  (4, 6, 'Susțin că nu preiau tipul de deșeu pe care am vrut să îl predau', '', '2023-10-27 00:33:32', '2023-10-27 00:33:32'),
+  (5, 6, 'Cantitatea sau modul de prezentare/ împachetare al deșeului a fost cosiderat neadecvat', '', '2023-10-27 00:34:00', '2023-10-27 00:34:02'),
+  (6, 6, 'Altă problemă', '', '2023-10-27 00:34:16', '2023-10-27 00:34:17');
 
 
 -- Dumping structure for table harta_reciclarii.reports

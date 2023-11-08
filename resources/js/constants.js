@@ -284,18 +284,23 @@ export const CONSTANTS =
 			{
 				TITLE: "Materialele nu sunt corecte",
 				SUBTITLE: "Care este problema sesizată legată de materiale?",
-				OPTIONS_NOT_FOUND: `Trebuie selectatǎ cel puțin o opțiune!`
+				OPTIONS_NOT_FOUND: `Trebuie selectatǎ cel puțin o opțiune!`,
+				SUCCESS:
+				{
+					TITLE: `Vă mulțumim pentru sesizare!`,
+					SUB_TITLE: `Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.`,
+				}
 			},
 			MATERIALS_NOT_COLLECTED_STEP:
 			{
 				TITLE: "Nu se colectează unele materiale",
-				SUBTITLE: "Care dintre următoarele materiale ați identificat că NU se colectează în realitate?",
+				SUBTITLE: "Care dintre următoarele materiale ați identificat că <b class='underline'>NU</b> se colectează în realitate?",
 				MATERIALS_NOT_FOUND: "Trebuie selectat cel puțin un material!",
 			},
 			MATERIALS_MISSING_STEP:
 			{
 				TITLE: "Lipsesc materiale din descriere",
-				SUBTITLE: "Care dintre următoarele materiale ați identificat că lipsesc din descrierea locației?",
+				SUBTITLE: "Care dintre următoarele materiale ați identificat că <b class='underline'>lipsesc</b> din descrierea locației?",
 				MATERIALS_NOT_FOUND: "Trebuie selectat cel puțin un material!",
 			},
 			MATERIALS_OTHER_STEP:

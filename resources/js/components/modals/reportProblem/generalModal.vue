@@ -88,7 +88,16 @@
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></material-option-missing-step>
-
+						<material-option-other-step
+							v-show="activeStep === 'material-option-other'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							:map-point="mapPoint"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></material-option-other-step>
 
 						<success-address-step
 							v-if="activeStep === 'success-address'"
@@ -135,6 +144,15 @@
 							@backToStep="backToStep($event)"
 							@close="closeModal();"
 						></success-takeover-step>
+						<success-material-options-step
+							v-if="activeStep === 'success-material-options'"
+							:active-step="activeStep"
+							:map-point="mapPoint"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+						></success-material-options-step>
 					</div>
 				</div>
 			</div>
@@ -163,9 +181,13 @@ import SuccessTakeoverStep from "./successTakeoverStep.vue";
 import MaterialsOptionsStep from "./materialsOptionsStep.vue";
 import MaterialOptionExtraStep from "./materialOptionExtraStep.vue";
 import MaterialOptionMissingStep from "./materialOptionMissingStep.vue";
+import MaterialOptionOtherStep from "./materialOptionOtherStep.vue";
+import SuccessMaterialOptionsStep from "./successMaterialOptionsStep.vue";
 
 export default {
 	components: {
+		SuccessMaterialOptionsStep,
+		MaterialOptionOtherStep,
 		MaterialOptionMissingStep,
 		MaterialOptionExtraStep,
 		MaterialsOptionsStep,
@@ -293,7 +315,7 @@ export default {
 					}
 					else
 					{
-						this.activeStep = 'materials-options-finish';
+						this.activeStep = 'success-material-options';
 					}
 				}
 			}

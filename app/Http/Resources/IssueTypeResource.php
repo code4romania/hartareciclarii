@@ -4,22 +4,24 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class IssueType extends JsonResource
+class IssueTypeResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Transform the resource collection into an array.
      *
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
+	
     public function toArray(Request $request): array
     {
-		return [
+        return [
 			'id' => $this->id,
 			'accept_images' => $this->accept_images,
 			'title' => $this->title,
 			'steps' => $this->steps,
-			'items' => IssueTypeItem::collection($this->items)
+			'items' => IssueTypeItemResource::collection($this->items)
 		];
     }
 }

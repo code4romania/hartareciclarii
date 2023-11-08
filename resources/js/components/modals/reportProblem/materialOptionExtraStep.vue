@@ -12,7 +12,7 @@
 			class="flex items-center justify-between flex-col"
 			v-if="items.length > 0"
 		>
-			<span class="pt-10 pb-3 text-sm px-5 w-full">{{ CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_NOT_COLLECTED_STEP.SUBTITLE }}</span>
+			<span class="pt-10 pb-3 text-sm px-5 w-full" v-html="CONSTANTS.LABELS.REPORT_PROBLEM.MATERIALS_NOT_COLLECTED_STEP.SUBTITLE"></span>
 			<fieldset>
 				<legend class="sr-only"></legend>
 				<template
