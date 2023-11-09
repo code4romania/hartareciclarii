@@ -48,6 +48,16 @@
 							@close="closeModal();"
 							@stepFinished="stepFinished($event)"
 						></container-step>
+						<takeover-step
+							v-show="activeStep === 'takeover'"
+							:active-step="activeStep"
+							:nomenclatures="nomenclatures"
+							:previous-step-body="requestBody"
+							:map-point="mapPoint"
+							@backToStep="backToStep($event)"
+							@close="closeModal();"
+							@stepFinished="stepFinished($event)"
+						></takeover-step>
 						<other-problem-step
 							v-show="activeStep === 'other-problem'"
 							:active-step="activeStep"
