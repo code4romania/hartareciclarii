@@ -7,7 +7,10 @@ use App\Models\Issue;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class IssuesResource extends Resource
 {
@@ -29,21 +32,55 @@ class IssuesResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $actions = [
+            Tables\Actions\ViewAction::make()
+                ->label(__('issues.buttons.details')),
+            // ->icon('heroicon-m-eye'),
+        ];
+
         return $table
             ->columns([
-                //
+                TextColumn::make('point_id')
+                    ->label(__('issues.columns.map_point_id'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('reporter.fullname')
+                    ->label(__('issues.columns.reporter'))
+                    ->searchable()
+                    ->html(),
+                TextColumn::make('created_at')
+                    ->label(__('issues.columns.created_at'))
+                    ->sortable(),
+                TextColumn::make('type.title')
+                    ->label(__('issues.columns.issue_type'))
+                    ->sortable()
+                    ->searchable()
+                    ->html(),
+                TextColumn::make('status')
+                    ->label(__('issues.columns.status'))
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(function ($state)
+                    {
+                        return __('issues.status.' . $state);
+                    }),
+
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->actions(
+                $actions,
+            )
+            ->headerActions(
+                [
+                    ExportAction::make()->exports([
+                        ExcelExport::make('table')->fromTable(),
+                    ]),
+                ]
+            )
+            ->bulkActions([])
+            ->deferLoading();
     }
 
     public static function getRelations(): array
@@ -59,6 +96,7 @@ class IssuesResource extends Resource
             'index' => Pages\ListIssues::route('/'),
             'create' => Pages\CreateIssues::route('/create'),
             'edit' => Pages\EditIssues::route('/{record}/edit'),
+            'view' => Pages\ViewIssue::route('/{record}'),
         ];
     }
 

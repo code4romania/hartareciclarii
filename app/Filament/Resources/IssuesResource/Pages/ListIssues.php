@@ -2,59 +2,42 @@
 
 namespace App\Filament\Resources\IssuesResource\Pages;
 
-use App\Contracts\Pages\WithTabs;
 use App\Filament\Resources\IssuesResource;
-use App\Filament\Resources\IssuesResource\Concerns;
-use App\Models\Issue as IssueModel;
-use Filament\Actions;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Resources\Pages\Page;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
+use App\Models\MapPointType as MapPointTypeModel;
+use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Contracts\Support\Htmlable;
 
-class ListIssues extends Page implements WithTabs, HasForms, HasTable, HasActions
+class ListIssues extends ListRecords
 {
-    use Concerns\HasTabs;
-
-    use InteractsWithFormActions;
-
-    use InteractsWithTable;
-
-    public ?array $data = [];
-
     protected static string $resource = IssuesResource::class;
-
-    protected static string $view = 'filament.resources.issues-resource.pages.list';
 
     protected function getHeaderActions(): array
     {
         return [
-            // Actions\CreateAction::make(),
+
         ];
     }
 
-    public function table(Table $table): Table
+    public function getTabs(): array
     {
-        $data = $this->data;
-        $actions = [];
+        $map_point_types = MapPointTypeModel::whereHas('map_points.issues')->with('map_points.issues')->get();
+        $this->type = request()->get('type', $map_point_types->first()->type_name);
+        $tabs = [];
 
-        return $table
-            ->query(function ()
+        foreach ($map_point_types as $type)
+        {
+            $tabs[$type->display_name] = Tab::make($type->display_name)->modifyQueryUsing(function ($query) use ($type)
             {
-                return IssueModel::query();
-            })
-            ->headerActions(
-                $actions,
-            )
-            ->paginated(false)
-            ->columns($this->getTableColumns())
-            ->view('filament.resources.reports-resource.pages.view', [
-                'data'=>$this->data,
-                'header'=>$this->getTableColumns(),
-            ]);
-        // ->view('filament-tables::index');
+                return $query->whereIn('point_id', $type->map_points->pluck('id')->toArray());
+            });
+        }
+
+        return $tabs;
+    }
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('issues.header.list');
     }
 }
