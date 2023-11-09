@@ -26,6 +26,10 @@
 
 			</div>
 
+            <upload-image
+                @imageUpload="stepRequestBody.photos.push($event)"
+            ></upload-image>
+
 			<template v-if="getError('description')">
 				<div class="rounded-md bg-red-50 p-4 mb-2">
 					<div class="flex">
@@ -65,13 +69,15 @@ import {CONSTANTS} from "@/constants";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid';
+import uploadImage from "./uploadImage.vue";
 
 export default {
 	components: {
 		DesktopFilterCloseIcon,
 		XCircleIcon,
 		CheckIcon,
-		ChevronUpDownIcon
+		ChevronUpDownIcon,
+        uploadImage
 	},
 	props: {
 		nomenclatures: {
@@ -84,6 +90,10 @@ export default {
 		},
 		previousStepBody: {
 			type: Object,
+			required: true,
+		},
+        activeStep: {
+			type: String,
 			required: true,
 		}
 	},
@@ -98,7 +108,8 @@ export default {
 		return {
 			errors: {},
 			stepRequestBody: {
-				description: ''
+				description: '',
+                photos: []
 			}
 		};
 	},

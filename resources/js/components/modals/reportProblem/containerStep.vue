@@ -39,6 +39,11 @@
 					</div>
 				</div>
 			</template>
+
+            <upload-image
+                @imageUpload="stepRequestBody.photos.push($event)"
+            ></upload-image>
+
 			<div class="py-2 mb-1 grid grid-cols-2 text-end align-bottom">
 				<button
 					class="rounded bg-white px-2 py-1 text-sm font-semibold text-gray-600 shadow-sm hover:bg-gray-200 border border-black h-10 mr-3"
@@ -65,13 +70,15 @@ import {CONSTANTS} from "@/constants";
 import DesktopFilterCloseIcon from "../../svg-icons/desktopFilterCloseIcon.vue";
 import {XCircleIcon} from '@heroicons/vue/20/solid';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid';
+import uploadImage from "./uploadImage.vue";
 
 export default {
 	components: {
 		DesktopFilterCloseIcon,
 		XCircleIcon,
 		CheckIcon,
-		ChevronUpDownIcon
+		ChevronUpDownIcon,
+        uploadImage
 	},
 	props: {
 		nomenclatures: {
@@ -94,8 +101,9 @@ export default {
 		return {
 			errors: {},
 			stepRequestBody: {
-				description: ''
-			},
+				description: '',
+                photos: []
+            },
 		};
 	},
 	mounted ()
