@@ -1011,6 +1011,7 @@ INSERT INTO `reported_point_issue_types` (`id`, `accept_images`, `title`, `creat
     (7, 1, 'Altă problemă', '2023-10-27 00:19:55', '2023-10-27 00:19:43', '["other-problem"]');
 
 -- Dumping structure for table harta_reciclarii.reported_point_issue_type_items
+DROP TABLE IF EXISTS `reported_point_issue_type_items`;
 CREATE TABLE IF NOT EXISTS `reported_point_issue_type_items` (
  `id` int NOT NULL AUTO_INCREMENT,
  `reported_point_issue_type_id` int NOT NULL DEFAULT '0',

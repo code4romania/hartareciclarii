@@ -131,3 +131,22 @@ export function addAuthToken()
         }
     );
 }
+
+export async function getUserProfile()
+{
+    let userInfo = {};
+    const session = localStorage.getItem('userSession');
+    if (session)
+    {
+        await axios
+            .get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.USER.PROFILE.INFO)
+            .then((response) =>
+            {
+                userInfo = _.get(response, 'data.data', {});
+            }).catch((err) =>
+        {
+        });
+    }
+
+    return userInfo;
+}

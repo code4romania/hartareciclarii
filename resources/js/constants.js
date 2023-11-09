@@ -93,6 +93,14 @@ export const CONSTANTS =
 			MY_ACCOUNT: `Contul meu`,
 			LOGOUT: `Logout`,
 			MY_PROFILE: `Profilul meu`,
+			BACK: `Înapoi la hartă`
+		},
+		PROFILE:
+		{
+			HEADING: `Profilul meu`,
+			EMAIL: `Email`,
+			MEMBER_FROM: `Membru din {date}`,
+			EDIT: `Modifică`,
 		},
 		LOCATION:
 		{

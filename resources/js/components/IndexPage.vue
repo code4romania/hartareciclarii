@@ -104,6 +104,7 @@ import eventBus from "../eventBus.js";
 import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
 import PointDetails from "./pointDetails.vue";
+import {getUserProfile} from "../general.js";
 
 export default
 {
@@ -204,25 +205,13 @@ export default
 			};
 			navigator.geolocation.getCurrentPosition(success, error);
 		},
-		getUserInfo ()
+		async getUserInfo ()
 		{
-			const session = localStorage.getItem('userSession');
-			if (session)
+			console.log(`start get profile`);
+			this.userInfo = await getUserProfile();
+			if (Object.keys(this.userInfo).length > 0)
 			{
-				axios
-					.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.USER.PROFILE.INFO)
-					.then((response) =>
-					{
-						this.userInfo = _.get(response, 'data.data', {});
-						this.isAuthenticated = true;
-					}).catch((err) =>
-				{
-					this.isAuthenticated = false
-				});
-			}
-			else
-			{
-				this.isAuthenticated = false;
+				this.isAuthenticated = true;
 			}
 		},
 		getMapPoints(filters = {})

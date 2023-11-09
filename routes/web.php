@@ -17,6 +17,10 @@ Route::get('/', function ()
 {
     return view('welcome');
 });
+Route::get('/profile', function ()
+{
+	return view('welcome');
+});
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function ()
@@ -30,3 +34,4 @@ Route::prefix('admin')->group(function ()
         Route::get('users-reports', UsersReport::class)->name('reports-users');
     });
 });
+

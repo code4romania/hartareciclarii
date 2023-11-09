@@ -65,7 +65,7 @@
 				<div>
 					<MenuButton class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black">
 						<menu-my-account-icon></menu-my-account-icon>
-						{{CONSTANTS.LABELS.TOP_MENU.MY_ACCOUNT}}
+						{{this.userInfo.firstname}}
 					</MenuButton>
 				</div>
 

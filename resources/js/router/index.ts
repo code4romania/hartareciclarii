@@ -3,7 +3,7 @@ import IndexPage from '/resources/js/components/IndexPage.vue';
 import ProfilePage from '/resources/js/components/profilePage.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.APP_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
