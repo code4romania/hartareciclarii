@@ -102,11 +102,11 @@ class IssuesResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::whereStatus(0)->count();
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return static::getModel()::count() > 1 ? 'danger' : 'primary';
+        return static::getModel()::whereStatus(0)->count() > 1 ? 'danger' : 'primary';
     }
 }
