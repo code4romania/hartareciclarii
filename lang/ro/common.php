@@ -17,4 +17,8 @@ return [
         'sun' => 'Duminica',
     ],
     'closed' => 'Inchis',
+	'contribution_types' => [
+		'point' => 'Adăugare punct nou',
+		'issue' => 'Raportare problemă'
+	],
 ];

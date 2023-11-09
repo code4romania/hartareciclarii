@@ -82,21 +82,21 @@
 					<h1 class="text-black text-2xl font-bold leading-none mb-10">
 						{{CONSTANTS.LABELS.PROFILE.HEADING}}
 					</h1>
-					<div class="grid grid-cols-6 gap-4">
+					<div class="grid grid-cols-5 gap-4">
 						<div class="lg:w-44 w-full">
 							<div class="relative bg-gray-300 rounded-lg">
 								<div class="w-28 h-28"></div>
 								<div class="w-7 h-7"></div>
 							</div>
 						</div>
-						<div class="lg:w-44 w-full">
+						<div>
 							<div class="text-black text-2xl font-normal leading-none">{{this.userInfo.firstname}} {{this.userInfo.lastname}}</div>
-							<div class="text-black text-sm font-normal  leading-none">Membru din 23 Mai 2022</div>
+							<div class="text-black text-sm font-normal  leading-none">{{CONSTANTS.LABELS.PROFILE.MEMBER_FROM}} {{moment(this.userInfo.created_at).format('DD MMMM YYYY')}}</div>
 							<div class="py-5"></div>
 							<div class="text-gray-700 text-sm font-medium leading-tight">{{CONSTANTS.LABELS.PROFILE.EMAIL}}</div>
 							<div class="text-black text-sm font-normal leading-none">{{this.userInfo.email}}</div>
 						</div>
-						<div class="lg:w-44 w-full">
+						<div>
 							<a v-on:click="editUser()" class="cursor-pointer">
 								<pencil-square-icon class="h-5 w-5 text-black inline"></pencil-square-icon>
 								{{CONSTANTS.LABELS.PROFILE.EDIT}}
@@ -104,15 +104,64 @@
 						</div>
 						<div class="col-span-2 self-center content-end items-end">
 							<div class="flex self-center content-center justify-end">
-								<div class="w-64 h-64 relative bg-neutral-100 rounded-lg">
-									<div class="left-[36px] top-[103px] absolute text-center">
-										<span class="text-stone-500 text-xs font-normal  leading-none"><br/><br/></span>
-										<span class="text-stone-500 text-3xl font-normal leading-none">contribuții</span></div>
-									<div class="left-[31px] top-[64px] absolute text-center"><span class="text-stone-500 text-8xl font-bold leading-none">2</span><span class="text-stone-500 text-8xl font-normal leading-none"> </span></div>
+								<div class=" relative bg-neutral-100 rounded-lg py-6 pl-6 pr-16">
+									<span class="text-stone-500 text-8xl font-bold leading-none">
+										<span v-if="Object.keys(userInfo).length > 0 && 'contributions' in userInfo">
+											{{userInfo.contributions.length}}
+										</span>
+										<span v-else>0</span>
+									</span><br />
+									<span class="text-stone-500 text-3xl font-normal leading-none">{{CONSTANTS.LABELS.PROFILE.CONTRIBUTIONS}}</span>
 								</div>
 							</div>
 						</div>
 					</div>
+					<template v-if="Object.keys(userInfo).length > 0 && 'contributions' in userInfo && userInfo.contributions.length > 0">
+						<h2 class="text-black text-lg font-semibold leading-none my-10">
+							{{CONSTANTS.LABELS.PROFILE.CONTRIBUTIONS_TITLE}}
+						</h2>
+						<div class="flow-root">
+							<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+								<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+									<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+										<table class="min-w-full divide-y divide-gray-300">
+											<thead class="bg-gray-50">
+											<tr>
+												<th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.DATE_HOUR}}</th>
+												<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.CONTRIBUTION_TYPE}}</th>
+												<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.ITEM_TYPE}}</th>
+												<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.LOCATION}}</th>
+												<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.POINT_ID}}</th>
+												<th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">{{CONSTANTS.LABELS.PROFILE.TABLE_HEADING.ACTIONS}}</th>
+											</tr>
+											</thead>
+											<tbody class="divide-y divide-gray-200 bg-white">
+											<tr v-for="contribution in userInfo.contributions">
+												<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ moment(contribution.date).format('DD MMMM YYYY / hh:mm') }}</td>
+												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.type }}</td>
+												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.item_type }}</td>
+												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.location }}</td>
+												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.point_id }}</td>
+												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+													<a
+														v-if="contribution.status == 1"
+														v-on:click="viewOnMap(contribution.point_id)"
+														class="cursor-pointer text-black text-xs font-normal underline leading-none"
+													>
+														{{CONSTANTS.LABELS.PROFILE.TABLE_CONTENT.VIEW_ON_MAP}}
+													</a>
+													<span v-else>
+														{{CONSTANTS.LABELS.PROFILE.TABLE_CONTENT.PENDING}}
+													</span>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</template>
 				</div>
 			</main>
 		</div>
@@ -125,7 +174,7 @@ import {getUserProfile} from "../general.js";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { ArrowLeftIcon, PencilSquareIcon } from '@heroicons/vue/20/solid'
-
+import moment from 'moment';
 
 export default
 {
@@ -148,6 +197,7 @@ export default
 	{
 		return {
 			userInfo: {},
+			moment,
 			isAuthenticated: false,
 		};
 	},
@@ -156,6 +206,7 @@ export default
 		async getUserInfo ()
 		{
 			this.userInfo = await getUserProfile();
+			console.log(`user`, this.userInfo);
 
 			if (Object.keys(this.userInfo).length > 0)
 			{

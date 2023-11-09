@@ -17,4 +17,8 @@ return [
         'sun' => 'Sunday',
     ],
     'closed' => 'Closed',
+	'contribution_types' => [
+		'point' => 'New Point',
+		'issue' => 'Issue Report'
+	],
 ];

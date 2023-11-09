@@ -99,8 +99,24 @@ export const CONSTANTS =
 		{
 			HEADING: `Profilul meu`,
 			EMAIL: `Email`,
-			MEMBER_FROM: `Membru din {date}`,
+			MEMBER_FROM: `Membru din `,
 			EDIT: `Modifică`,
+			CONTRIBUTIONS: `contribuții`,
+			CONTRIBUTIONS_TITLE: `Contribuții hartă`,
+			TABLE_HEADING:
+			{
+				DATE_HOUR: `Data / ora`,
+				CONTRIBUTION_TYPE: `Contribuție`,
+				ITEM_TYPE: `Tip`,
+				LOCATION: `Locație`,
+				POINT_ID: `ID punct`,
+				ACTIONS: `Acțiuni`,
+			},
+			TABLE_CONTENT:
+			{
+				VIEW_ON_MAP: `Vezi pe hartă`,
+				PENDING: 'În așteptare',
+			}
 		},
 		LOCATION:
 		{
