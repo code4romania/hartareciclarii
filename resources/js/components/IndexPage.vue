@@ -48,6 +48,7 @@
 					ref="map"
 					:center="[latitude, longitude]"
 					:zoom="zoom"
+					:max-zoom="20"
 					@ready="initMap"
 					@update:zoom="zoomEvent($event)"
 					@update:center="centerEvent($event)"
@@ -105,7 +106,8 @@ import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
 import PointDetails from "./pointDetails.vue";
 import {getUserProfile} from "../general.js";
-
+import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
+import 'vue-leaflet-markercluster/dist/style.css'
 export default
 {
 	components:
@@ -121,6 +123,7 @@ export default
 		LMap,
 		LTileLayer,
 		LControlLayers,
+		LMarkerClusterGroup
     },
 	data ()
 	{
