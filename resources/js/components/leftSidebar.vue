@@ -1,7 +1,7 @@
 <template>
 	<!-- Static sidebar for desktop sm -->
 	<div
-		class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:w-[4.5rem] lg:flex-col bg-white"
+		class="hidden lg:relative lg:inset-y-0 lg:z-10 lg:w-[4.5rem] lg:flex-col bg-white"
 		:class="{'lg:flex': !open, 'lg:hidden': open}"
 	>
 		<!-- Toggle lg:hidden lg:flex -->
@@ -53,7 +53,7 @@
 
 	<!-- Static sidebar for desktop -->
 	<div
-		class="fixed w-full z-10 inset-y-0  lg:w-96 flex-col bg-white"
+		class="w-full z-10 inset-y-0  lg:w-96 flex-col bg-white"
         ref="filtersBox"
 		:class="{'flex': open, 'hidden': !open}"
 	>

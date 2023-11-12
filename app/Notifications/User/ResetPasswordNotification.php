@@ -6,17 +6,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Auth\Notifications\ResetPassword;
 
-class ResetPasswordNotification extends Notification
+class ResetPasswordNotification extends ResetPassword
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        parent::__construct($token);
     }
 
     /**
@@ -24,7 +25,7 @@ class ResetPasswordNotification extends Notification
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via($notifiable): array
     {
         return ['mail'];
     }
@@ -32,13 +33,16 @@ class ResetPasswordNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable): MailMessage
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
+		$link = url( "/reset/".$this->token );
+		return ( new MailMessage )
+			->subject( __('users.reset_password.subject') )
+			->line( __('users.reset_password.email_heading') )
+			->action( __('users.reset_password.link_label'), $link )
+			->line( __('users.reset_password.reset_time'));
+	
+	}
 
     /**
      * Get the array representation of the notification.

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\IssueStatus;
 use App\Filament\Resources\IssuesResource;
 use App\Http\Resources\IssueResource;
 use App\Http\Resources\MapPointResource;
+use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
@@ -13,6 +15,8 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
@@ -138,5 +142,23 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
 	
 	public function sendPasswordResetNotification($token) {
 		$this->notify(new UserResetPasswordNotification($token));
+	}
+	
+	public static function createFromArray($data)
+	{
+		$user = new self();
+		$user->firstname = $data['firstname'];
+		$user->lastname = $data['lastname'];
+		$user->email = $data['email'];
+		$user->accept_terms = $data['accept_terms'];
+		$user->send_newsletter = $data['send_newsletter'];
+		$user->password = Hash::make($data['password']);
+		$user->email_confirmed = 0;
+		$user->created_at = Carbon::now()->toDateTimeString();
+		
+		
+		$user->save();
+		
+		return $user;
 	}
 }

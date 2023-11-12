@@ -129,24 +129,59 @@ export const CONSTANTS =
 			EMAIL: `Email`,
 			EMAIL_PLACEHOLDER: `Adresa de email`,
 			PASSWORD: `Parola`,
+			PASSWORD_CONFIRM: `Confirmǎ parola`,
 			PASSWORD_PLACEHOLDER: `Parola`,
 			RECOVER: `Am uitat parola`,
 			NEXT_STEP: `Următorul pas`,
 			LOGIN_BUTTON: `Intră în cont`,
 			LOGIN_FORM_TITLE: `Intră în cont`,
-			RECOVER_FORM_TITLE: `Recuperare parolă`,
+			RECOVER_FORM_TITLE: `Resetare parolă`,
 			REGISTER_FORM_TITLE: `Crează-ți un cont`,
 			REGISTER_LABEL: `Nu ai cont Harta Reciclării?`,
 			REGISTER_LABEL_LINK: `Crează-ți unul acum`,
 			ERROR: `Email sau parolă invalide!`,
 			RECOVER_SUBMITED: `Un email cu instrucțiuni a fost trimis la adresa de email introdusă!`,
+			RESET_LABEL: 'Resetează parola',
+			RESET_LABEL_HEADING: 'Completează noua parolǎ',
+			CANCEL: `Renunțǎ`,
+			SAVE: `Salveazǎ`,
+			RESET:
+			{
+				ERRORS:
+				{
+					INVALID_PASSWORD: 'Parola trebuie să conțină cel puțin 8 caractere, o literă mare, o literă mică și un număr',
+					PASSWORDS_NOT_MATCH: 'Parolele nu se potrivesc',
+					INVALID_TOKEN: 'Token invalid',
+				}
+			},
+			REGISTER:
+			{
+				FIRSTNAME: `Prenume`,
+				FIRSTNAME_PLACEHOLDER: `Prenumele tău`,
+				LASTNAME: `Nume`,
+				LASTNAME_PLACEHOLDER: `Numele tău`,
+				EMAIL: `Email`,
+				EMAIL_PLACEHOLDER: `Adresa de email`,
+				PASSWORD: `Parola`,
+				ACCEPT_TERMS: 'Am citit și sunt de acord cu <a href="https://hartareciclarii.ro/termeni/" class="underline" target="_blank">Termenii și condițiile</a>',
+				REGISTER_TO_NEWSLETTER: `Vreau să primesc newslettere`,
+				SAVE: `Înregistrează-te`,
+				ERRORS:
+				{
+					PASSWORD: 'Parola trebuie să conțină cel puțin 8 caractere, o literă mare, o literă mică și un număr',
+					FIRSTNAME: 'Trebuie sǎ introduci prenumele',
+					LASTNAME: 'Trebuie sǎ introduci numele',
+					EMAIL: 'Trebuie sǎ introduci un email valid',
+					API: 'A apărut o eroare. Vă rugăm să încercați din nou mai târziu',
+				}
+			}
 		},
         ADD_POINT: {
             TITLE: `Adauga un nou punct pe harta`,
             NEXT_STEP: `Urmatorul pas`,
             FINISH_STEPS: `Adauga punct`,
             SUCCESS_MESSAGE: `Punct adaugat cu succes. Un moderator Harta Reciclarii va valida informatia in cel mai scurt timp`,
-            CANCEL: `Renunta`,
+            CANCEL: `Renunțǎ`,
             BACK: `Inapoi`,
             FIRST_STEP: {
                 SERVICE_TYPE_PLACEHOLDER: `Selecteaza un tip de punct`,

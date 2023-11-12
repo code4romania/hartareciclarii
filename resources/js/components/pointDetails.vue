@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute bg-white border border-black z-10 top-5 left-10 p-6 w-96 overflow-y-auto min-h-full">
+	<div class="fixed bg-white border border-black z-10 p-6 w-96 overflow-y-auto min-h-[85%] mt-5 ml-8">
 		<div class="flex justify-between items-center mb-3.5">
 			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<desktop-filter-close-icon

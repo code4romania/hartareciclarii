@@ -1,94 +1,104 @@
 <template>
-	<left-sidebar
-        :has-results="hasResults"
-		:total-points="totalPoints"
-		@filtersChanged="setFilters($event)"
-    ></left-sidebar>
+	<div class="flex w-screen h-screen">
+		<div
+			class="flex"
+			:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
+		>
+			<left-sidebar
+				:has-results="hasResults"
+				:total-points="totalPoints"
+				@filtersChanged="setFilters($event)"
+			></left-sidebar>
 
-	<div
-		:class="{'g:pl-[4.5rem]': !open, 'lg:pl-96': open}"
-	>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
-		<main class="">
-			<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
-				<button class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
-						type="button">
-					<mobile-filter-burger-icon></mobile-filter-burger-icon>
-				</button>
-				<div class="relative rounded-md shadow-sm flex-1">
-					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-						<mobile-filter-scope-icon></mobile-filter-scope-icon>
+		</div>
+		<div class="flex w-full h-full">
+			<div
+				:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
+				class="h-screen w-full "
+			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
+				<main class="h-screen w-full ">
+					<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
+						<button class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
+								type="button">
+							<mobile-filter-burger-icon></mobile-filter-burger-icon>
+						</button>
+						<div class="relative rounded-md shadow-sm flex-1">
+							<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+								<mobile-filter-scope-icon></mobile-filter-scope-icon>
+							</div>
+							<input
+								id="search-point"
+								class="block w-full rounded-md border-0 py-1.5 h-10 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+								name="text"
+								placeholder="Exemplu căutare"
+								type="email"
+							/>
+						</div>
+						<button
+							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
+							type="button"
+						>
+							<mobile-filter-svg-icon></mobile-filter-svg-icon>
+						</button>
 					</div>
-					<input
-						id="search-point"
-						class="block w-full rounded-md border-0 py-1.5 h-10 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-						name="text"
-						placeholder="Exemplu căutare"
-						type="email"
-					/>
-				</div>
-				<button
-					class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
-					type="button"
-				>
-					<mobile-filter-svg-icon></mobile-filter-svg-icon>
-				</button>
-			</div>
 
-			<top-menu
-				:userInfo="userInfo"
-				:is-authenticated="isAuthenticated"
-			>
-
-			</top-menu>
-
-			<div
-				class="map h-screen w-full bg-green-900"
-			>
-				<l-map
-					ref="map"
-					:center="[latitude, longitude]"
-					:zoom="zoom"
-					:max-zoom="20"
-					@ready="initMap"
-					@update:zoom="zoomEvent($event)"
-					@update:center="centerEvent($event)"
-					@update:bounds="boundsEvent($event)"
-					:use-global-leaflet="false"
-					:marker-zoom-animation="true"
-				>
-					<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
-					<l-marker
-						v-for="(point) of points"
-						:lat-lng="[point.lat, point.lon]"
-						:ref="`marker_${point.id}`"
-						:name="`marker_${point.id}`"
-						@click="getPoint(point.id, $event)"
-						:icon="getIcon(point.id)"
+					<top-menu
+						:userInfo="userInfo"
+						:is-authenticated="isAuthenticated"
 					>
-					</l-marker>
 
-				</l-map>
+					</top-menu>
+
+					<point-details
+						v-if="Object.keys(selectedPoint).length > 0"
+						:point="selectedPoint"
+						:main-materials="mainMaterials"
+						:point-url="pointUrl"
+						:user-info="userInfo"
+						@closePointDetails="closePointDetails($event)"
+					>
+					</point-details>
+					<div
+						class="map h-screen w-full bg-green-900"
+					>
+						<l-map
+							ref="map"
+							:center="[latitude, longitude]"
+							:zoom="zoom"
+							:max-zoom="20"
+							@ready="initMap"
+							@update:zoom="zoomEvent($event)"
+							@update:center="centerEvent($event)"
+							@update:bounds="boundsEvent($event)"
+							:use-global-leaflet="false"
+							:marker-zoom-animation="true"
+						>
+							<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
+							<l-marker
+								v-for="(point) of points"
+								:lat-lng="[point.lat, point.lon]"
+								:ref="`marker_${point.id}`"
+								:name="`marker_${point.id}`"
+								@click="getPoint(point.id, $event)"
+								:icon="getIcon(point.id)"
+							>
+							</l-marker>
+
+						</l-map>
+					</div>
+					<div
+						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
+						:class="{'hidden': hasApprovedLocation}"
+					>
+						<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
+						<div class="text-end">
+							<a v-on:click="requestCurrentLocation()" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
+						</div>
+					</div>
+				</main>
 			</div>
-			<div
-				class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
-				:class="{'hidden': hasApprovedLocation}"
-			>
-				<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
-				<div class="text-end">
-					<a v-on:click="requestCurrentLocation()" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
-				</div>
-			</div>
-		</main>
+		</div>
 	</div>
-	<point-details
-		v-if="Object.keys(selectedPoint).length > 0"
-		:point="selectedPoint"
-		:main-materials="mainMaterials"
-		:point-url="pointUrl"
-		:user-info="userInfo"
-		@closePointDetails="closePointDetails($event)"
-	>
-	</point-details>
 </template>
 
 <script>

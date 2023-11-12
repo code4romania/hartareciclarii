@@ -150,3 +150,15 @@ export async function getUserProfile()
 
     return userInfo;
 }
+
+export function checkPassword(str)
+{
+    let re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    return re.test(str);
+}
+
+export function checkEmail(str)
+{
+    let re = /^[^@]+@\w+(\.\w+)+\w$/;
+    return re.test(str);
+}

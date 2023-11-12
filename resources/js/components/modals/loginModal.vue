@@ -13,13 +13,13 @@
 							v-if="showLogin"
 							@close="closeModal();"
 							@recover="showRecover = true; showLogin = false; showRegister = false"
-							@register="showRecover = true; showLogin = false; showRegister = false"
+							@register="showRecover = false; showLogin = false; showRegister = true"
 						></login-form>
 						<recover-form
 							v-if="showRecover"
 							@close="closeModal();"
 							@login="showRecover = false; showLogin= true; showRegister = false"
-							@register="showRecover = true; showLogin = false; showRegister = false"
+							@register="showRecover = false; showLogin = false; showRegister = true"
 						></recover-form>
 						<register-form
 							v-if="showRegister"

@@ -21,6 +21,17 @@ Route::get('/profile', function ()
 {
     return view('welcome');
 });
+
+Route::get('/reset/{token}', function ()
+{
+	return view('welcome');
+});
+
+Route::get('/point/{id}', function ()
+{
+	return view('welcome');
+});
+
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function ()
