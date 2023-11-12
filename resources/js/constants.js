@@ -2,6 +2,7 @@ export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
 	APP_DOMAIN: `${import.meta.env.VITE_APP_URL}`,
+	RECAPTCHA_SITE_KEY: `6LdmXAwpAAAAAMGd7KyyMZibyQksLpbJb7Cy4toN`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
 	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
 	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
@@ -138,6 +139,7 @@ export const CONSTANTS =
 			REGISTER_LABEL: `Nu ai cont Harta Reciclării?`,
 			REGISTER_LABEL_LINK: `Crează-ți unul acum`,
 			ERROR: `Email sau parolă invalide!`,
+			RECOVER_SUBMITED: `Un email cu instrucțiuni a fost trimis la adresa de email introdusă!`,
 		},
         ADD_POINT: {
             TITLE: `Adauga un nou punct pe harta`,

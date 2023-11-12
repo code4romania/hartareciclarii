@@ -9,13 +9,15 @@ use App\Http\Resources\MapPointResource;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
 
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
 {
     use HasApiTokens;
 
@@ -132,5 +134,9 @@ class User extends Authenticatable implements FilamentUser, HasName
 		
 		return null;
 		
+	}
+	
+	public function sendPasswordResetNotification($token) {
+		$this->notify(new UserResetPasswordNotification($token));
 	}
 }
