@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-full">
+	<div class="min-h-full w-full">
 		<Disclosure as="nav" class="bg-black" v-slot="{ open }">
 		<div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
 			<div class="flex h-16 items-center justify-between">
@@ -217,6 +217,10 @@ export default
 				this.$router.push('/');
 			}
 		},
+		viewOnMap(id)
+		{
+			this.$router.push('/point/'+id);
+		}
 	},
 	mounted ()
 	{
