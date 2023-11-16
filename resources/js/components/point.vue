@@ -71,7 +71,7 @@ export default {
 
 				let icon = L.icon(
 		{
-					iconUrl: this.mapPoint.service.icon,
+					iconUrl: (this.mapPoint.service.icon.length) ? this.mapPoint.service.icon : CONSTANTS.DEFAULT_MAP_OPTIONS.MARKER_ICON,
 					iconSize: [50, 66.5],
 				});
 

@@ -24,7 +24,8 @@ export const CONSTANTS =
 					]
 				]
 			}
-		}
+		},
+		MARKER_ICON: '/assets/map_icons/pins/pin.png',
 	},
 	EXTERNAL_URLS:{
 		GUIDE: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
