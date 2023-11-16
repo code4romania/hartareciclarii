@@ -11,6 +11,7 @@
         "axios": "^1.5.1",
         "filepond": "^4.30.4",
         "filepond-plugin-image-preview": "^4.6.11",
+        "leaflet.markercluster": "^1.5.3",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
         "tiny-emitter": "^2.1.0",

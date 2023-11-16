@@ -1,7 +1,6 @@
 <template>
 	<div class="flex w-screen h-screen">
 		<main class="">
-
 			<div :id="mapId" class="w-screen h-screen"></div>
 		</main>
 		<point-details
@@ -72,7 +71,8 @@ export default {
 
 				let icon = L.icon(
 		{
-					iconUrl: '/assets/images/pin_selected.png',
+					iconUrl: this.mapPoint.service.icon,
+					iconSize: [50, 66.5],
 				});
 
 				let marker = L.marker([this.mapPoint.lat, this.mapPoint.lon], {

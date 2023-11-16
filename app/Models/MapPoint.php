@@ -715,10 +715,12 @@ class MapPoint extends Model
             'recycling_points.lat',
             'recycling_points.lon',
             'recycling_points.location',
+			'recycling_point_services.icon',
             \DB::raw($boundarySearch)
         )
             ->having('in_bounds', '=', 1)
-            ->where('status', 1);
+            ->where('status', 1)
+			->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.service_id');
 
         if (!empty($filters))
         {
@@ -743,7 +745,7 @@ class MapPoint extends Model
                 };
             }
         }
-        $sql->limit(50);
+        //$sql->limit(50);
 
         return $sql->get();
     }

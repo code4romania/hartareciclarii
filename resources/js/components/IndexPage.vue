@@ -58,6 +58,8 @@
 						@closePointDetails="closePointDetails($event)"
 					>
 					</point-details>
+					<div :id="mapId" class="w-screen h-screen"></div>
+					<!--
 					<div
 						class="map h-screen w-full bg-green-900"
 					>
@@ -80,12 +82,13 @@
 								:ref="`marker_${point.id}`"
 								:name="`marker_${point.id}`"
 								@click="getPoint(point.id, $event)"
-								:icon="getIcon(point.id)"
+								:icon="getIcon(point.icon)"
 							>
 							</l-marker>
 
 						</l-map>
 					</div>
+					-->
 					<div
 						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
 						:class="{'hidden': hasApprovedLocation}"
@@ -140,31 +143,15 @@ export default
 		return {
 			userInfo: {},
 			isAuthenticated: false,
+			mapOptions: {
+				zoom: CONSTANTS.DEFAULT_MAP_OPTIONS.ZOOM,
+				lat: CONSTANTS.DEFAULT_MAP_OPTIONS.LATITUDE,
+				lng: CONSTANTS.DEFAULT_MAP_OPTIONS.LONGITUDE,
+				geoJSON: CONSTANTS.DEFAULT_MAP_OPTIONS.GEO_JSON,
+			},
 			open: false,
-			zoom: 13,
-			latitude: CONSTANTS.DEFAULT_LOCATION.LATITUDE,
-			longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
 			points: {},
-			mapIcon: {
-				iconUrl: '/assets/images/pin.png',
-				iconSize: [48, 64],
-				iconAnchor: [48, 64],
-				popupAnchor: [-3, -76]
-			},
-			mapIconSelected: {
-				iconUrl: '/assets/images/pin_selected.png',
-				iconSize: [56, 75],
-				iconAnchor: [56, 75],
-				popupAnchor: [-3, -76]
-			},
-			overlayingIcons:{
-				colectare_separata_magazin: {
-					iconUrl: '/assets/images/colectare_separata_magazin.png',
-					iconSize: [48, 64],
-					iconAnchor: [48, 64],
-					popupAnchor: [-3, -76]
-				}
-			},
+			mapId: 'leaflet-map',
 			hasApprovedLocation: false,
 			hasResults: true,
 			totalPoints: 0,
@@ -173,6 +160,7 @@ export default
 			selectedPoint: {},
 			mainMaterials: {},
 			pointUrl: '',
+			mapInstance: {}
 
 		};
 	},
@@ -194,27 +182,59 @@ export default
 					console.log(err);
 				});
 		},
+		setBounds()
+		{
+			const leafletMap = L.map(this.mapId, {
+				center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
+				zoom: this.mapOptions.zoom,
+				zoomControl: true,
+				zoomAnimation: false,
+				layers: [],
+			});
+			this.mapInstance = leafletMap;
+
+			this.bounds = {
+				northEast: {
+					lat: leafletMap.getBounds().getNorthEast().lat,
+					lng: leafletMap.getBounds().getNorthEast().lng,
+				},
+				northWest: {
+					lat: leafletMap.getBounds().getNorthWest().lat,
+					lng: leafletMap.getBounds().getNorthWest().lng,
+				},
+				southWest: {
+					lat: leafletMap.getBounds().getSouthWest().lat,
+					lng: leafletMap.getBounds().getSouthWest().lng,
+				},
+				southEast: {
+					lat: leafletMap.getBounds().getSouthEast().lat,
+					lng: leafletMap.getBounds().getSouthEast().lng,
+				},
+			};
+		},
 		requestCurrentLocation()
 		{
-			const success = (position) =>
+			const success = async (position) =>
 			{
-				const latitude  = position.coords.latitude;
+				const latitude = position.coords.latitude;
 				const longitude = position.coords.longitude;
 
-				this.latitude = latitude;
-				this.longitude = longitude;
-
+				this.mapOptions.lat = latitude;
+				this.mapOptions.lng = longitude;
+				this.setBounds();
 				this.hasApprovedLocation = true;
-				this.$nextTick(() => {
-					this.initMap()
-				});
 
+
+				this.points = await this.getMapPoints();
+				this.initMap();
 			};
 
-			const error = (err) =>
+			const error = async (err) =>
 			{
-				console.log(error)
-				this.getMapPoints();
+				console.log(error);
+				this.setBounds();
+				this.points = await this.getMapPoints();
+				this.initMap();
 			};
 			navigator.geolocation.getCurrentPosition(success, error);
 		},
@@ -227,22 +247,23 @@ export default
 				this.isAuthenticated = true;
 			}
 		},
-		getMapPoints(filters = {})
+		async getMapPoints(filters = {})
 		{
-			this.points = {};
-			axios
+			let points = {};
+			await
+				axios
 				.get(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.INFO, {
 					params: {
 						bounds: this.bounds,
 						filters: this.filters,
-						lat: this.latitude,
-						lng: this.longitude
+						lat: this.mapOptions.lat,
+						lng: this.mapOptions.lng
 					}
 				})
 				.then((response) =>
 				{
-					this.points = _.get(response, 'data.points', {});
-					if (Object.keys(this.points).length > 0)
+					points = _.get(response, 'data.points', {});
+					if (Object.keys(points).length > 0)
 					{
 						this.hasResults = true;
 						this.totalPoints = Object.keys(this.points).length;
@@ -252,7 +273,7 @@ export default
 						this.totalPoints = 0;
 					}
 
-					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(this.points).length === 0)
+					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(points).length === 0)
 					{
 						this.hasResults = false;
 					}
@@ -261,29 +282,82 @@ export default
 			{
 				console.log(err);
 			});
+
+			return points;
 		},
 		initMap()
 		{
-			this.map = this.$refs.map.leafletObject;
-			this.bounds = {
-				northEast: {
-					lat: this.map.getBounds().getNorthEast().lat,
-					lng: this.map.getBounds().getNorthEast().lng,
+			const leafletMap = this.mapInstance;
+			const tile = L.tileLayer(
+				`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
+				{
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				}
+			).addTo(leafletMap);
+			this.layerControlInstance = L.control.layers({OpenStreetMap: tile}).addTo(leafletMap);
+
+			var markers = L.markerClusterGroup({
+				maxClusterRadius: 120,
+				spiderfyOnMaxZoom: false,
+				showCoverageOnHover: false,
+				iconCreateFunction: function (cluster) {
+
+					var iconSettings = {
+						mapIconUrl: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">\n' +
+							'<g id="Pin-multiple">\n' +
+							'<path id="Ellipse 2" d="M39.283 20C39.283 30.6499 30.6496 39.2833 19.9998 39.2833C9.35004 39.2833 0.716667 30.6499 0.716667 20C0.716667 9.3501 9.35004 0.716667 19.9998 0.716667C30.6496 0.716667 39.283 9.3501 39.283 20Z" stroke="#00AD4D" stroke-width="1.43333"/>\n' +
+							'<path id="Ellipse 5" d="M11.697 6C11.697 8.8952 9.26208 11.2833 6.20685 11.2833C3.15161 11.2833 0.716667 8.8952 0.716667 6C0.716667 3.1048 3.15161 0.716667 6.20685 0.716667C9.26208 0.716667 11.697 3.1048 11.697 6Z" fill="#004667" stroke="white" stroke-width="1.43333"/>\n' +
+							'<path id="Ellipse 6" d="M39.2839 6C39.2839 8.8952 36.849 11.2833 33.7938 11.2833C30.7385 11.2833 28.3036 8.8952 28.3036 6C28.3036 3.1048 30.7385 0.716667 33.7938 0.716667C36.849 0.716667 39.2839 3.1048 39.2839 6Z" fill="#004667" stroke="white" stroke-width="1.43333"/>\n' +
+							'<path id="Ellipse 7" d="M39.2839 31.3335C39.2839 34.2287 36.849 36.6168 33.7938 36.6168C30.7385 36.6168 28.3036 34.2287 28.3036 31.3335C28.3036 28.4383 30.7385 26.0502 33.7938 26.0502C36.849 26.0502 39.2839 28.4383 39.2839 31.3335Z" fill="#004667" stroke="white" stroke-width="1.43333"/>\n' +
+							'<path id="Ellipse 8" d="M11.697 31.3335C11.697 34.2287 9.26208 36.6168 6.20685 36.6168C3.15161 36.6168 0.716667 34.2287 0.716667 31.3335C0.716667 28.4383 3.15161 26.0502 6.20685 26.0502C9.26208 26.0502 11.697 28.4383 11.697 31.3335Z" fill="#004667" stroke="white" stroke-width="1.43333"/>\n' +
+							'</g>\n' +
+							'</svg>\n',
+
+						pinInnerCircleRadius: 48
+					};
+
+					return L.divIcon({
+						html: L.Util.template(iconSettings.mapIconUrl, iconSettings),
+						className: 'mycluster',
+						iconSize: L.point(40, 40)
+					});
 				},
-				northWest: {
-					lat: this.map.getBounds().getNorthWest().lat,
-					lng: this.map.getBounds().getNorthWest().lng,
-				},
-				southWest: {
-					lat: this.map.getBounds().getSouthWest().lat,
-					lng: this.map.getBounds().getSouthWest().lng,
-				},
-				southEast: {
-					lat: this.map.getBounds().getSouthEast().lat,
-					lng: this.map.getBounds().getSouthEast().lng,
-				},
-			};
-			this.getMapPoints();
+			});
+			if (Object.keys(this.points).length > 0)
+			{
+				markers = this.addPointsToMap(markers);
+			}
+
+
+			leafletMap.addLayer(markers);
+
+			this.mapInstance = leafletMap;
+		},
+		addPointsToMap(markers)
+		{
+			var ref = this;
+			for (const point of this.points)
+			{
+				var icon = L.icon(
+					{
+						iconUrl: point.icon,
+						iconSize: [50, 66.5],
+						id: `marker_${point.id}`
+					});
+
+				let marker = L.marker(L.latLng(point.lat, point.lon), {
+					id: `marker_${point.id}`,
+					icon: icon
+				}).on('click', function(e)
+				{
+
+					ref.getPoint(point.id);
+				});
+
+				markers.addLayer(marker)
+			}
+
+			return markers;
 		},
 		setFilters(event)
 		{
@@ -338,13 +412,12 @@ export default
 
 			this.getMapPoints();
 		},
-		getIcon(point)
+		getIcon(point_icon)
 		{
-			if (this.pointId === point)
-			{
-				return L.icon(this.mapIconSelected);
-			}
-			return L.icon(this.mapIcon);
+			return L.icon({
+				iconUrl: point_icon,
+				iconSize: [50, 66.5],
+			});
 		},
 		addMapMarkers()
 		{
@@ -387,6 +460,17 @@ export default
 			this.getUserInfo();
 		});
 		this.getUserInfo();
+	},
+	watch: {
+		'window.selectedPoint' :
+		{
+			handler: function (newVal)
+			{
+				console.log(`new selected point clicked`, newVal);
+			},
+			deep: true,
+			immediate: true
+		}
 	}
 };
 </script>

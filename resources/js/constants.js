@@ -6,9 +6,24 @@ export const CONSTANTS =
 	DEFAULT_ITEMS_PER_PAGE: 12,
 	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
 	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
-	DEFAULT_LOCATION:{
+	DEFAULT_MAP_OPTIONS:{
 		LATITUDE: 46.755504,
-		LONGITUDE: 23.5787266
+		LONGITUDE: 23.5787266,
+		ZOOM: 13,
+		GEO_JSON:
+		{
+			"type": "Feature",
+			"properties": {},
+			"geometry":
+			{
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[23.5787266, 46.755504]
+					]
+				]
+			}
+		}
 	},
 	EXTERNAL_URLS:{
 		GUIDE: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
