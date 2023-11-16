@@ -192,6 +192,7 @@ export default
 		},
 		async mapMoveEvent(e)
 		{
+			const leafletMap = this.mapInstance;
 			this.bounds = {
 				northEast: {
 					lat: leafletMap.getBounds().getNorthEast().lat,
@@ -211,9 +212,14 @@ export default
 				},
 			};
 
+			this.mapOptions.lat = leafletMap.getCenter().lat;
+			this.mapOptions.lng = leafletMap.getCenter().lng;
+			this.mapOptions.geoJSON.geometry.coordinates = [leafletMap.getCenter().lng, leafletMap.getCenter().lat];
+			this.mapOptions.zoom = leafletMap.getZoom();
+
 
 			this.points = await this.getMapPoints();
-			this.initMap();
+			this.initMap(true);
 		},
 		requestCurrentLocation()
 		{
@@ -288,9 +294,32 @@ export default
 
 			return points;
 		},
-		initMap()
+		initMap(refresh = false)
 		{
-			const leafletMap = this.mapInstance;
+			var leafletMap = this.mapInstance;
+			if (refresh)
+			{
+				this.mapInstance.off();
+				this.mapInstance.remove();
+				this.mapInstance = {};
+				leafletMap = L.map(this.mapId, {
+					center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
+					zoom: this.mapOptions.zoom,
+					maxZoom: this.mapOptions.maxZoom,
+					zoomControl: true,
+					zoomAnimation: false,
+					layers: [],
+				});
+
+				const ref = this;
+				leafletMap.on('moveend', function(e)
+				{
+					ref.mapMoveEvent(e);
+				});
+				this.mapInstance = leafletMap;
+			}
+
+
 			const tile = L.tileLayer(
 				`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
 				{
@@ -361,18 +390,20 @@ export default
 
 			return markers;
 		},
-		setFilters(event)
+		async setFilters (event)
 		{
 			if (Object.keys(event).length > 0)
 			{
 				this.filters = event;
-				this.getMapPoints();
+				this.points = await this.getMapPoints();
+				this.initMap(true);
 			}
 
 			if (this.hasResults === false)
 			{
 				this.filters = event;
-				this.getMapPoints();
+				this.points = await this.getMapPoints();
+				this.initMap(true);
 			}
 		},
 		closePointDetails()
@@ -400,16 +431,5 @@ export default
 		});
 		this.getUserInfo();
 	},
-	watch: {
-		'window.selectedPoint' :
-		{
-			handler: function (newVal)
-			{
-				console.log(`new selected point clicked`, newVal);
-			},
-			deep: true,
-			immediate: true
-		}
-	}
 };
 </script>
