@@ -10,6 +10,7 @@ export const CONSTANTS =
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266,
 		ZOOM: 13,
+		MAX_ZOOM: 22,
 		GEO_JSON:
 		{
 			"type": "Feature",

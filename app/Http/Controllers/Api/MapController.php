@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\IssueResource;
 use App\Http\Resources\IssueTypeResource;
+use App\Http\Resources\MapPointFieldResource;
+use App\Http\Resources\MapPointResource;
+use App\Http\Resources\MapPointServiceResource;
+use App\Http\Resources\RecycleMaterialResource;
 use App\Models\Issue;
 use App\Models\IssueType;
 use App\Models\MapPoint;
@@ -89,7 +94,7 @@ class MapController extends Controller
 			]
 		]);
 
-		$point = MapPoint::create($data);
+		$point = new MapPointResource(MapPoint::create($data));
 		return response()
 			->json($point);
 	}
@@ -100,9 +105,9 @@ class MapController extends Controller
 		return response()
 			->json(
 				[
-					'services' => MapPointService::with('pointTypes')->get(),
-					'material_recycling_points' => RecycleMaterial::whereNull('is_wildcard')->get(),
-					'field_types' => MapPointField::all(),
+					'services' => MapPointServiceResource::collection(MapPointService::with('pointTypes')->get()),
+					'material_recycling_points' => RecycleMaterialResource::collection(RecycleMaterial::whereNull('is_wildcard')->get()),
+					'field_types' => MapPointFieldResource::collection(MapPointField::all()),
 					'reported_point_issue_types' => IssueTypeResource::collection(IssueType::with('items')->get()),
 				]);
 	}
@@ -112,8 +117,8 @@ class MapController extends Controller
 		return response()
 			->json(
 				[
-					'point' => MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id),
-					'materials' => RecycleMaterial::whereNull('is_wildcard')->whereNull('parent')->get(),
+					'point' => new MapPointResource(MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id)),
+					'materials' => RecycleMaterialResource::collection(RecycleMaterial::whereNull('is_wildcard')->whereNull('parent')->get()),
 					'url' => secure_url('/point/' . $id)
 				]);
 	}
@@ -140,9 +145,9 @@ class MapController extends Controller
 		$rules = $this->_getIssueValidationRules($data);
 		$this->validate($request, $rules);
 		
-		$point = Issue::createFromArray($data);
+		$issue = new IssueResource(Issue::createFromArray($data));
 		return response()
-			->json($point);
+			->json($issue);
 	}
 	
 	private function _getIssueValidationRules($data)

@@ -59,36 +59,6 @@
 					>
 					</point-details>
 					<div :id="mapId" class="w-screen h-screen"></div>
-					<!--
-					<div
-						class="map h-screen w-full bg-green-900"
-					>
-						<l-map
-							ref="map"
-							:center="[latitude, longitude]"
-							:zoom="zoom"
-							:max-zoom="20"
-							@ready="initMap"
-							@update:zoom="zoomEvent($event)"
-							@update:center="centerEvent($event)"
-							@update:bounds="boundsEvent($event)"
-							:use-global-leaflet="false"
-							:marker-zoom-animation="true"
-						>
-							<l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
-							<l-marker
-								v-for="(point) of points"
-								:lat-lng="[point.lat, point.lon]"
-								:ref="`marker_${point.id}`"
-								:name="`marker_${point.id}`"
-								@click="getPoint(point.id, $event)"
-								:icon="getIcon(point.icon)"
-							>
-							</l-marker>
-
-						</l-map>
-					</div>
-					-->
 					<div
 						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
 						:class="{'hidden': hasApprovedLocation}"
@@ -145,6 +115,7 @@ export default
 			isAuthenticated: false,
 			mapOptions: {
 				zoom: CONSTANTS.DEFAULT_MAP_OPTIONS.ZOOM,
+				maxZoom: CONSTANTS.DEFAULT_MAP_OPTIONS.MAX_ZOOM,
 				lat: CONSTANTS.DEFAULT_MAP_OPTIONS.LATITUDE,
 				lng: CONSTANTS.DEFAULT_MAP_OPTIONS.LONGITUDE,
 				geoJSON: CONSTANTS.DEFAULT_MAP_OPTIONS.GEO_JSON,
@@ -166,7 +137,7 @@ export default
 	},
 	methods:
 	{
-		getPoint(id, event)
+		getPoint(id)
 		{
 			let url = _.replace(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.DETAILS, '{id}', id);
 
@@ -187,9 +158,16 @@ export default
 			const leafletMap = L.map(this.mapId, {
 				center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 				zoom: this.mapOptions.zoom,
+				maxZoom: this.mapOptions.maxZoom,
 				zoomControl: true,
 				zoomAnimation: false,
 				layers: [],
+			});
+
+			const ref = this;
+			leafletMap.on('moveend', function(e)
+			{
+				ref.mapMoveEvent(e);
 			});
 			this.mapInstance = leafletMap;
 
@@ -211,6 +189,31 @@ export default
 					lng: leafletMap.getBounds().getSouthEast().lng,
 				},
 			};
+		},
+		async mapMoveEvent(e)
+		{
+			this.bounds = {
+				northEast: {
+					lat: leafletMap.getBounds().getNorthEast().lat,
+					lng: leafletMap.getBounds().getNorthEast().lng,
+				},
+				northWest: {
+					lat: leafletMap.getBounds().getNorthWest().lat,
+					lng: leafletMap.getBounds().getNorthWest().lng,
+				},
+				southWest: {
+					lat: leafletMap.getBounds().getSouthWest().lat,
+					lng: leafletMap.getBounds().getSouthWest().lng,
+				},
+				southEast: {
+					lat: leafletMap.getBounds().getSouthEast().lat,
+					lng: leafletMap.getBounds().getSouthEast().lng,
+				},
+			};
+
+
+			this.points = await this.getMapPoints();
+			this.initMap();
 		},
 		requestCurrentLocation()
 		{
@@ -328,7 +331,6 @@ export default
 				markers = this.addPointsToMap(markers);
 			}
 
-
 			leafletMap.addLayer(markers);
 
 			this.mapInstance = leafletMap;
@@ -372,69 +374,6 @@ export default
 				this.filters = event;
 				this.getMapPoints();
 			}
-		},
-		zoomEvent(event)
-		{
-			if (event != this.zoom)
-			{
-				//this.getMapPoints();
-			}
-
-			//this.zoom = event;
-		},
-		centerEvent(event)
-		{
-			this.latitude = event.lat;
-			this.longitude = event.lng;
-
-			//this.getMapPoints();
-		},
-		boundsEvent(event)
-		{
-			this.bounds = {
-				northEast: {
-					lat: event.getNorthEast().lat,
-					lng: event.getNorthEast().lng,
-				},
-				northWest: {
-					lat: event.getNorthWest().lat,
-					lng: event.getNorthWest().lng,
-				},
-				southWest: {
-					lat: event.getSouthWest().lat,
-					lng: event.getSouthWest().lng,
-				},
-				southEast: {
-					lat: event.getSouthEast().lat,
-					lng: event.getSouthEast().lng,
-				}
-			};
-
-			this.getMapPoints();
-		},
-		getIcon(point_icon)
-		{
-			return L.icon({
-				iconUrl: point_icon,
-				iconSize: [50, 66.5],
-			});
-		},
-		addMapMarkers()
-		{
-			/*
-			let markers = L.markerClusterGroup({ chunkedLoading: true });
-
-			for (var i = 0; i < addressPoints.length; i++) {
-				var a = addressPoints[i];
-				var title = a[2];
-				var marker = L.marker(L.latLng(a[0], a[1]), { title: title });
-				marker.bindPopup(title);
-				markers.addLayer(marker);
-			}
-
-			map.addLayer(markers);
-
-			 */
 		},
 		closePointDetails()
 		{

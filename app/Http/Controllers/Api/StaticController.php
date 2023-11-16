@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\MapPointServiceResource;
 use App\Models\MapPointService;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,7 @@ class StaticController extends Controller
 		return response()
 			->json(
 			[
-				'filters' => MapPointService::all(),
+				'filters' => MapPointServiceResource::collection(MapPointService::all()),
 				'extended_filters' => MapPointService::getExtendedFilters((int) $service_id),
 			]);
 	}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,7 +32,7 @@ class AuthController extends Controller
 			$user = Auth::user();
 			return response()->json(
 			[
-				'user' => $user,
+				'user' => new UserResource($user),
 				'authorization' =>
 				[
 					'token' => $user->createToken('ApiToken')->plainTextToken,
@@ -75,7 +76,7 @@ class AuthController extends Controller
 	{
 		return response()->json(
 		[
-			'user' => Auth::user(),
+			'user' => new UserResource(Auth::user()),
 			'authorisation' =>
 			[
 				'token' => Auth::refresh(),
