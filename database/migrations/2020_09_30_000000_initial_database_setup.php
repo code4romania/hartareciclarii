@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+		/*
 		Schema::withoutForeignKeyConstraints(function () {
 			DB::unprepared(
 				File::get(database_path('data/harta_reciclarii.sql'))
 			);
-		});
+		});*/
     }
 
     /**
