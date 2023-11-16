@@ -371,7 +371,7 @@ export default
 			{
 				var icon = L.icon(
 					{
-						iconUrl: (point.icon.length) ? point.icon : CONSTANTS.DEFAULT_MAP_OPTIONS.MARKER_ICON,
+						iconUrl: (point.icon != '') ? point.icon : CONSTANTS.DEFAULT_MAP_OPTIONS.MARKER_ICON,
 						iconSize: [50, 66.5],
 						id: `marker_${point.id}`
 					});
