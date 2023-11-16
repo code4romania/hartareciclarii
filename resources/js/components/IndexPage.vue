@@ -16,7 +16,7 @@
 				:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
 				class="h-screen w-full "
 			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
-				<main class="h-screen w-full ">
+				<main class="">
 					<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
 						<button class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
 								type="button">

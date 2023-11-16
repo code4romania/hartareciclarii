@@ -246,7 +246,7 @@
                 </div>
             </span>
 
-			<div class="px-6 py-3 border-t absolute bottom-0 bg-white w-full">
+			<div class="px-6 py-3 border-t absolute bottom-0 bg-white lg:w-96 ">
 				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters()">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
 					{{ CONSTANTS.LABELS.SIDEBAR.CLEAR_FILTERS_LABEL }}
