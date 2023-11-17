@@ -18,7 +18,8 @@ class MapPointServiceResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
 			'display_name' => $this->display_name,
-			'icon' => $this->icon
+			'icon' => $this->icon,
+			'pointTypes' => MapPointTypeResource::collection($this->pointTypes)
 		];
     }
 }
