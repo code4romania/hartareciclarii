@@ -51,4 +51,15 @@ class StaticController extends Controller
 					'images' => $images
 				]);
 	}
+	
+	public function recapcha(Request $request)
+	{
+		$this->validate($request, [
+			'recaptchaToken' => recaptchaRuleName()
+		]);
+		
+		
+		return response()
+			->json([ 'ok' => 'ok']);
+	}
 }

@@ -170,6 +170,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+		Biscolab\ReCaptcha\ReCaptchaServiceProvider::class
 
     ])->toArray(),
 
@@ -186,6 +187,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+		'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
     ])->toArray(),
 
 ];

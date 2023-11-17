@@ -29,6 +29,7 @@
 	
 	Route::get('/static/filters', [StaticController::class, 'filters']);
 	Route::post('/static/image', [StaticController::class, 'upload']);
+	Route::post('/static/recapcha', [StaticController::class, 'recapcha']);
 	
 	Route::get('/map/nomenclatures', [MapController::class, 'nomenclatures']);
 	Route::get('/map/points', [MapController::class, 'points']);
