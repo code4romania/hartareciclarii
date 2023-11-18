@@ -91,7 +91,7 @@
 						</div>
 						<div>
 							<div class="text-black text-2xl font-normal leading-none">{{this.userInfo.firstname}} {{this.userInfo.lastname}}</div>
-							<div class="text-black text-sm font-normal  leading-none">{{CONSTANTS.LABELS.PROFILE.MEMBER_FROM}} {{moment(this.userInfo.created_at).format('DD MMMM YYYY')}}</div>
+							<div class="text-black text-sm font-normal  leading-none">{{CONSTANTS.LABELS.PROFILE.MEMBER_FROM}} {{ $moment(this.userInfo.created_at).format('DD MMMM YYYY') }}</div>
 							<div class="py-5"></div>
 							<div class="text-gray-700 text-sm font-medium leading-tight">{{CONSTANTS.LABELS.PROFILE.EMAIL}}</div>
 							<div class="text-black text-sm font-normal leading-none">{{this.userInfo.email}}</div>
@@ -137,7 +137,7 @@
 											</thead>
 											<tbody class="divide-y divide-gray-200 bg-white">
 											<tr v-for="contribution in userInfo.contributions">
-												<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ moment(contribution.date).format('DD MMMM YYYY / hh:mm') }}</td>
+												<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ $moment(contribution.date).format('DD MMMM YYYY / hh:mm') }}</td>
 												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.type }}</td>
 												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.item_type }}</td>
 												<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ contribution.location }}</td>
@@ -174,7 +174,6 @@ import {getUserProfile} from "../general.js";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { ArrowLeftIcon, PencilSquareIcon } from '@heroicons/vue/20/solid'
-import moment from 'moment';
 
 export default
 {
@@ -197,7 +196,6 @@ export default
 	{
 		return {
 			userInfo: {},
-			moment,
 			isAuthenticated: false,
 		};
 	},

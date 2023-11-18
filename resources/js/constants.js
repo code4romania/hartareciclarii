@@ -2,7 +2,9 @@ export const CONSTANTS =
 {
 	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
 	APP_DOMAIN: `${import.meta.env.VITE_APP_URL}`,
-	RECAPTCHA_SITE_KEY: `6LdmXAwpAAAAAMGd7KyyMZibyQksLpbJb7Cy4toN`,
+	RECAPTCHA_SITE_KEY: `6LdmXAwpAAAAAMGd7KyyMZibyQksLpbJb7Cy4toN`, //cheie pt v2 invisible captcha //todo: incerc prima data cu varianta asta de v2 invisible
+    //6Le2dw8pAAAAANoNQ2pyFMhn-v3DSSkrDV7NSEV9      cheie pentru vue, site key pt v3
+    //6Le2dw8pAAAAAHJAczvtDiECM3vNQpmoUQINOAYT pentru laravel, site key pt v3
 	DEFAULT_ITEMS_PER_PAGE: 12,
 	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
 	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
@@ -52,6 +54,7 @@ export const CONSTANTS =
 		},
         STATIC:
         {
+            VALIDATE_CAPTCHA: '/static/recapcha',
             FILTERS:
             {
                 FILTERS: `/static/filters`
@@ -216,6 +219,7 @@ export const CONSTANTS =
                 SUBTITLE: `Pasul 2/3 - Detalii punct`,
                 POINT_TYPE: `Tip punct`,
                 POINT_TYPE_REQUIRED: `Tip punct este obligatoriu!`,
+                MANAGED_BY_REQUIRED: `Administrat de este obligatoriu!`,
                 COLLECTED_MATERIALS: `Materiale colectate`,
                 COLLECTED_MATERIALS_REQUIRED: `Materiale colectate este obligatoriu!`,
                 ADMINISTRATION: `Administrat de`,
@@ -249,7 +253,7 @@ export const CONSTANTS =
                 DOESNT_OFFERS_MONEY: `NU ofera bani`,
                 WEBSITE: `Website`,
                 EMAIL: `Email`,
-                PHONE: `Phone`
+                PHONE: `Phone`,
             }
         },
 		API:

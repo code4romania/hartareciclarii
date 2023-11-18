@@ -176,6 +176,18 @@
                     {{ CONSTANTS.LABELS.ADD_POINT.FINISH_STEPS }}
                 </button>
             </div>
+
+            <div class="space-y-1 mb-3" v-if="showCaptcha">
+                <vue-programmatic-invisible-google-recaptcha
+                    ref="invisibleRecaptcha1"
+                    :sitekey="CONSTANTS.RECAPTCHA_SITE_KEY"
+                    :elementId="'invisibleRecaptcha1'"
+                    :showBadgeMobile="false"
+                    :badgePosition="'left'"
+                    :showBadgeDesktop="true"
+                    @recaptchaCallback="recaptchaCallback"
+                ></vue-programmatic-invisible-google-recaptcha>
+            </div>
         </div>
     </div>
 </template>
@@ -188,7 +200,7 @@ import {XCircleIcon} from '@heroicons/vue/20/solid';
 import eventBus from "../../../eventBus.js";
 import 'vue3-treeselect/dist/vue3-treeselect.css'
 import {LMap, LTileLayer, LControlLayers, LMarker, LIcon, LControl } from "@vue-leaflet/vue-leaflet";
-
+import VueProgrammaticInvisibleGoogleRecaptcha from 'vue-programmatic-invisible-google-recaptcha'
 
 export default {
     components: {
@@ -199,7 +211,8 @@ export default {
         LMap,
         LTileLayer,
         LControlLayers,
-        LControl
+        LControl,
+        VueProgrammaticInvisibleGoogleRecaptcha,
     },
     props: {
         nomenclatures: {
@@ -225,6 +238,7 @@ export default {
     },
     data() {
         return {
+            showCaptcha: false,
             /*previousStepBody: {
                 "service_id": 1,
                 "field_types": {
@@ -245,14 +259,22 @@ export default {
             }*/
         };
     },
-    mounted() {},
+    mounted() {
+        let recaptchaScript = document.createElement('script')
+        recaptchaScript.setAttribute('src', 'https://www.google.com/recaptcha/api.js?render=explicit')
+        document.head.appendChild(recaptchaScript)
+
+        setTimeout(() => {
+            this.showCaptcha = true;
+        }, 100);
+    },
     methods: {
         closeModal() {
             this.$emit('close');
         },
         containerType() {
             for (const service of _.get(this, 'nomenclatures.services', [])) {
-                for (const point of service.point_types) {
+                for (const point of service.pointTypes) {
                     if (point.id === this.previousStepBody.service_id) {
                         return point.display_name;
                     }
@@ -271,10 +293,25 @@ export default {
             return false;
         },
         nextStep() {
-            this.$emit('stepFinished', {
-                nextStep: 'finish',
-            })
-        }
+            this.$refs.invisibleRecaptcha1.execute();
+        },
+        recaptchaCallback (recaptchaToken) {
+            axios
+                .post(
+                    CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.STATIC.VALIDATE_CAPTCHA,
+                    { recaptchaToken: recaptchaToken }
+                )
+                .then((response) => {
+                    if (_.get(response, 'status', 0) === HttpStatusCode.Ok) {
+                        this.$emit('stepFinished', {
+                            nextStep: 'finish',
+                        })
+                    }
+                })
+                .catch((err) => {});
+
+            return true;
+        },
     },
     watch: {
         nomenclatures: {
@@ -287,3 +324,9 @@ export default {
     },
 };
 </script>
+
+<style>
+.grecaptcha-badge {
+    bottom: unset !important;
+}
+</style>

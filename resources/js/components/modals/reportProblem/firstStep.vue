@@ -58,6 +58,18 @@
 				{{ CONSTANTS.LABELS.REPORT_PROBLEM.NEXT_STEP }}
 			</button>
 		</div>
+
+        <div class="space-y-1 mb-3">
+            <vue-programmatic-invisible-google-recaptcha
+                ref="invisibleRecaptcha1"
+                :sitekey="CONSTANTS.RECAPTCHA_SITE_KEY"
+                :elementId="'invisibleRecaptcha1'"
+                :showBadgeMobile="false"
+                :badgePosition="'left'"
+                :showBadgeDesktop="true"
+                @recaptchaCallback="recaptchaCallback"
+            ></vue-programmatic-invisible-google-recaptcha>
+        </div>
 	</div>
 </template>
 
@@ -70,6 +82,7 @@ import {XCircleIcon} from '@heroicons/vue/20/solid';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid';
 import {LMap, LTileLayer, LControlLayers, LMarker, LIcon, LControl} from "@vue-leaflet/vue-leaflet";
 import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions} from '@headlessui/vue';
+import VueProgrammaticInvisibleGoogleRecaptcha from 'vue-programmatic-invisible-google-recaptcha'
 
 export default {
 	components: {
@@ -87,7 +100,8 @@ export default {
 		ListboxButton,
 		ListboxLabel,
 		ListboxOption,
-		ListboxOptions
+		ListboxOptions,
+        VueProgrammaticInvisibleGoogleRecaptcha
 	},
 	props: {
 		nomenclatures: {
@@ -127,14 +141,17 @@ export default {
 		return {
 			selectedService: {},
 			errors: {},
+            constNextStep: 'first',
 			stepRequestBody:
 				{
 					reported_point_issue_type_id: null,
 				},
 		};
 	},
-	mounted ()
-	{
+	mounted () {
+        let recaptchaScript = document.createElement('script')
+        recaptchaScript.setAttribute('src', 'https://www.google.com/recaptcha/api.js?render=explicit')
+        document.head.appendChild(recaptchaScript)
 	},
 	methods: {
 		closeModal ()
@@ -156,27 +173,38 @@ export default {
 
 			return Object.keys(this.errors).length;
 		},
-		nextStep ()
-		{
-			if (this.validate())
-			{
+		nextStep () {
+			if (this.validate()) {
 				return;
 			}
-			let nextStep = 'first';
-			for (const nomenclature of this.$props.nomenclatures.reported_point_issue_types)
-			{
-				if (nomenclature.id == this.stepRequestBody.reported_point_issue_type_id)
-				{
-					nextStep = nomenclature.steps[0];
-				}
 
+			for (const nomenclature of this.$props.nomenclatures.reported_point_issue_types) {
+				if (nomenclature.id == this.stepRequestBody.reported_point_issue_type_id) {
+					this.constNextStep = nomenclature.steps[0];
+				}
 			}
-			this.$emit('stepFinished',
-		{
-				nextStep: nextStep,
-				body: this.stepRequestBody
-			});
-		}
+
+            this.$refs.invisibleRecaptcha1.execute();
+
+		},
+        recaptchaCallback (recaptchaToken) {
+            axios
+                .post(
+                    CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.STATIC.VALIDATE_CAPTCHA,
+                    { recaptchaToken: recaptchaToken }
+                )
+                .then((response) => {
+                    if (_.get(response, 'status', 0) === HttpStatusCode.Ok) {
+                        this.$emit('stepFinished', {
+                            nextStep: this.constNextStep,
+                            body: this.stepRequestBody
+                        });
+                    }
+                })
+                .catch((err) => {});
+
+            return true;
+        },
 	},
 	watch: {
 		selectedService: {
@@ -190,3 +218,9 @@ export default {
 	},
 };
 </script>
+
+<style>
+.grecaptcha-badge {
+    bottom: unset !important;
+}
+</style>

@@ -109,7 +109,7 @@
 
             <div class="space-y-1 mb-3">
                 <label
-                    class="block text-sm font-medium leading-6 text-gray-900"
+                    class="block text-sm font-medium leading-6 text-gray-900 required"
                     for="administration"
                 >
                     {{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.ADMINISTRATION }}
@@ -124,6 +124,19 @@
                         name="administration"
                     />
                 </div>
+
+                <template v-if="getError('managed_by')">
+                    <div class="rounded-md bg-red-50 p-4 mb-2">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <XCircleIcon aria-hidden="true" class="h-5 w-5 text-red-400"/>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">{{ CONSTANTS.LABELS.ADD_POINT.SECOND_STEP.MANAGED_BY_REQUIRED }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
 
             <div class="space-y-1 mb-8">
@@ -501,7 +514,7 @@ export default {
             let toReturn = [];
 
             for (const service of _.get(this, 'nomenclatures.services', {})) {
-                for (const point of _.get(service, 'point_types', [])) {
+                for (const point of _.get(service, 'pointTypes', [])) {
                     if (point.service_id === this.previousStepBody.service_id) {
                         toReturn.push(point);
                     }
@@ -518,6 +531,11 @@ export default {
             }
             if (!_.get(this, 'stepRequestBody.material_recycling_point', []).length) {
                 this.errors.material_recycling_point = true;
+            }
+            if (!_.get(this, 'stepRequestBody.field_types.managed_by', false)
+                && !this.administrationUnknown
+            ) {
+                this.errors.managed_by = true;
             }
 
             return Object.keys(this.errors).length;
