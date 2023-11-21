@@ -53,9 +53,9 @@
 
 	<!-- Static sidebar for desktop -->
 	<div
-		class="w-full z-10 inset-y-0  lg:w-96 flex-col bg-white"
+		class="w-full z-50 inset-y-0  lg:w-96 flex-col bg-white"
         ref="filtersBox"
-		:class="{'flex': open, 'hidden': !open}"
+		:class="{'flex': open && !this.filtersOpen, 'hidden': !open, 'absolute z-30': this.filtersOpen}"
 	>
 		<!-- Sidebar component, swap this element with another sidebar if you like -->
 		<div class="flex grow flex-col overflow-y-auto">
@@ -246,7 +246,10 @@
                 </div>
             </span>
 
-			<div class="px-6 py-3 border-t absolute bottom-0 bg-white lg:w-96 ">
+			<div
+				class="px-6 py-3 border-t absolute bottom-0 bg-white lg:w-96 "
+				:class="{'relative': this.filtersOpen}"
+			>
 				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters()">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
 					{{ CONSTANTS.LABELS.SIDEBAR.CLEAR_FILTERS_LABEL }}
@@ -285,7 +288,12 @@ export default {
 			type: Number,
 			required: true,
 			default: 0
-		}
+		},
+		filtersOpen: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
     },
 	data () {
 		return {
@@ -313,6 +321,7 @@ export default {
 		},
 		toggleFilters() {
 			this.open = !this.open;
+			this.$emit('toggle-filters', this.open);
 		},
         getFilter(filterType) {
             return _.get(this, ['filters', 'extended_filters', filterType], false);
@@ -460,6 +469,18 @@ export default {
 			handler: function (newVal)
 			{
 				this.$emit('filters-changed', this.collectedFilters);
+			},
+			deep: true,
+			immediate: true
+		},
+		filtersOpen: {
+			handler: function (newVal)
+			{
+				console.log(this.filtersOpen, newVal, this.open);
+				if (newVal !== this.open)
+				{
+					this.open = newVal;
+				}
 			},
 			deep: true,
 			immediate: true

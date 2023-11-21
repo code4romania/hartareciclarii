@@ -2,12 +2,14 @@
 	<div class="flex w-screen h-screen">
 		<div
 			class="flex"
-			:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
+			:class="{'lg:w-[4.5rem]': !filtersOpen, 'lg:w-96': filtersOpen}"
 		>
 			<left-sidebar
 				:has-results="hasResults"
 				:total-points="totalPoints"
+				:filters-open="filtersOpen"
 				@filtersChanged="setFilters($event)"
+				@toggleFilters="toggleFilters()"
 			></left-sidebar>
 
 		</div>
@@ -17,9 +19,12 @@
 				class="h-screen w-full "
 			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
 				<main class="">
-					<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
-						<button class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
-								type="button">
+					<div class="flex absolute inset-x-0 px-4 py-6 z-20 gap-x-2 lg:hidden">
+						<button
+							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
+							type="button"
+							v-on:click="toggleMenu()"
+						>
 							<mobile-filter-burger-icon></mobile-filter-burger-icon>
 						</button>
 						<div class="relative rounded-md shadow-sm flex-1">
@@ -37,6 +42,7 @@
 						<button
 							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
 							type="button"
+							v-on:click="toggleFilters()"
 						>
 							<mobile-filter-svg-icon></mobile-filter-svg-icon>
 						</button>
@@ -44,9 +50,10 @@
 
 					<top-menu
 						:userInfo="userInfo"
+						:menu-open="menuOpen"
 						:is-authenticated="isAuthenticated"
+						@toggleMenu="toggleMenu()"
 					>
-
 					</top-menu>
 
 					<point-details
@@ -131,7 +138,10 @@ export default
 			selectedPoint: {},
 			mainMaterials: {},
 			pointUrl: '',
-			mapInstance: {}
+			mapInstance: {},
+			isDesktop: true,
+			filtersOpen: false,
+			menuOpen: false
 
 		};
 	},
@@ -160,7 +170,7 @@ export default
 				center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 				zoom: this.mapOptions.zoom,
 				maxZoom: this.mapOptions.maxZoom,
-				zoomControl: true,
+				zoomControl: this.isDesktop,
 				zoomAnimation: false,
 				layers: [],
 			});
@@ -307,7 +317,7 @@ export default
 					center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 					zoom: this.mapOptions.zoom,
 					maxZoom: this.mapOptions.maxZoom,
-					zoomControl: true,
+					zoomControl: this.isDesktop,
 					zoomAnimation: false,
 					layers: [],
 				});
@@ -410,6 +420,15 @@ export default
 		closePointDetails()
 		{
 			this.selectedPoint = {};
+		},
+		toggleFilters()
+		{
+			console.log(this.filtersOpen);
+			this.filtersOpen = !this.filtersOpen;
+		},
+		toggleMenu()
+		{
+			this.menuOpen = !this.menuOpen;
 		}
 	},
 	computed: {
@@ -424,6 +443,10 @@ export default
 	},
 	mounted()
 	{
+		if ((/(portrait(-primary|-secondary)?)/i.test(screen.orientation.type)))
+		{
+			this.isDesktop = false;
+		}
 		this.requestCurrentLocation();
 
 		eventBus.$on('getUser', (speaker) =>

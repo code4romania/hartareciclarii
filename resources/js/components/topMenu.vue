@@ -1,5 +1,20 @@
 <template>
-	<div class="hidden absolute top-0 end-0 px-4 py-6 z-50 gap-x-3 lg:flex">
+	<div
+		class="absolute px-4 py-6 gap-x-3"
+		:class="{'hidden lg:flex top-0 end-0  z-20': !menuOpen, 'absolute w-screen h-screen top-0 bg-white px-4 py-6 z-30 gap-x-3': menuOpen}"
+	>
+		<div
+			class="flex h-16 row items-center justify-between p-4 bg-gray-50"
+			:class="{'hidden': !menuOpen, 'flex': menuOpen}"
+		>
+			<a href="">
+				<img alt="Harta Reciclarii V2.0" class="h-8 w-auto" src="/assets/images/logo.png">
+			</a>
+			<button type="button" v-on:click="toggleMenu();" class=" cursor-pointer">
+				<desktop-filter-close-icon></desktop-filter-close-icon>
+			</button>
+		</div>
+
 		<button
             type="button"
             class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
@@ -24,7 +39,10 @@
 				leave-from-class="transform opacity-100 scale-100"
 				leave-to-class="transform opacity-0 scale-95"
 			>
-				<MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+				<MenuItems
+					class="absolute z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+					:class="{'right-0': !menuOpen, 'left-0': menuOpen}"
+				>
 					<div class="py-1">
 						<MenuItem v-slot="{ active }">
 							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
@@ -159,12 +177,14 @@ import eventBus from "../eventBus.js";
 import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/20/solid'
+import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 
 export default
 {
 	name: "topMenu",
 	components:
 	{
+		DesktopFilterCloseIcon,
 		MenuMyAccountIcon,
 		MenuFaqIcon,
 		MenuAddPointIcon,
@@ -190,7 +210,13 @@ export default
 		{
 			type: Object,
 			required: true,
-		}
+		},
+		menuOpen:
+		{
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	data()
 	{
@@ -257,7 +283,11 @@ export default
             setTimeout(() => {
                 this.showSaveMessage = false;
             }, 10000);
-        }
+        },
+		toggleMenu()
+		{
+			this.$emit('toggleMenu');
+		}
 	}
 };
 </script>

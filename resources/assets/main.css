@@ -20,3 +20,12 @@
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
 }
+
+@media (max-width: 767px) {
+    .leaflet-right
+    {
+        top: auto !important;
+        bottom: 20px
+    }
+
+}
