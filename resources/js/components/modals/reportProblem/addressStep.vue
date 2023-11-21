@@ -189,8 +189,8 @@ export default {
     data() {
         return {
             selectedService: {},
-            latitude: CONSTANTS.DEFAULT_LOCATION.LATITUDE,
-            longitude: CONSTANTS.DEFAULT_LOCATION.LONGITUDE,
+            latitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LATITUDE,
+            longitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LONGITUDE,
             zoom: 13,
             point: {},
             errors: {},
