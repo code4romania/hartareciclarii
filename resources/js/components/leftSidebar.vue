@@ -380,12 +380,12 @@ export default {
         collectionPointFilterChanged(filter) {
             if (this.selectedCollectionPointsTypes.includes(filter.id)) {
                 this.selectedCollectionPointsTypes = this.selectedCollectionPointsTypes.filter(item => item !== filter.id)
-				this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
+				this.collectedFilters.point_type_id = this.selectedCollectionPointsTypes;
                 return;
             }
 
             this.selectedCollectionPointsTypes.push(filter.id);
-			this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
+			this.collectedFilters.point_type_id = this.selectedCollectionPointsTypes;
         },
         getFilters() {
             const loader = this.$loading.show({
