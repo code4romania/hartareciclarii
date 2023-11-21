@@ -21,7 +21,7 @@
         "vue-leaflet": "^0.1.0",
         "vue-loading-overlay": "^6.0.3",
         "vue-router": "^4.0.13",
-        "vue3-treeselect": "^0.1.10"
+        "vue3-treeselect": "^0.1.10",
     },
     "devDependencies": {
         "@rushstack/eslint-patch": "^1.3.3",
@@ -29,7 +29,7 @@
         "@tailwindcss/typography": "^0.5.10",
         "@tsconfig/node18": "^18.2.2",
         "@types/node": "^18.17.17",
-        "@vitejs/plugin-vue": "^4.3.4",
+        "@vitejs/plugin-vue": "^4.5.0",
         "@vitejs/plugin-vue-jsx": "^3.0.2",
         "@vue-leaflet/vue-leaflet": "^0.10.1",
         "@vue/eslint-config-prettier": "^8.0.0",

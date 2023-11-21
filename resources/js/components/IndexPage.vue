@@ -139,6 +139,7 @@ export default
 	{
 		getPoint(id)
 		{
+			this.selectedPoint = {};
 			let url = _.replace(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.DETAILS, '{id}', id);
 
 			axios
