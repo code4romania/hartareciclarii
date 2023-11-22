@@ -463,7 +463,8 @@ export default {
                     phone_no: null,
                     offers_money: 0,
                     offers_transport: 0,
-                    notes: ''
+                    notes: '',
+					address: ''
                 },
                 opening_hours: {
                     startDay: null,
@@ -572,7 +573,13 @@ export default {
             },
             deep: true,
             immediate: true
-        }
+        },
+		previousStepBody: {
+			handler: function (newVal) {
+				_.set(this, 'stepRequestBody.field_types.address', _.get(newVal, 'field_types.address', ''));
+			},
+			deep: true,
+		}
     },
 };
 </script>
