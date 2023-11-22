@@ -188,7 +188,7 @@ class MapPointsResource extends Resource
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
-                        $state = '<div style="display:inline-flex">';
+                        $state = '<div style="display:inline-flex; flex-wrap:wrap">';
                         foreach ($icons as $icon)
                         {
                             $state .= __("<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>");
