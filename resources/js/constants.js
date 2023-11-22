@@ -1,8 +1,7 @@
-import {Ziggy} from "./ziggy";
 export const CONSTANTS =
 {
-	API_DOMAIN: `${Ziggy.url}/api`,
-	APP_DOMAIN: Ziggy.url,
+	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
+	APP_DOMAIN: `${import.meta.env.VITE_APP_URL}`,
 	RECAPTCHA_SITE_KEY: `6LdmXAwpAAAAAMGd7KyyMZibyQksLpbJb7Cy4toN`,
 	DEFAULT_ITEMS_PER_PAGE: 12,
 	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
