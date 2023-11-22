@@ -12,6 +12,13 @@ import {addAuthToken} from "./general.js";
 const app = createApp(App);
 
 app.config.devtools = true
+const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__
+if (typeof devtools === 'object')
+{
+	devtools.enabled = true
+	devtools.emit('app:init', app, '1.0.0', {})
+}
+
 app.use(router)
 app.use(LoadingPlugin)
 app.mount('#app')
