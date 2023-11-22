@@ -256,6 +256,10 @@ export default {
 	},
 	mounted ()
 	{
+		if (this.isOpen)
+		{
+			console.log(`opened report modal`);
+		}
 		this.getNomenclatureValues();
 	},
 	methods: {
