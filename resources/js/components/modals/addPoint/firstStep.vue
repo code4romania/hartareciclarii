@@ -319,8 +319,8 @@ export default {
             this.stepRequestBody.lat = null;
             this.stepRequestBody.lng = null;
 
-            this.latitude = null;
-            this.longitude = null;
+            //this.latitude = null;
+            //this.longitude = null;
 
 			let url = `${CONSTANTS.NOMINATIM_URL}/search?format=json&q=${this.stepRequestBody.field_types.address}&addressdetails=1`;
 
