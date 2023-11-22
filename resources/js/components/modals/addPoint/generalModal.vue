@@ -135,17 +135,7 @@ export default {
 				mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
 			}
 
-			console.log('11111111111');
-			console.log(stepData.body);
-			console.log(this.requestBody);
-			console.log('11111111111');
-
 			this.requestBody = {...this.requestBody, ...stepData.body}
-
-			console.log('222222222222');
-			console.log(this.requestBody);
-			console.log('222222222222');
-
 			if (mergedFieldTypes) {
 				this.requestBody.field_types = mergedFieldTypes;
 			}
