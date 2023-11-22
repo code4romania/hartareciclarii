@@ -3,10 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\IssueStatus;
-use App\Filament\Resources\IssuesResource;
 use App\Http\Resources\IssueResource;
 use App\Http\Resources\MapPointResource;
+use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -16,10 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
 
 class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
 {
@@ -81,84 +78,83 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     {
         return "{$this->firstname} {$this->lastname}";
     }
-	
-	public function getContributions()
-	{
-		$mapPoints = MapPointResource::collection(MapPoint::with('type', 'service', 'fields.field')->where('created_by', $this->id)->get());
-		$issues = IssueResource::collection(Issue::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
-		
-		$contributions = [];
-		if (!empty($mapPoints))
-		{
-			foreach ($mapPoints->collection->toArray() as $mapPoint)
-			{
-				$contributions[] =
-				[
-					'date' => $mapPoint['created_at'],
-					'type' => __('common.contribution_types.point'),
-					'item_type' => $mapPoint['service']['display_name'].' ('.$mapPoint['type']['display_name'].')',
-					'location' => self::getAddress($mapPoint['fields']),
-					'status' => $mapPoint['status'],
-					'point_id' => $mapPoint['id']
-				];
-			}
-		}
-		
-		if (!empty($issues))
-		{
-			foreach ($issues->collection->toArray() as $issue)
-			{
-				$contributions[] =
-					[
-						'date' => $issue['created_at'],
-						'type' => __('common.contribution_types.issue'),
-						'item_type' => $issue['type']['title'],
-						'location' => self::getAddress($issue['map_point']['fields']),
-						'status' => $issue['status'],
-						'point_id' => $issue['point_id']
-					];
-			}
-		}
-		
-		return $contributions;
-	}
-	
-	private static function getAddress($fields)
-	{
-		if (!empty($fields))
-		{
-			foreach ($fields as $field)
-			{
-				if ($field['field']['field_name'] == 'address')
-				{
-					return $field['value'];
-				}
-			}
-		}
-		
-		return null;
-		
-	}
-	
-	public function sendPasswordResetNotification($token) {
-		$this->notify(new UserResetPasswordNotification($token));
-	}
-	
-	public static function createFromArray($data)
-	{
-		$user = new self();
-		$user->firstname = $data['firstname'];
-		$user->lastname = $data['lastname'];
-		$user->email = $data['email'];
-		$user->accept_terms = $data['accept_terms'];
-		$user->send_newsletter = $data['send_newsletter'];
-		$user->password = Hash::make($data['password']);
-		$user->email_confirmed = 0;
-		$user->created_at = Carbon::now()->toDateTimeString();
-		
-		
-		$user->save();
-		
-		return $user;
-	}
+
+    public function getContributions()
+    {
+        $mapPoints = MapPointResource::collection(MapPoint::with('type', 'service', 'fields.field')->where('created_by', $this->id)->get());
+        $issues = IssueResource::collection(Issue::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
+
+        $contributions = [];
+        if (!empty($mapPoints))
+        {
+            foreach ($mapPoints->collection->toArray() as $mapPoint)
+            {
+                $contributions[] =
+                [
+                    'date' => $mapPoint['created_at'],
+                    'type' => __('common.contribution_types.point'),
+                    'item_type' => $mapPoint['service']['display_name'] . ' (' . $mapPoint['type']['display_name'] . ')',
+                    'location' => self::getAddress($mapPoint['fields']),
+                    'status' => $mapPoint['status'],
+                    'point_id' => $mapPoint['id'],
+                ];
+            }
+        }
+
+        if (!empty($issues))
+        {
+            foreach ($issues->collection->toArray() as $issue)
+            {
+                $contributions[] =
+                    [
+                        'date' => $issue['created_at'],
+                        'type' => __('common.contribution_types.issue'),
+                        'item_type' => $issue['type']['title'],
+                        'location' => self::getAddress($issue['map_point']['fields']),
+                        'status' => $issue['status'],
+                        'point_id' => $issue['point_id'],
+                    ];
+            }
+        }
+
+        return $contributions;
+    }
+
+    private static function getAddress($fields)
+    {
+        if (!empty($fields))
+        {
+            foreach ($fields as $field)
+            {
+                if ($field['field']['field_name'] == 'address')
+                {
+                    return $field['value'];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new UserResetPasswordNotification($token));
+    }
+
+    public static function createFromArray($data)
+    {
+        $user = new self();
+        $user->firstname = $data['firstname'];
+        $user->lastname = $data['lastname'];
+        $user->email = $data['email'];
+        $user->accept_terms = $data['accept_terms'];
+        $user->send_newsletter = $data['send_newsletter'];
+        $user->password = Hash::make($data['password']);
+        $user->email_confirmed = 0;
+        $user->created_at = Carbon::now()->toDateTimeString();
+
+        $user->save();
+
+        return $user;
+    }
 }
