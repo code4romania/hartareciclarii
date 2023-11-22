@@ -1,11 +1,10 @@
 export const CONSTANTS =
 {
-	API_DOMAIN: `${import.meta.env.VITE_API_URL}`,
-	APP_DOMAIN: `${import.meta.env.VITE_APP_URL}`,
-	RECAPTCHA_SITE_KEY: `6LdmXAwpAAAAAMGd7KyyMZibyQksLpbJb7Cy4toN`,
+	API_DOMAIN: window.config.app.api_url,
+	APP_DOMAIN: window.config.app.url,
+	RECAPTCHA_SITE_KEY: window.config.recaptcha.api_site_key,
 	DEFAULT_ITEMS_PER_PAGE: 12,
-	NOMINATIM_URL_DETAILS: `https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1`,
-	NOMINATIM_URL_POINTS: `https://nominatim.openstreetmap.org/search?format=json&q={search}&addressdetails=1`,
+	NOMINATIM_URL: window.config.services.nominatim.url,
 	DEFAULT_MAP_OPTIONS:{
 		LATITUDE: 46.755504,
 		LONGITUDE: 23.5787266,
