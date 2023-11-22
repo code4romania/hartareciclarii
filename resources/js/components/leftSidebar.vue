@@ -55,7 +55,7 @@
 	<div
 		class="w-full z-50 inset-y-0  lg:w-96 flex-col bg-white"
         ref="filtersBox"
-		:class="{'flex': open && !this.filtersOpen, 'hidden': !open, 'absolute z-30': this.filtersOpen}"
+		:class="{'flex': open && !this.filtersOpen, 'hidden': !open, 'absolute lg:relative z-30': this.filtersOpen}"
 	>
 		<!-- Sidebar component, swap this element with another sidebar if you like -->
 		<div class="flex grow flex-col overflow-y-auto">
