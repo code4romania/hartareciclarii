@@ -189,9 +189,18 @@ class MapPointsResource extends Resource
                     {
                         $icons = collect(explode(',', $state))->unique();
                         $state = '<div style="display:inline-flex; flex-wrap:wrap">';
-                        foreach ($icons as $icon)
+                        foreach ($icons as $index => $icon)
                         {
-                            $state .= __("<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>");
+							if ($index < 3)
+							{
+								$state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
+							}
+							else
+							{
+								$state.= sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
+								break;
+							}
+							
                         }
                         $state = rtrim($state) . '</div>';
 
