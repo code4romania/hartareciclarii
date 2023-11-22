@@ -146,7 +146,6 @@
 				{{CONSTANTS.LABELS.POINT_DETAILS.COPY_LABEL}}
 			</button>
 		</div>
-
 	</div>
 
 	<add-report-problem-modal
