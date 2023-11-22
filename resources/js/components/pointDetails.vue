@@ -149,7 +149,6 @@
 	</div>
 
 	<add-report-problem-modal
-		v-if="!resetReportProblemModal"
 		:is-open="isReportProblemModalOpen"
 		:user-info="userInfo"
 		:map-point="point"
