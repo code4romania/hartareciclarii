@@ -146,11 +146,9 @@
 				{{CONSTANTS.LABELS.POINT_DETAILS.COPY_LABEL}}
 			</button>
 		</div>
-
-	</div> <!-- -->
+	</div>
 
 	<add-report-problem-modal
-		v-if="!resetReportProblemModal"
 		:is-open="isReportProblemModalOpen"
 		:user-info="userInfo"
 		:map-point="point"

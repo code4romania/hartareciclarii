@@ -30,6 +30,7 @@
                             v-show="activeStep === 'third'"
                             :nomenclatures="nomenclatures"
                             :previous-step-body="requestBody"
+							:validation-errors="validationErrors"
                             @close="closeModal();"
                             @stepFinished="savePoint($event)"
                             @backToStep="backToStep($event)"
@@ -92,6 +93,7 @@ export default {
             //activeStep: 'second',
             nomenclatures: {},
             requestBody: {},
+			validationErrors: {}
         };
     },
     mounted() {
@@ -152,7 +154,9 @@ export default {
                         this.$emit('pointSaved', true);
                     }
                 })
-                .catch((err) => {});
+                .catch((err) => {
+					this.validationErrors = _.get(err, 'response.data.errors', {});
+				});
         }
     }
 };
