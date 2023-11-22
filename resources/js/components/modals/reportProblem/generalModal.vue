@@ -228,7 +228,7 @@ export default {
 		},
 		isAuthenticated: {
 			type: Boolean,
-			required: true,
+			required: false,
 			default: false
 		},
 		userInfo: {

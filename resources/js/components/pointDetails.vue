@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute lg:fixed bg-white border border-black z-10 top-10 p-6 w-86 lg:w-96 overflow-y-auto h-[85%] lg:h-[90%] m-10 lg:mt-5 lg:ml-8">
+	<div class="absolute lg:fixed bg-white border border-black z-10 top-10 lg:top-0 p-6 w-86 lg:w-96 overflow-y-auto h-[85%] lg:h-[90%] m-10 lg:mt-5 lg:ml-14">
 		<div class="flex justify-between items-center mb-3.5">
 			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<desktop-filter-close-icon
@@ -285,8 +285,8 @@ export default
 			},
 			reportProblem()
 			{
-				console.log(`open report problem`);
 				this.isReportProblemModalOpen = true;
+				console.log(`open report problem`, this.isReportProblemModalOpen);
 			},
 			resetReportProblemModal() {
 				this.resetReportProblemModal = true;
