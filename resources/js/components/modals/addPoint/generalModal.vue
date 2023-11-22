@@ -122,25 +122,34 @@ export default {
 
             this.activeStep = step;
         },
-        stepFinished(stepData) {
-            const myDiv = document.getElementById('containerWithScroll');
-            myDiv.scrollTop = 0;
+		stepFinished(stepData) {
+			const myDiv = document.getElementById('containerWithScroll');
+			myDiv.scrollTop = 0;
 
-            this.activeStep = stepData.nextStep
+			this.activeStep = stepData.nextStep
 
-            let mergedFieldTypes = false;
-            if (_.has(this, 'requestBody.field_types')
-                && _.has(stepData, 'body.field_types')
-            ) {
-                mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
-            }
+			let mergedFieldTypes = false;
+			if (_.has(this, 'requestBody.field_types')
+				&& _.has(stepData, 'body.field_types')
+			) {
+				mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
+			}
 
-            this.requestBody = {...this.requestBody, ...stepData.body}
+			console.log('11111111111');
+			console.log(stepData.body);
+			console.log(this.requestBody);
+			console.log('11111111111');
 
-            if (mergedFieldTypes) {
-                this.requestBody.field_types = mergedFieldTypes;
-            }
-        },
+			this.requestBody = {...this.requestBody, ...stepData.body}
+
+			console.log('222222222222');
+			console.log(this.requestBody);
+			console.log('222222222222');
+
+			if (mergedFieldTypes) {
+				this.requestBody.field_types = mergedFieldTypes;
+			}
+		},
         savePoint() {
             axios
                 .post(
