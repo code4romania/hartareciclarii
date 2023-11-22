@@ -162,7 +162,14 @@ class MapPointsResource extends Resource
                     ->searchable(),
                 TextColumn::make('fields.value')
                     ->label(__('map_points.managed_by'))
-                    ->sortable()
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->whereHas('fields', function ($q) use ($search)
+                        {
+                            $q->where('field_type_id', MapPointTypesEnum::ManagedBy)
+                                ->where('value', 'LIKE', "$search");
+                        });
+                    })
                     ->sortable(query: function (Builder $query, string $direction, $column): Builder
                     {
                         return $query->orderBy(
@@ -194,20 +201,40 @@ class MapPointsResource extends Resource
                 TextColumn::make('county')
                     ->label(__('map_points.county'))
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->whereHas('fields', function ($q) use ($search)
+                        {
+                            $q->where('field_type_id', MapPointTypesEnum::County)
+                                ->where('value', 'LIKE', "$search");
+                        });
+                    }),
                 TextColumn::make('city')
                     ->label(__('map_points.city'))
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->whereHas('fields', function ($q) use ($search)
+                        {
+                            $q->where('field_type_id', MapPointTypesEnum::City)
+                                ->where('value', 'LIKE', "$search");
+                        });
+                    }),
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
                     ->sortable()
-                    ->searchable()
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->whereHas('fields', function ($q) use ($search)
+                        {
+                            $q->where('field_type_id', MapPointTypesEnum::Address)
+                                ->where('value', 'LIKE', "$search");
+                        });
+                    })
                     ->wrap(),
                 TextColumn::make('getGroup.name')
                     ->label(__('map_points.group'))
                     ->sortable()
-                    ->searchable()
                     ->wrap(),
 
                 BadgeColumn::make('status')
