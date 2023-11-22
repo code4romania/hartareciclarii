@@ -147,7 +147,7 @@
 			</button>
 		</div>
 
-	</div> <!-- -->
+	</div>
 
 	<add-report-problem-modal
 		v-if="!resetReportProblemModal"
