@@ -10,8 +10,9 @@ import {addAuthToken} from "./general.js";
 
 
 const app = createApp(App);
-app.config.performance = true
 
+app.config.performance = true
+/*
 const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
 devtools.enabled = true
 if (typeof devtools === 'object')
@@ -19,7 +20,7 @@ if (typeof devtools === 'object')
 	devtools.enabled = true
 	devtools.emit('app:init', app, '1.0.0', {})
 }
-
+ */
 app.use(router)
 app.use(LoadingPlugin)
 
