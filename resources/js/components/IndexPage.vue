@@ -170,6 +170,7 @@ export default
 				center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 				zoom: this.mapOptions.zoom,
 				maxZoom: this.mapOptions.maxZoom,
+				minZoom: this.mapOptions.minZoom,
 				zoomControl: this.isDesktop,
 				zoomAnimation: false,
 				layers: [],
@@ -317,6 +318,7 @@ export default
 					center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 					zoom: this.mapOptions.zoom,
 					maxZoom: this.mapOptions.maxZoom,
+					minZoom: this.mapOptions.minZoom,
 					zoomControl: this.isDesktop,
 					zoomAnimation: false,
 					layers: [],
@@ -330,7 +332,7 @@ export default
 				this.mapInstance = leafletMap;
 			}
 
-
+			console.log(leafletMap.getZoom());
 			const tile = L.tileLayer(
 				`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
 				{
