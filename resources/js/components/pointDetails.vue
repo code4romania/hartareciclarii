@@ -285,8 +285,8 @@ export default
 			},
 			reportProblem()
 			{
-				console.log(`open report problem`);
 				this.isReportProblemModalOpen = true;
+				console.log(`open report problem`, this.isReportProblemModalOpen);
 			},
 			resetReportProblemModal() {
 				this.resetReportProblemModal = true;
