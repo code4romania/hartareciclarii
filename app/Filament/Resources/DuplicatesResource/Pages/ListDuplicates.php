@@ -57,7 +57,7 @@ class ListDuplicates extends ListRecords
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
 
             ])
 
