@@ -4,7 +4,7 @@
      * @Author: bib
      * @Date:   2023-10-03 10:55:55
      * @Last Modified by:   Bogdan Bocioaca
-     * @Last Modified time: 2023-11-23 16:31:01
+     * @Last Modified time: 2023-11-23 17:04:54
      */
 
 namespace App\Models;
@@ -729,15 +729,15 @@ namespace App\Models;
                 \DB::raw($boundarySearch)
             )
                 ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.service_id')
-				->leftJoin('material_recycling_point', 'recycling_points.id', '=', 'material_recycling_point.recycling_point_id')
-				->leftJoin('materials', 'materials.id', '=', 'material_recycling_point.material_id')
-				->leftJoin('field_type_recycling_point', 'recycling_points.id', '=', 'field_type_recycling_point.recycling_point_id')
-				->leftJoin('field_types', 'field_types.id', '=', 'field_type_recycling_point.field_type_id')
-				->leftJoin('counties', 'counties.id', '=', 'recycling_points.id_county')
-				->leftJoin('cities', 'cities.id', '=', 'recycling_points.id_city')
-				->having('in_bounds', '=', 1)
-				->where('status', 1)
-				->groupBy('recycling_points.id');
+                ->leftJoin('material_recycling_point', 'recycling_points.id', '=', 'material_recycling_point.recycling_point_id')
+                ->leftJoin('materials', 'materials.id', '=', 'material_recycling_point.material_id')
+                ->leftJoin('field_type_recycling_point', 'recycling_points.id', '=', 'field_type_recycling_point.recycling_point_id')
+                ->leftJoin('field_types', 'field_types.id', '=', 'field_type_recycling_point.field_type_id')
+                ->leftJoin('counties', 'counties.id', '=', 'recycling_points.id_county')
+                ->leftJoin('cities', 'cities.id', '=', 'recycling_points.id_city')
+                ->having('in_bounds', '=', 1)
+                ->where('status', 1)
+                ->groupBy('recycling_points.id');
 
             if (!empty($filters))
             {
@@ -747,8 +747,8 @@ namespace App\Models;
                     {
                         'service_id' => $sql->where('recycling_points.service_id', $value),
                         'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
-                        'material_type_id' => $sql->whereIn('material_recycling_point.material_id',$value),
-                        'field_type_id' => $sql->whereIn('field_type_recycling_point.field_type_id',$value),
+                        'material_type_id' => $sql->whereIn('material_recycling_point.material_id', $value),
+                        'field_type_id' => $sql->whereIn('field_type_recycling_point.field_type_id', $value),
                         'search_key' => $sql->where(function ($query) use ($value)
                         {
                             $query->orWhere('field_type_recycling_point.value', 'LIKE', '%' . $value . '%');
@@ -760,7 +760,7 @@ namespace App\Models;
                 }
             }
             //$sql->limit(50);
-			//dd($sql->toRawSql());
+            //dd($sql->toRawSql());
 
             return $sql->get();
         }

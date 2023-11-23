@@ -162,7 +162,7 @@ class MapPointsResource extends Resource
                 TextColumn::make('type.display_name')
                     ->label(__('map_points.point_type'))
                     ->searchable(),
-                TextColumn::make('fields.value')
+                TextColumn::make('managed_by')
                     ->label(__('map_points.managed_by'))
                     ->searchable(query: function (Builder $query, string $search): Builder
                     {
@@ -264,12 +264,13 @@ class MapPointsResource extends Resource
                         });
                     })
                     ->wrap(),
-                TextColumn::make('getGroup.name')
+                TextColumn::make('group.name')
                     ->label(__('map_points.group'))
                     ->sortable()
                     ->wrap(),
 
                 BadgeColumn::make('status')
+                    ->sortable()
                     ->color(static function ($state, $record): string
                     {
                         if ($record->issues->count() > 0)
@@ -347,7 +348,7 @@ class MapPointsResource extends Resource
                                 ->label('Group')
                                 ->options(MapPointGroupModel::query()->pluck('name', 'id'))
                                 ->required()
-                                ->relationship('getGroup', 'name')
+                                ->relationship('group', 'name')
                                 ->preload(),
                         ])
                         ->action(function (array $data, Collection $records): void
