@@ -128,7 +128,7 @@ export default {
 
 			this.activeStep = stepData.nextStep
 
-			let mergedFieldTypes = false;
+		let mergedFieldTypes = false;
 			if (_.has(this, 'requestBody.field_types')
 				&& _.has(stepData, 'body.field_types')
 			) {

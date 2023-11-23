@@ -18,6 +18,8 @@ class CreateRecyclingPointsTable extends Migration
             $table->string('lat', 20)->index('recycling_points_lat_index');
             $table->string('lon', 20)->index('recycling_points_lon_index');
             $table->point('location');
+            $table->integer('id_county')->default(0)->index('recycling_points_id_county_index');
+            $table->integer('id_city')->default(0)->index('recycling_points_id_city_index');
             $table->integer('rating_1')->default(0);
             $table->integer('rating_2')->default(0);
             $table->integer('rating_3')->default(0);
