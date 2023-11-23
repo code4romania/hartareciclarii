@@ -239,7 +239,7 @@ export default {
             selectedService: {},
             latitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LATITUDE,
             longitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LONGITUDE,
-            zoom: 13,
+            zoom: 15,
             point: {},
             errors: {},
             mapIsActive: false,
@@ -340,9 +340,9 @@ export default {
                     }
 
                     //remove the below line to not change the address typed by user
-					console.log(`found address`, _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address));
-                    this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
-					console.log(`stored address`, this.stepRequestBody.field_types.address);
+					//console.log(`found address`, _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address));
+                    //this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
+					//console.log(`stored address`, this.stepRequestBody.field_types.address);
 
                     this.stepRequestBody.lat = this.point.lat;
                     this.stepRequestBody.lng = this.point.lon;
