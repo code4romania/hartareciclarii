@@ -24,7 +24,7 @@ class MapPointResource extends JsonResource
 			'created_by' => $this->created_by,
 			'type' => new MapPointTypeResource($this->type),
 			'service' => new MapPointServiceResource($this->service),
-			'fields' => MapPointFieldResource::collection($this->fields),
+			'fields' => MapPointToFieldResource::collection($this->fields),
 			'materials' => RecycleMaterialResource::collection($this->materials),
 		];
     }
