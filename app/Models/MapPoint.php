@@ -607,7 +607,6 @@ namespace App\Models;
         public static function createFromArray(array $data): self
         {
 			$geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
-			dd($geoLocation);
 			
             $record = new self();
             $record->service_id = data_get($data, 'service_id');
