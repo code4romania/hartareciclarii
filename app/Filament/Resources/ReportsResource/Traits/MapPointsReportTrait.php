@@ -4,18 +4,18 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-31 13:13:53
+ * @Last Modified time: 2023-11-23 16:07:52
  */
 
 namespace App\Filament\Resources\ReportsResource\Traits;
 
 use App\Enums\MapPointTypes;
 use App\Exports\ReportsExport;
+use App\Models\City as CityModel;
 use App\Models\County as CountyModel;
 use App\Models\MapPoint as MapPointModel;
 // use Filament\Resources\Pages\CreateRecord;
 use App\Models\MapPointService as MapPointServiceModel;
-use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use App\Models\Report;
@@ -195,25 +195,18 @@ trait MapPointsReportTrait
                 break;
             case 'city':
 
-                $query->join('field_type_recycling_point as fields', function ($join)
-                {
-                    $join->on('fields.recycling_point_id', '=', 'recycling_points.id')
-                        ->where('fields.field_type_id', MapPointTypes::City);
-                });
-                $select[] = 'fields.value as city_id';
-                $select[] = 'fields.value as grouped_by';
-                $query->groupBy('fields.value');
+                $query->join('cities', 'recycling_points.id_city', '=', 'cities.id');
+                $select[] = 'cities.id as city_id';
+                $select[] = 'cities.name as grouped_by';
+
+                $query->groupBy('recycling_points.id_city');
                 break;
             case 'county':
 
-                $query->join('field_type_recycling_point as county', function ($join)
-                {
-                    $join->on('county.recycling_point_id', '=', 'recycling_points.id')
-                        ->where('county.field_type_id', MapPointTypes::County);
-                });
-                $select[] = 'county.value as county_id';
-                $select[] = 'county.value as grouped_by';
-                $query->groupBy('county.value');
+                $query->join('counties', 'recycling_points.id_county', '=', 'counties.id');
+                $select[] = 'counties.id as county_id';
+                $select[] = 'counties.name as grouped_by';
+                $query->groupBy('recycling_points.id_county');
                 break;
             case 'admin':
                 break;
@@ -247,7 +240,7 @@ trait MapPointsReportTrait
                 $header = RecycleMaterialModel::all()->pluck('name');
                 break;
             case 'city':
-                $header = MapPointToFieldModel::where('field_type_id', MapPointTypes::City)->groupBy('value')->get()->pluck('value');
+                $header = CityModel::all()->pluck('name');
                 break;
             case 'county':
                 $header = CountyModel::all()->pluck('name');

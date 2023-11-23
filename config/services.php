@@ -39,6 +39,7 @@ return [
     'nominatim'=>[
         //'url'=>'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
         'url'=>'https://nominatim.openstreetmap.org',
+        'reverse'=>'/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
     ],
 
 ];

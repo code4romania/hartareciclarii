@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Enums\MapPointTypes as MapPointTypesEnum;
 use App\Filament\Resources\MapPointsResource\Pages;
+use App\Models\City as CityModel;
+use App\Models\County as CountyModel;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointToField as MapPointToFieldModel;
@@ -191,16 +193,15 @@ class MapPointsResource extends Resource
                         $state = '<div style="display:inline-flex; flex-wrap:wrap">';
                         foreach ($icons as $index => $icon)
                         {
-							if ($index < 3)
-							{
-								$state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
-							}
-							else
-							{
-								$state.= sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
-								break;
-							}
-							
+                            if ($index < 3)
+                            {
+                                $state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
+                            }
+                            else
+                            {
+                                $state .= sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
+                                break;
+                            }
                         }
                         $state = rtrim($state) . '</div>';
 
@@ -209,7 +210,14 @@ class MapPointsResource extends Resource
                     ->html(),
                 TextColumn::make('county')
                     ->label(__('map_points.county'))
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
+                    {
+                        return $query->orderBy(
+                            CountyModel::select('name')
+                                ->whereColumn('recycling_points.id_county', 'counties.id'),
+                            $direction
+                        );
+                    })
                     ->searchable(query: function (Builder $query, string $search): Builder
                     {
                         return $query->whereHas('fields', function ($q) use ($search)
@@ -220,7 +228,14 @@ class MapPointsResource extends Resource
                     }),
                 TextColumn::make('city')
                     ->label(__('map_points.city'))
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
+                    {
+                        return $query->orderBy(
+                            CityModel::select('name')
+                                ->whereColumn('recycling_points.id_city', 'cities.id'),
+                            $direction
+                        );
+                    })
                     ->searchable(query: function (Builder $query, string $search): Builder
                     {
                         return $query->whereHas('fields', function ($q) use ($search)
@@ -231,7 +246,15 @@ class MapPointsResource extends Resource
                     }),
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
-                    ->sortable()
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
+                    {
+                        return $query->orderBy(
+                            MapPointToFieldModel::select('value')
+                                ->whereColumn('recycling_points.id', 'field_type_recycling_point.recycling_point_id')
+                                ->where('field_type_id', MapPointTypesEnum::Address),
+                            $direction
+                        );
+                    })
                     ->searchable(query: function (Builder $query, string $search): Builder
                     {
                         return $query->whereHas('fields', function ($q) use ($search)

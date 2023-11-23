@@ -4,13 +4,15 @@
      * @Author: bib
      * @Date:   2023-10-03 10:55:55
      * @Last Modified by:   Bogdan Bocioaca
-     * @Last Modified time: 2023-11-22 11:12:48
+     * @Last Modified time: 2023-11-23 16:31:01
      */
 
 namespace App\Models;
 
     use App\Enums\IssueStatus as IssueStatusEnum;
     use App\Models\ActionLog as ActionLogModel;
+    use App\Models\City as CityModel;
+    use App\Models\County as CountyModel;
     use App\Models\MapPointField as MapPointFieldModel;
     use App\Models\MapPointGroup as MapPointGroupModel;
     use App\Models\MapPointIssues as MapPointIssuesModel;
@@ -51,13 +53,22 @@ namespace App\Models;
             );
         }
 
-        public function county()
+        public function judet()
         {
             return $this->hasOne(
-                MapPointToFieldModel::class,
-                'recycling_point_id',
+                CountyModel::class,
                 'id',
-            )->whereFieldTypeId(2);
+                'id_county',
+            );
+        }
+
+        public function oras()
+        {
+            return $this->hasOne(
+                CityModel::class,
+                'id',
+                'id_city',
+            );
         }
 
         public function getNotesAttribute()
@@ -72,9 +83,9 @@ namespace App\Models;
 
         public function getCityAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 1)->first())
+            if ($this->oras)
             {
-                return $this->fields->where('field_type_id', 1)->first()->value;
+                return $this->oras->name;
             }
 
             return '-';
@@ -276,9 +287,9 @@ namespace App\Models;
 
         public function getCountyAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 2)->first())
+            if ($this->judet)
             {
-                return $this->fields->where('field_type_id', 2)->first()->value;
+                return $this->judet->name;
             }
 
             return '-';
@@ -370,7 +381,11 @@ namespace App\Models;
                 }
             }
             $this->location = \DB::raw('GeomFromText("POINT(' . data_get($data, 'lat') . ' ' . data_get($data, 'lon') . ')")');
+            $geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+            $this->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
+            $this->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $this->save();
+
             $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
             if (!empty($judet))
             {
@@ -606,25 +621,25 @@ namespace App\Models;
 
         public static function createFromArray(array $data): self
         {
-			$geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
-			
+            $geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+
             $record = new self();
             $record->service_id = data_get($data, 'service_id');
             $record->point_type_id = data_get($data, 'type_id');
-            $record->lat = !empty($geoLocation) ? $geoLocation['lat'] :data_get($data, 'lat');
-            $record->lon = !empty($geoLocation) ? $geoLocation['lon'] :data_get($data, 'lon');
+            $record->lat = !empty($geoLocation) ? $geoLocation['lat'] : data_get($data, 'lat');
+            $record->lon = !empty($geoLocation) ? $geoLocation['lon'] : data_get($data, 'lon');
             $record->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
             $record->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $record->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")');
             $record->created_by = data_get($data, 'created_by');
             $record->point_source = data_get($data, 'point_source', 'user');
             $record->status = 0;
-			
+
             $record->save();
 
             foreach (MapPointFieldModel::all() as $field)
             {
-                if (in_array($field->field_name, ['county', 'city']))
+                if (\in_array($field->field_name, ['county', 'city']))
                 {
                     continue;
                 }
@@ -634,7 +649,7 @@ namespace App\Models;
                     'value' => data_get($data, $field->field_name),
                 ]);
             }
-            
+
             if (!empty($fields))
             {
                 MapPointToFieldModel::addValuesToPoint($fields);
