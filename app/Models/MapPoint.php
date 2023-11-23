@@ -728,9 +728,16 @@ namespace App\Models;
                 'recycling_point_services.icon',
                 \DB::raw($boundarySearch)
             )
-                ->having('in_bounds', '=', 1)
-                ->where('status', 1)
-                ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.service_id');
+                ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.service_id')
+				->leftJoin('material_recycling_point', 'recycling_points.id', '=', 'material_recycling_point.recycling_point_id')
+				->leftJoin('materials', 'materials.id', '=', 'material_recycling_point.material_id')
+				->leftJoin('field_type_recycling_point', 'recycling_points.id', '=', 'field_type_recycling_point.recycling_point_id')
+				->leftJoin('field_types', 'field_types.id', '=', 'field_type_recycling_point.field_type_id')
+				->leftJoin('counties', 'counties.id', '=', 'recycling_points.id_county')
+				->leftJoin('cities', 'cities.id', '=', 'recycling_points.id_city')
+				->having('in_bounds', '=', 1)
+				->where('status', 1)
+				->groupBy('recycling_points.id');
 
             if (!empty($filters))
             {
@@ -740,22 +747,20 @@ namespace App\Models;
                     {
                         'service_id' => $sql->where('recycling_points.service_id', $value),
                         'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
-                        'material_type_id' => $sql->whereHas('materials', function ($query) use ($value)
+                        'material_type_id' => $sql->whereIn('material_recycling_point.material_id',$value),
+                        'field_type_id' => $sql->whereIn('field_type_recycling_point.field_type_id',$value),
+                        'search_key' => $sql->where(function ($query) use ($value)
                         {
-                            $query->whereIn('material_recycling_point.material_id', (array) $value);
-                        }),
-                        'field_type_id' => $sql->whereHas('fieldTypes', function ($query) use ($value)
-                        {
-                            $query->whereIn('field_type_recycling_point.field_type_id', (array) $value);
-                        }),
-                        'search_key' => $sql->whereHas('fieldTypes', function ($query) use ($value)
-                        {
-                            $query->where('field_type_recycling_point.value', 'LIKE', '%' . $value . '%');
+                            $query->orWhere('field_type_recycling_point.value', 'LIKE', '%' . $value . '%');
+                            $query->orWhere('materials.name', 'LIKE', '%' . $value . '%');
+                            $query->orWhere('counties.name', 'LIKE', '%' . $value . '%');
+                            $query->orWhere('cities.name', 'LIKE', '%' . $value . '%');
                         }),
                     };
                 }
             }
             //$sql->limit(50);
+			//dd($sql->toRawSql());
 
             return $sql->get();
         }
