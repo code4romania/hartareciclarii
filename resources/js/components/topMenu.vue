@@ -23,49 +23,15 @@
 			<menu-add-point-icon></menu-add-point-icon>
 			{{CONSTANTS.LABELS.TOP_MENU.ADD_POINT}}
 		</button>
-		<Menu as="div" class="relative inline-block text-left">
-			<div>
-				<MenuButton class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black">
-					<menu-dictionary-icon></menu-dictionary-icon>
-					{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
-				</MenuButton>
-			</div>
+		<button
+			type="button"
+			class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
+			v-on:click="goToDictionary()"
+		>
+			<menu-dictionary-icon></menu-dictionary-icon>
+			{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
+		</button>
 
-			<transition
-				enter-active-class="transition ease-out duration-100"
-				enter-from-class="transform opacity-0 scale-95"
-				enter-to-class="transform opacity-100 scale-100"
-				leave-active-class="transition ease-in duration-75"
-				leave-from-class="transform opacity-100 scale-100"
-				leave-to-class="transform opacity-0 scale-95"
-			>
-				<MenuItems
-					class="absolute z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-					:class="{'right-0': !menuOpen, 'left-0': menuOpen}"
-				>
-					<div class="py-1">
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY_RECYCLING}}
-							</a>
-						</MenuItem>
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
-							</a>
-						</MenuItem>
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.GUIDE_A_Z}}
-							</a>
-						</MenuItem>
-					</div>
-				</MenuItems>
-			</transition>
-		</Menu>
 
 		<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-1 text-black" type="button" v-on:click="goToFaq()">
 			<menu-faq-icon></menu-faq-icon>
