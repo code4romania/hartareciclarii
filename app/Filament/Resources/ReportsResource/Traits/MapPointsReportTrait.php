@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-23 16:07:52
+ * @Last Modified time: 2023-11-23 17:10:24
  */
 
 namespace App\Filament\Resources\ReportsResource\Traits;
@@ -240,7 +240,7 @@ trait MapPointsReportTrait
                 $header = RecycleMaterialModel::all()->pluck('name');
                 break;
             case 'city':
-                $header = CityModel::all()->pluck('name');
+                $header = CityModel::whereIn('id', MapPointModel::select('id_city')->distinct()->get()->toArray())->get()->pluck('name');
                 break;
             case 'county':
                 $header = CountyModel::all()->pluck('name');
