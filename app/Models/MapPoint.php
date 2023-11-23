@@ -606,21 +606,25 @@ namespace App\Models;
 
         public static function createFromArray(array $data): self
         {
+			$geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+			
             $record = new self();
             $record->service_id = data_get($data, 'service_id');
             $record->point_type_id = data_get($data, 'type_id');
-            $record->lat = data_get($data, 'lat');
-            $record->lon = data_get($data, 'lon');
+            $record->lat = !empty($geoLocation) ? $geoLocation['lat'] :data_get($data, 'lat');
+            $record->lon = !empty($geoLocation) ? $geoLocation['lon'] :data_get($data, 'lon');
+            $record->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
+            $record->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $record->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")');
             $record->created_by = data_get($data, 'created_by');
             $record->point_source = data_get($data, 'point_source', 'user');
             $record->status = 0;
-
+			
             $record->save();
 
             foreach (MapPointFieldModel::all() as $field)
             {
-                if ($field->field_name == 'county')
+                if (in_array($field->field_name, ['county', 'city']))
                 {
                     continue;
                 }
@@ -630,15 +634,7 @@ namespace App\Models;
                     'value' => data_get($data, $field->field_name),
                 ]);
             }
-            $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
-            if (!empty($judet))
-            {
-                $fields[] = collect([
-                    'field_type_id' => 2,
-                    'recycling_point_id' => $record->id,
-                    'value' => $judet[0]->name,
-                ]);
-            }
+            
             if (!empty($fields))
             {
                 MapPointToFieldModel::addValuesToPoint($fields);
