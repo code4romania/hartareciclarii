@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 09:27:44
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-09 20:53:37
+ * @Last Modified time: 2023-11-27 07:59:35
  */
 return [
     'status_updated' => 'Status salvat',
@@ -40,6 +40,7 @@ return [
         'material_issue_extra' => 'Care din urmatoarele materiale ati identificat ca se colecteaza <strong>in plus</strong> fata de descrierea locatiei?',
         'opening_hours' => 'Orar',
         'description' => 'Descriere problema',
+        'decline_reason' => 'Motivul refuzului',
     ],
 
 ];
