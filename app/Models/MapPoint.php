@@ -4,7 +4,7 @@
      * @Author: bib
      * @Date:   2023-10-03 10:55:55
      * @Last Modified by:   Bogdan Bocioaca
-     * @Last Modified time: 2023-11-23 17:04:54
+     * @Last Modified time: 2023-11-28 21:15:19
      */
 
 namespace App\Models;
@@ -386,16 +386,16 @@ namespace App\Models;
             $this->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $this->save();
 
-            $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
-            if (!empty($judet))
-            {
-                $field = collect([
-                    'field_type_id' => 2,
-                    'recycling_point_id' => $this->id,
-                    'value' => $judet[0]->name,
-                ]);
-                MapPointToFieldModel::addValueToPoint($field);
-            }
+            // $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
+            // if (!empty($judet))
+            // {
+            //     $field = collect([
+            //         'field_type_id' => 2,
+            //         'recycling_point_id' => $this->id,
+            //         'value' => $judet[0]->name,
+            //     ]);
+            //     MapPointToFieldModel::addValueToPoint($field);
+            // }
             $action = collect([
                 'model' => \get_called_class(),
                 'model_id' => $this->id,
