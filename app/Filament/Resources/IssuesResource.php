@@ -18,9 +18,9 @@ class IssuesResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-bell-alert';
 
-    protected static ?string $navigationGroup = 'Rapoarte';
+    protected static ?string $navigationGroup = 'Harta';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -109,4 +109,14 @@ class IssuesResource extends Resource
     {
         return static::getModel()::whereStatus(0)->count() > 1 ? 'danger' : 'primary';
     }
+	
+	public static function getLabel(): ?string
+	{
+		return __('issues.label');
+	}
+	
+	public static function getPluralLabel(): ?string
+	{
+		return __('issues.label');
+	}
 }

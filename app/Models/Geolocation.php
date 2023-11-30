@@ -89,4 +89,34 @@ class Geolocation extends Model
 		
 		return [];
 	}
+	
+	public static function search($address)
+	{
+		$client = new \GuzzleHttp\Client();
+		$uri = config('services.nominatim.url') . '/search?format=json&q=' . $address . '&addressdetails=1';
+		$response = $client->request('GET', $uri);
+		
+		$result = [
+			'lat' => 0,
+			'lon' => 0,
+		];
+		
+		$address = [];
+		try
+		{
+			$contents = $response->getBody()->getContents();
+			$address = json_decode($contents, true);
+		}
+		catch (\Exception $e)
+		{
+		}
+		
+		if (!empty($address))
+		{
+			$result['lat'] = $address[key($address)]['lat'];
+			$result['lon'] = $address[key($address)]['lon'];
+		}
+		
+		return $result;
+	}
 }

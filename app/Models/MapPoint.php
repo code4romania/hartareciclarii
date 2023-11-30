@@ -367,6 +367,20 @@ namespace App\Models;
 
         public function updateAddress(Collection $data): self
         {
+			if ($data->get('lat') != null && $data->get('lon') != null)
+			{
+				$geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+			}
+			else
+			{
+				$geoLocation = Geolocation::search(data_get($data, 'address'));
+				$data->put('lat', $geoLocation['lat']);
+				$data->put('lon', $geoLocation['lon']);
+				
+				$this->lat = $geoLocation['lat'];
+				$this->lon = $geoLocation['lon'];
+			}
+			
             $location_fields = [
                 'lat', 'lon', 'address', 'location_notes',
             ];
@@ -380,8 +394,9 @@ namespace App\Models;
                     $new_values[$field] = $data->get($field);
                 }
             }
-            $this->location = \DB::raw('GeomFromText("POINT(' . data_get($data, 'lat') . ' ' . data_get($data, 'lon') . ')")');
-            $geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+			
+			$this->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lat') . ' ' . data_get($data, 'lon') . ')")');
+            
             $this->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
             $this->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $this->save();

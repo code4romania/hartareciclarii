@@ -7,6 +7,7 @@
  * @Last Modified time: 2023-11-27 07:59:35
  */
 return [
+	'label' => 'Probleme raportate',
     'status_updated' => 'Status salvat',
     'header'=>[
         'list' => 'Lista probleme raportate',

@@ -226,7 +226,7 @@
 			$record->point_type_id = data_get($data, 'type');
 			$record->lat = data_get($data, 'lat');
 			$record->lon = data_get($data, 'lon');
-			$record->location = \DB::raw('GeomFromText("POINT('.data_get($data, 'lon').' '.data_get($data, 'lat').')")');
+			$record->location = \DB::raw('ST_GeomFromText("POINT('.data_get($data, 'lon').' '.data_get($data, 'lat').')")');
 			$record->created_by = data_get($data, 'created_by');
 			$record->point_source = 'user';
 			$record->status = 0;
