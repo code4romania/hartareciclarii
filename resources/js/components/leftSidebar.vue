@@ -53,7 +53,7 @@
 
 	<!-- Static sidebar for desktop -->
 	<div
-		class="w-full z-50 inset-y-0  lg:w-96 flex-col bg-white"
+		class="w-full z-50 inset-y-0  lg:w-96 flex-col bg-white overflow-y-auto h-100"
         ref="filtersBox"
 		:class="{'flex': open && !this.filtersOpen, 'hidden': !open, 'absolute lg:relative z-30': this.filtersOpen}"
 	>

@@ -220,7 +220,7 @@ export default {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [44, 44 * 1.15];
+            return [48, 64];
         },
         mapOptions() {
             if (!this.mapIsActive) {

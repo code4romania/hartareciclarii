@@ -54,7 +54,7 @@
                     }"
                     ref="map"
                     :center="[previousStepBody.lat, previousStepBody.lng]"
-                    :zoom="13"
+                    :zoom="15"
                 >
                     <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
                     <l-marker
@@ -62,7 +62,7 @@
                     >
                         <l-icon
                             :icon-size="dynamicSize"
-                            icon-url="/assets/images/logo.png" >
+                            icon-url="/assets/images/pin_selected.png" >
                         </l-icon>
                     </l-marker>
 
@@ -237,7 +237,7 @@ export default {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [this.iconSize, this.iconSize / 2.15];
+            return [48, 64];
         },
     },
     data() {
