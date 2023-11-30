@@ -184,38 +184,56 @@
                     <div class="px-6 pb-6">
                         <div id="filter-section-service" class="pt-4 pb-6 border-b">
                             <div class="space-y-1">
-                                <template v-for="materialFilter of materialTypesFilters">
-                                    <div class="flex items-center">
-                                        <input
-                                            :id="'material_filter_' + materialFilter.id"
-                                            class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                            type="checkbox"
-                                            value="1"
-                                            @change="materialFilterChanged(materialFilter, true)"
-                                            :checked="selectedMaterialTypes.includes(materialFilter.id)"
-                                        >
+								<dl class="mt-10 space-y-6 divide-y divide-gray-900/10">
+								  <Disclosure
+									  as="div"
+									  aria-expanded="true"
+									  v-for="materialFilter of materialTypesFilters"
+									  class="pt-6"
+									  data-state="expanded"
+									  v-slot="{ open }"
+									  defaultOpen="true"
+								  >
+									<dt>
+									  <DisclosureButton class="flex w-full items-start justify-between text-left text-gray-900">
+										 <input
+											 :id="'material_filter_' + materialFilter.id"
+											 class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+											 type="checkbox"
+											 value="1"
+											 @change="materialFilterChanged(materialFilter, true)"
+											 :checked="selectedMaterialTypes.includes(materialFilter.id)"
+										 >
                                         <label
-                                            class="ml-2 min-w-0 flex-1 text-gray-700"
-                                            :for="'material_filter_' + materialFilter.id"
-                                        >{{ materialFilter.name }}</label>
-                                    </div>
-                                    <template v-for="childrenMaterialFilter of materialFilter.children">
+											class="ml-2 min-w-0 flex-1 text-gray-700"
+											:for="'material_filter_' + materialFilter.id"
+										>{{ materialFilter.name }}</label>
+										<span class="ml-6 flex h-7 items-center">
+										  <ChevronDownIcon v-if="!open" class="h-6 w-6" aria-hidden="true" />
+										  <ChevronUpIcon v-else class="h-6 w-6" aria-hidden="true" />
+										</span>
+									  </DisclosureButton>
+									</dt>
+									<DisclosurePanel as="dd" class="mt-0 pr-12">
+									  <template v-for="childrenMaterialFilter of materialFilter.children">
                                         <div class="flex items-center ml-8">
                                             <input
-                                                :id="'material_filter_' + childrenMaterialFilter.id"
-                                                class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                                type="checkbox"
-                                                @change="materialFilterChanged(childrenMaterialFilter, false)"
-                                                value="1"
-                                                :checked="selectedMaterialTypes.includes(childrenMaterialFilter.id)"
-                                            >
+												:id="'material_filter_' + childrenMaterialFilter.id"
+												class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+												type="checkbox"
+												@change="materialFilterChanged(childrenMaterialFilter, false)"
+												value="1"
+												:checked="selectedMaterialTypes.includes(childrenMaterialFilter.id)"
+											>
                                             <label
-                                                class="ml-2 min-w-0 flex-1 text-gray-700"
-                                                :for="'material_filter_' + childrenMaterialFilter.id"
-                                            >{{ childrenMaterialFilter.name }}</label>
+												class="ml-2 min-w-0 flex-1 text-gray-700"
+												:for="'material_filter_' + childrenMaterialFilter.id"
+											>{{ childrenMaterialFilter.name }}</label>
                                         </div>
                                     </template>
-                                </template>
+									</DisclosurePanel>
+								  </Disclosure>
+								</dl>
                             </div>
                         </div>
                     </div>
@@ -268,11 +286,21 @@ import DesktopFilterScopeIcon from "./svg-icons/desktopFilterScopeIcon.vue";
 import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 import DesktopFilterClearIcon from "./svg-icons/desktopFilterClearIcon.vue";
 import MobileFilterScopeIcon from "./svg-icons/mobileFilterScopeIcon.vue";
+import {ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
+
 import axios from "axios";
 import _ from "lodash";
+import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
 
 export default {
-	components: {MobileFilterScopeIcon, DesktopFilterCloseIcon, DesktopFilterScopeIcon, DesktopFilterBurgerIcon, DesktopFilterClearIcon},
+	components: {
+		DisclosurePanel,
+		DisclosureButton,
+		Disclosure,
+		MobileFilterScopeIcon, DesktopFilterCloseIcon, DesktopFilterScopeIcon, DesktopFilterBurgerIcon, DesktopFilterClearIcon,
+		ChevronDownIcon,
+		ChevronUpIcon
+	},
 	computed: {
 		CONSTANTS () {
 			return CONSTANTS;
