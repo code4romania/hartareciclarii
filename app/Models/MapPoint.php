@@ -741,9 +741,15 @@ namespace App\Models;
                 'recycling_points.lon',
                 'recycling_points.location',
                 'recycling_point_services.icon',
+                'recycling_point_services.display_name AS service',
+                'recycling_point_types.display_name AS point_type',
+                'recycling_point_types.icon AS point_type_icon',
+				\DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('field_type_id', ftrp.field_type_id, 'value', field_type_recycling_point.value, 'field_name', ft.field_name)) FROM field_type_recycling_point ftrp, field_types ft WHERE ftrp.field_type_id = ft.id AND ftrp.recycling_point_id = recycling_points.id AND ft.field_name IN ('managed_by', 'address') GROUP BY ftrp.recycling_point_id),']') AS field_types"),
+				\DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('material_id', mrp.material_id, 'name', m.name, 'parent', m.parent)) FROM material_recycling_point mrp, materials m WHERE mrp.material_id = m.id AND mrp.recycling_point_id = recycling_points.id GROUP BY mrp.recycling_point_id),']') AS materials"),
                 \DB::raw($boundarySearch)
             )
-                ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.service_id')
+                ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.point_type_id')
+                ->join('recycling_point_types', 'recycling_point_types.id', '=', 'recycling_points.service_id')
                 ->leftJoin('material_recycling_point', 'recycling_points.id', '=', 'material_recycling_point.recycling_point_id')
                 ->leftJoin('materials', 'materials.id', '=', 'material_recycling_point.material_id')
                 ->leftJoin('field_type_recycling_point', 'recycling_points.id', '=', 'field_type_recycling_point.recycling_point_id')

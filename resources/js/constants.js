@@ -86,6 +86,7 @@ export const CONSTANTS =
 			SEARCH: `Caută`,
 			FILTERS: `Filtre`,
 			FILTERS_TITLE: `FILTREAZĂ REZULTATELE`,
+			FILTERS_SHORT_TITLE: `Filtreazǎ`,
             RESULTS: `Rezultate`,
             NO_RESULTS_FOUND_FIRST_PART: `Nu a fost gasit niciun rezultat pentru`,
             NO_RESULTS_FOUND_SECOND_PART: `Folositi un alt termen de cautare`,

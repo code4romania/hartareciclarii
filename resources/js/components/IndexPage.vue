@@ -8,7 +8,10 @@
 				:has-results="hasResults"
 				:total-points="totalPoints"
 				:filters-open="filtersOpen"
+				:map-points="points"
 				@filtersChanged="setFilters($event)"
+				@resetFilters="resetFilters($event)"
+				@pointDetails="getPoint($event)"
 				@toggleFilters="toggleFilters()"
 			></left-sidebar>
 
@@ -98,6 +101,7 @@ import PointDetails from "./pointDetails.vue";
 import {getUserProfile} from "../general.js";
 import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
 import 'vue-leaflet-markercluster/dist/style.css'
+import pointDetails from "./pointDetails.vue";
 export default
 {
 	components:
@@ -159,6 +163,7 @@ export default
 					this.selectedPoint = _.get(response, 'data.point', {});
 					this.mainMaterials = _.get(response, 'data.materials', {});
 					this.pointUrl = _.get(response, 'data.url', {});
+					this.mapInstance.panTo(L.latLng(this.selectedPoint.lat, this.selectedPoint.lon));
 				}).catch((err) =>
 				{
 					console.log(err);
@@ -231,6 +236,8 @@ export default
 
 
 			this.points = await this.getMapPoints();
+			this.totalPoints = Object.keys(this.points).length;
+			this.setResults(this.points);
 			this.initMap(true);
 		},
 		requestCurrentLocation()
@@ -247,6 +254,8 @@ export default
 
 
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap();
 			};
 
@@ -255,6 +264,8 @@ export default
 				console.log(error);
 				this.setBounds();
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap();
 			};
 			navigator.geolocation.getCurrentPosition(success, error);
@@ -284,20 +295,6 @@ export default
 				.then((response) =>
 				{
 					points = _.get(response, 'data.points', {});
-					if (Object.keys(points).length > 0)
-					{
-						this.hasResults = true;
-						this.totalPoints = Object.keys(this.points).length;
-					}
-					else
-					{
-						this.totalPoints = 0;
-					}
-
-					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(points).length === 0)
-					{
-						this.hasResults = false;
-					}
 
 				}).catch((err) =>
 			{
@@ -409,6 +406,8 @@ export default
 			{
 				this.filters = event;
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap(true);
 			}
 
@@ -416,8 +415,30 @@ export default
 			{
 				this.filters = event;
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap(true);
 			}
+
+			//this.initMap(true);
+		},
+		setResults(points)
+		{
+			if ('search_key' in this.filters && this.filters.search_key.length > 3)
+			{
+				if (Object.keys(points).length === 0)
+				{
+					this.hasResults = false;
+				}
+			}
+			this.hasResults = true;
+		},
+		async resetFilters (event)
+		{
+			this.points = await this.getMapPoints();
+			this.totalPoints = Object.keys(this.points).length;
+			this.setResults(this.points);
+			this.initMap(true);
 		},
 		closePointDetails()
 		{
@@ -434,6 +455,10 @@ export default
 		}
 	},
 	computed: {
+		pointDetails ()
+		{
+			return pointDetails
+		},
 		CONSTANTS ()
 		{
 			return CONSTANTS
