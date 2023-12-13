@@ -160,8 +160,8 @@ class MapPointsResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('type.display_name')
-                    ->label(__('map_points.point_type'))
-                    ->searchable(),
+                    ->label(__('map_points.point_type')),
+                // ->searchable(),
                 TextColumn::make('managed_by')
                     ->label(__('map_points.managed_by'))
                     ->searchable(query: function (Builder $query, string $search): Builder
@@ -185,7 +185,7 @@ class MapPointsResource extends Resource
                 TextColumn::make('materials.getParent.icon')
                     ->label(__('map_points.materials'))
                     ->sortable()
-                    ->searchable()
+                    // ->searchable()
                     ->formatStateUsing(function (string $state, $record)
                     {
                         $icons = collect(explode(',', $state))->unique();
@@ -216,15 +216,15 @@ class MapPointsResource extends Resource
                                 ->whereColumn('recycling_points.id_county', 'counties.id'),
                             $direction
                         );
-                    })
-                    ->searchable(query: function (Builder $query, string $search): Builder
-                    {
-                        return $query->whereHas('fields', function ($q) use ($search)
-                        {
-                            $q->where('field_type_id', MapPointTypesEnum::County)
-                                ->where('value', 'LIKE', "$search");
-                        });
                     }),
+                // ->searchable(query: function (Builder $query, string $search): Builder
+                // {
+                //     return $query->whereHas('fields', function ($q) use ($search)
+                //     {
+                //         $q->where('field_type_id', MapPointTypesEnum::County)
+                //             ->where('value', 'LIKE', "$search");
+                //     });
+                // }),
                 TextColumn::make('city')
                     ->label(__('map_points.city'))
                     ->sortable(query: function (Builder $query, string $direction, $column): Builder
@@ -234,15 +234,15 @@ class MapPointsResource extends Resource
                                 ->whereColumn('recycling_points.id_city', 'cities.id'),
                             $direction
                         );
-                    })
-                    ->searchable(query: function (Builder $query, string $search): Builder
-                    {
-                        return $query->whereHas('fields', function ($q) use ($search)
-                        {
-                            $q->where('field_type_id', MapPointTypesEnum::City)
-                                ->where('value', 'LIKE', "$search");
-                        });
                     }),
+                //     ->searchable(query: function (Builder $query, string $search): Builder
+                //     {
+                //         return $query->whereHas('fields', function ($q) use ($search)
+                //         {
+                //             $q->where('field_type_id', MapPointTypesEnum::City)
+                //                 ->where('value', 'LIKE', "$search");
+                //         });
+                //     }),
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
                     ->sortable(query: function (Builder $query, string $direction, $column): Builder
@@ -259,7 +259,7 @@ class MapPointsResource extends Resource
                         return $query->whereHas('fields', function ($q) use ($search)
                         {
                             $q->where('field_type_id', MapPointTypesEnum::Address)
-                                ->where('value', 'LIKE', "$search");
+                                ->where('value', 'LIKE', "%$search%");
                         });
                     })
                     ->wrap(),
