@@ -130,10 +130,11 @@ class MapPointsResource extends Resource
             Tables\Actions\ViewAction::make()
                 ->label(__('map_points.buttons.details'))
                 ->icon('heroicon-m-eye'),
-            Tables\Actions\Action::make('view-on-map')
-                ->label(__('map_points.buttons.view_on_map'))
-                ->icon('heroicon-m-map')
-                ->url(fn (MapPointModel $record): string => route('map_points.map-view', $record)),
+            // Tables\Actions\Action::make('view-on-map')
+            //     ->label(__('map_points.buttons.view_on_map'))
+            //     ->icon('heroicon-m-map')
+            //     ->url(fn (MapPointModel $record): string => route('map_points.map-view', $record))
+            //     ->openUrlInNewTab(),
 
         ];
         if (auth()->user()->can('manage_map_points'))
