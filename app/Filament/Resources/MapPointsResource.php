@@ -169,7 +169,7 @@ class MapPointsResource extends Resource
                         return $query->whereHas('fields', function ($q) use ($search)
                         {
                             $q->where('field_type_id', MapPointTypesEnum::ManagedBy)
-                                ->where('value', 'LIKE', "$search");
+                                ->where('value', 'LIKE', "%$search%");
                         });
                     })
                     ->sortable(query: function (Builder $query, string $direction, $column): Builder
@@ -181,7 +181,6 @@ class MapPointsResource extends Resource
                             $direction
                         );
                     })
-                    ->searchable()
                     ->wrap(),
                 TextColumn::make('materials.getParent.icon')
                     ->label(__('map_points.materials'))
