@@ -16,9 +16,8 @@
 			></left-sidebar>
 
 		</div>
-		<div class="flex w-full h-full">
+		<div class="flex h-full">
 			<div
-				:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
 				class="h-screen w-full "
 			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
 				<main class="">
@@ -68,15 +67,20 @@
 						@closePointDetails="closePointDetails($event)"
 					>
 					</point-details>
-					<div :id="mapId" class="w-screen h-screen"></div>
+					<div
+						:id="mapId" class="h-screen w-screen"
+					></div>
 					<div
 						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
 						:class="{'hidden': hasApprovedLocation}"
 					>
 						<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
-						<div class="text-end">
-							<a v-on:click="requestCurrentLocation()" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
+						<div class="text-end me-4">
+							<a v-on:click="locationSettings(true)" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
 						</div>
+						<a class="link top-0 right-0 absolute p-1 cursor-pointer text-white" v-on:click="hasApprovedLocation = true;">
+							<desktop-filter-close-icon></desktop-filter-close-icon>
+						</a>
 					</div>
 				</main>
 			</div>
@@ -102,10 +106,12 @@ import {getUserProfile} from "../general.js";
 import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
 import 'vue-leaflet-markercluster/dist/style.css'
 import pointDetails from "./pointDetails.vue";
+import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 export default
 {
 	components:
 	{
+		DesktopFilterCloseIcon,
 		PointDetails,
 		MobileFilterScopeIcon,
 		MobileFilterBurgerIcon,
@@ -240,7 +246,7 @@ export default
 			this.setResults(this.points);
 			this.initMap(true);
 		},
-		requestCurrentLocation()
+		requestCurrentLocation(refresh = false)
 		{
 			const success = async (position) =>
 			{
@@ -256,7 +262,7 @@ export default
 				this.points = await this.getMapPoints();
 				this.totalPoints = Object.keys(this.points).length;
 				this.setResults(this.points);
-				this.initMap();
+				this.initMap(refresh);
 			};
 
 			const error = async (err) =>
@@ -266,9 +272,24 @@ export default
 				this.points = await this.getMapPoints();
 				this.totalPoints = Object.keys(this.points).length;
 				this.setResults(this.points);
-				this.initMap();
+				this.initMap(refresh);
 			};
-			navigator.geolocation.getCurrentPosition(success, error);
+			navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true});
+		},
+		locationSettings(refresh = false)
+		{
+			const success = async (position) =>
+			{
+				console.log(`success`, position);
+			};
+
+			const error = async (err) =>
+			{
+				console.log(`error`, err);
+			};
+
+			navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0});
+
 		},
 		async getUserInfo ()
 		{

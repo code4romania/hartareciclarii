@@ -17,7 +17,7 @@
 
 		<button
             type="button"
-            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
+            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-3 lg:py-1 text-black"
             v-on:click="addMapPoint()"
         >
 			<menu-add-point-icon></menu-add-point-icon>
@@ -25,7 +25,7 @@
 		</button>
 		<button
 			type="button"
-			class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
+			class="flex rounded-full items-center gap-x-2 bg-white px-5 py-3 lg:py-1 text-black"
 			v-on:click="goToDictionary()"
 		>
 			<menu-dictionary-icon></menu-dictionary-icon>
@@ -33,13 +33,13 @@
 		</button>
 
 
-		<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-1 text-black" type="button" v-on:click="goToFaq()">
+		<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-3 lg:py-1 text-black" type="button" v-on:click="goToFaq()">
 			<menu-faq-icon></menu-faq-icon>
 			{{CONSTANTS.LABELS.TOP_MENU.FAQ}}
 		</button>
 
 		<template v-if="!isAuthenticated">
-			<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-1 text-black" type="button" v-on:click="openLoginModal();">
+			<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-3 lg:py-1 text-black" type="button" v-on:click="openLoginModal();">
 				<menu-my-account-icon></menu-my-account-icon>
 				{{CONSTANTS.LABELS.TOP_MENU.MY_ACCOUNT}}
 			</button>

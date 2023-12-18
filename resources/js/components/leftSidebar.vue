@@ -83,6 +83,17 @@
                         v-model="searchParamsForFilters.search_key"
                         @input="pointLiveSearch()"
 					>
+					<div
+						class="absolute inset-y-0 right-2 flex items-center pl-3 cursor-pointer"
+						v-if="hasResults && 'search_key' in collectedFilters && collectedFilters.search_key != '' && collectedFilters.search_key.length > 2"
+					>
+						<a
+							class="cursor-pointer"
+							v-on:click="resetFilters()"
+						>
+							<desktop-filter-close-icon></desktop-filter-close-icon>
+						</a>
+					</div>
 				</div>
 			</div>
 
@@ -98,11 +109,11 @@
 					</div>
                 </div>
 				<template v-if="'search_key' in collectedFilters && collectedFilters.search_key != ''">
-					<div class="px-6 pb-6">
+					<div class="py-6 mb-3" style="max-height: 73vh;">
 						<template v-for="(point, index) of mapPoints" :key="index">
 							<template v-if="index < 10">
 								<div class="flex items-center border-b my-3 cursor-pointer" v-on:click="$emit('point-details', point.id)">
-									<div class="ml-0">
+									<div class="ml-0 mb-2 px-2">
 										<div>
 											<h3 class="font-bold">{{point.point_type}}</h3>
 										</div>
@@ -213,9 +224,9 @@
                     </div>
 
                     <div class="px-6 pb-6">
-                        <div id="filter-section-service" class="pt-4 pb-6 border-b">
+                        <div id="filter-section-service" class="pt-0 pb-6 border-b">
                             <div class="space-y-1">
-								<dl class="mt-10 space-y-6 divide-y divide-gray-900/10">
+								<dl class="mb-10 space-y-6 divide-y divide-gray-900/10">
 								  <Disclosure
 									  as="div"
 									  aria-expanded="true"
@@ -298,8 +309,8 @@
             </span>
 
 			<div
-				class="px-6 py-3 border-t absolute bottom-0 bg-white lg:w-96 "
-				:class="{'relative': this.filtersOpen}"
+				class="px-6 py-3 border-t fixed mt-2 bottom-0 bg-white lg:w-96 "
+				:class="{'fixed': this.filtersOpen}"
 			>
 				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters()">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
@@ -588,7 +599,12 @@ export default {
 		collectedFilters: {
 			handler: function (newVal)
 			{
+				if (!'search_key' in this.collectedFilters || ('search_key' in this.collectedFilters && this.collectedFilters.search_key == ''))
+				{
+					//this.$emit('filters-changed', this.collectedFilters);
+				}
 				this.$emit('filters-changed', this.collectedFilters);
+
 			},
 			deep: true,
 			immediate: true
