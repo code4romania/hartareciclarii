@@ -84,11 +84,11 @@ class ViewIssue extends ViewRecord
                 ->label(__('issues.buttons.update_status'))
                 ->icon('heroicon-m-ellipsis-vertical')
                 ->size(ActionSize::Small)
-                ->color('primary')
+                ->color('gray')
                 ->button(),
 
             Action::make('view_list')
-                ->color('danger')
+                ->color('success')
                 ->label(__('issues.buttons.view_map_point'))
                 ->url(MapPointsResource::getUrl('view', ['record'=>$this->record->map_point]))
                 ->openUrlInNewTab(),
