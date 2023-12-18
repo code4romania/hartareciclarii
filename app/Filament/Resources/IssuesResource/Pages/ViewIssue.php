@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\IssuesResource\Pages;
 
-use App\Enums\IssueStatus as IssueStatusEnum;
 // use Filament\Actions\Action;
 use App\Filament\Resources\IssuesResource;
 use App\Filament\Resources\MapPointsResource;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
+use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 
@@ -46,18 +46,52 @@ class ViewIssue extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('view_list')->label(__('issues.buttons.update_status'))->action(function ($data, $record)
-            {
-                $this->record->status = $data['status'];
-                $this->record->save();
-                Notification::make()
-                    ->title(__('issues.status_updated'))
-                    ->success()
-                    ->send();
-            })->form([
-                Select::make('status')->options(IssueStatusEnum::toArray()),
-            ])->color('success'),
-            Action::make('view_list')->color('danger')->label(__('issues.buttons.view_map_point'))->url(MapPointsResource::getUrl('view', ['record'=>$this->record->map_point])),
+            ActionGroup::make([
+                Action::make('change_status_0')
+                    ->label(__('issues.status.0'))->action(function ($data, $record)
+                    {
+                        $this->record->status = 0;
+                        $this->record->save();
+                        Notification::make()
+                            ->title(__('issues.status_updated'))
+                            ->success()
+                            ->send();
+                    })
+                    ->icon($this->record->status == 0 ? 'heroicon-m-check' : ''),
+                Action::make('change_status_2')
+                    ->label(__('issues.status.2'))->action(function ($data, $record)
+                    {
+                        $this->record->status = 2;
+                        $this->record->save();
+                        Notification::make()
+                            ->title(__('issues.status_updated'))
+                            ->success()
+                            ->send();
+                    })
+                    ->icon($this->record->status == 2 ? 'heroicon-m-check' : ''),
+                Action::make('change_status_1')
+                    ->label(__('issues.status.1'))->action(function ($data, $record)
+                    {
+                        $this->record->status = 1;
+                        $this->record->save();
+                        Notification::make()
+                            ->title(__('issues.status_updated'))
+                            ->success()
+                            ->send();
+                    })
+                    ->icon($this->record->status == 1 ? 'heroicon-m-check' : ''),
+            ])
+                ->label(__('issues.buttons.update_status'))
+                ->icon('heroicon-m-ellipsis-vertical')
+                ->size(ActionSize::Small)
+                ->color('primary')
+                ->button(),
+
+            Action::make('view_list')
+                ->color('danger')
+                ->label(__('issues.buttons.view_map_point'))
+                ->url(MapPointsResource::getUrl('view', ['record'=>$this->record->map_point]))
+                ->openUrlInNewTab(),
 
         ];
     }

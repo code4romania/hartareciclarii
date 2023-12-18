@@ -2,7 +2,7 @@
 * @Author: Bogdan Bocioaca
 * @Date:   2023-10-04 12:16:53
 * @Last Modified by:   Bogdan Bocioaca
-* @Last Modified time: 2023-12-13 08:57:39
+* @Last Modified time: 2023-12-18 16:51:17
 */
 latitude = null;
 longitude = null;
@@ -22,15 +22,16 @@ var addressElem = document.getElementById("data.address");
 if(typeof addressElem === "undefined" || !addressElem){
 	var addressElem = document.getElementById("mountedActionsData.0.address");
 }
-addressElem.addEventListener("keyup", function(){
-	clearTimeout(typingTimer);
-  	typingTimer = setTimeout(reverseAddress, doneTypingInterval);
+if(typeof addressElem !== "undefined" && addressElem ){
+	addressElem.addEventListener("keyup", function(){
+		clearTimeout(typingTimer);
+	  	typingTimer = setTimeout(reverseAddress, doneTypingInterval);
 
-});
-addressElem.addEventListener('keydown', function () {
-  clearTimeout(typingTimer);
-});
-
+	});
+	addressElem.addEventListener('keydown', function () {
+	  clearTimeout(typingTimer);
+	});
+}
 function reverseAddress(e) {
 	if(addressElem.value.length > 3){
 		let url = `${nominatim_url}/search?format=json&q=${addressElem.value}&addressdetails=1`;
