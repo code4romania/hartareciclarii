@@ -9,6 +9,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -46,7 +47,13 @@ class IssuesResource extends Resource
                     ->searchable(),
                 TextColumn::make('reporter.fullname')
                     ->label(__('issues.columns.reporter'))
-                    ->searchable()
+                    ->searchable(query: function (Builder $query, string $search): Builder
+                    {
+                        return $query->whereHas('reporter', function ($q) use ($search)
+                        {
+                            $q->whereRaw(\DB::raw("CONCAT(firstname,' ',lastname) like '%$search%'"));
+                        });
+                    })
                     ->html(),
                 TextColumn::make('created_at')
                     ->label(__('issues.columns.created_at'))
@@ -54,12 +61,10 @@ class IssuesResource extends Resource
                 TextColumn::make('type.title')
                     ->label(__('issues.columns.issue_type'))
                     ->sortable()
-                    ->searchable()
                     ->html(),
                 TextColumn::make('status')
                     ->label(__('issues.columns.status'))
                     ->sortable()
-                    ->searchable()
                     ->formatStateUsing(function ($state)
                     {
                         return __('issues.status.' . $state);
@@ -109,14 +114,14 @@ class IssuesResource extends Resource
     {
         return static::getModel()::whereStatus(0)->count() > 1 ? 'danger' : 'primary';
     }
-	
-	public static function getLabel(): ?string
-	{
-		return __('issues.label');
-	}
-	
-	public static function getPluralLabel(): ?string
-	{
-		return __('issues.label');
-	}
+
+    public static function getLabel(): ?string
+    {
+        return __('issues.label');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('issues.label');
+    }
 }
