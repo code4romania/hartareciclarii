@@ -5,7 +5,7 @@ import ResetPassword from '/resources/js/components/resetPassword.vue';
 import Point from '/resources/js/components/point.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

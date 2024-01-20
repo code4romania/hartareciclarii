@@ -53,9 +53,9 @@
 
 	<!-- Static sidebar for desktop -->
 	<div
-		class="w-full z-10 inset-y-0  lg:w-96 flex-col bg-white"
+		class="w-full z-50 inset-y-0  lg:w-96 flex-col bg-white overflow-y-auto h-100"
         ref="filtersBox"
-		:class="{'flex': open, 'hidden': !open}"
+		:class="{'flex': open && !this.filtersOpen, 'hidden': !open, 'absolute lg:relative z-30': this.filtersOpen}"
 	>
 		<!-- Sidebar component, swap this element with another sidebar if you like -->
 		<div class="flex grow flex-col overflow-y-auto">
@@ -83,6 +83,17 @@
                         v-model="searchParamsForFilters.search_key"
                         @input="pointLiveSearch()"
 					>
+					<div
+						class="absolute inset-y-0 right-2 flex items-center pl-3 cursor-pointer"
+						v-if="hasResults && 'search_key' in collectedFilters && collectedFilters.search_key != '' && collectedFilters.search_key.length > 2"
+					>
+						<a
+							class="cursor-pointer"
+							v-on:click="resetFilters()"
+						>
+							<desktop-filter-close-icon></desktop-filter-close-icon>
+						</a>
+					</div>
 				</div>
 			</div>
 
@@ -90,40 +101,71 @@
 				<div
 					class="px-4 pb-4 mb-3 border-b"
 				>
-                    {{totalPoints}} {{ CONSTANTS.LABELS.SIDEBAR.RESULTS }}
+					<div class="flex flex-row columns-2" v-if="'search_key' in collectedFilters && collectedFilters.search_key != ''">
+						<div class="text-left w-1/2">{{totalPoints}} {{ CONSTANTS.LABELS.SIDEBAR.RESULTS }}</div>
+						<div class="text-right w-1/2">
+							<a v-on:click="resetFilters()" class="text-primary underline cursor-pointer">{{ CONSTANTS.LABELS.SIDEBAR.FILTERS_SHORT_TITLE }}</a>
+						</div>
+					</div>
                 </div>
-                <div class="px-4 pb-4 mb-3 border-b">
-                    <span class="font-medium text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.FILTERS_TITLE }}</span>
-                </div>
-
-                <div class="px-6 pb-6">
+				<template v-if="'search_key' in collectedFilters && collectedFilters.search_key != ''">
+					<div class="py-6 mb-3" style="max-height: 73vh;">
+						<template v-for="(point, index) of mapPoints" :key="index">
+							<template v-if="index < 10">
+								<div class="flex items-center border-b my-3 cursor-pointer" v-on:click="$emit('point-details', point.id)">
+									<div class="ml-0 mb-2 px-2">
+										<div>
+											<h3 class="font-bold">{{point.point_type}}</h3>
+										</div>
+										<div v-if="hasFieldType('managed_by', point)" class="text-sm">
+											<img :src="point?.point_type_icon" class="inline w-5">
+											{{ showFieldType('managed_by', point) }}
+										</div>
+										<div v-if="hasFieldType('address', point)" class="text-sm">
+											<point-details-location-icon class="inline w-10"></point-details-location-icon>
+											{{ showFieldType('address', point) }}
+										</div>
+										<div class="text-sm text-gray-500 mt-2">
+											{{ showMaterials(point) }}
+										</div>
+									</div>
+								</div>
+							</template>
+						</template>
+					</div>
+				</template>
+				<template v-else>
+					<div class="px-4 pb-4 mb-3 border-b">
+						<span class="font-medium text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.FILTERS_TITLE }}</span>
+					</div>
+					<div class="px-6 pb-6">
                     <h3 class="flow-root">
                         <!-- Expand/collapse section button -->
                         <button aria-controls="filter-section-mobile-0"
-                                aria-expanded="false"
-                                class="flex w-full items-center justify-between bg-white text-gray-400 hover:text-gray-500" type="button">
+								aria-expanded="false"
+								class="flex w-full items-center justify-between bg-white text-gray-400 hover:text-gray-500" type="button">
                             <span class="font-medium text-gray-900">{{ CONSTANTS.LABELS.SIDEBAR.SERVICE_TYPE_LABEL }}</span>
 
                         </button>
                     </h3>
-                    <!-- Filter section, show/hide based on section state. -->
+						<!-- Filter section, show/hide based on section state. -->
                     <div id="filter-section-service" class="pt-4 pb-6 border-b">
                         <div class="space-y-1">
                             <template v-for="filter of filters.filters">
                                 <div class="flex items-center">
                                     <input
-                                        :id="'filter-service_' + filter.id"
-                                        id="filter-service-1"
-                                        class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                        type="checkbox"
-                                        value="1"
-                                        @change="serviceFilterChanged(filter.id)"
-                                        :checked="searchParamsForFilters.service_id === filter.id"
-                                    >
+										:id="'filter-service_' + filter.id"
+										id="filter-service-1"
+										class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+										type="checkbox"
+										value="1"
+										@change="serviceFilterChanged(filter.id)"
+										:checked="searchParamsForFilters.service_id === filter.id"
+									>
                                     <label
-                                        class="ml-2 min-w-0 flex-1 text-gray-700"
-                                        :for="'filter-service_' + filter.id"
-                                    >
+										class="ml-2 min-w-0 flex-1 text-gray-700"
+										:for="'filter-service_' + filter.id"
+									>
                                         {{ filter.display_name }}
                                     </label>
                                 </div>
@@ -143,17 +185,17 @@
                                 <template v-for="collectionPointFilter of getFilter('service_types')">
                                     <div class="flex items-center">
                                         <input
-                                            :id="'colection_point_filter_' + collectionPointFilter.id"
-                                            class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                            type="checkbox"
-                                            value="1"
-                                            @change="collectionPointFilterChanged(collectionPointFilter)"
-                                            :checked="selectedCollectionPointsTypes.includes(collectionPointFilter.id)"
-                                        >
+											:id="'colection_point_filter_' + collectionPointFilter.id"
+											class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+											type="checkbox"
+											value="1"
+											@change="collectionPointFilterChanged(collectionPointFilter)"
+											:checked="selectedCollectionPointsTypes.includes(collectionPointFilter.id)"
+										>
                                         <label
-                                            class="ml-2 min-w-0 flex-1 text-gray-700"
-                                            :for="'colection_point_filter_' + collectionPointFilter.id"
-                                        >{{ collectionPointFilter.display_name }}</label>
+											class="ml-2 min-w-0 flex-1 text-gray-700"
+											:for="'colection_point_filter_' + collectionPointFilter.id"
+										>{{ collectionPointFilter.display_name }}</label>
                                     </div>
                                 </template>
                             </div>
@@ -171,55 +213,75 @@
                             <mobile-filter-scope-icon></mobile-filter-scope-icon>
                         </div>
                         <input
-                            id="search-point"
-                            :placeholder="CONSTANTS.LABELS.SIDEBAR.SEARCH_MATERIAL_LABEL"
-                            class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            name="text"
-                            type="email"
-                            v-model="materialFilterLiveSearch"
-                            @input="materialLiveSearch()"
-                        >
+							id="search-point"
+							:placeholder="CONSTANTS.LABELS.SIDEBAR.SEARCH_MATERIAL_LABEL"
+							class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+							name="text"
+							type="email"
+							v-model="materialFilterLiveSearch"
+							@input="materialLiveSearch()"
+						>
                     </div>
 
                     <div class="px-6 pb-6">
-                        <div id="filter-section-service" class="pt-4 pb-6 border-b">
+                        <div id="filter-section-service" class="pt-0 pb-6 border-b">
                             <div class="space-y-1">
-                                <template v-for="materialFilter of materialTypesFilters">
-                                    <div class="flex items-center">
-                                        <input
-                                            :id="'material_filter_' + materialFilter.id"
-                                            class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                            type="checkbox"
-                                            value="1"
-                                            @change="materialFilterChanged(materialFilter, true)"
-                                            :checked="selectedMaterialTypes.includes(materialFilter.id)"
-                                        >
+								<dl class="mb-10 space-y-6 divide-y divide-gray-900/10">
+								  <Disclosure
+									  as="div"
+									  aria-expanded="true"
+									  v-for="materialFilter of materialTypesFilters"
+									  class="pt-6"
+									  data-state="expanded"
+									  v-slot="{ open }"
+									  defaultOpen="true"
+								  >
+									<dt>
+									  <DisclosureButton class="flex w-full items-start justify-between text-left text-gray-900">
+										 <input
+											 :id="'material_filter_' + materialFilter.id"
+											 class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+											 type="checkbox"
+											 value="1"
+											 @change="materialFilterChanged(materialFilter, true)"
+											 :checked="selectedMaterialTypes.includes(materialFilter.id)"
+										 >
                                         <label
-                                            class="ml-2 min-w-0 flex-1 text-gray-700"
-                                            :for="'material_filter_' + materialFilter.id"
-                                        >{{ materialFilter.name }}</label>
-                                    </div>
-                                    <template v-for="childrenMaterialFilter of materialFilter.children">
+											class="ml-2 min-w-0 flex-1 text-gray-700"
+											:for="'material_filter_' + materialFilter.id"
+										>{{ materialFilter.name }}</label>
+										<span class="ml-6 flex h-7 items-center">
+										  <ChevronDownIcon v-if="!open" class="h-6 w-6" aria-hidden="true" />
+										  <ChevronUpIcon v-else class="h-6 w-6" aria-hidden="true" />
+										</span>
+									  </DisclosureButton>
+									</dt>
+									<DisclosurePanel as="dd" class="mt-0 pr-12">
+									  <template v-for="childrenMaterialFilter of materialFilter.children">
                                         <div class="flex items-center ml-8">
                                             <input
-                                                :id="'material_filter_' + childrenMaterialFilter.id"
-                                                class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
-                                                type="checkbox"
-                                                @change="materialFilterChanged(childrenMaterialFilter, false)"
-                                                value="1"
-                                                :checked="selectedMaterialTypes.includes(childrenMaterialFilter.id)"
-                                            >
+												:id="'material_filter_' + childrenMaterialFilter.id"
+												class="h-4 w-4 rounded border-gray-300 text-secondary focus:ring-indigo-500"
+												type="checkbox"
+												@change="materialFilterChanged(childrenMaterialFilter, false)"
+												value="1"
+												:checked="selectedMaterialTypes.includes(childrenMaterialFilter.id)"
+											>
                                             <label
-                                                class="ml-2 min-w-0 flex-1 text-gray-700"
-                                                :for="'material_filter_' + childrenMaterialFilter.id"
-                                            >{{ childrenMaterialFilter.name }}</label>
+												class="ml-2 min-w-0 flex-1 text-gray-700"
+												:for="'material_filter_' + childrenMaterialFilter.id"
+											>{{ childrenMaterialFilter.name }}</label>
                                         </div>
                                     </template>
-                                </template>
+									</DisclosurePanel>
+								  </Disclosure>
+								</dl>
                             </div>
                         </div>
                     </div>
                 </div>
+				</template>
+
             </span>
 
             <span v-else>
@@ -246,7 +308,10 @@
                 </div>
             </span>
 
-			<div class="px-6 py-3 border-t absolute bottom-0 bg-white lg:w-96 ">
+			<div
+				class="px-6 py-3 border-t fixed mt-2 bottom-0 bg-white lg:w-96 "
+				:class="{'fixed': this.filtersOpen}"
+			>
 				<button class="flex items-center justify-center text-red-700 w-full" type="button" v-on:click="resetFilters()">
 					<desktop-filter-clear-icon></desktop-filter-clear-icon>
 					{{ CONSTANTS.LABELS.SIDEBAR.CLEAR_FILTERS_LABEL }}
@@ -265,11 +330,25 @@ import DesktopFilterScopeIcon from "./svg-icons/desktopFilterScopeIcon.vue";
 import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 import DesktopFilterClearIcon from "./svg-icons/desktopFilterClearIcon.vue";
 import MobileFilterScopeIcon from "./svg-icons/mobileFilterScopeIcon.vue";
+import {ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
+
 import axios from "axios";
 import _ from "lodash";
+import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
+import PointDetailsAddressIcon from "./svg-icons/pointDetailsAddressIcon.vue";
+import PointDetailsLocationIcon from "./svg-icons/pointDetailsLocationIcon.vue";
 
 export default {
-	components: {MobileFilterScopeIcon, DesktopFilterCloseIcon, DesktopFilterScopeIcon, DesktopFilterBurgerIcon, DesktopFilterClearIcon},
+	components: {
+		PointDetailsLocationIcon,
+		PointDetailsAddressIcon,
+		DisclosurePanel,
+		DisclosureButton,
+		Disclosure,
+		MobileFilterScopeIcon, DesktopFilterCloseIcon, DesktopFilterScopeIcon, DesktopFilterBurgerIcon, DesktopFilterClearIcon,
+		ChevronDownIcon,
+		ChevronUpIcon
+	},
 	computed: {
 		CONSTANTS () {
 			return CONSTANTS;
@@ -281,11 +360,21 @@ export default {
             required: false,
             default: true
         },
+		mapPoints: {
+			type: Object,
+			required: false,
+			default: {}
+		},
 		totalPoints: {
 			type: Number,
 			required: true,
 			default: 0
-		}
+		},
+		filtersOpen: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
     },
 	data () {
 		return {
@@ -313,6 +402,7 @@ export default {
 		},
 		toggleFilters() {
 			this.open = !this.open;
+			this.$emit('toggle-filters', this.open);
 		},
         getFilter(filterType) {
             return _.get(this, ['filters', 'extended_filters', filterType], false);
@@ -380,12 +470,12 @@ export default {
         collectionPointFilterChanged(filter) {
             if (this.selectedCollectionPointsTypes.includes(filter.id)) {
                 this.selectedCollectionPointsTypes = this.selectedCollectionPointsTypes.filter(item => item !== filter.id)
-				this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
+				this.collectedFilters.point_type_id = this.selectedCollectionPointsTypes;
                 return;
             }
 
             this.selectedCollectionPointsTypes.push(filter.id);
-			this.collectedFilters.field_type_id = this.selectedCollectionPointsTypes;
+			this.collectedFilters.point_type_id = this.selectedCollectionPointsTypes;
         },
         getFilters() {
             const loader = this.$loading.show({
@@ -421,7 +511,7 @@ export default {
 			this.filters = {};
 			this.collectedFilters = {};
 			this.getFilters();
-			this.$emit('filters-changed', this.collectedFilters);
+			this.$emit('reset-filters');
         },
         materialLiveSearch() {
             this.selectedMaterialTypes = [];
@@ -453,13 +543,80 @@ export default {
                 }
                 this.materialTypesFilters = newFilters;
             }
-        }
+        },
+		hasFieldType(fieldType, point)
+		{
+			let fieldTypes = _.get(point, 'field_types', {});
+			if (null !== fieldTypes && Object.keys(fieldTypes).length > 0)
+			{
+				let fieldTypes = JSON.parse(point.field_types);
+				for (let field of fieldTypes)
+				{
+					if (field.field_name == fieldType)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		},
+		showFieldType(fieldType, point)
+		{
+			let fieldTypes = _.get(point, 'field_types', {});
+			if (null !== fieldTypes && Object.keys(fieldTypes).length > 0)
+			{
+				let fieldTypes = JSON.parse(point.field_types);
+				for (let field of fieldTypes)
+				{
+					if (field.field_name == fieldType)
+					{
+						return field.value;
+					}
+				}
+			}
+
+			return '';
+		},
+		showMaterials(point)
+		{
+			let materials = _.get(point, 'materials', {});
+			if (null !== materials && Object.keys(materials).length > 0)
+			{
+				let materials = JSON.parse(point.materials);
+				let materialsArray = [];
+				for (let material of materials)
+				{
+					materialsArray.push(material.name);
+				}
+
+				return materialsArray.join(', ');
+			}
+			return 'asd';
+		}
 	},
 	watch: {
 		collectedFilters: {
 			handler: function (newVal)
 			{
+				if (!'search_key' in this.collectedFilters || ('search_key' in this.collectedFilters && this.collectedFilters.search_key == ''))
+				{
+					//this.$emit('filters-changed', this.collectedFilters);
+				}
 				this.$emit('filters-changed', this.collectedFilters);
+
+			},
+			deep: true,
+			immediate: true
+		},
+		filtersOpen: {
+			handler: function (newVal)
+			{
+				console.log(this.filtersOpen, newVal, this.open);
+				if (newVal !== this.open)
+				{
+					this.open = newVal;
+				}
 			},
 			deep: true,
 			immediate: true

@@ -231,9 +231,11 @@ export default
 					CONSTANTS.API_DOMAIN + url, this.requestBody
 				)
 				.then((response) => {
-					this.$router.push('/');
+					//console.log("here", response);
+					this.$emit('close');
 				})
 				.catch((err) => {
+					console.log("error", err);
 					//this.errors.password = CONSTANTS.LABELS.AUTH.REGISTER.ERRORS.API;
 				});
 		},

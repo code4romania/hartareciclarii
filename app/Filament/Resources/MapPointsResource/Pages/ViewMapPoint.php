@@ -162,7 +162,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
             $actions = array_merge($actions, [
                 Action::make('validate-point')
                     ->label(__('map_points.buttons.change_status'))
-                    ->icon('heroicon-m-check')
+                    ->icon('heroicon-m-arrows-right-left')
                     ->action(function (array $data, Collection $records): void
                     {
                         $this->record->changeStatus();

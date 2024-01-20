@@ -72,18 +72,18 @@ class DuplicatesResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('type.display_name')
-					->label(__('duplicates.type'))
-					->sortable()
-					->searchable(),
+                    ->label(__('duplicates.type'))
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('distance')
-					->label(__('duplicates.distance'))
-					->sortable(),
+                    ->label(__('duplicates.distance'))
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
 
             ])
 
@@ -101,7 +101,7 @@ class DuplicatesResource extends Resource
 
     public static function getPluralLabel(): ?string
     {
-		return __('duplicates.label');
+        return __('duplicates.label');
     }
 
     public static function getNavigationBadge(): ?string

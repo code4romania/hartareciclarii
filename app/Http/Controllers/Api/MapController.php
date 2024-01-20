@@ -70,9 +70,6 @@ class MapController extends Controller
 				'numeric',
 				'between:-180,180'
 			],
-			'field_types.managed_by' => [
-				'string'
-			],
 			'field_types.address' => [
 				'required',
 				'string'

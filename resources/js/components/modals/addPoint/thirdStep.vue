@@ -9,8 +9,20 @@
         <div class="flex items-center justify-between">
             <span class="pl-5 text-sm">{{ CONSTANTS.LABELS.ADD_POINT.THIRD_STEP.SUBTITLE }}</span>
         </div>
-
         <div class="mt-3 sm:mt-5 w-full px-5" v-if="Object.keys(previousStepBody).length">
+			<template v-if="Object.keys(validationErrors).length > 0">
+				<div class="rounded-md bg-red-50 p-4 mb-2">
+					<div class="flex">
+						<div class="flex-shrink-0">
+							<XCircleIcon aria-hidden="true" class="h-5 w-5 text-red-400"/>
+						</div>
+						<div class="ml-3">
+							<h3 class="text-sm font-medium text-red-800" v-for="error of validationErrors">
+								{{ error[0] }}</h3>
+						</div>
+					</div>
+				</div>
+			</template>
             <div class="space-y-1 mb-3">
                 <p class="text-xl">{{ containerType() }}</p>
             </div>
@@ -42,7 +54,7 @@
                     }"
                     ref="map"
                     :center="[previousStepBody.lat, previousStepBody.lng]"
-                    :zoom="13"
+                    :zoom="15"
                 >
                     <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"></l-tile-layer>
                     <l-marker
@@ -50,7 +62,7 @@
                     >
                         <l-icon
                             :icon-size="dynamicSize"
-                            icon-url="/assets/images/logo.png" >
+                            icon-url="/assets/images/pin_selected.png" >
                         </l-icon>
                     </l-marker>
 
@@ -227,13 +239,18 @@ export default {
             type: Object,
             required: true,
         },
+		validationErrors: {
+			type: Object,
+			required: false,
+			default: {}
+		},
     },
     computed: {
         CONSTANTS() {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [this.iconSize, this.iconSize / 2.15];
+            return [48, 64];
         },
     },
     data() {
@@ -257,6 +274,7 @@ export default {
                 "material_recycling_point": [1, 13, 14],
                 "opening_hours": {"startDay": "Luni", "endDay": "Vineri", "startHour": "06:00", "endHour": "10:00"}
             }*/
+			errors: {},
         };
     },
     mounted() {

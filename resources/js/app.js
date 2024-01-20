@@ -8,17 +8,19 @@ import {LoadingPlugin} from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
 import {addAuthToken} from "./general.js";
 
-import moment from 'moment';
-import ro from "moment/dist/locale/ro"
-moment.locale('ro', ro);
 
 const app = createApp(App);
 
+app.config.devtools = true
+const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__
+if (typeof devtools === 'object')
+{
+	devtools.enabled = true
+	devtools.emit('app:init', app, '1.0.0', {})
+}
+
 app.use(router)
 app.use(LoadingPlugin)
-
-app.config.globalProperties.$moment = moment;
-
 app.mount('#app')
 
 addAuthToken();

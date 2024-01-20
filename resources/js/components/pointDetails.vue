@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed bg-white border border-black z-10 p-6 w-96 overflow-y-auto min-h-[85%] mt-5 ml-8">
+	<div class="absolute lg:fixed bg-white border border-black z-20 top-10 lg:top-0 p-6 w-86 lg:w-96 overflow-y-auto h-[85%] lg:h-[90%] m-10 lg:mt-5 lg:ml-14">
 		<div class="flex justify-between items-center mb-3.5">
 			<h2 class="font-bold text-2xl">{{point.type.display_name}} </h2>
 			<desktop-filter-close-icon
@@ -146,11 +146,9 @@
 				{{CONSTANTS.LABELS.POINT_DETAILS.COPY_LABEL}}
 			</button>
 		</div>
-
-	</div> <!-- -->
+	</div>
 
 	<add-report-problem-modal
-		v-if="!resetReportProblemModal"
 		:is-open="isReportProblemModalOpen"
 		:user-info="userInfo"
 		:map-point="point"
@@ -286,6 +284,7 @@ export default
 			reportProblem()
 			{
 				this.isReportProblemModalOpen = true;
+				console.log(`open report problem`, this.isReportProblemModalOpen);
 			},
 			resetReportProblemModal() {
 				this.resetReportProblemModal = true;

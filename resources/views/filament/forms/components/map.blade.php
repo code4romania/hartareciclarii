@@ -14,7 +14,8 @@ content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="n
 $record = $getRecord();
 $latitude = $record ? $record->lat : config('services.maps.defaults.latitude');
 $longitude = $record ? $record->lon : config('services.maps.defaults.longitude');
-$reverse_url = config('services.nominatim.url');
+$reverse_url = config('services.nominatim.url').config('services.nominatim.reverse');
+
 @endphp
 
 <div x-data="{ state: $wire.$entangle('lat') }">
@@ -29,10 +30,7 @@ $reverse_url = config('services.nominatim.url');
 <div x-data="map" x-init="init(JSON.stringify({
 			'latitude': {{ $latitude }},
 			'longitude': {{ $longitude }},
-			'reverse_url':'{{ $reverse_url }}'
+			'reverse_url':'{{ $reverse_url }}',
+			'nominatim_url': '{{ config('services.nominatim.url') }}'
 
 		}))" wire:ignore id="recycle-point-map"></div>
-
-<script>
-
-</script>

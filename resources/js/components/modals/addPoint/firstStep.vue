@@ -220,7 +220,7 @@ export default {
             return CONSTANTS;
         },
         dynamicSize () {
-            return [44, 44 * 1.15];
+            return [48, 64];
         },
         mapOptions() {
             if (!this.mapIsActive) {
@@ -239,7 +239,7 @@ export default {
             selectedService: {},
             latitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LATITUDE,
             longitude: CONSTANTS.DEFAULT_MAP_OPTIONS.LONGITUDE,
-            zoom: 13,
+            zoom: 15,
             point: {},
             errors: {},
             mapIsActive: false,
@@ -303,9 +303,7 @@ export default {
             this.stepRequestBody.lat = this.point.lat;
             this.stepRequestBody.lng = this.point.lon;
 
-            let url = CONSTANTS.NOMINATIM_URL_DETAILS;
-            url = _.replace(url, '{lat}', this.point.lat);
-            url = _.replace(url, '{lon}', this.point.lon);
+			let url = `${CONSTANTS.NOMINATIM_URL}/reverse?format=json&lat=${this.point.lat}&lon=${this.point.lon}&zoom=18&addressdetails=1`;
 
             axios
                 .get(
@@ -321,11 +319,10 @@ export default {
             this.stepRequestBody.lat = null;
             this.stepRequestBody.lng = null;
 
-            this.latitude = null;
-            this.longitude = null;
+            //this.latitude = null;
+            //this.longitude = null;
 
-            let url = CONSTANTS.NOMINATIM_URL_POINTS;
-            url = _.replace(url, '{search}', this.stepRequestBody.field_types.address);
+			let url = `${CONSTANTS.NOMINATIM_URL}/search?format=json&q=${this.stepRequestBody.field_types.address}&addressdetails=1`;
 
             axios
                 .get(
@@ -343,7 +340,9 @@ export default {
                     }
 
                     //remove the below line to not change the address typed by user
-                    this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
+					//console.log(`found address`, _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address));
+                    //this.stepRequestBody.field_types.address = _.get(response, 'data.0.display_name', this.stepRequestBody.field_types.address);
+					//console.log(`stored address`, this.stepRequestBody.field_types.address);
 
                     this.stepRequestBody.lat = this.point.lat;
                     this.stepRequestBody.lng = this.point.lon;

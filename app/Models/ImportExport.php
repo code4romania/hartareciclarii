@@ -194,7 +194,7 @@ class ImportExport extends Model
             $duplicates = \DB::select('
 				select
 					rp.id as recycle_point_1,
-					ST_Distance_Sphere(rp.location, ' . \DB::raw('GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")')->getValue(\DB::connection()->getQueryGrammar()) . ') as distance,
+					ST_Distance_Sphere(rp.location, ' . \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")')->getValue(\DB::connection()->getQueryGrammar()) . ') as distance,
 					rp.point_type_id
 				from
 					recycling_points rp

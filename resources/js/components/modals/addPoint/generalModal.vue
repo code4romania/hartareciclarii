@@ -1,6 +1,6 @@
 <template>
     <TransitionRoot :show="isOpen" as="template">
-        <Dialog as="div" class="relative z-10" @close="closeModal();">
+        <Dialog as="div" class="relative z-50" @close="closeModal();">
             <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                              leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>
@@ -30,6 +30,7 @@
                             v-show="activeStep === 'third'"
                             :nomenclatures="nomenclatures"
                             :previous-step-body="requestBody"
+							:validation-errors="validationErrors"
                             @close="closeModal();"
                             @stepFinished="savePoint($event)"
                             @backToStep="backToStep($event)"
@@ -92,6 +93,7 @@ export default {
             //activeStep: 'second',
             nomenclatures: {},
             requestBody: {},
+			validationErrors: {}
         };
     },
     mounted() {
@@ -120,25 +122,24 @@ export default {
 
             this.activeStep = step;
         },
-        stepFinished(stepData) {
-            const myDiv = document.getElementById('containerWithScroll');
-            myDiv.scrollTop = 0;
+		stepFinished(stepData) {
+			const myDiv = document.getElementById('containerWithScroll');
+			myDiv.scrollTop = 0;
 
-            this.activeStep = stepData.nextStep
+			this.activeStep = stepData.nextStep
 
-            let mergedFieldTypes = false;
-            if (_.has(this, 'requestBody.field_types')
-                && _.has(stepData, 'body.field_types')
-            ) {
-                mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
-            }
+		let mergedFieldTypes = false;
+			if (_.has(this, 'requestBody.field_types')
+				&& _.has(stepData, 'body.field_types')
+			) {
+				mergedFieldTypes = {...this.requestBody.field_types, ...stepData.body.field_types}
+			}
 
-            this.requestBody = {...this.requestBody, ...stepData.body}
-
-            if (mergedFieldTypes) {
-                this.requestBody.field_types = mergedFieldTypes;
-            }
-        },
+			this.requestBody = {...this.requestBody, ...stepData.body}
+			if (mergedFieldTypes) {
+				this.requestBody.field_types = mergedFieldTypes;
+			}
+		},
         savePoint() {
             axios
                 .post(
@@ -152,7 +153,9 @@ export default {
                         this.$emit('pointSaved', true);
                     }
                 })
-                .catch((err) => {});
+                .catch((err) => {
+					this.validationErrors = _.get(err, 'response.data.errors', {});
+				});
         }
     }
 };

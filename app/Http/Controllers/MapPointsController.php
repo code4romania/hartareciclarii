@@ -4,7 +4,7 @@
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-03 20:27:58
  * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-10 10:34:59
+ * @Last Modified time: 2023-12-13 09:17:57
  */
 
 namespace App\Http\Controllers;
@@ -48,5 +48,11 @@ class MapPointsController extends Controller
         header("Content-Disposition:attachment;filename={$xls['filename']}");
         echo base64_decode($xls['content']);
         die();
+    }
+
+    public function mapView($id)
+    {
+        $record = MapPointModel::find($id);
+        dd('TO BE DEFINED WHERE IT SUPPOSED TO GO');
     }
 }

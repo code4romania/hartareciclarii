@@ -10,8 +10,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class County extends Model
 {
-    protected $table = 'judete_geo';
+    protected $table = 'counties';
+	
+	public function cities(): HasMany
+	{
+		return $this->hasMany(City::class);
+	}
 }

@@ -1,61 +1,45 @@
 <template>
-	<div class="hidden absolute top-0 end-0 px-4 py-6 z-50 gap-x-3 lg:flex">
+	<div
+		class="absolute px-4 py-6 gap-x-3"
+		:class="{'hidden lg:flex top-0 end-0  z-20': !menuOpen, 'absolute w-screen h-screen top-0 bg-white px-4 py-6 z-30 gap-x-3': menuOpen}"
+	>
+		<div
+			class="flex h-16 row items-center justify-between p-4 bg-gray-50"
+			:class="{'hidden': !menuOpen, 'flex': menuOpen}"
+		>
+			<a href="">
+				<img alt="Harta Reciclarii V2.0" class="h-8 w-auto" src="/assets/images/logo.png">
+			</a>
+			<button type="button" v-on:click="toggleMenu();" class=" cursor-pointer">
+				<desktop-filter-close-icon></desktop-filter-close-icon>
+			</button>
+		</div>
+
 		<button
             type="button"
-            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black"
+            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-3 lg:py-1 text-black"
             v-on:click="addMapPoint()"
         >
 			<menu-add-point-icon></menu-add-point-icon>
 			{{CONSTANTS.LABELS.TOP_MENU.ADD_POINT}}
 		</button>
-		<Menu as="div" class="relative inline-block text-left">
-			<div>
-				<MenuButton class="flex rounded-full items-center gap-x-2 bg-white px-5 py-1 text-black">
-					<menu-dictionary-icon></menu-dictionary-icon>
-					{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
-				</MenuButton>
-			</div>
+		<button
+			type="button"
+			class="flex rounded-full items-center gap-x-2 bg-white px-5 py-3 lg:py-1 text-black"
+			v-on:click="goToDictionary()"
+		>
+			<menu-dictionary-icon></menu-dictionary-icon>
+			{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
+		</button>
 
-			<transition
-				enter-active-class="transition ease-out duration-100"
-				enter-from-class="transform opacity-0 scale-95"
-				enter-to-class="transform opacity-100 scale-100"
-				leave-active-class="transition ease-in duration-75"
-				leave-from-class="transform opacity-100 scale-100"
-				leave-to-class="transform opacity-0 scale-95"
-			>
-				<MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-					<div class="py-1">
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY_RECYCLING}}
-							</a>
-						</MenuItem>
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.DICTIONARY}}
-							</a>
-						</MenuItem>
-						<MenuItem v-slot="{ active }">
-							<a v-on:click="goToDictionary()" class="group flex text-gray-700 px-3 gap-x-2 py-2 hover:bg-gray-100 cursor-pointer" target="_blank">
-								<menu-dictionary-icon></menu-dictionary-icon>
-								{{CONSTANTS.LABELS.TOP_MENU.GUIDE_A_Z}}
-							</a>
-						</MenuItem>
-					</div>
-				</MenuItems>
-			</transition>
-		</Menu>
 
-		<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-1 text-black" type="button" v-on:click="goToFaq()">
+		<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-3 lg:py-1 text-black" type="button" v-on:click="goToFaq()">
 			<menu-faq-icon></menu-faq-icon>
 			{{CONSTANTS.LABELS.TOP_MENU.FAQ}}
 		</button>
 
 		<template v-if="!isAuthenticated">
-			<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-1 text-black" type="button" v-on:click="openLoginModal();">
+			<button class="flex rounded-full items-center gap-x-2 rounded-md bg-white px-5 py-3 lg:py-1 text-black" type="button" v-on:click="openLoginModal();">
 				<menu-my-account-icon></menu-my-account-icon>
 				{{CONSTANTS.LABELS.TOP_MENU.MY_ACCOUNT}}
 			</button>
@@ -159,12 +143,14 @@ import eventBus from "../eventBus.js";
 import _ from "lodash";
 import axios, {HttpStatusCode} from "axios";
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/20/solid'
+import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 
 export default
 {
 	name: "topMenu",
 	components:
 	{
+		DesktopFilterCloseIcon,
 		MenuMyAccountIcon,
 		MenuFaqIcon,
 		MenuAddPointIcon,
@@ -190,7 +176,13 @@ export default
 		{
 			type: Object,
 			required: true,
-		}
+		},
+		menuOpen:
+		{
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	data()
 	{
@@ -257,7 +249,11 @@ export default
             setTimeout(() => {
                 this.showSaveMessage = false;
             }, 10000);
-        }
+        },
+		toggleMenu()
+		{
+			this.$emit('toggleMenu');
+		}
 	}
 };
 </script>

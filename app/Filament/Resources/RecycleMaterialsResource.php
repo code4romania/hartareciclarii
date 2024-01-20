@@ -40,8 +40,7 @@ class RecycleMaterialsResource extends Resource
                         Repeater::make('Aliases')
                             ->relationship('aliases')
                             ->schema([
-                                TextInput::make('alias'),
-
+                                TextInput::make('alias')->required(),
                             ])
                             ->columns(2),
                     ]),
@@ -55,17 +54,17 @@ class RecycleMaterialsResource extends Resource
                 TextColumn::make('icon')
                     ->formatStateUsing(fn (string $state): string => __("<img src='{$state}'>"))->html(),
                 TextColumn::make('name')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('order')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('getParent.name')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -73,7 +72,11 @@ class RecycleMaterialsResource extends Resource
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\DeleteAction::make()->action(function ($record)
+                    {
+                        $record->aliases()->delete();
+                        $record->delete();
+                    }),
                 ]),
             ])
             ->bulkActions([

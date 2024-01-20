@@ -2,24 +2,31 @@
 	<div class="flex w-screen h-screen">
 		<div
 			class="flex"
-			:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
+			:class="{'lg:w-[4.5rem]': !filtersOpen, 'lg:w-96': filtersOpen}"
 		>
 			<left-sidebar
 				:has-results="hasResults"
 				:total-points="totalPoints"
+				:filters-open="filtersOpen"
+				:map-points="points"
 				@filtersChanged="setFilters($event)"
+				@resetFilters="resetFilters($event)"
+				@pointDetails="getPoint($event)"
+				@toggleFilters="toggleFilters()"
 			></left-sidebar>
 
 		</div>
-		<div class="flex w-full h-full">
+		<div class="flex h-full">
 			<div
-				:class="{'g:w-[4.5rem]': !open, 'lg:w-96': open}"
 				class="h-screen w-full "
 			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
 				<main class="">
-					<div class="flex absolute inset-x-0 px-4 py-6 z-50 gap-x-2 lg:hidden">
-						<button class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
-								type="button">
+					<div class="flex absolute inset-x-0 px-4 py-6 z-20 gap-x-2 lg:hidden">
+						<button
+							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
+							type="button"
+							v-on:click="toggleMenu()"
+						>
 							<mobile-filter-burger-icon></mobile-filter-burger-icon>
 						</button>
 						<div class="relative rounded-md shadow-sm flex-1">
@@ -37,6 +44,7 @@
 						<button
 							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
 							type="button"
+							v-on:click="toggleFilters()"
 						>
 							<mobile-filter-svg-icon></mobile-filter-svg-icon>
 						</button>
@@ -44,9 +52,10 @@
 
 					<top-menu
 						:userInfo="userInfo"
+						:menu-open="menuOpen"
 						:is-authenticated="isAuthenticated"
+						@toggleMenu="toggleMenu()"
 					>
-
 					</top-menu>
 
 					<point-details
@@ -58,15 +67,20 @@
 						@closePointDetails="closePointDetails($event)"
 					>
 					</point-details>
-					<div :id="mapId" class="w-screen h-screen"></div>
+					<div
+						:id="mapId" class="h-screen w-screen"
+					></div>
 					<div
 						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
 						:class="{'hidden': hasApprovedLocation}"
 					>
 						<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
-						<div class="text-end">
-							<a v-on:click="requestCurrentLocation()" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
+						<div class="text-end me-4">
+							<a v-on:click="locationSettings(true)" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
 						</div>
+						<a class="link top-0 right-0 absolute p-1 cursor-pointer text-white" v-on:click="hasApprovedLocation = true;">
+							<desktop-filter-close-icon></desktop-filter-close-icon>
+						</a>
 					</div>
 				</main>
 			</div>
@@ -91,10 +105,13 @@ import PointDetails from "./pointDetails.vue";
 import {getUserProfile} from "../general.js";
 import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
 import 'vue-leaflet-markercluster/dist/style.css'
+import pointDetails from "./pointDetails.vue";
+import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
 export default
 {
 	components:
 	{
+		DesktopFilterCloseIcon,
 		PointDetails,
 		MobileFilterScopeIcon,
 		MobileFilterBurgerIcon,
@@ -131,7 +148,10 @@ export default
 			selectedPoint: {},
 			mainMaterials: {},
 			pointUrl: '',
-			mapInstance: {}
+			mapInstance: {},
+			isDesktop: true,
+			filtersOpen: false,
+			menuOpen: false
 
 		};
 	},
@@ -139,6 +159,7 @@ export default
 	{
 		getPoint(id)
 		{
+			this.selectedPoint = {};
 			let url = _.replace(CONSTANTS.API_DOMAIN + CONSTANTS.ROUTES.MAP.POINTS.DETAILS, '{id}', id);
 
 			axios
@@ -148,6 +169,7 @@ export default
 					this.selectedPoint = _.get(response, 'data.point', {});
 					this.mainMaterials = _.get(response, 'data.materials', {});
 					this.pointUrl = _.get(response, 'data.url', {});
+					this.mapInstance.panTo(L.latLng(this.selectedPoint.lat, this.selectedPoint.lon));
 				}).catch((err) =>
 				{
 					console.log(err);
@@ -159,7 +181,8 @@ export default
 				center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 				zoom: this.mapOptions.zoom,
 				maxZoom: this.mapOptions.maxZoom,
-				zoomControl: true,
+				minZoom: this.mapOptions.minZoom,
+				zoomControl: this.isDesktop,
 				zoomAnimation: false,
 				layers: [],
 			});
@@ -219,9 +242,11 @@ export default
 
 
 			this.points = await this.getMapPoints();
+			this.totalPoints = Object.keys(this.points).length;
+			this.setResults(this.points);
 			this.initMap(true);
 		},
-		requestCurrentLocation()
+		requestCurrentLocation(refresh = false)
 		{
 			const success = async (position) =>
 			{
@@ -235,7 +260,9 @@ export default
 
 
 				this.points = await this.getMapPoints();
-				this.initMap();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
+				this.initMap(refresh);
 			};
 
 			const error = async (err) =>
@@ -243,9 +270,26 @@ export default
 				console.log(error);
 				this.setBounds();
 				this.points = await this.getMapPoints();
-				this.initMap();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
+				this.initMap(refresh);
 			};
-			navigator.geolocation.getCurrentPosition(success, error);
+			navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true});
+		},
+		locationSettings(refresh = false)
+		{
+			const success = async (position) =>
+			{
+				console.log(`success`, position);
+			};
+
+			const error = async (err) =>
+			{
+				console.log(`error`, err);
+			};
+
+			navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, maximumAge: 0});
+
 		},
 		async getUserInfo ()
 		{
@@ -272,20 +316,6 @@ export default
 				.then((response) =>
 				{
 					points = _.get(response, 'data.points', {});
-					if (Object.keys(points).length > 0)
-					{
-						this.hasResults = true;
-						this.totalPoints = Object.keys(this.points).length;
-					}
-					else
-					{
-						this.totalPoints = 0;
-					}
-
-					if ('search_key' in this.filters && this.filters.search_key.length > 3 && Object.keys(points).length === 0)
-					{
-						this.hasResults = false;
-					}
 
 				}).catch((err) =>
 			{
@@ -306,7 +336,8 @@ export default
 					center: L.latLng(this.mapOptions.lat, this.mapOptions.lng),
 					zoom: this.mapOptions.zoom,
 					maxZoom: this.mapOptions.maxZoom,
-					zoomControl: true,
+					minZoom: this.mapOptions.minZoom,
+					zoomControl: this.isDesktop,
 					zoomAnimation: false,
 					layers: [],
 				});
@@ -319,7 +350,7 @@ export default
 				this.mapInstance = leafletMap;
 			}
 
-
+			console.log(leafletMap.getZoom());
 			const tile = L.tileLayer(
 				`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`,
 				{
@@ -396,6 +427,8 @@ export default
 			{
 				this.filters = event;
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap(true);
 			}
 
@@ -403,15 +436,50 @@ export default
 			{
 				this.filters = event;
 				this.points = await this.getMapPoints();
+				this.totalPoints = Object.keys(this.points).length;
+				this.setResults(this.points);
 				this.initMap(true);
 			}
+
+			//this.initMap(true);
+		},
+		setResults(points)
+		{
+			if ('search_key' in this.filters && this.filters.search_key.length > 3)
+			{
+				if (Object.keys(points).length === 0)
+				{
+					this.hasResults = false;
+				}
+			}
+			this.hasResults = true;
+		},
+		async resetFilters (event)
+		{
+			this.points = await this.getMapPoints();
+			this.totalPoints = Object.keys(this.points).length;
+			this.setResults(this.points);
+			this.initMap(true);
 		},
 		closePointDetails()
 		{
 			this.selectedPoint = {};
+		},
+		toggleFilters()
+		{
+			console.log(this.filtersOpen);
+			this.filtersOpen = !this.filtersOpen;
+		},
+		toggleMenu()
+		{
+			this.menuOpen = !this.menuOpen;
 		}
 	},
 	computed: {
+		pointDetails ()
+		{
+			return pointDetails
+		},
 		CONSTANTS ()
 		{
 			return CONSTANTS
@@ -423,6 +491,10 @@ export default
 	},
 	mounted()
 	{
+		if ((/(portrait(-primary|-secondary)?)/i.test(screen.orientation.type)))
+		{
+			this.isDesktop = false;
+		}
 		this.requestCurrentLocation();
 
 		eventBus.$on('getUser', (speaker) =>
