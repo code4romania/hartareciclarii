@@ -56,7 +56,7 @@
 					</div>
 				</div>
 			</template>
-			<div class="py-20 px-20 space-x-5 mb-1">
+			<div class="py-10 px-10 space-x-5 mb-1">
 				<button
 					id="login_button"
 					:class="{ 'disabled': loading }"
@@ -72,7 +72,7 @@
 					<div class="w-full border-t border-gray-300"/>
 				</div>
 			</div>
-			<div class="py-20 space-x-5 mb-1">
+			<div class="py-10 space-x-5 mb-1">
 				{{ CONSTANTS.LABELS.AUTH.REGISTER_LABEL }} <a class="cursor-pointer underline" v-on:click="register();">{{ CONSTANTS.LABELS.AUTH.REGISTER_LABEL_LINK }}</a>
 			</div>
 		</div>
