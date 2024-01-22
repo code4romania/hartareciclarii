@@ -601,9 +601,9 @@ export default {
 			{
 				if (!'search_key' in this.collectedFilters || ('search_key' in this.collectedFilters && this.collectedFilters.search_key == ''))
 				{
-					//this.$emit('filters-changed', this.collectedFilters);
+					this.$emit('filters-changed', this.collectedFilters);
 				}
-				this.$emit('filters-changed', this.collectedFilters);
+				//this.$emit('filters-changed', this.collectedFilters);
 
 			},
 			deep: true,

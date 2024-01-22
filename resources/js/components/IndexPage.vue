@@ -382,7 +382,8 @@ export default
 					return L.divIcon({
 						html: L.Util.template(iconSettings.mapIconUrl, iconSettings),
 						className: 'mycluster',
-						iconSize: L.point(40, 40)
+						iconSize: L.point(40, 40),
+						iconAnchor: [20, 40]
 					});
 				},
 			});

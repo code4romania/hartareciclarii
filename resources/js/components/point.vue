@@ -73,6 +73,7 @@ export default {
 		{
 					iconUrl: this.mapPoint.service?.icon || CONSTANTS.DEFAULT_MAP_OPTIONS.MARKER_ICON,
 					iconSize: [50, 66.5],
+					iconAnchor: [25, 66.5],
 				});
 
 				let marker = L.marker([this.mapPoint.lat, this.mapPoint.lon], {

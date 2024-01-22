@@ -90,6 +90,7 @@
                         :lat-lng="[point.lat, point.lon]"
                     >
                         <l-icon
+							:icon-anchor="[18, 48]"
                             :icon-size="dynamicSize"
                             icon-url="/assets/images/pin_selected.png" >
                         </l-icon>

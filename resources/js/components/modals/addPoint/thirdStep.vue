@@ -62,6 +62,7 @@
                     >
                         <l-icon
                             :icon-size="dynamicSize"
+							:icon-anchor="[24, 64]"
                             icon-url="/assets/images/pin_selected.png" >
                         </l-icon>
                     </l-marker>
