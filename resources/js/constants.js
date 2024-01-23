@@ -112,7 +112,9 @@ export const CONSTANTS =
 			MY_ACCOUNT: `Contul meu`,
 			LOGOUT: `Logout`,
 			MY_PROFILE: `Profilul meu`,
-			BACK: `Înapoi la hartă`
+			BACK: `Înapoi la hartă`,
+            JUMP_TO_ADDRESS: `Sari la localitate`,
+            TYPE_ADDRESS_HERE: `Scrie adresa aici`
 		},
 		PROFILE:
 		{

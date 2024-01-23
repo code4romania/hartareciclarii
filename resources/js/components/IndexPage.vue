@@ -1,5 +1,5 @@
 <template>
-	<div class="flex w-screen h-screen">
+	<div class="flex w-screen h-screen" style="overflow: hidden">
 		<div
 			class="flex"
 			:class="{'lg:w-[4.5rem]': !filtersOpen, 'lg:w-96': filtersOpen}"
@@ -20,7 +20,7 @@
 			<div
 				class="h-screen w-full "
 			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
-				<main class="">
+				<main style="max-width: 100%">
 					<div class="flex absolute inset-x-0 px-4 py-6 z-20 gap-x-2 lg:hidden">
 						<button
 							class="bg-white rounded w-10 h-10 ring-1 ring-inset ring-gray-300 flex items-center justify-center"
@@ -71,16 +71,17 @@
 						:id="mapId" class="h-screen w-screen"
 					></div>
 					<div
-						class="grid grid-cols-2 absolute w-full z-50 bottom-0 bg-gray-500 px-3 py-2 text-white"
+                        :style="'width: ' + calculateWidth() + 'px'"
+						class="grid grid-cols-2 absolute z-50 bottom-0 bg-gray-500 px-3 py-2 text-white "
 						:class="{'hidden': hasApprovedLocation}"
 					>
 						<div>{{CONSTANTS.LABELS.LOCATION.NOTICE}}</div>
 						<div class="text-end me-4">
 							<a v-on:click="locationSettings(true)" class="cursor-pointer font-bold">{{CONSTANTS.LABELS.LOCATION.SETTINGS}}</a>
+                            <a class="link top-0  absolute p-1 cursor-pointer text-white" v-on:click="hasApprovedLocation = true;">
+                                <desktop-filter-close-icon></desktop-filter-close-icon>
+                            </a>
 						</div>
-						<a class="link top-0 right-0 absolute p-1 cursor-pointer text-white" v-on:click="hasApprovedLocation = true;">
-							<desktop-filter-close-icon></desktop-filter-close-icon>
-						</a>
 					</div>
 				</main>
 			</div>
@@ -107,6 +108,7 @@ import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
 import 'vue-leaflet-markercluster/dist/style.css'
 import pointDetails from "./pointDetails.vue";
 import DesktopFilterCloseIcon from "./svg-icons/desktopFilterCloseIcon.vue";
+import {ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/20/solid'
 export default
 {
 	components:
@@ -123,7 +125,8 @@ export default
 		LMap,
 		LTileLayer,
 		LControlLayers,
-		LMarkerClusterGroup
+		LMarkerClusterGroup,
+        ChevronDownIcon
     },
 	data ()
 	{
@@ -473,7 +476,22 @@ export default
 		toggleMenu()
 		{
 			this.menuOpen = !this.menuOpen;
-		}
+		},
+        calculateWidth() {
+            let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+            if (this.userAgentIsWeb()) {
+                return width - 72;
+            }
+
+            return width
+        },
+        userAgentIsWeb() {
+            if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+                return true;
+            }
+            return false;
+        }
 	},
 	computed: {
 		pointDetails ()

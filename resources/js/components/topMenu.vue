@@ -3,6 +3,28 @@
 		class="absolute px-4 py-6 gap-x-3"
 		:class="{'hidden lg:flex top-0 end-0  z-20': !menuOpen, 'absolute w-screen h-screen top-0 bg-white px-4 py-6 z-30 gap-x-3': menuOpen}"
 	>
+        <button
+            style="width: fit-content"
+            class="flex rounded-full items-center gap-x-2 bg-white px-5 py-3 lg:py-1 text-black"
+            type="button"
+            v-on:click="toggleJumpToAddress = !toggleJumpToAddress"
+        >
+            {{ CONSTANTS.LABELS.TOP_MENU.JUMP_TO_ADDRESS }}
+            <chevron-right-icon class="h-6 w-6" aria-hidden="true" v-if="!toggleJumpToAddress"></chevron-right-icon>
+            <chevron-left-icon class="h-6 w-6" aria-hidden="true" v-if="toggleJumpToAddress"></chevron-left-icon>
+        </button>
+
+        <input
+            v-if="toggleJumpToAddress"
+            style=""
+            id="search-point"
+            class="block rounded-md border-0 py-1.5 h-10 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            name="text"
+            :placeholder="CONSTANTS.LABELS.TOP_MENU.TYPE_ADDRESS_HERE"
+            type="email"
+            @keyup="searchAddress($event)"
+        />
+
 		<div
 			class="flex h-16 row items-center justify-between p-4 bg-gray-50"
 			:class="{'hidden': !menuOpen, 'flex': menuOpen}"
@@ -132,7 +154,7 @@
 <script>
 import {CONSTANTS} from "@/constants.js";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import { ChevronDownIcon} from '@heroicons/vue/20/solid';
+import { ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/20/solid';
 import LoginModal from "./modals/loginModal.vue";
 import AddPointModal from "./modals/addPoint/generalModal.vue";
 import MenuDictionaryIcon from "./svg-icons/menuDictionaryIcon.vue";
@@ -162,6 +184,8 @@ export default
 		MenuItem,
 		MenuItems,
 		ChevronDownIcon,
+        ChevronRightIcon,
+        ChevronLeftIcon,
         CheckCircleIcon,
         XMarkIcon
 	},
@@ -191,7 +215,8 @@ export default
 			isLoginModalOpen: false,
 			isAddPointModalOpen: false,
 			active: false,
-            resetPointModal: false
+            resetPointModal: false,
+            toggleJumpToAddress: false
 		};
 	},
 	computed: {
@@ -253,7 +278,12 @@ export default
 		toggleMenu()
 		{
 			this.$emit('toggleMenu');
-		}
+		},
+        searchAddress(searchInput) {
+            console.log('111111111');
+            console.log(searchInput);
+            console.log('111111111');
+        }
 	}
 };
 </script>

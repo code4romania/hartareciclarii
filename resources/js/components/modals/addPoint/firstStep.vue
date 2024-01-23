@@ -303,16 +303,17 @@ export default {
             this.stepRequestBody.lat = this.point.lat;
             this.stepRequestBody.lng = this.point.lon;
 
-			let url = `${CONSTANTS.NOMINATIM_URL}/reverse?format=json&lat=${this.point.lat}&lon=${this.point.lon}&zoom=18&addressdetails=1`;
+            //this will change address based on pin
+			/*let url = `${CONSTANTS.NOMINATIM_URL}/reverse?format=json&lat=${this.point.lat}&lon=${this.point.lon}&zoom=18&addressdetails=1`;
 
             axios
                 .get(
                     url,
                 )
                 .then((response) => {
-                    this.stepRequestBody.field_types.address = response.data.display_name
+                    //this.stepRequestBody.field_types.address = response.data.display_name
                 })
-                .catch((err) => {});
+                .catch((err) => {});*/
         },
         getLatLonOfAddress() {
             this.point = {};

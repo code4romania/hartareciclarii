@@ -87,9 +87,9 @@
                     :multiple="true"
                     :options="materialTypesFilters"
                     :auto-select-ancestors="false"
-                    :auto-select-descendants="true"
                     :auto-deselect-descendants="true"
                     :flat="true"
+                    :disable-branch-nodes="true"
                     v-model="stepRequestBody.material_recycling_point"
                 />
 
