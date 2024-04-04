@@ -42,7 +42,6 @@ return new class extends Migration
         County::all()->each(function (County $county) use ($countiesCoordinates) {
             $sql = "UPDATE counties SET pol = {$countiesCoordinates[$county->name]} WHERE id = {$county->id}";
             DB::statement($sql);
-//            dd($sql);
         });
     }
 
