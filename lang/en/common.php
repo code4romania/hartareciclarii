@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-06 09:05:46
@@ -17,8 +19,8 @@ return [
         'sun' => 'Sunday',
     ],
     'closed' => 'Closed',
-	'contribution_types' => [
-		'point' => 'New Point',
-		'issue' => 'Issue Report'
-	],
+    'contribution_types' => [
+        'point' => 'New Point',
+        'issue' => 'Issue Report',
+    ],
 ];

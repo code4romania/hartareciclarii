@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\ImportResource\Pages;
 
 use App\Filament\Resources\ImportResource;
@@ -36,7 +38,7 @@ class CreateImport extends CreateRecord
 
     public function getTitle(): string
     {
-		return __('imports.import_map_points_label');
+        return __('imports.import_map_points_label');
     }
 
     protected function handleRecordCreation(array $data): Model

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -47,8 +49,7 @@ class ImportExport extends Model
         $spreadsheet->setActiveSheetIndex(0);
 
         $data = json_decode('{"items":[{"tip_serviciu":"Colectare separată deșeuri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.7548866","longitude":"23.5884752","location_notes":"Test notes","type":"Centru de colectare","materials":"Carton;Hârtie;Flacon plastic (ex: detergent, șampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A./Sucursala Cluj Napoca","website":"http://rosalgrup.ro","email":"alt@email.com","phone_no":"0744555691","mon":"09:00-15:00","tue":"09:00-10:00","wed":"09:00-11:00","thu":"09:00-12:00","fri":"09:00-13:00","sat":"09:00-14:00","sun":"-","observatii":"notite 2","offers_money":"da","offers_transport":"Nu"},{"tip_serviciu":"Colectare separată deșeuri","judet":"Cluj","oras":"Cluj Napoca","adresa":"Strada Gheorghe Dima 10, Cluj-Napoca 400000, Romania","latitude":"46.755504","longitude":"23.5787266","location_notes":"-","type":"Container stradal","materials":"Carton;Hârtie;Flacon plastic (ex: detergent, șampon s.a.);Alte tipuri de plastic;Tetra Pak (cutii de lapte, suc)","managed_by":"Administrat de S.C. Rosal Grup S.A./Sucursala Cluj Napoca","website":"website","email":"aasdad@asdasd.com","phone_no":"-","mon":"09:00-15:00","tue":"09:00-10:00","wed":"09:00-11:00","thu":"09:00-12:00","fri":"09:00-13:00","sat":"09:00-14:00","sun":"-","observatii":"-","offers_money":"da","offers_transport":"Nu"}],"heading":["Tip serviciu","Judet","Oras","Adresa","Latitudine","Longitudine","Notite localizare (private)","Tip punct","Materiale colectate","Adminstrat de","Website","Email","Phone no.","Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica","Observatii","Oferă bani","Oferă transport"]}', true);
-        $contentArray = array_map(function ($value)
-        {
+        $contentArray = array_map(function ($value) {
             return ucwords(str_replace('_', ' ', $value));
         }, $data['heading']);
         $items = array_merge([$contentArray], $data['items']);
@@ -59,8 +60,7 @@ class ImportExport extends Model
 
         $filename = 'map-point-sample-import.xlsx';
         $storage_path = storage_path('/tmp/');
-        if (!file_exists($storage_path))
-        {
+        if (! file_exists($storage_path)) {
             mkdir($storage_path);
         }
         $path = $storage_path . '/' . $filename;
@@ -95,8 +95,7 @@ class ImportExport extends Model
             'Oferă bani',
             'Oferă transport',
         ];
-        foreach ($items as $row)
-        {
+        foreach ($items as $row) {
             $item = [];
             $item['tip_serviciu'] = $row->service->display_name;
             $item['judet'] = $row->county;
@@ -124,73 +123,48 @@ class ImportExport extends Model
 
     public static function validateAndMapImportField(Collection $mapPoint, &$errors, &$data): bool
     {
-        if (!$mapPoint[0] || !$service = MapPointServiceModel::whereDisplayName($mapPoint[0])->first())
-        {
+        if (! $mapPoint[0] || ! $service = MapPointServiceModel::whereDisplayName($mapPoint[0])->first()) {
             $errors[] = 'service_incorrect';
-        }
-        else
-        {
+        } else {
             $data['service_id'] = $service->id;
         }
-        if (!$mapPoint[1] || !$county = CountyModel::where('name', $mapPoint[1])->first())
-        {
+        if (! $mapPoint[1] || ! $county = CountyModel::where('name', $mapPoint[1])->first()) {
             $errors[] = 'county_incorrect';
-        }
-        else
-        {
+        } else {
             $data['county'] = $county->id;
         }
-        if (!$mapPoint[2])
-        {
+        if (! $mapPoint[2]) {
             $errors[] = 'city_incorrect';
-        }
-        else
-        {
+        } else {
             $data['city'] = $mapPoint[2];
         }
-        if (!$mapPoint[3])
-        {
+        if (! $mapPoint[3]) {
             $errors[] = 'address_incorrect';
-        }
-        else
-        {
+        } else {
             $data['address'] = $mapPoint[3];
         }
-        if (!$mapPoint[4] || !self::validateLatitude($mapPoint[4]))
-        {
+        if (! $mapPoint[4] || ! self::validateLatitude($mapPoint[4])) {
             $errors[] = 'latitude_incorrect';
-        }
-        else
-        {
+        } else {
             $data['lat'] = $mapPoint[4];
         }
-        if (!$mapPoint[5] || !self::validateLongitude($mapPoint[5]))
-        {
+        if (! $mapPoint[5] || ! self::validateLongitude($mapPoint[5])) {
             $errors[] = 'longitude_incorrect';
-        }
-        else
-        {
+        } else {
             $data['lon'] = $mapPoint[5];
         }
 
-        if (!$mapPoint[7])
-        {
+        if (! $mapPoint[7]) {
             $errors[] = 'point_type_incorrect';
-        }
-        else
-        {
+        } else {
             $type = MapPointTypeModel::whereDisplayName($mapPoint[7])->first();
-            if (!$type || $type->service_id != $service->id)
-            {
+            if (! $type || $type->service_id != $service->id) {
                 $errors[] = 'point_type_incorrect';
-            }
-            else
-            {
+            } else {
                 $data['type_id'] = $type->id;
             }
         }
-        if (data_get($data, 'lon') && data_get($data, 'lat') && data_get($data, 'type_id'))
-        {
+        if (data_get($data, 'lon') && data_get($data, 'lat') && data_get($data, 'type_id')) {
             $duplicates = \DB::select('
 				select
 					rp.id as recycle_point_1,
@@ -204,30 +178,21 @@ class ImportExport extends Model
 					distance < 10
 
         	');
-            if (\count($duplicates) > 0)
-            {
-                foreach ($duplicates as $duplicate)
-                {
+            if (\count($duplicates) > 0) {
+                foreach ($duplicates as $duplicate) {
                     $errors[] = 'possible_duplicate=>id|' . $duplicate->recycle_point_1;
                 }
             }
         }
 
-        if (!$mapPoint[8])
-        {
+        if (! $mapPoint[8]) {
             $errors[] = 'materials_incorrect';
-        }
-        else
-        {
+        } else {
             $materials = explode(';', $mapPoint[8]);
-            foreach ($materials as $mat)
-            {
-                if (!$material = RecycleMaterialModel::where('name', $mat)->first())
-                {
+            foreach ($materials as $mat) {
+                if (! $material = RecycleMaterialModel::where('name', $mat)->first()) {
                     $errors[] = 'material_not_found=>name|' . $mat;
-                }
-                else
-                {
+                } else {
                     $data['materials'][] = $material->id;
                 }
             }
@@ -240,21 +205,19 @@ class ImportExport extends Model
         $days = [
             'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun',
         ];
-        for ($i = 0; $i < \count($days); $i++)
-        {
+        for ($i = 0; $i < \count($days); $i++) {
             $hours = explode('-', preg_replace('/\s+/', '', $mapPoint[13 + $i]));
             $start_hours = '-';
             $end_hours = '-';
             $closed = true;
-            if (\count($hours) > 1 && $hours[1] != '')
-            {
+            if (\count($hours) > 1 && $hours[1] != '') {
                 $start_hours = $hours[0];
                 $end_hours = $hours[1];
                 $closed = false;
             }
             $opening_hours[$days[$i]] = [
                 'startDay' => $days[$i],
-                'endDay' =>  $days[$i],
+                'endDay' => $days[$i],
                 'startHour' => $start_hours,
                 'endHour' => $end_hours,
                 'closed' => $closed,

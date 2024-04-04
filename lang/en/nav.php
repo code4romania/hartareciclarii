@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-03 13:49:09
@@ -9,7 +11,7 @@
 return [
     'harta' => 'Map',
     'settings' => 'Settings',
-    'reports'=> 'Reports',
+    'reports' => 'Reports',
     'map_points' => 'Map points',
     'duplicates' => 'Duplicates',
 ];

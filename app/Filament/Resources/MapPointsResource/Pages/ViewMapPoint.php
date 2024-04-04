@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
 use App\Filament\Resources\MapPointsResource;
@@ -82,8 +84,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                 ViewField::make('map')->view('filament.forms.components.map'),
 
             ])
-            ->action(function ($data)
-            {
+            ->action(function ($data) {
                 $data['lat'] = $this->lat;
                 $data['lon'] = $this->lon;
                 $data['city'] = $this->city;
@@ -148,8 +149,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                 Checkbox::make('offers_transport')->default($this->getRecord()->offers_transport),
                 Checkbox::make('offers_money')->default($this->getRecord()->offers_money),
             ])
-            ->action(function ($data)
-            {
+            ->action(function ($data) {
                 $this->getRecord()->updateDetails(collect($data));
             });
     }
@@ -157,14 +157,12 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
     protected function getHeaderActions(): array
     {
         $actions = [];
-        if (auth()->user()->can('manage_map_points'))
-        {
+        if (auth()->user()->can('manage_map_points')) {
             $actions = array_merge($actions, [
                 Action::make('validate-point')
                     ->label(__('map_points.buttons.change_status'))
                     ->icon('heroicon-m-arrows-right-left')
-                    ->action(function (array $data, Collection $records): void
-                    {
+                    ->action(function (array $data, Collection $records): void {
                         $this->record->changeStatus();
 
                         Notification::make()
@@ -181,8 +179,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                             ->options(MapPointGroupModel::query()->pluck('name', 'id'))
                             ->required(),
                     ])
-                    ->action(function (array $data, Collection $records): void
-                    {
+                    ->action(function (array $data, Collection $records): void {
                         $this->record->changeGroup($data['group_id']);
 
                         Notification::make()
@@ -194,8 +191,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                     ->color('info'),
                 Action::make('delete')
                     ->requiresConfirmation()
-                    ->action(function ()
-                    {
+                    ->action(function () {
                         $this->getRecord()->delete();
 
                         return redirect($this->getResource()::getUrl('index'));
@@ -239,14 +235,10 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
             ->query(ActionLogModel::whereModel(\get_class($this->getRecord()))->whereModelId($this->getRecord()->id)->orderBy('created_at', 'desc'))
             ->columns([
                 TextColumn::make('user_id')
-                    ->formatStateUsing(function (string $state, $record)
-                    {
-                        if ($record->user_id > 0)
-                        {
+                    ->formatStateUsing(function (string $state, $record) {
+                        if ($record->user_id > 0) {
                             $user = UserModel::find($record->user_id);
-                        }
-                        else
-                        {
+                        } else {
                             $user = new UserModel();
                             $user->name = 'System';
                         }
@@ -255,21 +247,18 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                     })
                     ->html(),
                 TextColumn::make('action')
-                    ->formatStateUsing(function (string $state, $record)
-                    {
+                    ->formatStateUsing(function (string $state, $record) {
                         return trans('actions.' . $record->action);
                     })
                     ->html(),
                 TextColumn::make('old_values')
-                    ->formatStateUsing(function (string $state, $record)
-                    {
+                    ->formatStateUsing(function (string $state, $record) {
                         return ActionLogModel::formatValuesText($record, 'old_values');
                     })
                     ->wrap()
                     ->html(),
                 TextColumn::make('new_values')
-                    ->formatStateUsing(function (string $state, $record)
-                    {
+                    ->formatStateUsing(function (string $state, $record) {
                         return ActionLogModel::formatValuesText($record, 'new_values');
                     })
                     ->wrap()

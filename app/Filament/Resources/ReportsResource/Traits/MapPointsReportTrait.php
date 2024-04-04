@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
@@ -90,22 +92,21 @@ trait MapPointsReportTrait
                         Select::make('filters.fields')
                             ->label(__('report.column.fields'))
                             ->placeholder(__('report.placeholder.select_one'))
-                            ->options([0=>'Ce punem aici?']),
+                            ->options([0 => 'Ce punem aici?']),
                     ])
                     ->columns(4),
                 Section::make(__('report.section.group_info_by'))
                     ->schema([
                         Radio::make('group')
                             ->options([
-                                'service_type'=>__('report.column.service_type'),
-                                'point_type'=>__('report.column.point_type'),
-                                'materials'=>__('report.column.materials'),
-                                'city'=>__('report.column.city'),
-                                'county'=>__('report.column.county'),
-                                'status'=>__('report.column.status'),
-                                'fields'=>__('report.column.fields'),
-                            ])->afterStateUpdated(function ($state)
-                            {
+                                'service_type' => __('report.column.service_type'),
+                                'point_type' => __('report.column.point_type'),
+                                'materials' => __('report.column.materials'),
+                                'city' => __('report.column.city'),
+                                'county' => __('report.column.county'),
+                                'status' => __('report.column.status'),
+                                'fields' => __('report.column.fields'),
+                            ])->afterStateUpdated(function ($state) {
                                 $this->updateGoupedBy($state);
                             })
                             ->required(),
@@ -118,19 +119,15 @@ trait MapPointsReportTrait
     protected function getMapPointsEloquentQuery(): Builder
     {
         $data = $this->data;
-        if (!$this->shouldGenerate)
-        {
+        if (! $this->shouldGenerate) {
             return Report::where('id', 0);
         }
         $query = MapPointModel::query();
-        foreach ($data['filters'] as $filter =>$value)
-        {
-            if (\is_null($value) || (\is_array($value) && \count($value) == 0))
-            {
+        foreach ($data['filters'] as $filter => $value) {
+            if (\is_null($value) || (\is_array($value) && \count($value) == 0)) {
                 continue;
             }
-            switch($filter)
-            {
+            switch($filter) {
                 case 'service_type':
                     $query->whereIn('recycling_points.service_id', $value);
                     break;
@@ -138,14 +135,12 @@ trait MapPointsReportTrait
                     $query->whereIn('point_type_id', $value);
                     break;
                 case 'materials':
-                    $query->whereHas('materials', function ($q) use ($value)
-                    {
+                    $query->whereHas('materials', function ($q) use ($value) {
                         $q->whereIn('material_id', $value);
                     });
                     break;
                 case 'location':
-                    $query->whereHas('fields', function ($q) use ($value)
-                    {
+                    $query->whereHas('fields', function ($q) use ($value) {
                         $q->where('field_type_id', MapPointTypes::City);
                         $q->whereIn('value', $value);
                     });
@@ -153,15 +148,13 @@ trait MapPointsReportTrait
                 case 'admin':
                     break;
                 case 'status':
-                    if (\in_array((int) $value, [0, 1]))
-                    {
+                    if (\in_array((int) $value, [0, 1])) {
                         $query->whereIn('status', $value);
                     }
                     break;
                 case 'range':
 
-                    if (!\is_null($value[0]) && !\is_null($value[1]))
-                    {
+                    if (! \is_null($value[0]) && ! \is_null($value[1])) {
                         $query->where('created_at', '<=', $value[1]);
                         $query->where('created_at', '>=', $value[0]);
                     }
@@ -172,8 +165,7 @@ trait MapPointsReportTrait
         }
         $select = ['recycling_points.*'];
 
-        switch($this->groupedBy)
-        {
+        switch($this->groupedBy) {
             case 'service_type':
                 $query->join('recycling_point_services', 'recycling_points.service_id', '=', 'recycling_point_services.id');
                 $select[] = 'recycling_point_services.display_name as grouped_by';
@@ -228,8 +220,7 @@ trait MapPointsReportTrait
     public function getMapPointsTableColumns(): array
     {
         $header = [];
-        switch($this->groupedBy)
-        {
+        switch($this->groupedBy) {
             case 'service_type':
                 $header = MapPointServiceModel::all()->pluck('display_name');
                 break;
@@ -252,10 +243,8 @@ trait MapPointsReportTrait
                 break;
         }
         $columns = [];
-        if (\count($header))
-        {
-            foreach ($header as $head)
-            {
+        if (\count($header)) {
+            foreach ($header as $head) {
                 $columns[] = TextColumn::make($head)->label($head)->html();
             }
         }
@@ -273,8 +262,7 @@ trait MapPointsReportTrait
                         ->label(__('report.column.title'))
                         ->required(),
                 ])
-                ->action(function (array $data): void
-                {
+                ->action(function (array $data): void {
                     $report = new Report();
                     $report->form_data = $this->data;
                     $report->results = $this->formatResults($this->getMapPointsEloquentQuery()->get());
@@ -286,8 +274,7 @@ trait MapPointsReportTrait
                         ->success()
                         ->send();
                 })
-                ->visible(function ($record): bool
-                {
+                ->visible(function ($record): bool {
                     return $this->shouldGenerate;
                 }),
             TableAction::make('export_report')
@@ -298,20 +285,17 @@ trait MapPointsReportTrait
                         ->label(__('report.column.title'))
                         ->required(),
                 ])
-                ->action(function (array $data)
-                {
+                ->action(function (array $data) {
                     return Excel::download(new ReportsExport($this->getMapPointsEloquentQuery()->get(), $this->getTableColumns()), $data['title'] . '.xlsx');
                 })
-                ->visible(function ($record): bool
-                {
+                ->visible(function ($record): bool {
                     return $this->shouldGenerate;
                 }),
 
         ];
 
         return $table
-            ->query(function ()
-            {
+            ->query(function () {
                 return $this->getMapPointsEloquentQuery()->limit(100);
             })
             ->headerActions(
@@ -320,8 +304,8 @@ trait MapPointsReportTrait
             ->paginated(false)
             ->columns($this->getTableColumns())
             ->view('filament.resources.reports-resource.pages.view', [
-                'data'=>$this->data,
-                'header'=>$this->getTableColumns(),
+                'data' => $this->data,
+                'header' => $this->getTableColumns(),
             ]);
         // ->view('filament-tables::index');
     }

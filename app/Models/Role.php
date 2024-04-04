@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-02 12:55:42

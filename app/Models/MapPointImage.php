@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -9,9 +11,7 @@
 
 namespace App\Models;
 
-use App\Models\MapPointToField as MapPointToFieldModel;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class MapPointImage extends Model
 {

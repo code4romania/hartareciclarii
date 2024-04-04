@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermissionsResource\Pages;
@@ -43,14 +45,14 @@ class PermissionsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('guard_name')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

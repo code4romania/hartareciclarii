@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\ImportResource\Pages;
 
 use App\Filament\Resources\ImportResource;

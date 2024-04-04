@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
     /*
      * @Author: bib
      * @Date:   2023-10-03 10:55:55
@@ -29,7 +31,7 @@ namespace App\Models;
     use Spatie\MediaLibrary\InteractsWithMedia;
     use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-    class MapPoint extends Model implements hasMedia
+    class MapPoint extends Model implements HasMedia
     {
         use InteractsWithMedia;
 
@@ -73,8 +75,7 @@ namespace App\Models;
 
         public function getNotesAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first()) {
                 return $this->fields->where('field_type_id', 10)->first()->value;
             }
 
@@ -83,8 +84,7 @@ namespace App\Models;
 
         public function getCityAttribute()
         {
-            if ($this->oras)
-            {
+            if ($this->oras) {
                 return $this->oras->name;
             }
 
@@ -93,8 +93,7 @@ namespace App\Models;
 
         public function getAddressAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 4)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 4)->first()) {
                 return $this->fields->where('field_type_id', 4)->first()->value;
             }
 
@@ -103,8 +102,7 @@ namespace App\Models;
 
         public function getPhoneNoAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 12)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 12)->first()) {
                 return $this->fields->where('field_type_id', 12)->first()->value;
             }
 
@@ -113,8 +111,7 @@ namespace App\Models;
 
         public function getDetailsAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 10)->first()) {
                 return $this->fields->where('field_type_id', 10)->first()->value;
             }
 
@@ -123,8 +120,7 @@ namespace App\Models;
 
         public function getOpeningHoursAttribute()
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 7)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 7)->first()) {
                 return json_decode($this->fields->where('field_type_id', 7)->first()->value, true);
             }
 
@@ -172,8 +168,7 @@ namespace App\Models;
 
         public function scopeManageble(Builder $query): void
         {
-            if (!auth()->user()->hasRole('SuperAdmin'))
-            {
+            if (! auth()->user()->hasRole('SuperAdmin')) {
                 $query->where('created_by', auth()->user()->id);
             }
         }
@@ -186,9 +181,9 @@ namespace App\Models;
                 'user_id' => auth()->user()->id,
                 'action' => 'change_status',
                 'old_values' => ['status' => (int) $this->status],
-                'new_values' => ['status' => (int) !$this->status],
+                'new_values' => ['status' => (int) ! $this->status],
             ]);
-            $this->status = !$this->status;
+            $this->status = ! $this->status;
             $this->save();
 
             ActionLogModel::logAction($action);
@@ -217,8 +212,7 @@ namespace App\Models;
 
         public function getWebsiteAttribute($value)
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 9)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 9)->first()) {
                 return $this->fields->where('field_type_id', 9)->first()->value;
             }
 
@@ -229,8 +223,7 @@ namespace App\Models;
 
         public function getManagedByAttribute($value)
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 3)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 3)->first()) {
                 return $this->fields->where('field_type_id', 3)->first()->value;
             }
 
@@ -239,8 +232,7 @@ namespace App\Models;
 
         public function getLocationNotesAttribute($value)
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 13)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 13)->first()) {
                 return $this->fields->where('field_type_id', 13)->first()->value;
             }
 
@@ -249,8 +241,7 @@ namespace App\Models;
 
         public function getEmailAttribute($value)
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 8)->first())
-            {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 8)->first()) {
                 return $this->fields->where('field_type_id', 8)->first()->value;
             }
 
@@ -269,12 +260,10 @@ namespace App\Models;
 
         public function getMaterialsIconAttribute($value)
         {
-            if ($this->materials)
-            {
+            if ($this->materials) {
                 $icons = $this->materials->pluck('icon')->toArray();
                 $state = '<div style="display:inline-flex">';
-                foreach ($icons as $icon)
-                {
+                foreach ($icons as $icon) {
                     $state .= __("<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>");
                 }
                 $state = rtrim($state) . '</div>';
@@ -287,8 +276,7 @@ namespace App\Models;
 
         public function getCountyAttribute()
         {
-            if ($this->judet)
-            {
+            if ($this->judet) {
                 return $this->judet->name;
             }
 
@@ -297,10 +285,8 @@ namespace App\Models;
 
         public function getOffersTransportAttribute(): int
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 6)->first())
-            {
-                if (strtolower($this->fields->where('field_type_id', 6)->first()->value) == 'nu')
-                {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 6)->first()) {
+                if (strtolower($this->fields->where('field_type_id', 6)->first()->value) == 'nu') {
                     return 0;
                 }
 
@@ -312,10 +298,8 @@ namespace App\Models;
 
         public function getOffersMoneyAttribute(): int
         {
-            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 5)->first())
-            {
-                if (strtolower($this->fields->where('field_type_id', 5)->first()->value) == 'nu')
-                {
+            if ($this->fields->isNotEmpty() && $this->fields->where('field_type_id', 5)->first()) {
+                if (strtolower($this->fields->where('field_type_id', 5)->first()->value) == 'nu') {
                     return 0;
                 }
 
@@ -367,38 +351,33 @@ namespace App\Models;
 
         public function updateAddress(Collection $data): self
         {
-			if ($data->get('lat') != null && $data->get('lon') != null)
-			{
-				$geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
-			}
-			else
-			{
-				$geoLocation = Geolocation::search(data_get($data, 'address'));
-				$data->put('lat', $geoLocation['lat']);
-				$data->put('lon', $geoLocation['lon']);
-				
-				$this->lat = $geoLocation['lat'];
-				$this->lon = $geoLocation['lon'];
-			}
-			
+            if ($data->get('lat') != null && $data->get('lon') != null) {
+                $geoLocation = Geolocation::reverse(data_get($data, 'lat'), data_get($data, 'lon'));
+            } else {
+                $geoLocation = Geolocation::search(data_get($data, 'address'));
+                $data->put('lat', $geoLocation['lat']);
+                $data->put('lon', $geoLocation['lon']);
+
+                $this->lat = $geoLocation['lat'];
+                $this->lon = $geoLocation['lon'];
+            }
+
             $location_fields = [
                 'lat', 'lon', 'address', 'location_notes',
             ];
             $old_values = [];
             $new_values = [];
-            foreach ($location_fields as $field)
-            {
-                if ($this->$field != $data->get($field))
-                {
+            foreach ($location_fields as $field) {
+                if ($this->$field != $data->get($field)) {
                     $old_values[$field] = $this->$field;
                     $new_values[$field] = $data->get($field);
                 }
             }
-			
-			$this->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lat') . ' ' . data_get($data, 'lon') . ')")');
-            
-            $this->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
-            $this->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
+
+            $this->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lat') . ' ' . data_get($data, 'lon') . ')")');
+
+            $this->id_county = ! empty($geoLocation) ? $geoLocation['county_id'] : 0;
+            $this->id_city = ! empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $this->save();
 
             // $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
@@ -451,38 +430,27 @@ namespace App\Models;
             ];
             $old_values = [];
             $new_values = [];
-            foreach ($location_fields as $field)
-            {
-                if ($field == 'materials')
-                {
+            foreach ($location_fields as $field) {
+                if ($field == 'materials') {
                     $materials = $this->materials->pluck('id')->toArray();
                     $new_materials = $data->get('materials');
 
-                    if (array_diff($materials, $new_materials) || array_diff($new_materials, $materials))
-                    {
+                    if (array_diff($materials, $new_materials) || array_diff($new_materials, $materials)) {
                         $old_values[$field] = $materials;
                         $new_values[$field] = $data->get('materials');
                     }
-                }
-                elseif ($field == 'opening_hours')
-                {
+                } elseif ($field == 'opening_hours') {
                     $result = $this->checkArrayDiffMulti($this->opening_hours, $data->get('opening_hours'));
-                    if (\count($result) > 0)
-                    {
+                    if (\count($result) > 0) {
                         $old_values[$field] = json_encode($this->opening_hours);
                         $new_values[$field] = json_encode($data->get('opening_hours'));
                     }
-                }
-                elseif ($field == 'type')
-                {
-                    if ($this->type->id != $data->get('type'))
-                    {
+                } elseif ($field == 'type') {
+                    if ($this->type->id != $data->get('type')) {
                         $old_values[$field] = $this->type->display_name;
                         $new_values[$field] = MapPointTypeModel::find($data->get('type'))->display_name;
                     }
-                }
-                elseif ($this->$field != $data->get($field))
-                {
+                } elseif ($this->$field != $data->get($field)) {
                     $old_values[$field] = $this->$field;
                     $new_values[$field] = $data->get($field);
                 }
@@ -557,32 +525,22 @@ namespace App\Models;
         public function checkArrayDiffMulti($array1, $array2)
         {
             $result = [];
-            if (\count($array1) < \count($array2))
-            {
+            if (\count($array1) < \count($array2)) {
                 return $array2;
             }
-            foreach ($array1 as $key => $val)
-            {
-                if (isset($array2[$key]))
-                {
-                    if (\is_array($val) && $array2[$key])
-                    {
+            foreach ($array1 as $key => $val) {
+                if (isset($array2[$key])) {
+                    if (\is_array($val) && $array2[$key]) {
                         $diff = $this->checkArrayDiffMulti($val, $array2[$key]);
-                        if (\count($diff) > 0)
-                        {
+                        if (\count($diff) > 0) {
                             $result[$key] = $this->checkArrayDiffMulti($val, $array2[$key]);
                         }
-                    }
-                    else
-                    {
-                        if ($array1[$key] != $array2[$key])
-                        {
+                    } else {
+                        if ($array1[$key] != $array2[$key]) {
                             $result[$key] = $val;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     $result[$key] = $val;
                 }
             }
@@ -602,22 +560,18 @@ namespace App\Models;
 
         public function getStatusBadgeAttribute($value)
         {
-            if ($this->issues->count() > 0)
-            {
+            if ($this->issues->count() > 0) {
                 $color = 'danger';
             }
-            if ((int) $this->status === 1)
-            {
+            if ((int) $this->status === 1) {
                 $color = 'success';
             }
 
             $color = 'warning';
-            if ($this->issues->count() > 0)
-            {
+            if ($this->issues->count() > 0) {
                 $text = __('map_points.issues_found');
             }
-            if ((int) $this->status === 1)
-            {
+            if ((int) $this->status === 1) {
                 $text = __('map_points.verified');
             }
 
@@ -641,10 +595,10 @@ namespace App\Models;
             $record = new self();
             $record->service_id = data_get($data, 'service_id');
             $record->point_type_id = data_get($data, 'type_id');
-            $record->lat = !empty($geoLocation) ? $geoLocation['lat'] : data_get($data, 'lat');
-            $record->lon = !empty($geoLocation) ? $geoLocation['lon'] : data_get($data, 'lon');
-            $record->id_county = !empty($geoLocation) ? $geoLocation['county_id'] : 0;
-            $record->id_city = !empty($geoLocation) ? $geoLocation['city_id'] : 0;
+            $record->lat = ! empty($geoLocation) ? $geoLocation['lat'] : data_get($data, 'lat');
+            $record->lon = ! empty($geoLocation) ? $geoLocation['lon'] : data_get($data, 'lon');
+            $record->id_county = ! empty($geoLocation) ? $geoLocation['county_id'] : 0;
+            $record->id_city = ! empty($geoLocation) ? $geoLocation['city_id'] : 0;
             $record->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")');
             $record->created_by = data_get($data, 'created_by');
             $record->point_source = data_get($data, 'point_source', 'user');
@@ -652,10 +606,8 @@ namespace App\Models;
 
             $record->save();
 
-            foreach (MapPointFieldModel::all() as $field)
-            {
-                if (\in_array($field->field_name, ['county', 'city']))
-                {
+            foreach (MapPointFieldModel::all() as $field) {
+                if (\in_array($field->field_name, ['county', 'city'])) {
                     continue;
                 }
                 $fields[] = collect([
@@ -665,23 +617,18 @@ namespace App\Models;
                 ]);
             }
 
-            if (!empty($fields))
-            {
+            if (! empty($fields)) {
                 MapPointToFieldModel::addValuesToPoint($fields);
             }
 
-            if (!empty(data_get($data, 'materials')))
-            {
-                foreach (data_get($data, 'materials') as $material_id)
-                {
+            if (! empty(data_get($data, 'materials'))) {
+                foreach (data_get($data, 'materials') as $material_id) {
                     $item = MaterialToMapPointModel::firstOrCreate(['material_id' => $material_id, 'recycling_point_id' => $record->id]);
                 }
             }
 
-            if (!empty(data_get($data, 'photos')))
-            {
-                foreach (data_get($data, 'photos') as $photo)
-                {
+            if (! empty(data_get($data, 'photos'))) {
+                foreach (data_get($data, 'photos') as $photo) {
                     $record->addMediaFromDisk($photo)->toMediaCollection('point_images');
                 }
             }
@@ -721,8 +668,7 @@ namespace App\Models;
          */
         public static function getFilteredMapPoints(array $filters, array $bounds): Collection
         {
-            if (empty($bounds))
-            {
+            if (empty($bounds)) {
                 return collect([]);
             }
 
@@ -744,8 +690,8 @@ namespace App\Models;
                 'recycling_point_services.display_name AS service',
                 'recycling_point_types.display_name AS point_type',
                 'recycling_point_types.icon AS point_type_icon',
-				\DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('field_type_id', ftrp.field_type_id, 'value', field_type_recycling_point.value, 'field_name', ft.field_name)) FROM field_type_recycling_point ftrp, field_types ft WHERE ftrp.field_type_id = ft.id AND ftrp.recycling_point_id = recycling_points.id AND ft.field_name IN ('managed_by', 'address') GROUP BY ftrp.recycling_point_id),']') AS field_types"),
-				\DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('material_id', mrp.material_id, 'name', m.name, 'parent', m.parent)) FROM material_recycling_point mrp, materials m WHERE mrp.material_id = m.id AND mrp.recycling_point_id = recycling_points.id GROUP BY mrp.recycling_point_id),']') AS materials"),
+                \DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('field_type_id', ftrp.field_type_id, 'value', field_type_recycling_point.value, 'field_name', ft.field_name)) FROM field_type_recycling_point ftrp, field_types ft WHERE ftrp.field_type_id = ft.id AND ftrp.recycling_point_id = recycling_points.id AND ft.field_name IN ('managed_by', 'address') GROUP BY ftrp.recycling_point_id),']') AS field_types"),
+                \DB::raw("CONCAT('[',(SELECT GROUP_CONCAT(json_object('material_id', mrp.material_id, 'name', m.name, 'parent', m.parent)) FROM material_recycling_point mrp, materials m WHERE mrp.material_id = m.id AND mrp.recycling_point_id = recycling_points.id GROUP BY mrp.recycling_point_id),']') AS materials"),
                 \DB::raw($boundarySearch)
             )
                 ->join('recycling_point_services', 'recycling_point_services.id', '=', 'recycling_points.point_type_id')
@@ -760,18 +706,14 @@ namespace App\Models;
                 ->where('status', 1)
                 ->groupBy('recycling_points.id');
 
-            if (!empty($filters))
-            {
-                foreach ($filters as $key => $value)
-                {
-                    match ($key)
-                    {
+            if (! empty($filters)) {
+                foreach ($filters as $key => $value) {
+                    match ($key) {
                         'service_id' => $sql->where('recycling_points.service_id', $value),
                         'point_type_id' => $sql->whereIn('recycling_points.point_type_id', (array) $value),
                         'material_type_id' => $sql->whereIn('material_recycling_point.material_id', $value),
                         'field_type_id' => $sql->whereIn('field_type_recycling_point.field_type_id', $value),
-                        'search_key' => $sql->where(function ($query) use ($value)
-                        {
+                        'search_key' => $sql->where(function ($query) use ($value) {
                             $query->orWhere('field_type_recycling_point.value', 'LIKE', '%' . $value . '%');
                             $query->orWhere('materials.name', 'LIKE', '%' . $value . '%');
                             $query->orWhere('counties.name', 'LIKE', '%' . $value . '%');
@@ -804,8 +746,7 @@ namespace App\Models;
                 'photos' => (array) data_get($data, 'photos'),
             ];
 
-            foreach (data_get($data, 'field_types') as $key => $value)
-            {
+            foreach (data_get($data, 'field_types') as $key => $value) {
                 $point[$key] = $value;
             }
 
@@ -816,8 +757,7 @@ namespace App\Models;
         {
             $this->addMediaCollection('point_images')
                 ->singleFile()
-                ->registerMediaConversions(function (Media $media)
-                {
+                ->registerMediaConversions(function (Media $media) {
                     $this
                         ->addMediaConversion('preview');
                 });

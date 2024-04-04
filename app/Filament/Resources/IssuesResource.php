@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IssuesResource\Pages;
@@ -47,10 +49,8 @@ class IssuesResource extends Resource
                     ->searchable(),
                 TextColumn::make('reporter.fullname')
                     ->label(__('issues.columns.reporter'))
-                    ->searchable(query: function (Builder $query, string $search): Builder
-                    {
-                        return $query->whereHas('reporter', function ($q) use ($search)
-                        {
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('reporter', function ($q) use ($search) {
                             $q->whereRaw(\DB::raw("CONCAT(firstname,' ',lastname) like '%$search%'"));
                         });
                     })
@@ -65,8 +65,7 @@ class IssuesResource extends Resource
                 TextColumn::make('status')
                     ->label(__('issues.columns.status'))
                     ->sortable()
-                    ->formatStateUsing(function ($state)
-                    {
+                    ->formatStateUsing(function ($state) {
                         return __('issues.status.' . $state);
                     }),
 

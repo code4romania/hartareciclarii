@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -15,8 +17,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RecycleMaterialAlias extends Model
 {
-	use HasFactory;
-	
+    use HasFactory;
+
     protected $table = 'material_aliases';
 
     protected $fillable = ['alias'];

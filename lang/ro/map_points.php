@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-03 17:08:19
@@ -26,17 +28,17 @@ return [
     'website' => 'Website',
     'email' => 'Email',
     'phone_no' => 'Telefon',
-	'opening_time' => 'Ora deschidere',
-	'closing_time' => 'Ora inchidere',
-	'notes' => 'Notite',
-	'offers_transport' => 'Ofera transport',
-	'offers_money' => 'Ofera bani',
-	'suggest_new_point' => 'Sugereaza un nou punct pe harta',
-	'point_save_success' => 'Punct salvat cu succes',
+    'opening_time' => 'Ora deschidere',
+    'closing_time' => 'Ora inchidere',
+    'notes' => 'Notite',
+    'offers_transport' => 'Ofera transport',
+    'offers_money' => 'Ofera bani',
+    'suggest_new_point' => 'Sugereaza un nou punct pe harta',
+    'point_save_success' => 'Punct salvat cu succes',
 
     'buttons' => [
         'set_group' => 'Aloca la grup',
-		'location_type' => 'Tip locatie',
+        'location_type' => 'Tip locatie',
         'create' => 'Adauga punct nou',
         'details' => 'Detalii punct',
         'delete' => 'Sterge punct',

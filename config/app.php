@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -170,7 +172,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-		Biscolab\ReCaptcha\ReCaptchaServiceProvider::class
+        Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
 
     ])->toArray(),
 
@@ -187,7 +189,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-		'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
+        'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
     ])->toArray(),
 
 ];

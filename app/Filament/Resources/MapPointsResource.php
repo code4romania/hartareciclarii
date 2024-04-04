@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Enums\MapPointTypes as MapPointTypesEnum;
@@ -137,16 +139,14 @@ class MapPointsResource extends Resource
             //     ->openUrlInNewTab(),
 
         ];
-        if (auth()->user()->can('manage_map_points'))
-        {
+        if (auth()->user()->can('manage_map_points')) {
             $actions = array_merge($actions, [
                 Tables\Actions\Action::make('validate-point')
                     ->label(__('map_points.buttons.validate'))
                     ->icon('heroicon-m-check')
                     ->url(fn (MapPointModel $record): string => route('map-points.validate', $record))
                     ->requiresConfirmation()
-                    ->visible(function ($record): bool
-                    {
+                    ->visible(function ($record): bool {
                         return $record->status == 0;
                     }),
                 // Tables\Actions\EditAction::make()->label(__('map_points.buttons.edit')),
@@ -165,16 +165,13 @@ class MapPointsResource extends Resource
                 // ->searchable(),
                 TextColumn::make('managed_by')
                     ->label(__('map_points.managed_by'))
-                    ->searchable(query: function (Builder $query, string $search): Builder
-                    {
-                        return $query->whereHas('fields', function ($q) use ($search)
-                        {
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('fields', function ($q) use ($search) {
                             $q->where('field_type_id', MapPointTypesEnum::ManagedBy)
                                 ->where('value', 'LIKE', "%$search%");
                         });
                     })
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
-                    {
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
                         return $query->orderBy(
                             MapPointToFieldModel::select('value')
                                 ->whereColumn('recycling_points.id', 'field_type_recycling_point.recycling_point_id')
@@ -187,18 +184,13 @@ class MapPointsResource extends Resource
                     ->label(__('map_points.materials'))
                     ->sortable()
                     // ->searchable()
-                    ->formatStateUsing(function (string $state, $record)
-                    {
+                    ->formatStateUsing(function (string $state, $record) {
                         $icons = collect(explode(',', $state))->unique();
                         $state = '<div style="display:inline-flex; flex-wrap:wrap">';
-                        foreach ($icons as $index => $icon)
-                        {
-                            if ($index < 3)
-                            {
+                        foreach ($icons as $index => $icon) {
+                            if ($index < 3) {
                                 $state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
-                            }
-                            else
-                            {
+                            } else {
                                 $state .= sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
                                 break;
                             }
@@ -210,8 +202,7 @@ class MapPointsResource extends Resource
                     ->html(),
                 TextColumn::make('county')
                     ->label(__('map_points.county'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
-                    {
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
                         return $query->orderBy(
                             CountyModel::select('name')
                                 ->whereColumn('recycling_points.id_county', 'counties.id'),
@@ -228,8 +219,7 @@ class MapPointsResource extends Resource
                 // }),
                 TextColumn::make('city')
                     ->label(__('map_points.city'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
-                    {
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
                         return $query->orderBy(
                             CityModel::select('name')
                                 ->whereColumn('recycling_points.id_city', 'cities.id'),
@@ -246,8 +236,7 @@ class MapPointsResource extends Resource
                 //     }),
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder
-                    {
+                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
                         return $query->orderBy(
                             MapPointToFieldModel::select('value')
                                 ->whereColumn('recycling_points.id', 'field_type_recycling_point.recycling_point_id')
@@ -255,10 +244,8 @@ class MapPointsResource extends Resource
                             $direction
                         );
                     })
-                    ->searchable(query: function (Builder $query, string $search): Builder
-                    {
-                        return $query->whereHas('fields', function ($q) use ($search)
-                        {
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('fields', function ($q) use ($search) {
                             $q->where('field_type_id', MapPointTypesEnum::Address)
                                 ->where('value', 'LIKE', "%$search%");
                         });
@@ -271,27 +258,21 @@ class MapPointsResource extends Resource
 
                 BadgeColumn::make('status')
                     ->sortable()
-                    ->color(static function ($state, $record): string
-                    {
-                        if ($record->issues->count() > 0)
-                        {
+                    ->color(static function ($state, $record): string {
+                        if ($record->issues->count() > 0) {
                             return 'danger';
                         }
-                        if ((int) $state === 1)
-                        {
+                        if ((int) $state === 1) {
                             return 'success';
                         }
 
                         return 'warning';
                     })
-                    ->formatStateUsing(function (string $state, $record)
-                    {
-                        if ($record->issues->count() > 0)
-                        {
+                    ->formatStateUsing(function (string $state, $record) {
+                        if ($record->issues->count() > 0) {
                             return __('map_points.issues_found');
                         }
-                        if ((int) $state === 1)
-                        {
+                        if ((int) $state === 1) {
                             return __('map_points.verified');
                         }
 
@@ -313,8 +294,7 @@ class MapPointsResource extends Resource
                             ])
                             ->withColumns([
                                 Column::make('materials')
-                                    ->formatStateUsing(function ($state)
-                                    {
+                                    ->formatStateUsing(function ($state) {
                                         $records = collect($state);
 
                                         return implode(',', $records->pluck('name')->toArray());
@@ -329,11 +309,9 @@ class MapPointsResource extends Resource
                     // BulkAction::make('associate')->button()->action(fn (Collection $records) => ...),
                     BulkAction::make('change-status')
                         ->label(__('map_points.buttons.change_status'))
-                        ->action(function (array $data, Collection $records): void
-                        {
-                            foreach ($records as $record)
-                            {
-                                $record->status = !$record->status;
+                        ->action(function (array $data, Collection $records): void {
+                            foreach ($records as $record) {
+                                $record->status = ! $record->status;
                                 $record->save();
                             }
                         })
@@ -351,10 +329,8 @@ class MapPointsResource extends Resource
                                 ->relationship('group', 'name')
                                 ->preload(),
                         ])
-                        ->action(function (array $data, Collection $records): void
-                        {
-                            foreach ($records as $record)
-                            {
+                        ->action(function (array $data, Collection $records): void {
+                            foreach ($records as $record) {
                                 $record->changeGroup($data['group_id']);
                             }
                         })

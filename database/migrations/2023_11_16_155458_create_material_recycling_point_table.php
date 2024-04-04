@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +22,7 @@ class CreateMaterialRecyclingPointTable extends Migration
             $table->integer('upvotes')->default(0);
             $table->integer('downvotes')->default(0);
             $table->timestamps();
-            
+
             $table->foreign('material_id', 'material_recycling_point_material_id_foreign')->references('id')->on('materials')->onDelete('cascade');
         });
     }

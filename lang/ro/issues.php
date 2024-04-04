@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 09:27:44
@@ -7,16 +9,16 @@
  * @Last Modified time: 2023-11-27 07:59:35
  */
 return [
-	'label' => 'Probleme raportate',
+    'label' => 'Probleme raportate',
     'status_updated' => 'Status salvat',
-    'header'=>[
+    'header' => [
         'list' => 'Lista probleme raportate',
     ],
     'columns' => [
         'reporter' => 'Utilizator',
         'created_at' => 'Raportat la',
         'issue_type' => 'Tip problema',
-        'status' =>'Status problema',
+        'status' => 'Status problema',
         'map_point_id' => 'ID punct',
     ],
     'status' => [

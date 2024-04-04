@@ -22,17 +22,14 @@ trait TabbedLayout
 {
     public function bootedTabbedLayout(): void
     {
-        if (!$this instanceof WithTabs)
-        {
+        if (! $this instanceof WithTabs) {
             return;
         }
 
-        if (!Str::startsWith(static::$view, 'filament::resources.pages'))
-        {
+        if (! Str::startsWith(static::$view, 'filament::resources.pages')) {
             return;
         }
-        static::$view = match (true)
-        {
+        static::$view = match (true) {
             $this instanceof ListRecords => 'filament.tabs.list-records',
             $this instanceof CreateRecord => 'filament.tabs.create-record',
             $this instanceof ViewRecord => 'filament.tabs.view-record',

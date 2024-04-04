@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\ImportExport as ImportExportModel;
@@ -29,28 +31,25 @@ class ProcessImports extends Command
     {
         $this->info('Started');
         $result = [
-            'failed'=>[],
-            'processed'=>[],
+            'failed' => [],
+            'processed' => [],
             'errors' => [],
 
         ];
         $items = ImportExportModel::whereStatus(0)->orderBy('created_at', 'asc')->get();
 
-        if ($items->isNotEmpty())
-        {
-            foreach ($items as $item)
-            {
+        if ($items->isNotEmpty()) {
+            foreach ($items as $item) {
                 $filePath = storage_path('app/public/' . $item->file);
                 $item->status = 1;
                 $item->started_at = date('Y-m-d H:i:s');
                 $item->save();
-                if (!file_exists($filePath))
-                {
+                if (! file_exists($filePath)) {
                     $item->result =
                         [
-                            'processed'=>[],
-                            'failed'=>[],
-                            'errors'=>[
+                            'processed' => [],
+                            'failed' => [],
+                            'errors' => [
                                 'file_not_found',
                             ],
                         ];
@@ -66,31 +65,23 @@ class ProcessImports extends Command
             $sheet = $spreadsheet->getSheet(0);
             $highestRow = $sheet->getHighestRow();
             $highestColumn = $sheet->getHighestColumn();
-            for ($row = 2; $row <= $highestRow; $row++)
-            {
+            for ($row = 2; $row <= $highestRow; $row++) {
                 $mapPoint = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, false);
-                if (!empty($mapPoint))
-                {
-                    if (!empty(array_filter($mapPoint[0], fn ($item) => !\is_null($item))))
-                    {
+                if (! empty($mapPoint)) {
+                    if (! empty(array_filter($mapPoint[0], fn ($item) => ! \is_null($item)))) {
                         $errors = [];
                         $data = [];
                         $isValid = ImportExportModel::validateAndMapImportField(collect($mapPoint[0]), $errors, $data);
-                        if (\count($errors))
-                        {
+                        if (\count($errors)) {
                             $result['failed']['A' . $row] = $errors;
-                        }
-                        else
-                        {
+                        } else {
                             $data['created_by'] = 0;
                             $data['point_source'] = 'import';
                             $record = MapPointModel::createFromArray($data);
                             $result['processed']['A' . $row] = $record->id;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     $result['failed']['A' . $row] = ['not_data_found'];
                 }
             }

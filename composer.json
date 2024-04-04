@@ -27,6 +27,8 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-ide-helper": "^2.13",
+        "friendsofphp/php-cs-fixer": "^3.23",
         "bennett-treptow/laravel-migration-generator": "^4.3",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -14,15 +16,17 @@ use Illuminate\Database\Eloquent\Model;
 class IssueType extends Model
 {
     protected $table = 'reported_point_issue_types';
-	protected $casts = [
-		'steps' => 'array'
-	];
-	
-	protected $fillable = [
-		'id'
-	];
-	public function items()
-	{
-		return $this->hasMany(IssueTypeItem::class, 'reported_point_issue_type_id', 'id');
-	}
+
+    protected $casts = [
+        'steps' => 'array',
+    ];
+
+    protected $fillable = [
+        'id',
+    ];
+
+    public function items()
+    {
+        return $this->hasMany(IssueTypeItem::class, 'reported_point_issue_type_id', 'id');
+    }
 }

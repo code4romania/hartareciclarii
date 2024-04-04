@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications\User;
 
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
 
 class ResetPasswordNotification extends ResetPassword
 {
@@ -35,14 +36,14 @@ class ResetPasswordNotification extends ResetPassword
      */
     public function toMail($notifiable): MailMessage
     {
-		$link = url( "/reset/".$this->token );
-		return ( new MailMessage )
-			->subject( __('users.reset_password.subject') )
-			->line( __('users.reset_password.email_heading') )
-			->action( __('users.reset_password.link_label'), $link )
-			->line( __('users.reset_password.reset_time'));
-	
-	}
+        $link = url('/reset/' . $this->token);
+
+        return (new MailMessage)
+            ->subject(__('users.reset_password.subject'))
+            ->line(__('users.reset_password.email_heading'))
+            ->action(__('users.reset_password.link_label'), $link)
+            ->line(__('users.reset_password.reset_time'));
+    }
 
     /**
      * Get the array representation of the notification.

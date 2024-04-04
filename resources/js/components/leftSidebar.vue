@@ -1,7 +1,7 @@
 <template>
 	<!-- Static sidebar for desktop sm -->
 	<div
-		class="hidden lg:relative lg:inset-y-0 lg:z-10 lg:w-[4.5rem] lg:flex-col bg-white"
+		class="hidden lg:absolute lg:inset-y-0 lg:z-10 lg:w-[4.5rem] lg:flex-col bg-white"
 		:class="{'lg:flex': !open, 'lg:hidden': open}"
 	>
 		<!-- Toggle lg:hidden lg:flex -->
@@ -74,15 +74,7 @@
 					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 						<mobile-filter-scope-icon></mobile-filter-scope-icon>
 					</div>
-					<input
-						id="search-point"
-						:placeholder="CONSTANTS.LABELS.SIDEBAR.SEARCH_POINT_PLACEHOLDER"
-						class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-						name="text"
-						type="email"
-                        v-model="searchParamsForFilters.search_key"
-                        @input="pointLiveSearch()"
-					>
+
 					<div
 						class="absolute inset-y-0 right-2 flex items-center pl-3 cursor-pointer"
 						v-if="hasResults && 'search_key' in collectedFilters && collectedFilters.search_key != '' && collectedFilters.search_key.length > 2"

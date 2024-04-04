@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +24,7 @@ class CreateMaterialsTable extends Migration
             $table->boolean('is_wildcard')->nullable()->unique('materials_is_wildcard_unique');
             $table->integer('external_material_id')->nullable();
             $table->string('external_url', 191)->nullable();
-			$table->timestamps();
+            $table->timestamps();
         });
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -15,9 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class County extends Model
 {
     protected $table = 'counties';
-	
-	public function cities(): HasMany
-	{
-		return $this->hasMany(City::class);
-	}
+
+    public function cities(): HasMany
+    {
+        return $this->hasMany(City::class);
+    }
 }

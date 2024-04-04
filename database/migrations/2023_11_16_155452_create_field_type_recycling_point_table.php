@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +24,7 @@ class CreateFieldTypeRecyclingPointTable extends Migration
             $table->integer('downvotes')->default(0);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            
+
             $table->foreign('field_type_id', 'field_type_recycling_point_field_type_id_foreign')->references('id')->on('field_types')->onDelete('cascade');
         });
     }

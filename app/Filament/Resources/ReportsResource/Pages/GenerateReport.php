@@ -24,11 +24,8 @@ use Filament\Tables\Table;
 class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasActions
 {
     use Concerns\HasTabs;
-
     use InteractsWithFormActions;
-
     use InteractsWithTable;
-
     use ReportsTrait;
 
     public ?array $data = [];
@@ -87,13 +84,10 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
         $this->authorizeAccess();
 
         $this->type = request()->get('type', 'map_points');
-        try
-        {
+        try {
             $this->data = $this->form->getState();
             $this->shouldGenerate = true;
-        }
-        catch (Halt $exception)
-        {
+        } catch (Halt $exception) {
             return;
         }
     }
@@ -119,8 +113,7 @@ class GenerateReport extends Page implements HasForms, WithTabs, HasTable, HasAc
                 ->label(__('report.action.generate'))
                 ->keyBindings(['mod+s'])
                 ->color('success')
-                ->action(function ($data)
-                {
+                ->action(function ($data) {
                     return $this->generate();
                 }),
             FormAction::make('cancel')

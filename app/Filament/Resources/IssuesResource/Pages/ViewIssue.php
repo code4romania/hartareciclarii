@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\IssuesResource\Pages;
 
 // use Filament\Actions\Action;
@@ -34,11 +36,10 @@ class ViewIssue extends ViewRecord
     {
         $record = $this->getRecord();
         $text = __('issues.labels.issue');
-        if ($record->reporter)
-        {
-            $text .= __('issues.labels.reported_by', ['name'=>$record->reporter->fullname]);
+        if ($record->reporter) {
+            $text .= __('issues.labels.reported_by', ['name' => $record->reporter->fullname]);
         }
-        $text .= __('issues.labels.reported_at', ['created_at'=>$record->created_at]) . '<br />';
+        $text .= __('issues.labels.reported_at', ['created_at' => $record->created_at]) . '<br />';
 
         return new HtmlString($text);
     }
@@ -48,8 +49,7 @@ class ViewIssue extends ViewRecord
         return [
             ActionGroup::make([
                 Action::make('change_status_0')
-                    ->label(__('issues.status.0'))->action(function ($data, $record)
-                    {
+                    ->label(__('issues.status.0'))->action(function ($data, $record) {
                         $this->record->status = 0;
                         $this->record->save();
                         Notification::make()
@@ -59,8 +59,7 @@ class ViewIssue extends ViewRecord
                     })
                     ->icon($this->record->status == 0 ? 'heroicon-m-check' : ''),
                 Action::make('change_status_2')
-                    ->label(__('issues.status.2'))->action(function ($data, $record)
-                    {
+                    ->label(__('issues.status.2'))->action(function ($data, $record) {
                         $this->record->status = 2;
                         $this->record->save();
                         Notification::make()
@@ -70,8 +69,7 @@ class ViewIssue extends ViewRecord
                     })
                     ->icon($this->record->status == 2 ? 'heroicon-m-check' : ''),
                 Action::make('change_status_1')
-                    ->label(__('issues.status.1'))->action(function ($data, $record)
-                    {
+                    ->label(__('issues.status.1'))->action(function ($data, $record) {
                         $this->record->status = 1;
                         $this->record->save();
                         Notification::make()
@@ -90,7 +88,7 @@ class ViewIssue extends ViewRecord
             Action::make('view_list')
                 ->color('success')
                 ->label(__('issues.buttons.view_map_point'))
-                ->url(MapPointsResource::getUrl('view', ['record'=>$this->record->map_point]))
+                ->url(MapPointsResource::getUrl('view', ['record' => $this->record->map_point]))
                 ->openUrlInNewTab(),
 
         ];
@@ -105,7 +103,7 @@ class ViewIssue extends ViewRecord
     {
         $record = $this->getRecord();
 
-        $title = __('issues.labels.issue_with_point', ['point_id'=>$record->point_id]);
+        $title = __('issues.labels.issue_with_point', ['point_id' => $record->point_id]);
 
         return new HtmlString($title);
     }

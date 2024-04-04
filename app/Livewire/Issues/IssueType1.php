@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Issues;
 
 use App\Models\Issue;
@@ -38,8 +40,7 @@ class IssueType1 extends Component implements HasForms
                     ->readonly(),
                 Textarea::make('map_point')
                     ->label(__('issues.labels.original_address'))
-                    ->formatStateUsing(function ($state, $record)
-                    {
+                    ->formatStateUsing(function ($state, $record) {
                         return $record->map_point->address;
                     })
                     ->readonly(),

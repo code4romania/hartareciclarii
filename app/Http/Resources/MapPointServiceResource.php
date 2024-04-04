@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -14,12 +16,12 @@ class MapPointServiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-		return [
-			'id' => $this->id,
-			'name' => $this->name,
-			'display_name' => $this->display_name,
-			'icon' => $this->icon,
-			'point_types' => MapPointTypeResource::collection($this->pointTypes)
-		];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'display_name' => $this->display_name,
+            'icon' => $this->icon,
+            'point_types' => MapPointTypeResource::collection($this->pointTypes),
+        ];
     }
 }

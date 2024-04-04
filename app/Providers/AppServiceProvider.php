@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Filament\Facades\Filament;
@@ -10,7 +12,6 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,8 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //     Model::preventLazyLoading($shouldBeEnabled);
         //     Model::preventAccessingMissingAttributes($shouldBeEnabled);
         // });
-        Filament::serving(function ()
-        {
+        Filament::serving(function () {
             Filament::registerNavigationGroups([
                 NavigationGroup::make()
                     ->label('Settings')

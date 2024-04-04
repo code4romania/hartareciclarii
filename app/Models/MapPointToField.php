@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -9,7 +11,6 @@
 
 namespace App\Models;
 
-use App\Models\MapPointToField as MapPointToFieldModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -21,26 +22,25 @@ class MapPointToField extends Model
 
     public static function addValueToPoint(Collection $field): self
     {
-        $item = self::firstOrCreate(['field_type_id'=>$field->get('field_type_id'), 'recycling_point_id'=>$field->get('recycling_point_id')]);
+        $item = self::firstOrCreate(['field_type_id' => $field->get('field_type_id'), 'recycling_point_id' => $field->get('recycling_point_id')]);
         $item->value = $field->get('value');
         $item->save();
 
         return $item;
     }
-	
-	public function field()
-	{
-		return $this->hasOne(
-			MapPointField::class,
-			'id',
-			'field_type_id',
-		);
-	}
+
+    public function field()
+    {
+        return $this->hasOne(
+            MapPointField::class,
+            'id',
+            'field_type_id',
+        );
+    }
 
     public static function addValuesToPoint($fields): bool
     {
-        foreach ($fields as $field)
-        {
+        foreach ($fields as $field) {
             self::addValueToPoint($field);
         }
 

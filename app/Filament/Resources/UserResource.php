@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
@@ -62,14 +64,14 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id'),
                 TextColumn::make('name')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('email')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
-					->sortable()
-					->searchable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

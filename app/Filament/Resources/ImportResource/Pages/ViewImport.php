@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\ImportResource\Pages;
 
 use App\Filament\Resources\ImportResource;
@@ -37,7 +39,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
 
     public function getSubHeading(): string | Htmlable
     {
-		return sprintf(__('imports.sub_heading'), $this->getRecord()->createdBy->fullname, $this->getRecord()->created_at, $this->getRecord()->finished_at);
+        return sprintf(__('imports.sub_heading'), $this->getRecord()->createdBy->fullname, $this->getRecord()->created_at, $this->getRecord()->finished_at);
     }
 
     protected function getHeaderActions(): array
@@ -48,22 +50,20 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
         $processed = (isset($record->result['processed'])) ? \count($record->result['processed']) : 0;
         $actions = array_merge($actions, [
             Action::make('failed')
-				->label(sprintf(__('imports.not_imported'), $failed))
-				->icon('heroicon-m-check')
-                ->hidden(function () use ($failed)
-                {
+                ->label(sprintf(__('imports.not_imported'), $failed))
+                ->icon('heroicon-m-check')
+                ->hidden(function () use ($failed) {
                     return $this->view_type == 'failed' || $failed == 0;
                 })
-                ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record'=>$record->id]) . '?show=failed')
+                ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record' => $record->id]) . '?show=failed')
                 ->color('danger'),
             Action::make('processed')
-				->label(sprintf(__('imports.imported'), $processed))
-				->icon('heroicon-m-check')
-                ->hidden(function () use ($processed)
-                {
+                ->label(sprintf(__('imports.imported'), $processed))
+                ->icon('heroicon-m-check')
+                ->hidden(function () use ($processed) {
                     return $this->view_type == 'processed' || $processed == 0;
                 })
-                ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record'=>$record->id]) . '?show=processed')
+                ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record' => $record->id]) . '?show=processed')
                 ->color('success'),
         ]);
 
@@ -74,7 +74,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
     {
         return [
             TextInput::make('title')
-				->required(),
+                ->required(),
         ];
     }
 
@@ -92,15 +92,14 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
     {
         $record = $this->getRecord();
 
-        $title = __('imports.import_record_label'). $this->getRecord()->id;
+        $title = __('imports.import_record_label') . $this->getRecord()->id;
 
         return new HtmlString($title);
     }
 
     public function table(Table $table): Table
     {
-        switch($this->view_type)
-        {
+        switch($this->view_type) {
             case 'processed':
                 return $this->getProccesedTable($table);
                 break;
@@ -117,80 +116,71 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
             ->columns([
 
                 TextColumn::make('id')
-					->label(__('map_points.id'))
-					->formatStateUsing(function ($state)
-					{
-						return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record'=>$state]) . '">' . $state . '</a>';
-					})
-					->sortable()
-					->searchable()
-					->html(),
+                    ->label(__('map_points.id'))
+                    ->formatStateUsing(function ($state) {
+                        return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record' => $state]) . '">' . $state . '</a>';
+                    })
+                    ->sortable()
+                    ->searchable()
+                    ->html(),
                 TextColumn::make('type.display_name')
-					->label(__('map_points.point_type'))
-					->searchable(),
+                    ->label(__('map_points.point_type'))
+                    ->searchable(),
                 TextColumn::make('managed_by')
-					->label(__('map_points.managed_by'))
-					->sortable()
-					->searchable()
-					->wrap(),
+                    ->label(__('map_points.managed_by'))
+                    ->sortable()
+                    ->searchable()
+                    ->wrap(),
                 TextColumn::make('materials.getParent.icon')
-					->label(__('map_points.materials'))
-					->sortable()
-					->searchable()
-                    ->formatStateUsing(function (string $state, $record)
-                    {
+                    ->label(__('map_points.materials'))
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(function (string $state, $record) {
                         $icons = collect(explode(',', $state))->unique();
                         $state = '<div style="display:inline-flex">';
-                        foreach ($icons as $icon)
-                        {
+                        foreach ($icons as $icon) {
                             $state .= __("<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>");
                         }
                         $state = rtrim($state) . '</div>';
 
                         return $state;
                     })
-					->html(),
+                    ->html(),
                 TextColumn::make('county')
-					->label(__('map_points.county'))
-					->sortable()
-					->searchable(),
+                    ->label(__('map_points.county'))
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('city')
-					->label(__('map_points.city'))
-					->sortable()
-					->searchable(),
+                    ->label(__('map_points.city'))
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('address')
-					->label(__('map_points.address'))
-					->sortable()
-					->searchable()
-					->wrap(),
+                    ->label(__('map_points.address'))
+                    ->sortable()
+                    ->searchable()
+                    ->wrap(),
                 TextColumn::make('group.name')
-					->label(__('map_points.group'))
-					->sortable()
-					->searchable()
-					->wrap(),
+                    ->label(__('map_points.group'))
+                    ->sortable()
+                    ->searchable()
+                    ->wrap(),
 
                 BadgeColumn::make('status')
-                    ->color(static function ($state, $record): string
-                    {
-                        if ($record->issues->count() > 0)
-                        {
+                    ->color(static function ($state, $record): string {
+                        if ($record->issues->count() > 0) {
                             return 'danger';
                         }
-                        if ((int) $state === 1)
-                        {
+                        if ((int) $state === 1) {
                             return 'success';
                         }
 
                         return 'warning';
                     })
-                    ->formatStateUsing(function (string $state, $record)
-                    {
-                        if ($record->issues->count() > 0)
-                        {
+                    ->formatStateUsing(function (string $state, $record) {
+                        if ($record->issues->count() > 0) {
                             return __('map_points.issues_found');
                         }
-                        if ((int) $state === 1)
-                        {
+                        if ((int) $state === 1) {
                             return __('map_points.verified');
                         }
 

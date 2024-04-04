@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-03 20:27:58
@@ -17,13 +19,11 @@ class MapPointsController extends Controller
 {
     public function validatePoint($point_id)
     {
-        if (!auth()->user()->can('manage_map_points'))
-        {
+        if (! auth()->user()->can('manage_map_points')) {
             return redirect(\URL::previous());
         }
         $point = MapPointModel::find($point_id);
-        if (!$point)
-        {
+        if (! $point) {
             Notification::make()
                 ->title('Point not found')
                 ->danger()

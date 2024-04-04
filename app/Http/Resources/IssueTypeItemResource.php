@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -14,11 +16,11 @@ class IssueTypeItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-		return [
-			'id' => $this->id,
-			'reported_point_issue_type_id' => $this->reported_point_issue_type_id,
-			'title' => $this->title,
-			'step' => $this->step
-		];
+        return [
+            'id' => $this->id,
+            'reported_point_issue_type_id' => $this->reported_point_issue_type_id,
+            'title' => $this->title,
+            'step' => $this->step,
+        ];
     }
 }

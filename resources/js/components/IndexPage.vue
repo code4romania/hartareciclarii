@@ -19,7 +19,21 @@
 		<div class="flex h-full">
 			<div
 				class="h-screen w-full "
-			>  <!-- Toggle lg:pl-[4.5rem] OR lg:pl-72 -->
+			>
+                <div class="absolute rounded-md shadow-sm m-3">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <mobile-filter-scope-icon></mobile-filter-scope-icon>
+                    </div>
+                    <input
+                        id="search-point"
+                        :placeholder="CONSTANTS.LABELS.SIDEBAR.SEARCH_MATERIAL_LABEL"
+                        class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        name="text"
+                        type="email"
+                        v-model="materialFilterLiveSearch"
+                        @input="materialLiveSearch()"
+                    >
+                </div>
 				<main class="">
 					<div class="flex absolute inset-x-0 px-4 py-6 z-20 gap-x-2 lg:hidden">
 						<button
@@ -57,6 +71,13 @@
 						@toggleMenu="toggleMenu()"
 					>
 					</top-menu>
+                    <input
+                        id="search-point"
+                        :placeholder="CONSTANTS.LABELS.SIDEBAR.SEARCH_POINT_PLACEHOLDER"
+                        class="block absolute w-1/6 rounded-md border-0 mt-10 ml-20 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 z-20 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        name="text"
+                        type="email"
+                    >
 
 					<point-details
 						v-if="Object.keys(selectedPoint).length > 0"

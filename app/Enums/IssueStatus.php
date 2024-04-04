@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
 enum IssueStatus: int
@@ -12,8 +14,7 @@ enum IssueStatus: int
     public static function toArray(): array
     {
         $array = [];
-        foreach (self::cases() as $case)
-        {
+        foreach (self::cases() as $case) {
             $array[$case->value] = __('issues.status.' . $case->value);
         }
 

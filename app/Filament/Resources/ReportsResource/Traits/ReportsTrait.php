@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
@@ -19,9 +21,7 @@ use Illuminate\Support\Str;
 trait ReportsTrait
 {
     use MapPointsReportTrait;
-
     use IssuesReportTrait;
-
     use UsersReportTrait;
 
     public $isGrouped = false;
@@ -47,8 +47,7 @@ trait ReportsTrait
     {
         $this->data['type'] = $this->data['type'] ? $this->data['type'] : 'map_points';
         $this->type = $this->data['type'];
-        switch($this->type)
-        {
+        switch($this->type) {
             case 'map_points':
                 return $this->getMapPointsEloquentQuery();
                 break;
@@ -77,13 +76,11 @@ trait ReportsTrait
     {
         $values = [];
         $columns = [];
-        foreach ($this->getReportTableColumns() as $column)
-        {
+        foreach ($this->getReportTableColumns() as $column) {
             $columns[] = $column->getLabel();
         }
         $returnArr['header'] = $columns;
-        foreach($columns as $column)
-        {
+        foreach($columns as $column) {
             $record = $items->where('grouped_by', $column)->first();
             $value = 0;
             if($record):

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-27 11:21:34
@@ -22,8 +24,7 @@ class ReportsExport implements FromCollection
         $columns = $this->formatColumns();
         $exportData[] = $columns;
         $values = [];
-        foreach($columns as $column)
-        {
+        foreach($columns as $column) {
             $record = $this->data->where('grouped_by', $column)->first();
             $value = (string) 0;
             if($record):
@@ -39,8 +40,7 @@ class ReportsExport implements FromCollection
     public function formatColumns()
     {
         $columns = [];
-        foreach ($this->columns as $column)
-        {
+        foreach ($this->columns as $column) {
             $columns[] = $column->getLabel();
         }
 

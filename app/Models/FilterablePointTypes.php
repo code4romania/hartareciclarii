@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +12,9 @@ class FilterablePointTypes extends Model
     protected $table = 'filterable_field_types';
 
     protected $fillable = ['name'];
-	
-	public function fieldTypes() : HasMany
-	{
-		return $this->hasMany(MapPointField::class, 'id', 'field_type_id');
-	}
+
+    public function fieldTypes(): HasMany
+    {
+        return $this->hasMany(MapPointField::class, 'id', 'field_type_id');
+    }
 }
