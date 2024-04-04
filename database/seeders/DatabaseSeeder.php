@@ -54,19 +54,5 @@ class DatabaseSeeder extends Seeder
         $role->syncPermissions($this->permissions);
 
         $admin->assignRole('SuperAdmin');
-        $this->call([
-            FilterableFieldTypesSeeder::class,
-            JudetGeoSeeder::class,
-            FilterableFieldTypesSeeder::class,
-            IssueTypeItemSeeder::class,
-            IssueTypeSeeder::class,
-            JudetGeoSeeder::class,
-            MapPointFieldSeeder::class,
-            MapPointServiceSeeder::class,
-            MapPointTypeSeeder::class,
-            RecycleMaterialAliasSeeder::class,
-            RecycleMaterialSeeder::class,
-
-        ]);
     }
 }
