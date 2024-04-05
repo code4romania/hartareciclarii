@@ -429,7 +429,7 @@ export default
 						id: `marker_${point.id}`
 					});
 
-				let marker = L.marker(L.latLng(point.lat, point.lon), {
+				let marker = L.marker(L.latLng(point.latitude, point.longitude), {
 					id: `marker_${point.id}`,
 					icon: icon
 				}).on('click', function(e)

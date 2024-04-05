@@ -25,8 +25,8 @@ class PointFactory extends Factory
      */
     public function definition(): array
     {
-        $latitudeRange = [46.0, 46.1];
-        $longitudeRange = [25.0, 25.1];
+        $latitudeRange = [45.0, 48.0];
+        $longitudeRange = [23.0, 28.0];
         $serviceType = $this->faker->randomElement(ServiceType::values());
         $serviceTypeEnum = ServiceType::from($serviceType);
         $city = City::query()->inRandomOrder()->first();

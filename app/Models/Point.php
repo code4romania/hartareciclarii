@@ -6,11 +6,11 @@ namespace App\Models;
 
 use App\Enums\Point\ServiceType;
 use App\Enums\Point\Status;
-use Database\Factories\PointFactory;
-use Database\Factories\TestFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Point extends Model
 {
@@ -47,5 +47,19 @@ class Point extends Model
     public function getPointTypeEnumAttribute()
     {
         return $this->service_type->pointTypes();
+    }
+
+    public function scopeInBounds(Builder $query, $bounds): Builder
+    {
+        $polygon = [
+            $bounds['northEast']['lat'] . ' ' . $bounds['northEast']['lng'],
+            $bounds['northWest']['lat'] . ' ' . $bounds['northWest']['lng'],
+            $bounds['southWest']['lat'] . ' ' . $bounds['southWest']['lng'],
+            $bounds['southEast']['lat'] . ' ' . $bounds['southEast']['lng'],
+            $bounds['northEast']['lat'] . ' ' . $bounds['northEast']['lng'],
+        ];
+        $boundarySearch = "ST_WITHIN(POINT(latitude, longitude), ST_GEOMETRYFROMTEXT('POLYGON((" . implode(', ', $polygon) . "))'))";
+
+        return $query->where(DB::raw($boundarySearch), 1);
     }
 }

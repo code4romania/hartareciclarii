@@ -16,6 +16,7 @@ use App\Models\IssueType;
 use App\Models\MapPoint;
 use App\Models\MapPointField;
 use App\Models\MapPointService;
+use App\Models\Point;
 use App\Models\RecycleMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,12 +27,11 @@ class MapController extends Controller
     {
         $filters = $request->get('filters', []);
         $bounds = $request->get('bounds', []);
-        ;
 
         return response()
             ->json(
                 [
-                    'points' => MapPoint::getFilteredMapPoints($filters, $bounds),
+                    'points' => Point::inBounds($bounds)->get(),
                 ]
             );
     }
