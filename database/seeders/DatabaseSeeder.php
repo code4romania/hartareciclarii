@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
+
+use App\Models\Point;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,20 +37,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+//        User::factory(10)->create();
+        $this->call(
+            MaterialSeeder::class
+        );
 
-        $admin = User::factory()->create([
-            'email' => 'email@example.com',
-            'email_confirmed' => 1,
-        ]);
+        Point::factory(100)->create();
 
-        $role = Role::create(['id' => 1, 'name' => 'SuperAdmin', 'guard_name' => 'web']);
-        foreach ($this->permissions as $permission_label) {
-            Permission::create(['name' => $permission_label]);
-        }
 
-        $role->syncPermissions($this->permissions);
-
-        $admin->assignRole('SuperAdmin');
     }
 }

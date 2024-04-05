@@ -26,6 +26,7 @@ class MapController extends Controller
     {
         $filters = $request->get('filters', []);
         $bounds = $request->get('bounds', []);
+        ;
 
         return response()
             ->json(
