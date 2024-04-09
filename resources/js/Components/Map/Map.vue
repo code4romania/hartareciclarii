@@ -1,34 +1,37 @@
 <template>
-    <div class="w-full h-full">
-        <LMap
-            ref="map"
-            :useGlobalLeaflet="true"
-            :min-zoom="10"
-            :zoom="10"
-            :max-zoom="18"
-            :center="[45.9432, 24.9668]"
-            @ready="ready"
-            @moveend="moveend"
-        >
-            <LTileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                layer-type="base"
-                subdomains="abcd"
-                name="OpenStreetMap"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            />
-            <LMarkerClusterGroup>
-                <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" />
-            </LMarkerClusterGroup>
-        </LMap>
-    </div>
+    <LMap
+        ref="map"
+        :useGlobalLeaflet="true"
+        :min-zoom="10"
+        :zoom="10"
+        :max-zoom="18"
+        :center="[45.9432, 24.9668]"
+        @ready="ready"
+        @moveend="moveend"
+        :options="{
+            zoomControl: false,
+        }"
+        class="w-full h-full"
+    >
+        <LControlZoom position="bottomright" />
+        <LTileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            layer-type="base"
+            subdomains="abcd"
+            name="OpenStreetMap"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
+        <LMarkerClusterGroup>
+            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" />
+        </LMarkerClusterGroup>
+    </LMap>
 </template>
 
 <script setup>
     import L from 'leaflet';
     globalThis.L = L;
 
-    import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
+    import { LMap, LTileLayer, LMarker, LControlZoom } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
 
     import 'leaflet/dist/leaflet.css';
