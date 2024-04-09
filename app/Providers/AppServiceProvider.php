@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
     {
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
         FilamentAsset::register([
-            Js::make('custom-script', resource_path('js/custom.js')),
+            Js::make('custom-script', resource_path('js/admin.js')),
             Js::make('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
             Css::make('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
             Js::make('leaflet-geocoding', 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js'),

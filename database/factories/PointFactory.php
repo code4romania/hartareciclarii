@@ -10,6 +10,7 @@ use App\Models\City;
 use App\Models\Material;
 use App\Models\Point;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 /**
  * @extends Factory<\App\Models\Point>
@@ -31,9 +32,13 @@ class PointFactory extends Factory
         $serviceTypeEnum = ServiceType::from($serviceType);
         $city = City::query()->inRandomOrder()->first();
 
+        $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
+        $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
+
         return [
-            'latitude' => $this->faker->randomFloat(6, $latitudeRange[0], $latitudeRange[1]),
-            'longitude' => $this->faker->randomFloat(6, $longitudeRange[0], $longitudeRange[1]),
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'location' => new SpatialPoint($latitude, $longitude),
             'county_id' => $city->county_id,
             'city_id' => $city->id,
             'address' => $this->faker->address,

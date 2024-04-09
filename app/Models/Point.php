@@ -11,10 +11,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
+use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
 class Point extends Model
 {
     use HasFactory;
+    use HasSpatial;
 
     protected $fillable = [
         'latitude',
@@ -37,6 +40,7 @@ class Point extends Model
         'schedule' => 'array',
         'status' => Status::class,
         'service_type' => ServiceType::class,
+        'location' => SpatialPoint::class,
     ];
 
     public function materials(): BelongsToMany

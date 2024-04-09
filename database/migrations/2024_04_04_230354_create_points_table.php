@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\City;
 use App\Models\County;
 use Illuminate\Database\Migrations\Migration;
@@ -24,6 +26,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('latitude');
             $table->string('longitude');
+            $table->point('location')->isGeometry()->nullable();
             $table->text('notes')->nullable();
             $table->string('administered_by')->nullable();
             $table->string('name');

@@ -1,6 +1,14 @@
 <template>
     <div class="w-full h-full">
-        <LMap ref="map" :useGlobalLeaflet="true" :min-zoom="6" :zoom="8" :max-zoom="18" :center="[45.9432, 24.9668]">
+        <LMap
+            ref="map"
+            :useGlobalLeaflet="true"
+            :min-zoom="6"
+            :zoom="8"
+            :max-zoom="18"
+            :center="[45.9432, 24.9668]"
+            @moveend="moveend"
+        >
             <LTileLayer
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 layer-type="base"
@@ -25,8 +33,21 @@
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
 
-    import { computed } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
+    import { ref, computed } from 'vue';
+    import { router, usePage } from '@inertiajs/vue3';
 
-    const points = computed(() => usePage().props.points.data);
+    const points = computed(() => usePage().props.points?.data || []);
+
+    const map = ref(null);
+
+    const moveend = (event) => {
+        const obj = map.value.leafletObject;
+
+        router.reload({
+            data: {
+                bounds: obj.getBounds().toBBoxString(),
+            },
+            only: ['points'],
+        });
+    };
 </script>
