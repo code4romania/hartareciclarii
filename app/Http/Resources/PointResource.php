@@ -13,9 +13,9 @@ class PointResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-            'latlng' => [$this->latitude, $this->longitude],
+            'latitude' => $this->location->latitude,
+            'longitude' => $this->location->longitude,
+            'latlng' => [$this->location->latitude, $this->location->longitude],
             'name' => $this->name,
         ];
     }

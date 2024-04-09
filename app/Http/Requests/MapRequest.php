@@ -32,6 +32,9 @@ class MapRequest extends FormRequest
 
     protected function passedValidation(): void
     {
+        if (! $this->bounds) {
+            return;
+        }
         $this->replace([
             'bounds' => $this->makePolygon($this->bounds),
         ]);
