@@ -42,7 +42,7 @@
                                 </div>
                             </TransitionChild>
                             <!-- Sidebar component, swap this element with another sidebar if you like -->
-                            <Sidebar :navigation="navigation" :teams="teams" />
+                            <Sidebar />
                         </DialogPanel>
                     </TransitionChild>
                 </div>
@@ -51,7 +51,7 @@
 
         <!-- Static sidebar for desktop -->
         <div class="hidden lg:absolute lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-            <Sidebar :navigation="navigation" :teams="teams" class="border-r border-gray-200" />
+            <Sidebar class="border-r border-gray-200" />
         </div>
 
         <div class="relative h-full lg:pl-72">

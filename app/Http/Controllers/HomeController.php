@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\Point\ServiceType;
 use App\Http\Requests\MapRequest;
 use App\Http\Resources\PointResource;
 use App\Models\Point;
@@ -19,6 +20,12 @@ class HomeController extends Controller
     public function __invoke(MapRequest $request): Response
     {
         return Inertia::render('Home', [
+            'service_types' => ServiceType::options(),
+            'point_types' => collect(ServiceType::cases())
+                ->mapWithKeys(fn (ServiceType $serviceType) => [
+                    $serviceType->value => $serviceType->pointTypes()::options(),
+                ]),
+
             'points' => Inertia::lazy(
                 fn () => PointResource::collection(
                     Point::query()

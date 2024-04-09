@@ -1,74 +1,75 @@
 <template>
-    <div class="flex flex-col px-6 pb-4 overflow-y-auto bg-white grow gap-y-5">
-        <div class="flex items-center h-16 shrink-0">
-            <img
-                class="w-auto h-8"
-                src="https://tailwindui.com/img/logos/mark.svg?color=blue&shade=600"
-                alt="Your Company"
-            />
+    <aside class="flex flex-col px-6 pb-4 overflow-y-auto bg-white grow gap-y-5">
+        <div class="flex items-center justify-start gap-2 py-4">
+            <FunnelIcon class="w-6 h-6 text-gray-900" />
+
+            <div class="font-semibold text-gray-900">Filtre</div>
         </div>
-        <nav class="flex flex-col flex-1">
-            <ul role="list" class="flex flex-col flex-1 gap-y-7">
-                <li>
-                    <ul role="list" class="-mx-2 space-y-1">
-                        <li v-for="item in navigation" :key="item.name">
-                            <a
-                                :href="item.href"
-                                :class="[
-                                    item.current
-                                        ? 'bg-gray-50 text-blue-600'
-                                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-                                ]"
-                            >
-                                <component
-                                    :is="item.icon"
-                                    :class="[
-                                        item.current ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600',
-                                        'h-6 w-6 shrink-0',
-                                    ]"
-                                    aria-hidden="true"
-                                />
-                                {{ item.name }}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                    <ul role="list" class="mt-2 -mx-2 space-y-1">
-                        <li v-for="team in teams" :key="team.name">
-                            <a
-                                :href="team.href"
-                                :class="[
-                                    team.current
-                                        ? 'bg-gray-50 text-blue-600'
-                                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-                                ]"
-                            >
-                                <span
-                                    :class="[
-                                        team.current
-                                            ? 'text-blue-600 border-blue-600'
-                                            : 'text-gray-400 border-gray-200 group-hover:border-blue-600 group-hover:text-blue-600',
-                                        'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white',
-                                    ]"
-                                    >{{ team.initial }}</span
-                                >
-                                <span class="truncate">{{ team.name }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
+
+        <ul v-if="selectedServiceType === null">
+            <li v-for="(label, type) in serviceTypes" :key="type">
+                <button
+                    class="flex items-center justify-between w-full text-gray-700"
+                    type="button"
+                    @click="selectedServiceType = type"
+                >
+                    {{ label }}
+                </button>
+            </li>
+        </ul>
+
+        <section v-else>
+            <div class="flex gap-2">
+                <button type="button" @click="selectedServiceType = null">&larr;</button>
+                <h2>{{ serviceTypes[selectedServiceType] }}</h2>
+            </div>
+
+            <CheckboxList v-model="selectedMaterialTypes" :options="collectionPointsTypes" class="flex-col" />
+        </section>
+
+        <div class="fixed bottom-0 px-6 py-3 mt-2 bg-white border-t lg:w-96" :class="{ fixed: filtersOpen }">
+            <button
+                class="flex items-center justify-center w-full text-red-700"
+                type="button"
+                v-on:click="resetFilters()"
+            >
+                <desktop-filter-clear-icon></desktop-filter-clear-icon>
+                {{ $t('sidebar.clear_filters_label') }}
+            </button>
+        </div>
+    </aside>
 </template>
 
 <script setup>
-    defineProps({
-        navigation: Array,
-        teams: Array,
+    import { computed, ref } from 'vue';
+    import { FunnelIcon } from '@heroicons/vue/24/outline';
+    import { usePage } from '@inertiajs/vue3';
+    import CheckboxList from '@/Components/Form/CheckboxList.vue';
+
+    const hasResults = ref(false);
+    const collectedFilters = ref({});
+    const filtersOpen = ref(true);
+
+    const open = ref(false);
+    const filters = ref({});
+    const pointFilterLiveSearch = ref('');
+    const materialFilterLiveSearch = ref('');
+    const selectedMaterialTypes = ref([]);
+    const selectedCollectionPointsTypes = ref([]);
+    const filtersCount = ref(0);
+    const materialTypesFilters = ref([]);
+    const searchParamsForFilters = ref({
+        search_key: '',
+        service_id: null,
     });
+
+    const serviceTypes = computed(() => usePage().props.service_types || []);
+    const selectedServiceType = ref(null);
+
+    const collectionPointsTypes = computed(() =>
+        Object.entries(usePage().props.point_types[selectedServiceType.value] || []).map(([label, value]) => ({
+            value,
+            label,
+        }))
+    );
 </script>
