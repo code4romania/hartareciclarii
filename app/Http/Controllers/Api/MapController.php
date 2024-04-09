@@ -10,6 +10,7 @@ use App\Http\Resources\IssueTypeResource;
 use App\Http\Resources\MapPointFieldResource;
 use App\Http\Resources\MapPointResource;
 use App\Http\Resources\MapPointServiceResource;
+use App\Http\Resources\PointResource;
 use App\Http\Resources\RecycleMaterialResource;
 use App\Models\Issue;
 use App\Models\IssueType;
@@ -109,14 +110,13 @@ class MapController extends Controller
             );
     }
 
-    public function point(int $id)
+    public function point(Point $point)
     {
         return response()
             ->json(
                 [
-                    'point' => new MapPointResource(MapPoint::with('type', 'service', 'fields.field', 'materials')->find($id)),
-                    'materials' => RecycleMaterialResource::collection(RecycleMaterial::whereNull('is_wildcard')->whereNull('parent')->get()),
-                    'url' => secure_url('/point/' . $id),
+                    'point' => PointResource::make($point->load('materials')),
+                    'url' => secure_url('/point/' . $point->id),
                 ]
             );
     }

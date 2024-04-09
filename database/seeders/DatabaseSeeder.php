@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-
 use App\Models\Point;
 use Illuminate\Database\Seeder;
 
@@ -43,7 +42,5 @@ class DatabaseSeeder extends Seeder
         );
 
         Point::factory(100)->create();
-
-
     }
 }

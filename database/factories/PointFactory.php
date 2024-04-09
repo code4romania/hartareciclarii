@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\Point\ServiceType;
+use App\Enums\Point\Source;
 use App\Enums\Point\Status;
 use App\Models\City;
 use App\Models\Material;
@@ -80,7 +81,7 @@ class PointFactory extends Factory
             'status' => $this->faker->randomElement(Status::values()),
             'service_type' => $serviceType,
             'point_type' => $this->faker->randomElement($serviceTypeEnum->pointTypes()::values()),
-            'source' => 'manual',
+            'source' => $this->faker->randomElement(Source::values()),
             'administered_by' => $this->faker->company,
 
         ];

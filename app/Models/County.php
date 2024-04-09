@@ -14,6 +14,7 @@ class County extends Model
         'name',
         'siruta',
     ];
+
     public $timestamps = false;
 
     public function cities(): HasMany

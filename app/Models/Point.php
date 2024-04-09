@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasLocation;
 use App\Enums\Point\ServiceType;
+use App\Enums\Point\Source;
 use App\Enums\Point\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 class Point extends Model
 {
     use HasFactory;
+    use HasLocation;
 
     protected $fillable = [
         'latitude',
@@ -37,6 +40,7 @@ class Point extends Model
         'schedule' => 'array',
         'status' => Status::class,
         'service_type' => ServiceType::class,
+        'source' => Source::class,
     ];
 
     public function materials(): BelongsToMany
@@ -46,7 +50,7 @@ class Point extends Model
 
     public function getPointTypeEnumAttribute()
     {
-        return $this->service_type->pointTypes();
+        return $this->service_type->pointTypes()::from($this->point_type);
     }
 
     public function scopeInBounds(Builder $query, $bounds): Builder
