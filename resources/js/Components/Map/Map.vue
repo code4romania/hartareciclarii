@@ -3,10 +3,11 @@
         <LMap
             ref="map"
             :useGlobalLeaflet="true"
-            :min-zoom="6"
-            :zoom="8"
+            :min-zoom="10"
+            :zoom="10"
             :max-zoom="18"
             :center="[45.9432, 24.9668]"
+            @ready="ready"
             @moveend="moveend"
         >
             <LTileLayer
@@ -33,21 +34,36 @@
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
 
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import { router, usePage } from '@inertiajs/vue3';
+    import { useGeolocation } from '@vueuse/core';
 
     const points = computed(() => usePage().props.points?.data || []);
 
-    const map = ref(null);
+    // const map = ref(null);
 
     const moveend = (event) => {
-        const obj = map.value.leafletObject;
+        const bounds = event.target.getBounds();
 
         router.reload({
             data: {
-                bounds: obj.getBounds().toBBoxString(),
+                bounds: bounds.toBBoxString(),
             },
             only: ['points'],
+        });
+    };
+
+    const ready = (leafletObject) => {
+        const { coords, locatedAt, error, resume, pause } = useGeolocation({
+            enableHighAccuracy: true,
+        });
+
+        watch(locatedAt, () => {
+            pause();
+
+            leafletObject.flyTo([coords.value.latitude, coords.value.longitude], 17, {
+                animate: false,
+            });
         });
     };
 </script>

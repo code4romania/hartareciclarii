@@ -21,6 +21,7 @@
         "@vue/eslint-config-prettier": "^9.0.0",
         "@vue/eslint-config-typescript": "^13.0.0",
         "@vue/tsconfig": "^0.5.1",
+        "@vueuse/core": "^10.9.0",
         "autoprefixer": "^10.4.16",
         "axios": "^1.5.1",
         "cypress": "^13.2.0",

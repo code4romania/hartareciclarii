@@ -19,12 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::inertia('/1', 'Home');
-Route::inertia('/2', 'Home2');
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 Route::get('/profile', function () {
     return view('welcome');
 });

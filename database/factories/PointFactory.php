@@ -95,4 +95,17 @@ class PointFactory extends Factory
             $point->materials()->attach(Material::query()->inRandomOrder()->limit(3)->get());
         });
     }
+
+    public function inLisbon(): static
+    {
+        $latitudeRange = [38.7363163, 38.7408642];
+        $longitudeRange = [-9.1353215, -9.1325596];
+
+        return $this->state(fn (array $attributes) => [
+            'location' => new SpatialPoint(
+                fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]),
+                fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1])
+            ),
+        ]);
+    }
 }
