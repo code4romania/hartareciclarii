@@ -20,8 +20,6 @@ class Point extends Model
     use HasSpatial;
 
     protected $fillable = [
-        'latitude',
-        'longitude',
         'address',
         'name',
         'phone',
@@ -33,6 +31,7 @@ class Point extends Model
         'status',
         'service_type',
         'point_type',
+        'location'
 
     ];
 

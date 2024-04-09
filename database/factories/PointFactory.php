@@ -36,8 +36,6 @@ class PointFactory extends Factory
         $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
 
         return [
-            'latitude' => $latitude,
-            'longitude' => $longitude,
             'location' => new SpatialPoint($latitude, $longitude),
             'county_id' => $city->county_id,
             'city_id' => $city->id,
