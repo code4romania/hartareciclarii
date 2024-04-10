@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         );
 
         Point::factory(100)
-            ->inLisbon()
+
             ->create();
     }
 }

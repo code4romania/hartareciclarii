@@ -12,12 +12,30 @@
             id="search-field"
             class="block w-full h-full py-2.5 px-0 text-gray-900 border-0 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
             placeholder="Search..."
+            v-model="search"
             type="search"
             name="search"
         />
     </form>
+
 </template>
 
 <script setup>
-    import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+    import { MagnifyingGlassIcon,  } from '@heroicons/vue/24/solid';
+    import {ref, watch} from "vue";
+    import {router, useForm} from "@inertiajs/vue3";
+
+    const search = ref('')
+    const loading = ref(false)
+
+
+    watch(search,(value,oldValue) => {
+        loading.value = true
+
+        router.reload({
+            data: {
+                search: value
+            },
+            only: ['points']})
+    })
 </script>
