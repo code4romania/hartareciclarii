@@ -9,7 +9,6 @@ use App\Http\Requests\MapRequest;
 use App\Http\Resources\PointResource;
 use App\Models\Material;
 use App\Models\Point;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use NominatimLaravel\Content\Nominatim;
@@ -21,40 +20,9 @@ class HomeController extends Controller
      */
     public function __invoke(MapRequest $request): Response
     {
-        $searchResult = [];
-        if (! empty($request->search)) {
-            $points = Point::query()->whereAny(
-                [
-                    'name',
-                    'address',
-                    'phone',
-                    'email',
-                    'website',
-                    'notes',
-                ],
-                'LIKE',
-                '%' . $request->search . '%'
-            )->get();
-            $nominatimResults = collect($this->getNominatimResults($request->search))->transform(function ($item) {
-                return [
-                    'name' => $item['display_name'],
-                    'lat' => $item['lat'],
-                    'lon' => $item['lon'],
-                ];
-            });
-            $materials = Material::query()->where('name', 'LIKE', '%' . $request->search . '%')
-                ->whereHas('points')
-                ->get();
-            $searchResult = [
-                'points' => $points,
-                'nominatim' => $nominatimResults,
-                'materials' => $materials,
-            ];
-        }
-
         return Inertia::render('Home', [
             'service_types' => ServiceType::options(),
-            'search_results' => $searchResult,
+            'search_results' => Inertia::lazy(fn (MapRequest $request) => $this->getSearchResults($request->search)),
             'point_types' => collect(ServiceType::cases())
                 ->mapWithKeys(fn (ServiceType $serviceType) => [
                     $serviceType->value => $serviceType->pointTypes()::options(),
@@ -70,14 +38,7 @@ class HomeController extends Controller
         ]);
     }
 
-    /**
-     * @param  MapRequest                                             $request
-     * @return array|\SimpleXMLElement
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \NominatimLaravel\Exceptions\InvalidParameterException
-     * @throws \NominatimLaravel\Exceptions\NominatimException
-     */
-    private function getNominatimResults(string $search): array|\SimpleXMLElement
+    private function getNominatimResults(string $search): array
     {
         $url = 'https://nominatim.openstreetmap.org';
         $nominatim = new Nominatim($url);
@@ -86,5 +47,40 @@ class HomeController extends Controller
             ->query($search);
 
         return $nominatim->find($nominatimSearch);
+    }
+
+    private function getSearchResults($search)
+    {
+        if (empty($search)) {
+            return [];
+        }
+        $points = Point::query()->whereAny(
+            [
+                'name',
+                'address',
+                'phone',
+                'email',
+                'website',
+                'notes',
+            ],
+            'LIKE',
+            '%' . $search . '%'
+        )->get();
+        $nominatimResults = collect($this->getNominatimResults($search))->transform(function ($item) {
+            return [
+                'name' => $item['display_name'],
+                'lat' => $item['lat'],
+                'lon' => $item['lon'],
+            ];
+        });
+        $materials = Material::query()->where('name', 'LIKE', '%' . $search . '%')
+            ->whereHas('points')
+            ->get();
+
+        return [
+            'points' => $points,
+            'nominatim' => $nominatimResults,
+            'materials' => $materials,
+        ];
     }
 }

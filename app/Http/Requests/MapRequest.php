@@ -16,17 +16,22 @@ class MapRequest extends FormRequest
         if (! $this->bounds) {
             return;
         }
+        debug($this->bounds);
+        if (! \is_string($this->bounds)) {
+            dd($this->bounds);
+        } // (1)
 
-        $this->replace([
-            'bounds' => explode(',', $this->bounds),
+        $this->merge([
+            'bounds_asdadas' => explode(',', $this->bounds),
         ]);
     }
 
     public function rules(): array
     {
         return [
-            'bounds' => ['nullable', 'array', 'size:4'],
-            'bounds.*' => ['numeric', 'between:-180,180'],
+
+            'bounds_asdadas' => ['nullable', 'array', 'size:4'],
+            'bounds_asdadas.*' => ['numeric', 'between:-180,180'],
             'search' => 'nullable|string',
         ];
     }
@@ -36,8 +41,8 @@ class MapRequest extends FormRequest
         if (! $this->bounds) {
             return;
         }
-        $this->replace([
-            'bounds' => $this->makePolygon($this->bounds),
+        $this->merge([
+            'bounds' => $this->makePolygon($this->bounds_asdadas),
         ]);
     }
 

@@ -22,11 +22,12 @@
 
 <script setup>
     import { MagnifyingGlassIcon,  } from '@heroicons/vue/24/solid';
-    import {ref, watch} from "vue";
-    import {router, useForm} from "@inertiajs/vue3";
+    import {computed, ref, watch} from "vue";
+    import {router, useForm, usePage} from "@inertiajs/vue3";
 
     const search = ref('')
     const loading = ref(false)
+    const searchResult = computed(() => usePage().props.search_results || []);
 
 
     watch(search,(value,oldValue) => {
@@ -36,6 +37,7 @@
             data: {
                 search: value
             },
-            only: ['points']})
+            only: ['points','search_results']
+        })
     })
 </script>
