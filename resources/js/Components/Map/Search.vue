@@ -18,33 +18,31 @@
         />
         <div id="search-result">
             <template v-for="(search, index) in searchResult">
-                <li v-for="item in search" v-text="item.name" @click="$emit('goToPoint',item)"/>
+                <li v-for="item in search" :key="item" v-text="item.name" @click="$emit('goToPoint', item)" />
             </template>
-
         </div>
     </form>
-
 </template>
 
 <script setup>
-    import { MagnifyingGlassIcon,  } from '@heroicons/vue/24/solid';
-    import {computed, ref, watch} from "vue";
-    import {router, useForm, usePage} from "@inertiajs/vue3";
+    import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
+    import { computed, ref, watch } from 'vue';
+    import { router, useForm, usePage } from '@inertiajs/vue3';
 
-    const search = ref('')
-    const loading = ref(false)
+    const search = ref('');
+    const loading = ref(false);
     const searchResult = computed(() => usePage().props.search_results || []);
 
-    const emit = defineEmits(['goToPoint'])
+    const emit = defineEmits(['goToPoint']);
 
-    watch(search,(value,oldValue) => {
-        loading.value = true
+    watch(search, (value, oldValue) => {
+        loading.value = true;
 
         router.reload({
             data: {
-                search: value
+                search: value,
             },
-            only: ['points','search_results']
-        })
-    })
+            only: ['points', 'search_results'],
+        });
+    });
 </script>

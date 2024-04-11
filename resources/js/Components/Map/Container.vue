@@ -55,8 +55,8 @@
         </div>
 
         <div class="relative h-full lg:pl-72">
-            <Search class="inset-x-3 top-3 z-[99999] lg:left-80 lg:right-auto"  @go-to-point="changeMapView"/>
-            <Map  :selected-points="selectedPoints"/>
+            <Search class="inset-x-3 top-3 z-[99999] lg:left-80 lg:right-auto" @go-to-point="setSelectedPoint" />
+            <Map :selected-point="selectedPoint" />
         </div>
     </div>
 </template>
@@ -64,16 +64,15 @@
 <script setup>
     import { ref } from 'vue';
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
-    import {
-        XMarkIcon,
-    } from '@heroicons/vue/24/outline';
+    import { XMarkIcon } from '@heroicons/vue/24/outline';
     import Map from '@/Components/Map/Map.vue';
     import Sidebar from '@/Components/Map/Sidebar.vue';
     import Search from '@/Components/Map/Search.vue';
-    const  selectedPoints = ref([])
 
-    function changeMapView(e){
-        selectedPoints.value= e
+    const selectedPoint = ref(null);
+
+    function setSelectedPoint(e) {
+        selectedPoint.value = e;
     }
 
     const sidebarOpen = ref(true);

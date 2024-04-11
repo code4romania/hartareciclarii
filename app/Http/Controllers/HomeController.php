@@ -54,25 +54,18 @@ class HomeController extends Controller
         if (empty($search)) {
             return [];
         }
-        $points = Point::query()->whereAny(
-            [
-                'name',
-                'address',
-                'phone',
-                'email',
-                'website',
-                'notes',
-            ],
-            'LIKE',
-            '%' . $search . '%'
-        )->get();
-        $nominatimResults = collect($this->getNominatimResults($search))->transform(function ($item) {
-            return [
+
+        $points = Point::query()
+            ->whereAny(['name', 'address', 'phone', 'email', 'website', 'notes'], 'LIKE', '%' . $search . '%')
+            ->get();
+
+        $nominatimResults = collect($this->getNominatimResults($search))
+            ->transform(fn ($item) => [
                 'name' => $item['display_name'],
                 'lat' => $item['lat'],
-                'lon' => $item['lon'],
-            ];
-        });
+                'lng' => $item['lon'],
+            ]);
+
         $materials = Material::query()->where('name', 'LIKE', '%' . $search . '%')
             ->whereHas('points')
             ->get();
