@@ -1,4 +1,5 @@
 <template>
+    {{selectedPoints}}
     <LMap
         ref="map"
         :useGlobalLeaflet="true"
@@ -43,7 +44,15 @@
 
     const points = computed(() => usePage().props.points?.data || []);
 
-    // const map = ref(null);
+    const props = defineProps({
+        selectedPoints: {
+            type: Object,
+            default: () => {},
+        },
+    });
+
+    const map = ref(null);
+    const selectedObject = ref(props.selectedPoints);
 
     const moveend = (event) => {
         const bounds = event.target.getBounds();
@@ -55,6 +64,15 @@
             only: ['points'],
         });
     };
+    console.log(props.selectedPoints)
+    watch(selectedObject, (value) => {
+        console.log(value)
+        if (value.length > 0) {
+            map.flyTo(value[0].latlng, 17, {
+                animate: true,
+            });
+        }
+    }, { deep: true })
 
     const ready = (leafletObject) => {
         const { coords, locatedAt, error, resume, pause } = useGeolocation({

@@ -16,6 +16,12 @@
             type="search"
             name="search"
         />
+        <div id="search-result">
+            <template v-for="(search, index) in searchResult">
+                <li v-for="item in search" v-text="item.name" @click="$emit('goToPoint',item)"/>
+            </template>
+
+        </div>
     </form>
 
 </template>
@@ -29,6 +35,7 @@
     const loading = ref(false)
     const searchResult = computed(() => usePage().props.search_results || []);
 
+    const emit = defineEmits(['goToPoint'])
 
     watch(search,(value,oldValue) => {
         loading.value = true

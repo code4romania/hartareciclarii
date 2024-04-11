@@ -55,9 +55,8 @@
         </div>
 
         <div class="relative h-full lg:pl-72">
-            <Search class="inset-x-3 top-3 z-[99999] lg:left-80 lg:right-auto" />
-
-            <Map />
+            <Search class="inset-x-3 top-3 z-[99999] lg:left-80 lg:right-auto"  @go-to-point="changeMapView"/>
+            <Map  :selected-points="selectedPoints"/>
         </div>
     </div>
 </template>
@@ -71,7 +70,11 @@
     import Map from '@/Components/Map/Map.vue';
     import Sidebar from '@/Components/Map/Sidebar.vue';
     import Search from '@/Components/Map/Search.vue';
+    const  selectedPoints = ref([])
 
+    function changeMapView(e){
+        selectedPoints.value= e
+    }
 
     const sidebarOpen = ref(true);
 </script>

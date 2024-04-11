@@ -22,7 +22,7 @@ class HomeController extends Controller
     {
         return Inertia::render('Home', [
             'service_types' => ServiceType::options(),
-            'search_results' => Inertia::lazy(fn (MapRequest $request) => $this->getSearchResults($request->search)),
+            'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search)),
             'point_types' => collect(ServiceType::cases())
                 ->mapWithKeys(fn (ServiceType $serviceType) => [
                     $serviceType->value => $serviceType->pointTypes()::options(),
