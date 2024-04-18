@@ -20,6 +20,11 @@ class HomeController extends Controller
      */
     public function __invoke(MapRequest $request, ?Point $point = null): Response
     {
+        $points = Point::query();
+        if (! empty($request->bounds)) {
+            $points->whereWithin('location', $request->bounds);
+        }
+
         return Inertia::render('Home', [
             'service_types' => ServiceType::options(),
             'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search)),
@@ -27,14 +32,7 @@ class HomeController extends Controller
                 ->mapWithKeys(fn (ServiceType $serviceType) => [
                     $serviceType->value => $serviceType->pointTypes()::options(),
                 ]),
-
-            'points' => Inertia::lazy(
-                fn () => PointResource::collection(
-                    Point::query()
-                        ->whereWithin('location', $request->bounds)
-                        ->get()
-                )
-            ),
+            'points' => Inertia::lazy(fn () => PointResource::collection($points->get())),
             'point' => $point ? new PointResource($point) : null,
         ]);
     }
