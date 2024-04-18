@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-31 11:05:30
@@ -85,16 +87,15 @@ trait UsersReportTrait
                     ->schema([
                         Radio::make('group')
                             ->options([
-                                'service_type'=>__('report.column.service_type'),
-                                'point_type'=>__('report.column.point_type'),
-                                'county'=>__('report.column.county'),
-                                'city'=>__('report.column.city'),
-                                'status'=>__('report.column.issue_status'),
-                                'type'=>__('report.column.issue_type'),
-                                'points_added'=>__('report.column.points_added'),
-                                'issues_added'=>__('report.column.issues_added'),
-                            ])->afterStateUpdated(function ($state)
-                            {
+                                'service_type' => __('report.column.service_type'),
+                                'point_type' => __('report.column.point_type'),
+                                'county' => __('report.column.county'),
+                                'city' => __('report.column.city'),
+                                'status' => __('report.column.issue_status'),
+                                'type' => __('report.column.issue_type'),
+                                'points_added' => __('report.column.points_added'),
+                                'issues_added' => __('report.column.issues_added'),
+                            ])->afterStateUpdated(function ($state) {
                                 $this->updateGoupedBy($state);
                             })
                             ->required(),
@@ -108,26 +109,20 @@ trait UsersReportTrait
     protected function getUsersEloquentQuery(): Builder
     {
         $data = $this->data;
-        if (!$this->shouldGenerate)
-        {
+        if (! $this->shouldGenerate) {
             return Report::where('id', 0);
         }
         $query = MapPointModel::query()->leftJoin('reported_point_issues', 'reported_point_issues.point_id', '=', 'recycling_points.id');
 
-        foreach ($data['filters'] as $filter =>$value)
-        {
-            if (\is_null($value) || (\is_array($value) && \count($value) == 0))
-            {
+        foreach ($data['filters'] as $filter => $value) {
+            if (\is_null($value) || (\is_array($value) && \count($value) == 0)) {
                 continue;
             }
-            switch($filter)
-            {
+            switch($filter) {
                 case 'user_type':
-                    switch($value)
-                    {
+                    switch($value) {
                         case '-1':
-                            $query->where(function ($q)
-                            {
+                            $query->where(function ($q) {
                                 $q->where('created_by', '>', 0)->orWhereNull('created_by');
                             });
                             break;
@@ -135,8 +130,7 @@ trait UsersReportTrait
                             $query->where('created_by', '>', 0);
                             break;
                         case '1':
-                            $query->where(function ($q)
-                            {
+                            $query->where(function ($q) {
                                 $q->where('created_by', '=', 0)->orWhereNull('created_by');
                             });
                             break;
@@ -146,23 +140,20 @@ trait UsersReportTrait
                     $query->whereIn('point_type_id', $value);
                     break;
                 case 'city':
-                    $query->whereHas('fields', function ($q) use ($value)
-                    {
+                    $query->whereHas('fields', function ($q) use ($value) {
                         $q->where('field_type_id', MapPointTypes::City);
                         $q->whereIn('value', $value);
                     });
                     break;
                 case 'county':
-                    $query->whereHas('fields', function ($q) use ($value)
-                    {
+                    $query->whereHas('fields', function ($q) use ($value) {
                         $q->where('field_type_id', MapPointTypes::County);
                         $q->whereIn('value', $value);
                     });
                     break;
                 case 'range':
 
-                    if (!\is_null($value[0]) && !\is_null($value[1]))
-                    {
+                    if (! \is_null($value[0]) && ! \is_null($value[1])) {
                         $query->where('created_at', '<=', $value[1]);
                         $query->where('created_at', '>=', $value[0]);
                     }
@@ -178,8 +169,7 @@ trait UsersReportTrait
 
         ];
 
-        switch($this->groupedBy)
-        {
+        switch($this->groupedBy) {
             case 'service_type':
                 $query->join('recycling_point_services', 'recycling_points.service_id', '=', 'recycling_point_services.id');
                 $select[] = 'recycling_point_services.display_name as grouped_by';
@@ -201,8 +191,7 @@ trait UsersReportTrait
                 break;
             case 'city':
 
-                $query->join('field_type_recycling_point as fields', function ($join)
-                {
+                $query->join('field_type_recycling_point as fields', function ($join) {
                     $join->on('fields.recycling_point_id', '=', 'recycling_points.id')
                         ->where('fields.field_type_id', MapPointTypes::City);
                 });
@@ -212,8 +201,7 @@ trait UsersReportTrait
                 break;
             case 'county':
 
-                $query->join('field_type_recycling_point as county', function ($join)
-                {
+                $query->join('field_type_recycling_point as county', function ($join) {
                     $join->on('county.recycling_point_id', '=', 'recycling_points.id')
                         ->where('county.field_type_id', MapPointTypes::County);
                 });
@@ -241,10 +229,8 @@ trait UsersReportTrait
             default:
                 break;
         }
-        if (isset($data['filters']['activity_type']))
-        {
-            switch($data['filters']['activity_type'])
-            {
+        if (isset($data['filters']['activity_type'])) {
+            switch($data['filters']['activity_type']) {
                 case '0':
                     $query->having('recycling_point_type', 1);
                     break;
@@ -267,12 +253,10 @@ trait UsersReportTrait
     public function getUsersTableColumns(): array
     {
         $header = [];
-        if (\is_null($this->groupedBy))
-        {
+        if (\is_null($this->groupedBy)) {
             return $header;
         }
-        switch($this->groupedBy)
-        {
+        switch($this->groupedBy) {
             case 'service_type':
                 $header = MapPointServiceModel::all()->pluck('display_name');
                 break;
@@ -314,10 +298,8 @@ trait UsersReportTrait
                 break;
         }
         $columns = [];
-        if (\count($header))
-        {
-            foreach ($header as $head)
-            {
+        if (\count($header)) {
+            foreach ($header as $head) {
                 $columns[] = TextColumn::make($head)->label($head)->html();
             }
         }
@@ -335,8 +317,7 @@ trait UsersReportTrait
                         ->label(__('report.column.title'))
                         ->required(),
                 ])
-                ->action(function (array $data): void
-                {
+                ->action(function (array $data): void {
                     $report = new Report();
                     $report->form_data = $this->data;
                     $report->results = $this->formatResults($this->getUsersEloquentQuery()->get());
@@ -348,8 +329,7 @@ trait UsersReportTrait
                         ->success()
                         ->send();
                 })
-                ->visible(function ($record): bool
-                {
+                ->visible(function ($record): bool {
                     return $this->shouldGenerate;
                 }),
             TableAction::make('export_report')
@@ -360,20 +340,17 @@ trait UsersReportTrait
                         ->label(__('report.column.title'))
                         ->required(),
                 ])
-                ->action(function (array $data)
-                {
+                ->action(function (array $data) {
                     return Excel::download(new ReportsExport($this->getUsersEloquentQuery()->get(), $this->getTableColumns()), $data['title'] . '.xlsx');
                 })
-                ->visible(function ($record): bool
-                {
+                ->visible(function ($record): bool {
                     return $this->shouldGenerate;
                 }),
 
         ];
 
         return $table
-            ->query(function ()
-            {
+            ->query(function () {
                 return $this->getUsersEloquentQuery()->limit(100);
             })
             ->headerActions(
@@ -382,8 +359,8 @@ trait UsersReportTrait
             ->paginated(false)
             ->columns($this->getTableColumns())
             ->view('filament.resources.reports-resource.pages.view', [
-                'data'=>$this->data,
-                'header'=>$this->getTableColumns(),
+                'data' => $this->data,
+                'header' => $this->getTableColumns(),
             ]);
         // ->view('filament-tables::index');
     }

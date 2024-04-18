@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -26,15 +28,14 @@ class ActionLog extends Model
 
     public static function logAction(Collection $action): ?self
     {
-        if ($action->get('action') == 'created' || (!empty($action->get('old_values')) && !empty($action->get('new_values'))))
-        {
+        if ($action->get('action') == 'created' || (! empty($action->get('old_values')) && ! empty($action->get('new_values')))) {
             $item = new self();
             $item->model = $action->get('model');
             $item->model_id = $action->get('model_id');
             $item->user_id = $action->get('user_id');
             $item->action = $action->get('action');
-            $item->old_values = !empty($action->get('old_values')) ? json_encode($action->get('old_values')) : null;
-            $item->new_values = !empty($action->get('new_values')) ? json_encode($action->get('new_values')) : null;
+            $item->old_values = ! empty($action->get('old_values')) ? json_encode($action->get('old_values')) : null;
+            $item->new_values = ! empty($action->get('new_values')) ? json_encode($action->get('new_values')) : null;
             $item->save();
 
             return $item;
@@ -46,51 +47,32 @@ class ActionLog extends Model
     public static function formatValuesText($record, $values = 'old_values'): string
     {
         $text = '';
-        if (!empty($record->$values))
-        {
+        if (! empty($record->$values)) {
             $values = json_decode($record->$values, true);
-            foreach ($values as $key=>$val)
-            {
-                if ($record->action == 'location_update')
-                {
+            foreach ($values as $key => $val) {
+                if ($record->action == 'location_update') {
                     $text .= trans('actions.' . $key) . ': ' . $val . '<br />';
-                }
-                elseif ($record->action == 'details_update')
-                {
-                    if ($key == 'materials')
-                    {
+                } elseif ($record->action == 'details_update') {
+                    if ($key == 'materials') {
                         $text .= trans('actions.' . $key) . '<br />';
-                        foreach (RecycleMaterialModel::whereIn('id', $val)->get() as $material)
-                        {
+                        foreach (RecycleMaterialModel::whereIn('id', $val)->get() as $material) {
                             $text .= $material->name . '<br />';
                         }
-                    }
-                    elseif ($key == 'opening_hours')
-                    {
+                    } elseif ($key == 'opening_hours') {
                         $text .= trans('actions.opening_hours') . '<br />';
-                        foreach (json_decode($val, true) as $schedule)
-                        {
+                        foreach (json_decode($val, true) as $schedule) {
                             $text .= trans('actions.start_day') . trans('common.week_days.' . $schedule['start_day']) . ' ' . $schedule['start_hour'] . '<br/ >';
                             $text .= trans('actions.end_day') . trans('common.week_days.' . $schedule['end_day']) . ' ' . $schedule['end_hour'] . '<br/ >';
                         }
-                    }
-                    elseif (\in_array($key, ['notes', 'website', 'email', 'phone_no']))
-                    {
+                    } elseif (\in_array($key, ['notes', 'website', 'email', 'phone_no'])) {
                         $text .= trans('actions.' . $key) . ' ' . $val . '<br />';
-                    }
-                    else
-                    {
+                    } else {
                         $text .= trans('actions.' . $key . '.' . strtolower($val)) . '<br />';
                     }
-                }
-                else
-                {
-                    if ($key == 'group')
-                    {
+                } else {
+                    if ($key == 'group') {
                         $text .= $val . '<br />';
-                    }
-                    else
-                    {
+                    } else {
                         $text .= trans('actions.' . $key . '.' . strtolower($val)) . '<br />';
                     }
                 }

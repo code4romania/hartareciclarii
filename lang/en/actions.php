@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-04 21:09:08
@@ -8,7 +10,7 @@
  */
 return [
     'change_status' => '<strong>Change status</strong>',
-    'status'=>[
+    'status' => [
         '1' => 'Verified',
         '0' => 'Need verification',
     ],

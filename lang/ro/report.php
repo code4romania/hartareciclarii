@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
@@ -19,7 +21,7 @@ return [
         'city' => 'Oras',
         'county' => 'Judet',
         'range_start' => 'Adaugat incepand cu',
-        'range_end'=> 'Adaugat sfarsind cu',
+        'range_end' => 'Adaugat sfarsind cu',
         'title' => 'Titlu raport',
         'created_at' => 'Creat',
         'range' => 'Perioada',
@@ -54,19 +56,19 @@ return [
 
     ],
     'action' => [
-        'generate'=> 'Genereaza raport',
-        'reset'=>'Reseteaza raportul',
+        'generate' => 'Genereaza raport',
+        'reset' => 'Reseteaza raportul',
         'save_report' => 'Salveaza raportul',
         'export' => 'Exporta',
         'saved' => 'Raport salvat',
     ],
-    'section'=>[
+    'section' => [
         'generator' => 'Genereaza raport',
         'filter_dates_by' => 'Filtreaza datele dupa: ',
         'group_info_by' => 'Grupeaza informatiile in tabel dupa: ',
         'filter_date_range' => 'Perioada',
     ],
-    'header'=>[
+    'header' => [
         'list' => 'Lista rapoarte',
     ],
     'placeholder' => [

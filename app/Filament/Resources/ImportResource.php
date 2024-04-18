@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ImportResource\Pages;
@@ -58,14 +60,10 @@ class ImportResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->getStateUsing(
-                        static function ($record): string
-                        {
-                            try
-                            {
+                        static function ($record): string {
+                            try {
                                 return \count($record->result['processed']);
-                            }
-                            catch(\Exception  $e)
-                            {
+                            } catch(\Exception  $e) {
                                 return 0;
                             }
                         }
@@ -76,14 +74,10 @@ class ImportResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->getStateUsing(
-                        static function ($record): string
-                        {
-                            try
-                            {
+                        static function ($record): string {
+                            try {
                                 return \count($record->result['failed']);
-                            }
-                            catch(\Exception  $e)
-                            {
+                            } catch(\Exception  $e) {
                                 return 0;
                             }
                         }
@@ -93,24 +87,20 @@ class ImportResource extends Resource
                     ->label(__('import.columns.status'))
                     ->sortable()
                     ->searchable()
-                    ->formatStateUsing(function ($state, $record)
-                    {
-                        if ($state == 2 && \count($record->result['errors']))
-                        {
+                    ->formatStateUsing(function ($state, $record) {
+                        if ($state == 2 && \count($record->result['errors'])) {
                             $errors = '';
-                            foreach ($record->result['errors'] as $err)
-                            {
+                            foreach ($record->result['errors'] as $err) {
                                 $errors .= __('import.' . $err);
                             }
 
                             return $errors;
                         }
 
-                        return match ($state)
-                        {
+                        return match ($state) {
                             0 => __('import.status.pending'),
                             1 => __('import.status.processing'),
-                            2 => '<a href="' . self::getUrl('view_report', ['record'=>$record->id]) . '">' . __('import.status.view') . '</a>',
+                            2 => '<a href="' . self::getUrl('view_report', ['record' => $record->id]) . '">' . __('import.status.view') . '</a>',
                         };
                     })
                     ->html(),
@@ -119,8 +109,7 @@ class ImportResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make()->iconButton()->hidden(function ($record)
-                {
+                Tables\Actions\DeleteAction::make()->iconButton()->hidden(function ($record) {
                     return $record->status != 0;
                 }),
             ])

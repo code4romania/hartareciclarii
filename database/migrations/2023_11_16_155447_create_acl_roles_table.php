@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +21,7 @@ class CreateAclRolesTable extends Migration
             $table->string('guard_name');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            
+
             $table->unique(['name', 'guard_name'], 'acl_roles_name_guard_name_unique');
         });
     }

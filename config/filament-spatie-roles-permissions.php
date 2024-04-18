@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     'preload_roles' => true,
@@ -8,7 +10,7 @@ return [
 
     'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
 
-    'team_model' => \App\Models\Team::class,
+    'team_model' => App\Models\Team::class,
 
     /*
      * Set to false to remove from navigation
@@ -104,7 +106,7 @@ return [
         ],
 
         'excluded_policy_models' => [
-            \App\Models\User::class,
+            App\Models\User::class,
         ],
 
         /*
@@ -114,7 +116,7 @@ return [
             //'view-log'
         ],
 
-        'user_model' => \App\Models\User::class,
+        'user_model' => App\Models\User::class,
 
         'policies_namespace' => 'App\Policies',
     ],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-10-23 10:36:09
@@ -19,23 +21,23 @@ return [
         'city' => 'City',
         'county' => 'County',
         'range_start' => 'Added starting with',
-        'range_end'=> 'Added ending with',
+        'range_end' => 'Added ending with',
         'title' => 'Report title',
         'created_at' => 'Created',
 
     ],
     'action' => [
-        'generate'=> 'Genereaza raport',
-        'reset'=>'Reseteaza raportul',
+        'generate' => 'Genereaza raport',
+        'reset' => 'Reseteaza raportul',
         'save_report' => 'Salveaza raportul',
         'export' => 'Exporta',
         'view_list' => 'Vezi lista',
     ],
-    'section'=>[
+    'section' => [
         'generator' => 'Generate report',
         'filter_date_range' => 'Date range',
     ],
-    'header'=>[
+    'header' => [
         'list' => 'Reports list',
     ],
     'placeholder' => [

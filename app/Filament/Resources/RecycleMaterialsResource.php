@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecycleMaterialsResource\Pages;
@@ -72,8 +74,7 @@ class RecycleMaterialsResource extends Resource
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make()->action(function ($record)
-                    {
+                    Tables\Actions\DeleteAction::make()->action(function ($record) {
                         $record->aliases()->delete();
                         $record->delete();
                     }),

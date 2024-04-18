@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @Author: Bogdan Bocioaca
  * @Date:   2023-11-09 20:15:28
@@ -45,8 +47,7 @@ class IssueType2 extends Component implements HasForms
                     ->readonly(),
                 Textarea::make('map_point')
                     ->label(__('issues.labels.original_address'))
-                    ->formatStateUsing(function ($state, $record)
-                    {
+                    ->formatStateUsing(function ($state, $record) {
                         return $record->map_point->address;
                     })
                     ->readonly(),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -14,14 +16,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-	use HasFactory;
-	
+    use HasFactory;
+
     protected $table = 'reports';
 
     protected $guarded = ['id'];
 
     protected $casts = [
-        'form_data'=>'array',
-        'results'=> 'array',
+        'form_data' => 'array',
+        'results' => 'array',
     ];
 }

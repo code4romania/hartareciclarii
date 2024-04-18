@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\IssuesResource\Pages;
 
 use App\Filament\Resources\IssuesResource;
@@ -25,10 +27,8 @@ class ListIssues extends ListRecords
         $this->type = request()->get('type', $map_point_types->first()->type_name);
         $tabs = [];
 
-        foreach ($map_point_types as $type)
-        {
-            $tabs[$type->display_name] = Tab::make($type->display_name)->modifyQueryUsing(function ($query) use ($type)
-            {
+        foreach ($map_point_types as $type) {
+            $tabs[$type->display_name] = Tab::make($type->display_name)->modifyQueryUsing(function ($query) use ($type) {
                 return $query->whereIn('point_id', $type->map_points->pluck('id')->toArray());
             });
         }

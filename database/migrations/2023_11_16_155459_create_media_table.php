@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,7 +33,7 @@ class CreateMediaTable extends Migration
             $table->json('responsive_images');
             $table->unsignedInteger('order_column')->nullable()->index('media_order_column_index');
             $table->timestamps();
-            
+
             $table->index(['model_type', 'model_id'], 'media_model_type_model_id_index');
         });
     }

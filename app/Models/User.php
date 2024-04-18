@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -21,11 +23,8 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
 {
     use HasApiTokens;
-
     use HasFactory;
-
     use Notifiable;
-
     use HasRoles;
 
     /**
@@ -85,10 +84,8 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         $issues = IssueResource::collection(Issue::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
 
         $contributions = [];
-        if (!empty($mapPoints))
-        {
-            foreach ($mapPoints->collection->toArray() as $mapPoint)
-            {
+        if (! empty($mapPoints)) {
+            foreach ($mapPoints->collection->toArray() as $mapPoint) {
                 $contributions[] =
                 [
                     'date' => $mapPoint['created_at'],
@@ -101,10 +98,8 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
             }
         }
 
-        if (!empty($issues))
-        {
-            foreach ($issues->collection->toArray() as $issue)
-            {
+        if (! empty($issues)) {
+            foreach ($issues->collection->toArray() as $issue) {
                 $contributions[] =
                     [
                         'date' => $issue['created_at'],
@@ -122,12 +117,9 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
 
     private static function getAddress($fields)
     {
-        if (!empty($fields))
-        {
-            foreach ($fields as $field)
-            {
-                if ($field['field']['field_name'] == 'address')
-                {
+        if (! empty($fields)) {
+            foreach ($fields as $field) {
+                if ($field['field']['field_name'] == 'address') {
                     return $field['value'];
                 }
             }

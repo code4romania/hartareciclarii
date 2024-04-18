@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\ReportsResource\Pages;
 
 use App\Filament\Resources\ReportsResource;
@@ -31,8 +33,8 @@ class ViewReport extends ViewRecord
         $text = '';
 
         foreach($filters['filters'] as $filter => $value):
-            if(!empty($value)):
-                if($filter == 'range' && (!empty($value[0]) || !empty($value[1]))):
+            if(! empty($value)):
+                if($filter == 'range' && (! empty($value[0]) || ! empty($value[1]))):
                     $text .= __('report.column.' . $filter) . ': ' . implode(',', $value) . '<br />';
                 elseif($filter != 'range'):
                     $text .= $this->formatFilter($filter, $value);
@@ -47,8 +49,7 @@ class ViewReport extends ViewRecord
 
     public function formatFilter($filter, $value)
     {
-        switch($filter)
-        {
+        switch($filter) {
             case 'service_type':
                 $value = MapPointServiceModel::whereIn('id', $value)->get()->pluck('display_name')->toArray();
                 break;

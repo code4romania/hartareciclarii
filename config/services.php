@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -33,13 +35,13 @@ return [
     'maps' => [
         'defaults' => [
             'latitude' => 44.4268,
-            'longitude' =>26.1025,
+            'longitude' => 26.1025,
         ],
     ],
-    'nominatim'=>[
+    'nominatim' => [
         //'url'=>'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
-        'url'=>'https://nominatim.openstreetmap.org',
-        'reverse'=>'/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
+        'url' => 'https://nominatim.openstreetmap.org',
+        'reverse' => '/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
     ],
 
 ];

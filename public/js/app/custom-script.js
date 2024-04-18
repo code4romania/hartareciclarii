@@ -2,71 +2,13 @@
 * @Author: Bogdan Bocioaca
 * @Date:   2023-10-04 12:16:53
 * @Last Modified by:   Bogdan Bocioaca
-* @Last Modified time: 2023-12-18 16:51:17
+* @Last Modified time: 2023-10-23 18:14:10
 */
 latitude = null;
 longitude = null;
 reverse_url = null;
-nominatim_url = null;
 map = null
-marker = null;
 event = new Event('input');
-var typingTimer;
-var doneTypingInterval = 1000
-const latElem = document.getElementById("input_lat");
-const lonElem = document.getElementById("input_lon");
-const cityElem = document.getElementById("input_city");
-var addressElem = document.getElementById("data.address");
-
-
-if(typeof addressElem === "undefined" || !addressElem){
-	var addressElem = document.getElementById("mountedActionsData.0.address");
-}
-if(typeof addressElem !== "undefined" && addressElem ){
-	addressElem.addEventListener("keyup", function(){
-		clearTimeout(typingTimer);
-	  	typingTimer = setTimeout(reverseAddress, doneTypingInterval);
-
-	});
-	addressElem.addEventListener('keydown', function () {
-	  clearTimeout(typingTimer);
-	});
-}
-function reverseAddress(e) {
-	if(addressElem.value.length > 3){
-		let url = `${nominatim_url}/search?format=json&q=${addressElem.value}&addressdetails=1`;
-		fetch(url)
-		.then(response=>response.json())
-		.then(function(json){
-			if(json.length > 0 && json[0] !== "undefined"){
-				console.log(json[0])
-				let result = json[0];
-				console.log(result)
-				var r = {lat: parseFloat(result.lat), lon: parseFloat(result.lon)}
-
-				latElem.value = result.lat
-				lonElem.value = result.lon
-				latElem.dispatchEvent(event);
-				lonElem.dispatchEvent(event);
-				addressElem.dispatchEvent(event);
-				if (marker) {
-					marker
-					.setLatLng(r);
-				} else {
-					marker = L.marker(r)
-					.bindPopup(addressElem.value)
-					.addTo(map);
-				}
-				map.panTo(new L.LatLng(r.lat,r.lon))
-			}
-
-
-		})
-
-	}
-
-}
-
 document.addEventListener('alpine:init', () => {
 	Alpine.data('map', () => ({
 		title: '',
@@ -94,12 +36,11 @@ function initMap(params){
 	latitude = params.latitude;
 	longitude = params.longitude
 	reverse_url = params.reverse_url
-	nominatim_url = params.nominatim_url
 	map = L.map('recycle-point-map').setView([latitude,longitude], 16);
 	setInterval(function() {
 		map.invalidateSize();
 	}, 200);
-	marker = new L.Marker([latitude, longitude],{
+	var marker = new L.Marker([latitude, longitude],{
 		draggable: true,
 		autoPan: true
 	});
@@ -133,7 +74,7 @@ function initMap(params){
 		geocoder.reverse(e.latlng, map.options.crs.scale(map.getZoom()), function(results) {
 			var r = results[0];
 			if (r) {
-				console.log(r.center)
+
 				if (marker) {
 					marker
 					.setLatLng(r.center);
@@ -163,6 +104,9 @@ function onMapClick(e) {
 
 
 function updateInputs(latitude, longitude){
+	const latElem = document.getElementById("input_lat");
+	const lonElem = document.getElementById("input_lon");
+	const cityElem = document.getElementById("input_city");
 	var addressElem = document.getElementById("data.address");
 	if(typeof addressElem === "undefined" || !addressElem){
 		var addressElem = document.getElementById("mountedActionsData.0.address");
@@ -185,7 +129,6 @@ function updateInputs(latitude, longitude){
 		addressElem.dispatchEvent(event);
 	})
 }
-
 	// document.addEventListener("DOMContentLoaded", () => {
 	// 	getLocation()
 	// })

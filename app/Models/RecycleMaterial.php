@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @Author: bib
  * @Date:   2023-10-03 10:55:55
@@ -16,7 +18,8 @@ use Illuminate\Support\Collection;
 
 class RecycleMaterial extends Model
 {
-	use HasFactory;
+    use HasFactory;
+
     protected $table = 'materials';
 
     protected $fillable = ['name'];
@@ -30,18 +33,18 @@ class RecycleMaterial extends Model
     {
         return $this->hasMany(RecycleMaterialAliasModel::class, 'parent');
     }
-	
-	public static function getAvailableMaterialsOnServiceId(int $service_id) : Collection
-	{
-		$sql = self::
-			select(
-				'materials.*',
-				\DB::raw('IFNULL(materials.order, 10000) AS `order`')
-			)
-			->whereNull('is_wildcard')
-			//->whereRaw('id IN (SELECT material_id FROM material_recycling_point mrp, recycling_points rp WHERE mrp.recycling_point_id = rp.id AND rp.service_id = '.$service_id.')')
-			->orderBy('order', 'ASC');
-		
-		return $sql->get();
-	}
+
+    public static function getAvailableMaterialsOnServiceId(int $service_id): Collection
+    {
+        $sql = self::
+            select(
+                'materials.*',
+                \DB::raw('IFNULL(materials.order, 10000) AS `order`')
+            )
+                ->whereNull('is_wildcard')
+            //->whereRaw('id IN (SELECT material_id FROM material_recycling_point mrp, recycling_points rp WHERE mrp.recycling_point_id = rp.id AND rp.service_id = '.$service_id.')')
+                ->orderBy('order', 'ASC');
+
+        return $sql->get();
+    }
 }

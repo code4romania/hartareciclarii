@@ -1,23 +1,32 @@
 <?php
 
-/*
- * @Author: bib
- * @Date:   2023-10-03 10:55:55
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-10 13:13:54
- */
+declare(strict_types=1);
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use MatanYadaev\EloquentSpatial\Objects\Polygon;
+use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
 class County extends Model
 {
-    protected $table = 'counties';
-	
-	public function cities(): HasMany
-	{
-		return $this->hasMany(City::class);
-	}
+    use HasSpatial;
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'pol',
+        'name',
+        'siruta',
+    ];
+
+    protected $casts = [
+        'pol' => Polygon::class,
+    ];
+
+    public function cities(): HasMany
+    {
+        return $this->hasMany(City::class);
+    }
 }
