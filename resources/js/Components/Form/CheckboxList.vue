@@ -12,13 +12,14 @@
                 :autofocus="autofocus"
             />
 
-            <span class="text-sm font-medium text-gray-700" v-text="option.label" />
+            <span class="text-sm font-medium text-gray-700" v-text="trans(option.label)" />
         </label>
     </div>
 </template>
 
 <script setup>
     import { computed, onMounted } from 'vue';
+    import {trans} from "laravel-vue-i18n";
 
     const props = defineProps({
         options: {

@@ -18,7 +18,7 @@ class HomeController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(MapRequest $request): Response
+    public function __invoke(MapRequest $request, ?Point $point = null): Response
     {
         return Inertia::render('Home', [
             'service_types' => ServiceType::options(),
@@ -35,6 +35,7 @@ class HomeController extends Controller
                         ->get()
                 )
             ),
+            'point' => $point ? new PointResource($point) : null,
         ]);
     }
 

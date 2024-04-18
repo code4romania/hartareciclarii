@@ -22,7 +22,25 @@
             <template v-for="(search, index) in searchResults">
                 <li v-for="item in search" :key="item">
                     <Link
-                        :href="`/points/${item.id}`"
+                        v-if="index==='points'"
+                        :href="`/point/${item.id}`"
+                        @click="$emit('goToPoint', item)"
+                        class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                        <MapPinIcon class="w-5 h-5 fill-gray-400" />
+                        <span class="flex-1 truncate" v-text="item.name" />
+                    </Link>
+                    <Link
+                        v-if="index==='materials'"
+                        :href="`/material/${item.id}`"
+                        @click="$emit('goToPoint', item)"
+                        class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                        <MapPinIcon class="w-5 h-5 fill-gray-400" />
+                        <span class="flex-1 truncate" v-text="item.name" />
+                    </Link>
+                    <Link
+                        v-if="index==='nominatim'"
                         @click="$emit('goToPoint', item)"
                         class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
@@ -63,6 +81,7 @@
     watch(query, runQuery);
 
     const goToPoint = (item) => {
+        console.log(item);
         emit('goToPoint', item);
     };
 </script>

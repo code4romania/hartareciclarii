@@ -12,9 +12,8 @@
                     class="flex items-center justify-between w-full text-gray-700"
                     type="button"
                     @click="selectedServiceType = type"
-                >
-                    {{ label }}
-                </button>
+                    v-text="trans(label)"
+                />
             </li>
         </ul>
 
@@ -45,6 +44,7 @@
     import { FunnelIcon } from '@heroicons/vue/24/outline';
     import { usePage } from '@inertiajs/vue3';
     import CheckboxList from '@/Components/Form/CheckboxList.vue';
+    import {trans} from "laravel-vue-i18n";
 
     const hasResults = ref(false);
     const collectedFilters = ref({});

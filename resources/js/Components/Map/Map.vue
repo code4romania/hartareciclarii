@@ -48,10 +48,16 @@
             type: Object,
             default: null,
         },
+        point: {
+            type: Object,
+            default: null,
+        },
     });
 
     const map = ref(null);
     const selectedPoint = computed(() => props.selectedPoint);
+    const point = computed(()=>props.point);
+    console.log(point.value)
 
     const moveend = (event) => {
         const bounds = event.target.getBounds();
@@ -74,6 +80,7 @@
         const { coords, locatedAt, error, resume, pause } = useGeolocation({
             enableHighAccuracy: true,
         });
+        console.log(point.value)
 
         watch(locatedAt, () => {
             pause();
