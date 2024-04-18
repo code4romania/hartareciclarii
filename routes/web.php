@@ -23,7 +23,7 @@ Route::get('/profile', function () {
     return view('welcome');
 });
 Route::get('/point/{point}', HomeController::class)->name('point');
-Route::get('/material/{material}', HomeController::class)->name('point');
+Route::get('/material/{material}', HomeController::class)->name('material');
 
 
 Route::prefix('admin')->group(function () {
