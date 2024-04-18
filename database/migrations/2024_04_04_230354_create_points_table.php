@@ -24,8 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(County::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(City::class)->constrained()->cascadeOnDelete();
             $table->string('address');
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->point('location')->isGeometry()->nullable();
             $table->text('notes')->nullable();
             $table->string('administered_by')->nullable();
             $table->string('name');

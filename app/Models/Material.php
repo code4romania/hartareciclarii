@@ -18,4 +18,9 @@ class Material extends Model
     {
         return $this->belongsToMany(MaterialCategory::class);
     }
+
+    public function points(): BelongsToMany
+    {
+        return $this->belongsToMany(Point::class);
+    }
 }

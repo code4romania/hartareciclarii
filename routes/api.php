@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 /*
- * Public Routes
- */
+* Public Routes
+*/
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/user/register', [UserController::class, 'register']);
@@ -34,14 +34,14 @@ Route::post('/static/recapcha', [StaticController::class, 'recapcha']);
 
 Route::get('/map/nomenclatures', [MapController::class, 'nomenclatures']);
 Route::get('/map/points', [MapController::class, 'points']);
-Route::get('/map/point/{point}', [MapController::class, 'point']);
+Route::get('/map/point/{id_point}', [MapController::class, 'point']);
 
 Route::post('/map/points', [MapController::class, 'create']);
 Route::post('/report/problem/{point_id}', [MapController::class, 'report']);
 
 /*
- * Protected Routes
- */
+* Protected Routes
+*/
 Route::get('/user/profile', [UserController::class, 'profile'])->middleware('auth:sanctum');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 

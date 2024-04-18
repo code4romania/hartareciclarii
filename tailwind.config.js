@@ -1,19 +1,23 @@
-/*
-import preset from './vendor/filament/support/tailwind.config.preset'
- */
+const colors = require('tailwindcss/colors');
+
 export default {
-    //presets: [preset],
+    darkMode: 'class',
+    theme: {
+        extend: {
+            //
+        }
+    },
     content: [
-        './app/Filament/**/*.php',
+        './app/**/*.php',
+        './resources/js/**/*.{vue,js,ts,jsx,tsx}',
+        './resources/views/**/*.blade.php',
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
-        "./resources/js/**/*.{vue,js,ts,jsx,tsx}",
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
     ],
     plugins: [
+        require('@tailwindcss/aspect-ratio'),
         require('@tailwindcss/forms'),
+        require('@tailwindcss/typography'),
     ],
-    corePlugins: {
-
-      //  visibility: false,
-    }
 }

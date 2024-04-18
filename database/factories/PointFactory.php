@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\Material;
 use App\Models\Point;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 /**
  * @extends Factory<\App\Models\Point>
@@ -32,9 +33,11 @@ class PointFactory extends Factory
         $serviceTypeEnum = ServiceType::from($serviceType);
         $city = City::query()->inRandomOrder()->first();
 
+        $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
+        $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
+
         return [
-            'latitude' => $this->faker->randomFloat(6, $latitudeRange[0], $latitudeRange[1]),
-            'longitude' => $this->faker->randomFloat(6, $longitudeRange[0], $longitudeRange[1]),
+            'location' => new SpatialPoint($latitude, $longitude),
             'county_id' => $city->county_id,
             'city_id' => $city->id,
             'address' => $this->faker->address,
@@ -92,5 +95,18 @@ class PointFactory extends Factory
         return $this->afterCreating(function (Point $point) {
             $point->materials()->attach(Material::query()->inRandomOrder()->limit(3)->get());
         });
+    }
+
+    public function inLisbon(): static
+    {
+        $latitudeRange = [38.7363163, 38.7408642];
+        $longitudeRange = [-9.1353215, -9.1325596];
+
+        return $this->state(fn (array $attributes) => [
+            'location' => new SpatialPoint(
+                fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]),
+                fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1])
+            ),
+        ]);
     }
 }

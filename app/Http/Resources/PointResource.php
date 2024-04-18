@@ -9,32 +9,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PointResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    public static $wrap = null;
+
     public function toArray(Request $request): array
     {
         return [
-            'service' => $this->service_type->label(),
-            'type' => $this->point_type_enum->label(),
-            'source' => $this->source->label(),
+            'id' => $this->id,
+            'latitude' => $this->location->latitude,
+            'longitude' => $this->location->longitude,
+            'latlng' => [$this->location->latitude, $this->location->longitude],
             'name' => $this->name,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-            'city' => $this->city->name,
-            'country' => $this->county->name,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'email' => $this->email,
-            'website' => $this->website,
-            'notes' => $this->notes,
-            'observations' => $this->observations,
-            'schedule' => $this->schedule,
-            'status' => $this->status->label(),
-            'materials' => MaterialResource::collection($this->whenLoaded('materials')),
-
         ];
     }
 }

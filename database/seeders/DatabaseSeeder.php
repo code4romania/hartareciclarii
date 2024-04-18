@@ -37,10 +37,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 //        User::factory(10)->create();
-        $this->call(
-            MaterialSeeder::class
-        );
+//        $this->call(
+//            MaterialSeeder::class
+//        );
 
-        Point::factory(100)->create();
+        Point::factory(100)
+
+            ->create();
     }
 }

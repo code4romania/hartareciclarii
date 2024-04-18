@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Concerns\HasLocation;
 use App\Enums\Point\ServiceType;
-use App\Enums\Point\Source;
 use App\Enums\Point\Status;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
+use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
 class Point extends Model
 {
     use HasFactory;
-    use HasLocation;
+    use HasSpatial;
 
     protected $fillable = [
-        'latitude',
-        'longitude',
         'address',
         'name',
         'phone',
@@ -33,14 +29,14 @@ class Point extends Model
         'status',
         'service_type',
         'point_type',
-
+        'location',
     ];
 
     protected $casts = [
         'schedule' => 'array',
         'status' => Status::class,
         'service_type' => ServiceType::class,
-        'source' => Source::class,
+        'location' => SpatialPoint::class,
     ];
 
     public function materials(): BelongsToMany
@@ -50,20 +46,6 @@ class Point extends Model
 
     public function getPointTypeEnumAttribute()
     {
-        return $this->service_type->pointTypes()::from($this->point_type);
-    }
-
-    public function scopeInBounds(Builder $query, $bounds): Builder
-    {
-        $polygon = [
-            $bounds['northEast']['lat'] . ' ' . $bounds['northEast']['lng'],
-            $bounds['northWest']['lat'] . ' ' . $bounds['northWest']['lng'],
-            $bounds['southWest']['lat'] . ' ' . $bounds['southWest']['lng'],
-            $bounds['southEast']['lat'] . ' ' . $bounds['southEast']['lng'],
-            $bounds['northEast']['lat'] . ' ' . $bounds['northEast']['lng'],
-        ];
-        $boundarySearch = "ST_WITHIN(POINT(latitude, longitude), ST_GEOMETRYFROMTEXT('POLYGON((" . implode(', ', $polygon) . "))'))";
-
-        return $query->where(DB::raw($boundarySearch), 1);
+        return $this->service_type->pointTypes();
     }
 }

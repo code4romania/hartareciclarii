@@ -26,7 +26,7 @@ enum ServiceType: string
 
     public function pointTypes(): string
     {
-        return  match ($this) {
+        return match ($this) {
             self::WASTE_COLLECTION => WestCollectionType::class,
             self::REPAIRS => RepairsType::class,
             self::REUSE => ReuseType::class,
