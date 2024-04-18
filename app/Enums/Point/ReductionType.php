@@ -17,6 +17,7 @@ enum ReductionType: string
     case BULK_SALES_SHOPS = 'bulk_sales_shops';
     case SHOPS_ACCEPTING_OWN_PACKAGING = 'shops_accepting_own_packaging';
     case OTHER_REDUCTION_SERVICES = 'other_reduction_services';
+
     public function labelKeyPrefix(): string
     {
         return 'enums.point.reduction_types';

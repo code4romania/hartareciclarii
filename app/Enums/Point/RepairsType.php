@@ -23,6 +23,7 @@ enum RepairsType: string
     case FURNITURE_REPAIRS = 'furniture_repairs';
     case BICYCLE_REPAIRS = 'bicycle_repairs';
     case OTHER_REPAIRS = 'other_repairs';
+
     public function labelKeyPrefix(): string
     {
         return 'enums.point.repairs_types';

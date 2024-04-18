@@ -12,8 +12,8 @@ enum DonationsType: string
     use Arrayable;
     use HasLabel;
 
-
     case DONATION_CENTER = 'donation_center';
+
     public function labelKeyPrefix(): string
     {
         return 'enums.point.donation_types';
