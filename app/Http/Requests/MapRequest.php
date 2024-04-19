@@ -16,9 +16,13 @@ class MapRequest extends FormRequest
         if (! $this->bounds) {
             return;
         }
+        if (! $this->center) {
+            return;
+        }
 
         $this->merge([
             'bounds' => explode(',', $this->bounds),
+            'center' => explode(',', $this->center),
         ]);
     }
 
@@ -29,6 +33,7 @@ class MapRequest extends FormRequest
             'bounds' => ['nullable', 'array', 'size:4'],
             'bounds.*' => ['numeric', 'between:-180,180'],
             'search' => 'nullable|string',
+            'center' => ['nullable', 'array', 'size:2'],
         ];
     }
 
@@ -37,8 +42,12 @@ class MapRequest extends FormRequest
         if (! $this->bounds) {
             return;
         }
+        if (! $this->center) {
+            return;
+        }
         $this->merge([
             'bounds' => $this->makePolygon($this->bounds),
+            'center' => new Point((float) $this->center[0], (float) $this->center[1]),
         ]);
     }
 

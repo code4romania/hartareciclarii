@@ -11,6 +11,7 @@ use App\Models\Material;
 use App\Models\Point;
 use Inertia\Inertia;
 use Inertia\Response;
+use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
 use NominatimLaravel\Content\Nominatim;
 
 class HomeController extends Controller
@@ -18,23 +19,31 @@ class HomeController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(MapRequest $request, ?Point $point = null): Response
+    public function __invoke(MapRequest $request): Response
     {
-        $points = Point::query();
-        if (! empty($request->bounds)) {
-            $points->whereWithin('location', $request->bounds);
-        }
+        return Inertia::render('Home', $this->defaultProps($request));
+    }
 
-        return Inertia::render('Home', [
-            'service_types' => ServiceType::options(),
-            'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search)),
-            'point_types' => collect(ServiceType::cases())
-                ->mapWithKeys(fn (ServiceType $serviceType) => [
-                    $serviceType->value => $serviceType->pointTypes()::options(),
-                ]),
-            'points' => Inertia::lazy(fn () => PointResource::collection($points->get())),
-            'point' => $point ? new PointResource($point) : null,
-        ]);
+    public function point(MapRequest $request, Point $point): Response
+    {
+        return Inertia::render(
+            'Home',
+            array_merge(
+                ['point' => new PointResource($point)],
+                $this->defaultProps($request)
+            )
+        );
+    }
+
+    public function material(MapRequest $request, Material $material): Response
+    {
+        return Inertia::render(
+            'Home',
+            array_merge(
+                ['point' => new PointResource($material)],
+                $this->defaultProps($request)
+            )
+        );
     }
 
     private function getNominatimResults(string $search): array
@@ -48,7 +57,7 @@ class HomeController extends Controller
         return $nominatim->find($nominatimSearch);
     }
 
-    private function getSearchResults($search)
+    private function getSearchResults($search, PointObject $center)
     {
         if (empty($search)) {
             return [];
@@ -56,6 +65,7 @@ class HomeController extends Controller
 
         $points = Point::query()
             ->whereAny(['name', 'address', 'phone', 'email', 'website', 'notes'], 'LIKE', '%' . $search . '%')
+            ->orderByDistance('location', $center)
             ->get();
 
         $nominatimResults = collect($this->getNominatimResults($search))
@@ -66,13 +76,32 @@ class HomeController extends Controller
             ]);
 
         $materials = Material::query()->where('name', 'LIKE', '%' . $search . '%')
-            ->whereHas('points')
+            ->whereHas('points', fn ($query) => $query->orderByDistance('location', $center))
             ->get();
 
         return [
             'points' => $points,
             'nominatim' => $nominatimResults,
             'materials' => $materials,
+        ];
+    }
+
+    private function defaultProps(MapRequest $request): array
+    {
+        $points = Point::query();
+        if (! empty($request->bounds)) {
+            $points->whereWithin('location', $request->bounds)
+                ->orderByDistance('location', $request->center);
+        }
+
+        return [
+            'service_types' => ServiceType::options(),
+            'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search, $request->center)),
+            'point_types' => collect(ServiceType::cases())
+                ->mapWithKeys(fn (ServiceType $serviceType) => [
+                    $serviceType->value => $serviceType->pointTypes()::options(),
+                ]),
+            'points' => Inertia::lazy(fn () => PointResource::collection($points->get())),
         ];
     }
 }

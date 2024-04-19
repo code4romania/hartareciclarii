@@ -22,9 +22,8 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/profile', function () {
     return view('welcome');
 });
-Route::get('/point/{point}', HomeController::class)->name('point');
-Route::get('/material/{material}', HomeController::class)->name('material');
-
+Route::get('/point/{point}', [HomeController::class, 'point'])->name('point');
+Route::get('/material/{material}', [HomeController::class, 'material'])->name('material');
 
 Route::prefix('admin')->group(function () {
     Route::middleware('auth')->group(function () {

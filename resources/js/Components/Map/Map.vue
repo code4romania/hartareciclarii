@@ -57,14 +57,16 @@
     const map = ref(null);
     const selectedPoint = computed(() => props.selectedPoint);
     const point = computed(()=>props.point);
-    console.log(point.value)
+
 
     const moveend = (event) => {
         const bounds = event.target.getBounds();
+        const center = event.target.getCenter();
 
         router.reload({
             data: {
                 bounds: bounds.toBBoxString(),
+                center: `${center.lat},${center.lng}`,
             },
             only: ['points'],
         });
@@ -81,6 +83,7 @@
             enableHighAccuracy: true,
         });
         console.log(point.value)
+
 
         watch(locatedAt, () => {
             pause();
