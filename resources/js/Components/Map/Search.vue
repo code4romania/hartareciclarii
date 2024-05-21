@@ -81,7 +81,6 @@
     watch(query, runQuery);
 
     const goToPoint = (item) => {
-        console.log(item);
         emit('goToPoint', item);
     };
 </script>

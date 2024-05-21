@@ -22,7 +22,7 @@
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
         <LMarkerClusterGroup>
-            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" />
+            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" @click="show(point)" />
         </LMarkerClusterGroup>
     </LMap>
 </template>
@@ -68,7 +68,7 @@
                 bounds: bounds.toBBoxString(),
                 center: `${center.lat},${center.lng}`,
             },
-            only: ['points'],
+            only: ['points','search_results'],
         });
     };
 
@@ -81,10 +81,7 @@
     const ready = (leafletObject) => {
         const { coords, locatedAt, error, resume, pause } = useGeolocation({
             enableHighAccuracy: true,
-        });
-        console.log(point.value)
-
-
+        })
         watch(locatedAt, () => {
             pause();
 
@@ -92,5 +89,9 @@
                 animate: false,
             });
         });
+
     };
+    function show(point) {
+       router.visit(`/point/${point.id}`);
+    }
 </script>
