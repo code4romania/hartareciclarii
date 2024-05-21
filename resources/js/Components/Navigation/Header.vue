@@ -48,7 +48,7 @@
                     </transition>
                 </Menu>
 
-                <PillButton v-else color="white" :label="$t('auth.login')" :icon="UserIcon" />
+                <PillButton v-else color="white" :label="$t('auth.login')" :icon="UserIcon" @click="showLoginModal=!showLoginModal" />
             </div>
 
             <div class="flex items-center -mr-2 md:hidden">
@@ -113,10 +113,11 @@
             </div>
         </DisclosurePanel>
     </Disclosure>
+    <LoginModal :show="showLoginModal"/>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+import {computed, ref} from 'vue';
     import { usePage } from '@inertiajs/vue3';
     import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
     import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
@@ -124,6 +125,7 @@
 
     import Icon from '@/Components/Icon.vue';
     import PillButton from '@/Components/Buttons/PillButton.vue';
+    import LoginModal from "@/Components/Modals/LoginModal.vue";
 
     const navigation = [
         { name: 'Dashboard', href: '#', current: true },
@@ -138,7 +140,8 @@
         { name: 'Sign out', href: '#' },
     ];
 
-    // const user = { full_name: 'John Doe' };
+
+    const showLoginModal = ref(true);
 
     const user = computed(() => usePage().props.user);
 </script>
