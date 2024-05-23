@@ -29,6 +29,4 @@ class MaterialSeeder extends Seeder
             $tmpCategory->materials()->sync($materialsIds);
         }
     }
-
-
 }

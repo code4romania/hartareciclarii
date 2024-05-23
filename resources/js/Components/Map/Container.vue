@@ -1,7 +1,7 @@
 <template>
     <div class="h-full">
         <TransitionRoot as="template" :show="sidebarOpen">
-            <Dialog as="div" class="relative z-50 lg:hidden" @close="sidebarOpen = false">
+            <Dialog as="div" class="relative  lg:hidden" @close="sidebarOpen = false">
                 <TransitionChild
                     as="template"
                     enter="transition-opacity ease-linear duration-300"
@@ -50,12 +50,12 @@
         </TransitionRoot>
 
         <!-- Static sidebar for desktop -->
-        <div class="hidden lg:absolute lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div class="hidden lg:absolute lg:inset-y-0  lg:flex lg:w-72 lg:flex-col">
             <Sidebar class="border-r border-gray-200" />
         </div>
 
         <div class="relative h-full lg:pl-72">
-            <Search class="inset-x-3 top-3 z-[99999] lg:left-80 lg:right-auto" @go-to-point="setSelectedPoint" />
+            <Search class="inset-x-3 top-3 z-1 lg:left-80 lg:right-auto" @go-to-point="setSelectedPoint" />
             <Map :selected-point="selectedPoint" />
         </div>
     </div>

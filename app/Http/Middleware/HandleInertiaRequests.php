@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Middleware;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -30,6 +31,10 @@ class HandleInertiaRequests extends Middleware
         if ($request->inertia()) {
             return [];
         }
+
+        return [
+            'ziggy' => new Ziggy,
+        ];
 
         return Arr::wrap($callback($request));
     }

@@ -11,7 +11,8 @@
         :options="{
             zoomControl: false,
         }"
-        class="w-full h-full"
+
+        class="w-full h-full z-0"
     >
         <LControlZoom position="bottomright" />
         <LTileLayer

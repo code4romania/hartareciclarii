@@ -18,10 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', HomeController::class)->name('home');
-
-Route::get('/profile', function () {
-    return view('welcome');
-});
+Route::post('/login', [HomeController::class, 'login'])->name('login');
 Route::get('/point/{point}', [HomeController::class, 'point'])->name('point');
 Route::get('/material/{material}', [HomeController::class, 'material'])->name('material');
 

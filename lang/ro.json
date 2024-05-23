@@ -57,6 +57,10 @@
         "settings": "SETĂRI"
     },
     "auth.login": "Intră în cont",
+    "auth.email": "Email",
+    "auth.password": "Parola",
+    "auth.recover": "Am uitat parola",
+
     "auth": {
         "email": "Email",
         "email_placeholder": "Adresa de email",

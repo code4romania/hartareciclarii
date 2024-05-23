@@ -43,6 +43,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('material_material_category');
     }
+
     private function getData(): array
     {
         return [
