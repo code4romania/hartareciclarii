@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
 {
     use HasApiTokens;
+    use MustVerifyEmail;
     use HasFactory;
     use Notifiable;
     use HasRoles;
@@ -33,7 +35,10 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
+        'accept_terms',
+        'send_newsletter',
         'email',
         'password',
     ];
@@ -56,6 +61,9 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'accept_terms' => 'boolean',
+        'send_newsletter' => 'boolean',
+        'created_at' => 'date:Y-m-d',
     ];
 
     public function getFilamentAvatarUrl(): ?string

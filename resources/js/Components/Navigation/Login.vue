@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PillButton color="white" :label="$t('auth.login')" :icon="UserIcon" @click="open" />
+        <PillButton color="white" :label="$t('auth.login')" :icon="UserIcon" @click="open"/>
         <div>
             <TransitionRoot appear :show="loginModal" as="template">
                 <Dialog as="div" @close="close" class="relative z-10">
@@ -13,7 +13,7 @@
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div class="fixed inset-0 bg-black/25" />
+                        <div class="fixed inset-0 bg-black/25"/>
                     </TransitionChild>
 
                     <div class="fixed inset-0 overflow-y-auto">
@@ -41,12 +41,12 @@
                                             type="button"
                                             class="text-gray-400 hover:text-gray-500"
                                             @click="close">
-                                            <XMarkIcon class="w-6 h-6" aria-hidden="true" />
+                                            <XMarkIcon class="w-6 h-6" aria-hidden="true"/>
                                         </button>
 
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <form @submit="submitLogin" >
+                                        <form @submit="submitLogin">
                                             <div class="space-y-1 mb-3">
                                                 <label
                                                     for="email"
@@ -84,14 +84,15 @@
                                                 </div>
                                             </div>
                                             <div class="mt-3 text-end">
-                                                <a class="cursor-pointer" >{{ $t('auth.recover') }}</a>
+                                                <a class="cursor-pointer">{{ $t('auth.recover') }}</a>
                                             </div>
                                             <template v-if="errors.email">
                                                 <div class="rounded-md bg-red-50 p-4">
                                                     <div class="flex">
-                                                        <XMarkIcon class="h-5 w-5 text-red-700" aria-hidden="true" />
+                                                        <XMarkIcon class="h-5 w-5 text-red-700" aria-hidden="true"/>
                                                         <div class="ml-3">
-                                                            <h4 class="text-sm font-medium text-red-800">{{errors.email}}</h4>
+                                                            <h4 class="text-sm font-medium text-red-800">
+                                                                {{ errors.email }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -108,7 +109,8 @@
                                     </div>
                                     <div class="mt-4 flex justify-center">
                                         <p class="text-sm " v-html="$t('auth.register')"/>
-                                        <button class="text-sm btn text-primary-500 ml-2" v-text="$t('auth.register_link')" @click="registerOpen"/>
+                                        <button class="text-sm btn text-primary-500 ml-2"
+                                                v-text="$t('auth.register_link')" @click="registerOpen"/>
                                     </div>
                                 </DialogPanel>
                             </TransitionChild>
@@ -130,7 +132,7 @@
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div class="fixed inset-0 bg-black/25" />
+                        <div class="fixed inset-0 bg-black/25"/>
                     </TransitionChild>
 
                     <div class="fixed inset-0 overflow-y-auto">
@@ -153,12 +155,12 @@
                                         as="div"
                                         class="text-lg font-medium leading-6 text-gray-900 flex items-center justify-between"
                                     >
-                                        <h3 v-text="$t('auth.register')"/>
+                                        <h3 v-text="$t('auth.register.title')"/>
                                         <button
                                             type="button"
                                             class="text-gray-400 hover:text-gray-500"
                                             @click="registerClose">
-                                            <XMarkIcon class="w-6 h-6" aria-hidden="true" />
+                                            <XMarkIcon class="w-6 h-6" aria-hidden="true"/>
                                         </button>
 
                                     </DialogTitle>
@@ -194,6 +196,7 @@
                                                         :label="$t('auth.email')"
                                                         v-model="registerForm.email"
                                                         :error="errors.email"
+                                                        type="email"
                                                         is-required
                                                     />
                                                 </div>
@@ -218,21 +221,41 @@
                                                         type="password"
                                                     />
                                                 </div>
+                                                <div class="sm:col-span-2">
+                                                    <CheckboxComponent
+                                                        id="accept-terms"
+                                                        :label="$t('auth.register.accept_terms')"
+                                                        v-model:checked="registerForm.accept_terms"
+                                                        :error="errors.accept_terms"
+                                                        is-required
+                                                    />
+                                                </div>
+
+                                                <div class="sm:col-span-2">
+                                                    <CheckboxComponent
+                                                        id="subscribe-newsletter"
+                                                        :label="$t('auth.register.subscribe_to_newsletter')"
+                                                        v-model="registerForm.subscribe_to_newsletter"
+                                                        :error="errors.subscribe_to_newsletter"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div class="mt-8">
-                                                <button
-                                                    type="submit"
-                                                    class="w-full inline-flex justify-center rounded-md border border-black bg-primary-500 px-3 py-2 text-sm text-white shadow-sm sm:col-start-2"
-                                                    @click="submitLogin"
-                                                    v-text="$t('auth.login')"/>
-                                            </div>
+
                                         </form>
+                                    </div>
+                                    <div class="mt-8 flex justify-center">
+                                        <button
+                                            type="submit"
+                                            class="w-1/2 inline-flex justify-center rounded-2xl border border-black bg-primary-500 px-3 py-2 text-sm text-white shadow-sm sm:col-start-2"
+                                            @click="submitRegister"
+                                            v-text="$t('auth.register.submit')"/>
                                     </div>
 
 
                                     <div class="mt-4 flex justify-center">
                                         <p class="text-sm " v-html="$t('auth.register.already_have_account')"/>
-                                        <button class="text-sm btn text-primary-500 ml-2" v-text="$t('auth.register.login')" @click="registerClose"/>
+                                        <button class="text-sm btn text-primary-500 ml-2"
+                                                v-text="$t('auth.register.login')" @click="registerClose"/>
                                     </div>
                                 </DialogPanel>
                             </TransitionChild>
@@ -254,62 +277,68 @@ import route from '@/Helpers/useRoute.js';
 import {computed, ref} from 'vue';
 import {useForm, usePage} from "@inertiajs/vue3";
 import InputComponent from "@/Components/InputComponent.vue";
+import CheckboxComponent from "@/Components/CheckboxComponent.vue";
 
 const loginModal = ref(false);
-    const registerModal = ref(false);
+const registerModal = ref(false);
 
-    const registerOpen = () => {
-        console.log('register')
-        loginModal.value = false;
-        registerModal.value = true;
-        console.log(registerModal.value)
-    };
+const registerOpen = () => {
+    loginModal.value = false;
+    registerModal.value = true;
+};
 
-    const registerClose = () => {
-        registerModal.value = false;
-        loginModal.value = true;
-    };
+const registerClose = () => {
+    registerModal.value = false;
+    loginModal.value = true;
+};
 
-    const open = () => {
-        loginModal.value = true;
-    };
+const open = () => {
+    loginModal.value = true;
+};
 
-    const close = () => {
-        loginModal.value = false;
-    };
+const close = () => {
+    loginModal.value = false;
+};
 
-    const form = useForm({
-        'email': '',
-        'password': '',
-    })
+const form = useForm({
+    'email': '',
+    'password': '',
+})
 
-    const registerForm = useForm({
-        'first_name': '',
-        'last_name': '',
-        'phone': '',
-        'email': '',
-        'password': '',
-        'password_confirmation': '',
-    })
+const registerForm = useForm({
+    'first_name': '',
+    'last_name': '',
+    'phone': '',
+    'email': '',
+    'password': '',
+    'password_confirmation': '',
+    'accept_terms': false,
+    'subscribe_to_newsletter': false,
+})
 
-    const submitLogin = () => {
-        form.post(route('login'),{
-            preserveScroll: true,
-            onSuccess: () => {
-                close();
-            }
+const submitLogin = () => {
+    form.post(route('login'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            close();
+        }
 
-        });
-    }
+    });
+}
 
-    const submitRegister = () => {
-        registerForm.post(route('register'),{
-            preserveScroll: true,
-            onSuccess: () => {
-                registerClose();
-            }
+const submitRegister = () => {
+    console.log('register');
+    console.log(registerForm)
+    registerForm.post(route('register'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            registerClose();
+        },
+        onError: () => {
+            console.log('error');
+        }
 
-        });
-    }
-    const errors = computed(() => usePage().props.errors)
+    });
+}
+const errors = computed(() => usePage().props.errors)
 </script>

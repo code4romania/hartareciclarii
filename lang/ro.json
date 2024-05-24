@@ -32,26 +32,21 @@
     "top_menu.logout": "Logout",
     "top_menu.my_profile": "Profilul meu",
     "top_menu.back": "Înapoi la hartă",
-    "profile": {
-        "heading": "Profilul meu",
-        "email": "Email",
-        "member_from": "Membru din ",
-        "edit": "Modifică",
-        "contributions": "contribuții",
-        "contributions_title": "Contribuții hartă",
-        "table_heading": {
-            "date_hour": "Data / ora",
-            "contribution_type": "Contribuție",
-            "item_type": "Tip",
-            "location": "Locație",
-            "point_id": "ID punct",
-            "actions": "Acțiuni"
-        },
-        "table_content": {
-            "view_on_map": "Vezi pe hartă",
-            "pending": "În așteptare"
-        }
-    },
+    "profile.contributions": "Contribuții",
+    "profile.logout": "Ieşi din cont",
+    "profile.my_profile": "Profilul meu",
+    "profile.my_points": "Punctele mele",
+    "profile.welcome_back": "Bine ai revenit, ",
+    "profile.register_from" : "Membru din ",
+    "profile.settings": "Setări cont",
+    "profile.table_heading.date_hour": "Data / ora",
+    "profile.table_heading.contribution_type": "Contribuție",
+    "profile.table_heading.item_type": "Tip",
+    "profile.table_heading.location": "Locație",
+    "profile.table_heading.point_id": "ID punct",
+    "profile.table_heading.actions": "Acțiuni",
+    "profile.table_content.view_on_map": "Vezi pe hartă",
+    "profile.table_content.pending": "În așteptare",
     "location": {
         "notice": "Serviciile de localizare nu sunt pornite pe acest dispozitiv. Pentru o localizare mai corectă, porniți serviciul localizare din setări.",
         "settings": "SETĂRI"
@@ -69,10 +64,14 @@
     "auth.register.phone": "Telefon",
     "auth.register.password":"Parola",
     "auth.register.password_confirm":"Confirmǎ parola",
-    "auth.register.accept_terms":"Am citit și sunt de acord cu",
+    "auth.register.accept_terms":"Am citit și sunt de acord cu Termenii și condițiile",
     "auth.register.terms":"Termenii și condițiile",
+    "auth.register.accept_terms_description":"Prin crearea unui cont, ești de acord cu Termenii și condițiile Harta Reciclării.",
     "auth.register.already_have_account":"Ai deja cont Harta Reciclării? ",
     "auth.register.login":"Autentifică-te",
+    "auth.register.submit": "Creează cont",
+    "auth.register.subscribe_to_newsletter": "Vreau să primesc newslettere",
+    "auth.register.subscribe_to_newsletter_description": "Prin abonarea la newsletter-ul Harta Reciclării, vei primi informații despre noutățile din domeniul reciclării și al protecției mediului.",
 
     "auth": {
         "email": "Email",
