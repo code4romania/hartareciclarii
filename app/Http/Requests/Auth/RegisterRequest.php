@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,12 +24,13 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $passwordRules = app()->environment('local')?[] : Password::defaults()
+        $passwordRules = app()->environment('local') ? [] : Password::defaults()
             ->uncompromised()
             ->mixedCase()
             ->letters()
             ->numbers()
             ->symbols();
+
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -37,7 +40,7 @@ class RegisterRequest extends FormRequest
                 'required',
                 'string',
                 'confirmed',
-                $passwordRules
+                $passwordRules,
             ],
             'accept_terms' => ['accepted'],
             'subscribe_to_newsletter' => ['nullable', 'boolean'],

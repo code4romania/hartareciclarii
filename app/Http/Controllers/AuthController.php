@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-
     /**
      * Handle an incoming authentication request.
      */
@@ -37,15 +36,16 @@ class AuthController extends Controller
                 'lastname' => $data['last_name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
+                'phone' => $data['phone'] ?? null,
                 'accept_terms' => $data['accept_terms'],
-                'send_newsletter' => $data['send_newsletter'] ?? false,
+                'send_newsletter' => $data['subscribe_to_newsletter'] ?? false,
             ]
         );
         $user->notify(new WelcomeNotification());
         Auth::login($user);
         $request->session()->regenerate();
-        return redirect()->intended(RouteServiceProvider::getDashboardUrl());
 
+        return redirect()->intended(RouteServiceProvider::getDashboardUrl());
     }
 
     /**

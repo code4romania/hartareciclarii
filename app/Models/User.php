@@ -39,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         'lastname',
         'accept_terms',
         'send_newsletter',
+        'phone',
         'email',
         'password',
     ];

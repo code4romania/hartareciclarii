@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('lastname', 191);
             $table->string('email', 191)->nullable()->unique('users_hr_email_unique');
             $table->string('password', 191)->default('#####');
+            $table->string('phone')->nullable();
             $table->boolean('accept_terms')->default(0);
             $table->boolean('send_newsletter')->default(0);
             $table->rememberToken();

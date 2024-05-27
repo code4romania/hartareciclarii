@@ -17,7 +17,6 @@ class RouteServiceProvider extends ServiceProvider
         return route('dashboard');
     }
 
-
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
@@ -36,5 +35,4 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
-
 }

@@ -4,9 +4,9 @@
             <ProfileHeader :contributions_count="contributions_count"/>
             <h3 class="text-2xl font-bold text-gray-900 mt-10">Contributions</h3>
             <div class="mt-8 mx-auto ">
-                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 bg-white">
                     <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                        <table class="min-w-full divide-y divide-gray-300">
+                        <table class="min-w-full divide-y divide-gray-300 ">
                             <thead>
                             <tr>
                                 <th scope="col"
@@ -59,7 +59,7 @@
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
 import {usePage} from "@inertiajs/vue3";
 import {computed} from "vue";
-import ProfileHeader from "@/Pages/ProfileHeader.vue";
+import ProfileHeader from "@/Components/ProfileHeader.vue";
 
 const user = usePage().props.user;
 const name = user.firstname + ' ' + user.lastname;
