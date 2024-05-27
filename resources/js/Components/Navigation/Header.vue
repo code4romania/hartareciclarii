@@ -4,7 +4,7 @@
             <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
 
             <div class="hidden md:flex md:gap-4 md:items-center">
-                <PillButton color="white" :label="$t('top_menu.add_point')" :icon="MapPinIcon" />
+                <AddPoint/>
 
                 <PillButton
                     color="white"
@@ -120,11 +120,14 @@
     import { usePage } from '@inertiajs/vue3';
     import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
     import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-    import { BookOpenIcon, QuestionMarkCircleIcon, MapPinIcon, UserIcon } from '@heroicons/vue/20/solid';
+    import { BookOpenIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/vue/20/solid';
 
     import Icon from '@/Components/Icon.vue';
     import PillButton from '@/Components/Buttons/PillButton.vue';
     import Login from '@/Components/Navigation/Login.vue';
+    import AddPoint from "@/Components/Navigation/AddPoint.vue";
+    import {trans} from "laravel-vue-i18n";
+    import route from "@/Helpers/useRoute.js";
 
     const navigation = [
         { name: 'Dashboard', href: '#', current: true },
@@ -134,9 +137,9 @@
     ];
 
     const userNavigation = [
-        { name: 'Your Profile', href: '#' },
-        { name: 'Settings', href: '#' },
-        { name: 'Sign out', href: '#' },
+        { name: trans('profile.my_profile'), href: route('dashboard') },
+        { name: trans('profile.settings'), href: route('profile.edit') },
+        { name: trans('profile.logout'), href: route('logout') },
     ];
 
     const showLoginModal = ref(true);
