@@ -63,7 +63,7 @@
                                         </form>
                                     </div>
 
-                                    <div class="mt-20 flex  place-content-end  space-x-4 ">
+                                    <div class="mt-4 flex  place-content-end  space-x-4 ">
                                         <button
                                             type="reset"
                                             class="inline-flex justify-center rounded-md border border-black bg-white px-3 py-2 text-sm text-primary-500 shadow-sm sm:col-end-2"

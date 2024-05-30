@@ -34,6 +34,7 @@ class MapRequest extends FormRequest
             'bounds.*' => ['numeric', 'between:-180,180'],
             'search' => 'nullable|string',
             'center' => ['nullable', 'array', 'size:2'],
+            'from' =>['nullable', 'string'],
         ];
     }
 
