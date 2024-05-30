@@ -77,7 +77,7 @@
                                             type="submit"
                                             v-if="currentStep!==3"
                                             class="inline-flex justify-center rounded-md border border-black bg-primary-500 px-3 py-2 text-sm text-white shadow-sm sm:col-end-2"
-                                            @click="submitLogin"
+                                            @click="submitForm"
                                             v-text="$t('add_point.next_step')"/>
                                     </div>
                                 </DialogPanel>
@@ -137,6 +137,11 @@ const serviceTypes = computed(() =>{
     return []
 });
 console.log(serviceTypes.value)
+
+const submitForm = (e) => {
+    e.preventDefault();
+    console.log(form)
+};
 
 
 const errors = computed(() => usePage().props.errors)

@@ -1,8 +1,13 @@
 <template>
     <div>
 
-        <Combobox @update:modelValue="onSelect" v-model="selectedOption">
-            <ComboboxLabel  class="block text-sm font-semibold leading-6 text-gray-900">{{ label }}</ComboboxLabel>
+        <Combobox
+            v-model="selectedOption"
+            as="div"
+            @update:modelValue="query = ''"
+            @change="$emit('update:modelValue', selectedOption )"
+        >
+            <ComboboxLabel class="block text-sm font-semibold leading-6 text-gray-900">{{ label }}</ComboboxLabel>
             <div class="relative">
                 <MagnifyingGlassIcon class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
                                      aria-hidden="true"/>
@@ -12,7 +17,7 @@
                     :displayValue="(option) => option? option.label : ''"
                     :id="id"
                     @change="query = $event.target.value"
-                  />
+                />
             </div>
 
             <ComboboxOptions v-if="filterOptions.length > 0" static
@@ -25,7 +30,8 @@
                 </ComboboxOption>
             </ComboboxOptions>
 
-            <p v-if="query !== '' && filterOptions.length === 0" class="p-4 text-sm text-gray-500" v-text="$t('no-results')"/>
+            <p v-if="query !== '' && filterOptions.length === 0" class="p-4 text-sm text-gray-500"
+               v-text="$t('no-results')"/>
         </Combobox>
     </div>
 
@@ -55,6 +61,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    modelValue: {
+        type: String,
+        required: true,
+    },
 
 })
 const query = ref('')
@@ -65,7 +75,7 @@ const filterOptions = computed(() =>
             return option.label.toLowerCase().includes(query.value.toLowerCase())
         })
 )
-const selectedOption = ref(filterOptions.value[0] ?? null)
+const selectedOption = ref(null)
 
 
 </script>
