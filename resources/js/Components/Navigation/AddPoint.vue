@@ -55,8 +55,12 @@
                                                     <SearchList
                                                         :label="$t('add_point.first_step.service_type_label')"
                                                         id="service_type"
+                                                        v-model="form.service_type"
+                                                        :options="serviceTypes"
+
+
                                                     />
-                                                    <SearchWithMap/>
+                                                    <SearchWithMap v-model="form.address"/>
 
                                                 </div>
                                             </div>
@@ -88,23 +92,16 @@
 
 <script setup>
 import {
-    Combobox, ComboboxInput, ComboboxOption, ComboboxOptions,
     Dialog,
     DialogPanel,
     DialogTitle,
-    Listbox,
-    ListboxButton, ListboxOption, ListboxOptions,
     TransitionChild,
     TransitionRoot
 } from '@headlessui/vue';
-import {UserIcon, XMarkIcon} from '@heroicons/vue/20/solid';
+import { XMarkIcon} from '@heroicons/vue/20/solid';
 import PillButton from '@/Components/Buttons/PillButton.vue';
-import route from '@/Helpers/useRoute.js';
-
 import {computed, ref} from 'vue';
 import {useForm, usePage} from "@inertiajs/vue3";
-import InputComponent from "@/Components/InputComponent.vue";
-import CheckboxComponent from "@/Components/CheckboxComponent.vue";
 import {MapPinIcon} from "@heroicons/vue/20/solid/index.js";
 import SearchList from "@/Components/AddPoint/SearchList.vue";
 import SearchWithMap from "@/Components/AddPoint/SearchWithMap.vue";
@@ -120,37 +117,27 @@ const close = () => {
 };
 
 const form = useForm({
-    'email': '',
-    'password': '',
-})
+    address: '',
+    service_type: '',
+    lat: '',
+    lng: '',
+    errors: {}
+});
 
-const submitLogin = () => {
-    form.post(route('login'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            close();
-        }
-
-    });
-}
 let currentStep = ref(1);
-const people = [
-    'Durward Reynolds',
-    'Kenton Towne',
-    'Therese Wunsch',
-    'Benedict Kessler',
-    'Katelyn Rohan',
-]
-const selectedPerson = ref(people[0])
-const query = ref('')
+const serviceTypes = computed(() =>{
+    if (usePage().props.service_types){
+        let tmp = usePage().props.service_types;
+        let tmpArr =[];
+        Object.keys(tmp).forEach(function(key) {
+            tmpArr.push({label: tmp[key], value: key})
+        });
+        return tmpArr
+    }
+    return []
+});
+console.log(serviceTypes.value)
 
-const filteredPeople = computed(() =>
-    query.value === ''
-        ? people
-        : people.filter((person) => {
-            return person.toLowerCase().includes(query.value.toLowerCase())
-        })
-)
 
 const errors = computed(() => usePage().props.errors)
 </script>
