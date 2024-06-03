@@ -28,7 +28,7 @@
                 <button
                     type="button"
                     @click="setPoint(item)"
-                    class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100 justify-items-start"
+                    class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100 justify-items-start text-start"
                 >
                     <MapPinIcon class="w-5 h-5 fill-gray-400" />
                     <span class="flex-1 truncate" v-text="item.display_name" />
