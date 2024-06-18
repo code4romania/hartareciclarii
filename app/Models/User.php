@@ -74,7 +74,8 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return auth()->user()->can('admin_login');
+        return  true;
+//        return auth()->user()->can('admin_login');
     }
 
     public function getFilamentName(): string
