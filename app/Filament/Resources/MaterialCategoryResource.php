@@ -103,8 +103,7 @@ class MaterialCategoryResource extends Resource
     {
         return [
             'index' => Pages\ListMaterialCategories::route('/'),
-            'create' => Pages\CreateMaterialCategory::route('/create'),
-            'edit' => Pages\EditMaterialCategory::route('/{record}/edit'),
+
         ];
     }
 }

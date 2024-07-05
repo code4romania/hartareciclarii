@@ -26,12 +26,12 @@ class RecycleMaterialsResource extends Resource
 
     public static function getModelLabel(): string
     {
-      return  __('materials.singular');
+        return  __('materials.singular');
     }
 
     public static function getModelName(): string
     {
-      return  __('materials.plural');
+        return  __('materials.plural');
     }
 
     protected static ?int $navigationSort = 4;
@@ -65,6 +65,10 @@ class RecycleMaterialsResource extends Resource
                 TextColumn::make('categories.name')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('points_count')
+                    ->counts('points')
+                    ->label(__('common.points_count'))
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->sortable()
                     ->searchable(),

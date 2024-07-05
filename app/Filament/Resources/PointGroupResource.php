@@ -39,7 +39,7 @@ class PointGroupResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->label(__('point_groups.fields.name'))
+                    ->label(__('common.name'))
                     ->maxLength(255),
             ]);
     }
