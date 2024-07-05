@@ -211,7 +211,7 @@ import {ComboboxInput, Dialog, DialogPanel, DialogTitle, TransitionChild, Transi
         errors: {},
     });
 
-    let currentStep = ref(2);
+    let currentStep = ref(1);
     const page = usePage();
 
     const serviceTypes = computed(() =>
