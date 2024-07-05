@@ -14,8 +14,8 @@ use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -164,5 +164,15 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     protected function getNameAttribute(): string
     {
         return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function issues(): HasMany
+    {
+        return $this->hasMany(Issue::class);
+    }
+
+    public function points(): HasMany
+    {
+        return $this->hasMany(Point::class, 'created_by');
     }
 }

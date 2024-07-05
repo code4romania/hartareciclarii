@@ -23,4 +23,11 @@ return [
         'point' => 'Adăugare punct nou',
         'issue' => 'Raportare problemă',
     ],
+    'points_count'=> 'Număr puncte',
+    'name' => 'Nume',
+
+    'points_group' => [
+        'singular' => 'Grup de puncte',
+        'plural' => 'Grupuri de puncte',
+    ],
 ];

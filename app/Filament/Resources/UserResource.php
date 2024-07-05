@@ -15,7 +15,6 @@ use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -78,6 +77,16 @@ class UserResource extends Resource
                 TextColumn::make('roles.name')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('points_count')
+                    ->counts('points')
+                    ->sortable(),
+                TextColumn::make('issues_count')
+                    ->counts('issues')
+                    ->sortable(),
+
+                TextColumn::make('last_login_date')->date('Y-m-d H:i:s')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->sortable()
                     ->searchable(),
@@ -118,6 +127,4 @@ class UserResource extends Resource
     {
         return (string) static::getModel()::count();
     }
-
-
 }

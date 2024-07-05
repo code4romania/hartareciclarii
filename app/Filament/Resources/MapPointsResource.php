@@ -195,7 +195,7 @@ class MapPointsResource extends Resource
                     ->label(__('map_points.address'))
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('group.name')
+                TextColumn::make('pointGroup.name')
                     ->label(__('map_points.group'))
                     ->sortable()
                     ->wrap(),

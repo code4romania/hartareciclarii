@@ -66,5 +66,8 @@ class Point extends Model
         return $this->belongsTo(County::class);
     }
 
-
+    public function pointGroup(): BelongsTo
+    {
+        return $this->belongsTo(PointGroup::class);
+    }
 }

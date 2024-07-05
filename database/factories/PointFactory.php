@@ -10,6 +10,8 @@ use App\Enums\Point\Status;
 use App\Models\City;
 use App\Models\Material;
 use App\Models\Point;
+use App\Models\PointGroup;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
@@ -36,9 +38,21 @@ class PointFactory extends Factory
         $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
         $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
 
+        if ($this->faker->boolean)
+        {
+            $user = User::factory()->create();
+        }
+
+        if ($this->faker->boolean)
+        {
+            $pointGroup = PointGroup::factory()->create();
+        }
+
         return [
             'location' => new SpatialPoint($latitude, $longitude),
             'county_id' => $city->county_id,
+            'point_group_id' => $pointGroup->id ?? null,
+            'created_by' => $user->id ?? null,
             'city_id' => $city->id,
             'address' => $this->faker->address,
             'name' => 'Point-' . $this->faker->unique()->numberBetween(1, 100),
