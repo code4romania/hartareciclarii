@@ -11,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -47,27 +46,21 @@ class IssuesResource extends Resource
                     ->label(__('issues.columns.map_point_id'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('reporter.fullname')
-                    ->label(__('issues.columns.reporter'))
-                    ->searchable(query: function (Builder $query, string $search): Builder {
-                        return $query->whereHas('reporter', function ($q) use ($search) {
-                            $q->whereRaw(\DB::raw("CONCAT(firstname,' ',lastname) like '%$search%'"));
-                        });
-                    })
-                    ->html(),
+                TextColumn::make('user.name')
+                    ->default(__('issues.columns.no_user'))
+                    ->label(__('issues.columns.reporter'))->sortable(),
+
                 TextColumn::make('created_at')
                     ->label(__('issues.columns.created_at'))
                     ->sortable(),
-                TextColumn::make('type.title')
+                TextColumn::make('type_value')
                     ->label(__('issues.columns.issue_type'))
                     ->sortable()
                     ->html(),
                 TextColumn::make('status')
                     ->label(__('issues.columns.status'))
                     ->sortable()
-                    ->formatStateUsing(function ($state) {
-                        return __('issues.status.' . $state);
-                    }),
+                    ->formatStateUsing(fn (Issue $record) => $record->status->label()),
 
             ])
             ->filters([

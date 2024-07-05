@@ -20,7 +20,9 @@ return [
         'issue_type' => 'Tip problema',
         'status' => 'Status problema',
         'map_point_id' => 'ID punct',
+        'no_user' => 'Utilizator necunoscut',
     ],
+
     'status' => [
         '0' => 'Neverificata',
         '1' => 'Rezolvata',

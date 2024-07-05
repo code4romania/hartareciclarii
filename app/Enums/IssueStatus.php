@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum IssueStatus: int
+use App\Concerns\Enums\Arrayable;
+use App\Concerns\Enums\HasLabel;
+
+enum IssueStatus: string
 {
-    case New = 0;
-    case Solved = 1;
-    case Pending = 2;
-    case Denied = 3;
+    use Arrayable;
+    use HasLabel;
+    case New = 'new';
+    case Solved = 'solved';
+    case Pending = 'pending';
+    case Denied = 'denied';
 
-    public static function toArray(): array
+    public function labelKeyPrefix(): string
     {
-        $array = [];
-        foreach (self::cases() as $case) {
-            $array[$case->value] = __('issues.status.' . $case->value);
-        }
-
-        return $array;
+        return 'enums.issue_status';
     }
 }

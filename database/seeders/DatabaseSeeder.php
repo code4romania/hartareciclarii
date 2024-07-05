@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Issue;
+use App\Models\Permission;
 use App\Models\Point;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -37,12 +39,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-//        User::factory(10)->create();
-//        $this->call(
-//            MaterialSeeder::class
-//        );
+        User::factory(10)->create();
 
-        User::factory(1)
+        $user = User::factory()
             ->create([
                 'firstname' => 'Admin',
                 'lastname' => 'User',
@@ -50,8 +49,19 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
             ]);
 
-        Point::factory(100)
+        collect($this->permissions)->each(function ($permission) {
+            Permission::create([
+                'name' => $permission,
+                'guard_name' => 'web',
 
+            ]);
+        });
+        $user->givePermissionTo($this->permissions);
+
+        Issue::factory(25)
+            ->create();
+
+        Point::factory(10)
             ->create();
     }
 }

@@ -37,7 +37,13 @@ class UserResource extends Resource
                 Section::make(__('users.label'))
                     ->description(__('users.heading'))
                     ->schema([
-                        TextInput::make('name')
+                        TextInput::make('firstname')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('lastname')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('phone')
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
@@ -67,6 +73,9 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('email')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('roles.name')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')
@@ -107,11 +116,8 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) static::getModel()::whereHas('roles')->count();
+        return (string) static::getModel()::count();
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->whereHas('roles');
-    }
+
 }

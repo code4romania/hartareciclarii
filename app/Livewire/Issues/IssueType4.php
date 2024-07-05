@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Issues;
 
-use App\Models\Issue;
+use App\Models\IssueOld;
 use App\Models\IssueType as IssueTypeModel;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
@@ -23,7 +23,7 @@ class IssueType4 extends Component implements HasForms
 
     public ?array $data = [];
 
-    public Issue $record;
+    public IssueOld $record;
 
     public function mount(): void
     {

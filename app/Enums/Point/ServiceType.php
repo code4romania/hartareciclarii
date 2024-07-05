@@ -6,6 +6,9 @@ namespace App\Enums\Point;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\HasLabel;
+use App\Enums\Issue\DefaultIssueType;
+use App\Enums\Issue\RepairsIssueType;
+use App\Enums\Issue\WasteCollectionIssueType;
 
 enum ServiceType: string
 {
@@ -33,6 +36,25 @@ enum ServiceType: string
             self::REDUCTION => ReductionType::class,
             self::DONATIONS => DonationsType::class,
             self::OTHER => OtherType::class,
+        };
+    }
+
+    public function issueTypes():string
+    {
+        return match ($this) {
+            self::WASTE_COLLECTION => WasteCollectionIssueType::class,
+            self::REPAIRS => RepairsIssueType::class,
+            self::REUSE, self::REDUCTION, self::DONATIONS, self::OTHER => DefaultIssueType::class,
+        };
+
+    }
+
+    public function issueFields(string $type): array
+    {
+        return match ($this) {
+            self::WASTE_COLLECTION => WasteCollectionIssueType::fields($type),
+            self::REPAIRS => RepairsIssueType::fields($type),
+            self::REUSE, self::REDUCTION, self::DONATIONS, self::OTHER => DefaultIssueType::fields($type),
         };
     }
 }

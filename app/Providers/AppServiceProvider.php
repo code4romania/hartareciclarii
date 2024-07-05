@@ -18,11 +18,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        // tap($this->app->isLocal(), function (bool $shouldBeEnabled)
-        // {
-        //     Model::preventLazyLoading($shouldBeEnabled);
-        //     Model::preventAccessingMissingAttributes($shouldBeEnabled);
-        // });
+
         Filament::serving(function () {
             Filament::registerNavigationGroups([
                 NavigationGroup::make()
@@ -32,18 +28,6 @@ class AppServiceProvider extends ServiceProvider
             ]);
 
             Filament::registerNavigationItems([
-
-                // NavigationItem::make('Lista rapoarte')
-                //     ->url('/admin/reports')
-                //     ->icon('heroicon-o-presentation-chart-line')
-                //     // ->activeIcon('heroicon-s-presentation-chart-line')
-                //     ->group('Rapoarte')
-                //     ->sort(2)
-                //     // ->isActiveWhen(function ()
-                //     // {
-                //     //     return request()->route()->uri == 'admin/reports';
-                //     // })
-                //     ->hidden(auth()->user() && !auth()->user()->can('view_reports')),
             ]);
         });
         Filament::registerNavigationGroups([

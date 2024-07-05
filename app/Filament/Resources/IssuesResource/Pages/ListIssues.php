@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\IssuesResource\Pages;
 
+use App\Enums\Point\ServiceType;
 use App\Filament\Resources\IssuesResource;
-use App\Models\MapPointType as MapPointTypeModel;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
@@ -23,17 +23,24 @@ class ListIssues extends ListRecords
 
     public function getTabs(): array
     {
-        $map_point_types = MapPointTypeModel::whereHas('map_points.issues')->with('map_points.issues')->get();
-        $this->type = request()->get('type', $map_point_types->first()->type_name);
-        $tabs = [];
+        return [
 
-        foreach ($map_point_types as $type) {
-            $tabs[$type->display_name] = Tab::make($type->display_name)->modifyQueryUsing(function ($query) use ($type) {
-                return $query->whereIn('point_id', $type->map_points->pluck('id')->toArray());
-            });
-        }
+            Tab::make(ServiceType::WASTE_COLLECTION->label())
+                ->modifyQueryUsing(function ($query) {
+                    return $query->where('type', ServiceType::WASTE_COLLECTION);
+                }),
 
-        return $tabs;
+            Tab::make(ServiceType::REPAIRS->label())
+                ->modifyQueryUsing(function ($query) {
+                    return $query->where('type', ServiceType::REPAIRS);
+                }),
+
+            Tab::make(__('point_types.other'))
+                ->modifyQueryUsing(function ($query) {
+                    return $query->whereNot('type', ServiceType::REPAIRS)->whereNot('type', ServiceType::WASTE_COLLECTION);
+                }),
+
+        ];
     }
 
     public function getTitle(): string | Htmlable

@@ -14,7 +14,7 @@ namespace App\Filament\Resources\ReportsResource\Traits;
 use App\Enums\MapPointTypes;
 use App\Exports\ReportsExport;
 use App\Models\County as CountyModel;
-use App\Models\Issue as IssueModel;
+use App\Models\IssueOld as IssueModel;
 // use Filament\Resources\Pages\CreateRecord;
 use App\Models\IssueType as IssueTypeModel;
 use App\Models\MapPointService as MapPointServiceModel;

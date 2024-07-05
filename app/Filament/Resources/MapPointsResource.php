@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\MapPointTypes as MapPointTypesEnum;
+use App\Enums\Point\Status;
 use App\Filament\Resources\MapPointsResource\Pages;
-use App\Models\City as CityModel;
-use App\Models\County as CountyModel;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointToField as MapPointToFieldModel;
@@ -25,7 +24,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -161,27 +159,14 @@ class MapPointsResource extends Resource
                     ->label(__('map_points.id'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('type.display_name')
+                TextColumn::make('service_type')
+                    ->formatStateUsing(fn ($state) => $state->label())
                     ->label(__('map_points.point_type')),
-                // ->searchable(),
-                TextColumn::make('managed_by')
+                TextColumn::make('administered_by')
                     ->label(__('map_points.managed_by'))
-                    ->searchable(query: function (Builder $query, string $search): Builder {
-                        return $query->whereHas('fields', function ($q) use ($search) {
-                            $q->where('field_type_id', MapPointTypesEnum::ManagedBy)
-                                ->where('value', 'LIKE', "%$search%");
-                        });
-                    })
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
-                        return $query->orderBy(
-                            MapPointToFieldModel::select('value')
-                                ->whereColumn('recycling_points.id', 'field_type_recycling_point.recycling_point_id')
-                                ->where('field_type_id', MapPointTypesEnum::ManagedBy),
-                            $direction
-                        );
-                    })
                     ->wrap(),
-                TextColumn::make('materials.getParent.icon')
+
+                TextColumn::make('materials')
                     ->label(__('map_points.materials'))
                     ->sortable()
                     // ->searchable()
@@ -201,84 +186,31 @@ class MapPointsResource extends Resource
                         return $state;
                     })
                     ->html(),
-                TextColumn::make('county')
-                    ->label(__('map_points.county'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
-                        return $query->orderBy(
-                            CountyModel::select('name')
-                                ->whereColumn('recycling_points.id_county', 'counties.id'),
-                            $direction
-                        );
-                    }),
-                // ->searchable(query: function (Builder $query, string $search): Builder
-                // {
-                //     return $query->whereHas('fields', function ($q) use ($search)
-                //     {
-                //         $q->where('field_type_id', MapPointTypesEnum::County)
-                //             ->where('value', 'LIKE', "$search");
-                //     });
-                // }),
-                TextColumn::make('city')
-                    ->label(__('map_points.city'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
-                        return $query->orderBy(
-                            CityModel::select('name')
-                                ->whereColumn('recycling_points.id_city', 'cities.id'),
-                            $direction
-                        );
-                    }),
-                //     ->searchable(query: function (Builder $query, string $search): Builder
-                //     {
-                //         return $query->whereHas('fields', function ($q) use ($search)
-                //         {
-                //             $q->where('field_type_id', MapPointTypesEnum::City)
-                //                 ->where('value', 'LIKE', "$search");
-                //         });
-                //     }),
+                TextColumn::make('county.name')
+                    ->label(__('map_points.county')),
+                TextColumn::make('city.name')
+                    ->label(__('map_points.city')),
+
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
-                    ->sortable(query: function (Builder $query, string $direction, $column): Builder {
-                        return $query->orderBy(
-                            MapPointToFieldModel::select('value')
-                                ->whereColumn('recycling_points.id', 'field_type_recycling_point.recycling_point_id')
-                                ->where('field_type_id', MapPointTypesEnum::Address),
-                            $direction
-                        );
-                    })
-                    ->searchable(query: function (Builder $query, string $search): Builder {
-                        return $query->whereHas('fields', function ($q) use ($search) {
-                            $q->where('field_type_id', MapPointTypesEnum::Address)
-                                ->where('value', 'LIKE', "%$search%");
-                        });
-                    })
+                    ->searchable()
                     ->wrap(),
                 TextColumn::make('group.name')
                     ->label(__('map_points.group'))
                     ->sortable()
                     ->wrap(),
 
-                BadgeColumn::make('status')
+                TextColumn::make('status')
                     ->sortable()
-                    ->color(static function ($state, $record): string {
+                    ->badge()
+                    ->color(fn (Status $state) => $state->color())
+                    ->formatStateUsing(function (Status $state, $record) {
                         if ($record->issues->count() > 0) {
-                            return 'danger';
-                        }
-                        if ((int) $state === 1) {
-                            return 'success';
+                            return Status::WITH_PROBLEMS->label();
                         }
 
-                        return 'warning';
-                    })
-                    ->formatStateUsing(function (string $state, $record) {
-                        if ($record->issues->count() > 0) {
-                            return __('map_points.issues_found');
-                        }
-                        if ((int) $state === 1) {
-                            return __('map_points.verified');
-                        }
-
-                        return __('map_points.requires_verification');
-                    })->html(),
+                        return $state->label();
+                    }),
             ])
             ->filters([
                 //
@@ -320,24 +252,24 @@ class MapPointsResource extends Resource
                         ->icon('heroicon-o-check')
                         ->color('warning')
                         ->requiresConfirmation(),
-                    BulkAction::make('updateGroup')
-                        ->label(__('map_points.buttons.set_group'))
-                        ->form([
-                            Select::make('group_id')
-                                ->label('Group')
-                                ->options(MapPointGroupModel::query()->pluck('name', 'id'))
-                                ->required()
-                                ->relationship('group', 'name')
-                                ->preload(),
-                        ])
-                        ->action(function (array $data, Collection $records): void {
-                            foreach ($records as $record) {
-                                $record->changeGroup($data['group_id']);
-                            }
-                        })
-                        ->icon('heroicon-o-user-group')
-                        ->color('info')
-                        ->deselectRecordsAfterCompletion(),
+                    //                    BulkAction::make('updateGroup')
+                    //                        ->label(__('map_points.buttons.set_group'))
+                    //                        ->form([
+                    //                            Select::make('group_id')
+                    //                                ->label('Group')
+                    //                                ->options(MapPointGroupModel::query()->pluck('name', 'id'))
+                    //                                ->required()
+                    //                                ->relationship('group', 'name')
+                    //                                ->preload(),
+                    //                        ])
+                    //                        ->action(function (array $data, Collection $records): void {
+                    //                            foreach ($records as $record) {
+                    //                                $record->changeGroup($data['group_id']);
+                    //                            }
+                    //                        })
+                    //                        ->icon('heroicon-o-user-group')
+                    //                        ->color('info')
+                    //                        ->deselectRecordsAfterCompletion(),
                     Tables\Actions\DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
 
                 ]),
@@ -379,7 +311,7 @@ class MapPointsResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->manageble()->with('issues', 'materials', 'fields');
+        return parent::getEloquentQuery()->with('issues', 'materials');
     }
 
     public static function getNavigationBadge(): ?string

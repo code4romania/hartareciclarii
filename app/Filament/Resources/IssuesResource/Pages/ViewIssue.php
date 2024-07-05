@@ -85,11 +85,7 @@ class ViewIssue extends ViewRecord
                 ->color('gray')
                 ->button(),
 
-            Action::make('view_list')
-                ->color('success')
-                ->label(__('issues.buttons.view_map_point'))
-                ->url(MapPointsResource::getUrl('view', ['record' => $this->record->map_point]))
-                ->openUrlInNewTab(),
+
 
         ];
     }

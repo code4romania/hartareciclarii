@@ -23,7 +23,7 @@
     	$color = 'danger';
     	break;
     }
-    $badgeLabel = __('issues.status.'.$record->status);
+    $badgeLabel = __('issues.status.'.$record->status->value);
 
 
 @endphp
@@ -34,5 +34,5 @@
 <x-filament::badge color="{{ $color }}">
     {{ $badgeLabel }}
 </x-filament::badge>
-	@livewire('issues.issue-type-'.$this->getRecord()->reported_point_issue_type_id,['record'=>$this->getRecord()])
+
 </x-filament-panels::page>

@@ -17,6 +17,15 @@ enum Status: string
 
     public function labelKeyPrefix(): string
     {
-        return 'enums.point.statuses';
+        return 'enums.point_status';
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::VERIFIED => 'info',
+            self::NEEDS_VERIFICATION => 'warning',
+            self::WITH_PROBLEMS => 'danger',
+        };
     }
 }

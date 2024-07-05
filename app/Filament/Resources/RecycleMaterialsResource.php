@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecycleMaterialsResource\Pages;
-use App\Models\RecycleMaterial as RecycleMaterialModel;
-use Filament\Forms\Components\Repeater;
+use App\Models\Material;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,11 +18,21 @@ use Filament\Tables\Table;
 
 class RecycleMaterialsResource extends Resource
 {
-    protected static ?string $model = RecycleMaterialModel::class;
+    protected static ?string $model = Material::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
 
     protected static ?string $navigationGroup = 'Settings';
+
+    public static function getModelLabel(): string
+    {
+      return  __('materials.singular');
+    }
+
+    public static function getModelName(): string
+    {
+      return  __('materials.plural');
+    }
 
     protected static ?int $navigationSort = 4;
 
@@ -35,16 +44,11 @@ class RecycleMaterialsResource extends Resource
                     ->description(__('materials.heading'))
                     ->schema([
                         TextInput::make('name')->required()->unique(ignoreRecord: true),
-                        Select::make('getParent')
-                            ->relationship('getParent', 'name')
+                        Select::make('categories')
+                            ->relationship('categories', 'name')
+                            ->multiple()
                             ->preload(),
                         TextInput::make('icon'),
-                        Repeater::make('Aliases')
-                            ->relationship('aliases')
-                            ->schema([
-                                TextInput::make('alias')->required(),
-                            ])
-                            ->columns(2),
                     ]),
             ]);
     }
@@ -58,10 +62,7 @@ class RecycleMaterialsResource extends Resource
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('order')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('getParent.name')
+                TextColumn::make('categories.name')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')

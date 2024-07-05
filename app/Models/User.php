@@ -14,6 +14,7 @@ use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -91,7 +92,7 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     public function getContributions()
     {
         $mapPoints = MapPointResource::collection(MapPoint::with('type', 'service', 'fields.field')->where('created_by', $this->id)->get());
-        $issues = IssueResource::collection(Issue::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
+        $issues = IssueResource::collection(IssueOld::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
 
         $contributions = [];
         if (! empty($mapPoints)) {
@@ -158,5 +159,10 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         $user->save();
 
         return $user;
+    }
+
+    protected function getNameAttribute(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
 }
