@@ -107,7 +107,7 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::whereHas('roles')->count();
+        return (string) static::getModel()::whereHas('roles')->count();
     }
 
     public static function getEloquentQuery(): Builder

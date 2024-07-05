@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Point;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -40,6 +41,14 @@ class DatabaseSeeder extends Seeder
 //        $this->call(
 //            MaterialSeeder::class
 //        );
+
+        User::factory(1)
+            ->create([
+                'firstname' => 'Admin',
+                'lastname' => 'User',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('password'),
+            ]);
 
         Point::factory(100)
 

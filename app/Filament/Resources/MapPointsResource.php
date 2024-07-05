@@ -12,6 +12,7 @@ use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
+use App\Models\Point;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
@@ -35,7 +36,7 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class MapPointsResource extends Resource
 {
-    protected static ?string $model = MapPointModel::class;
+    protected static ?string $model = Point::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
@@ -383,6 +384,6 @@ class MapPointsResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return (string) static::getModel()::count();
     }
 }

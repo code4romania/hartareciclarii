@@ -107,6 +107,8 @@
 
     const query = ref('');
 
+    const emit = defineEmits(['setPoint']);
+
     const runQuery = useDebounceFn(
         () => {
             axios
@@ -166,6 +168,8 @@
         map_pop_up.value.leafletObject.flyTo([item.lat, item.lon], 17, {
             animate: false,
         });
+
+
     };
 
     const populatePoint = (lat, lng, setDisplayName) => {
@@ -185,6 +189,7 @@
                     loader.value = false;
                 });
         }
+        emit('setPoint', {lat:lat, lng:lng, address: query.value});
     };
     const ready = (leafletObject) => {
         populatePoint(leafletObject.getCenter().lat, leafletObject.getCenter().lng, false);

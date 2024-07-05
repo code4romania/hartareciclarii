@@ -149,7 +149,7 @@ class ImportResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::whereStatus(0)->count();
+        return (string) static::getModel()::whereStatus(0)->count();
     }
 
     public static function getEloquentQuery(): Builder
