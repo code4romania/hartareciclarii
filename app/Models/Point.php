@@ -37,7 +37,6 @@ class Point extends Model
     protected $casts = [
         'schedule' => 'array',
         'status' => Status::class,
-        'service_type' => ServiceType::class,
         'location' => SpatialPoint::class,
     ];
 
@@ -70,4 +69,15 @@ class Point extends Model
     {
         return $this->belongsTo(PointGroup::class);
     }
+
+    public function serviceType(): BelongsTo
+    {
+        return $this->belongsTo(ServiceType::class);
+    }
+
+    public function pointType(): BelongsTo
+    {
+        return $this->belongsTo(PointType::class);
+    }
+
 }

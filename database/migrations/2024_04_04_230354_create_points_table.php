@@ -20,8 +20,6 @@ return new class extends Migration
         Schema::create('points', function (Blueprint $table) {
             $table->id();
             $table->string('status');
-            $table->string('service_type');
-            $table->string('point_type');
             $table->string('source');
             $table->foreignIdFor(County::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(City::class)->constrained()->cascadeOnDelete();

@@ -20,10 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Point::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('status');
-            $table->string('type');
-            $table->string('type_value');
             $table->text('description')->nullable();
-            $table->json('issues')->nullable();
             $table->dateTime('status_updated_at')->nullable();
             $table->timestamps();
         });

@@ -31,8 +31,6 @@ class PointFactory extends Factory
     {
         $latitudeRange = [45.0, 48.0];
         $longitudeRange = [23.0, 28.0];
-        $serviceType = $this->faker->randomElement(ServiceType::values());
-        $serviceTypeEnum = ServiceType::from($serviceType);
         $city = City::query()->inRandomOrder()->first();
 
         $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
@@ -55,7 +53,7 @@ class PointFactory extends Factory
             'created_by' => $user->id ?? null,
             'city_id' => $city->id,
             'address' => $this->faker->address,
-            'name' => 'Point-' . $this->faker->unique()->numberBetween(1, 100),
+            'name' => 'Point-' . $this->faker->unique()->numberBetween(1, 10000),
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->email,
             'website' => $this->faker->url,
@@ -96,8 +94,6 @@ class PointFactory extends Factory
             'offers_transport' => $this->faker->boolean,
             'free_of_charge' => $this->faker->boolean,
             'status' => $this->faker->randomElement(Status::values()),
-            'service_type' => $serviceType,
-            'point_type' => $this->faker->randomElement($serviceTypeEnum->pointTypes()::values()),
             'source' => $this->faker->randomElement(Source::values()),
             'administered_by' => $this->faker->company,
 

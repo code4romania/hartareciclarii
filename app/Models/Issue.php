@@ -39,4 +39,9 @@ class Issue extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function serviceType(): BelongsTo
+    {
+        return $this->belongsTo(ServiceType::class);
+    }
+
 }

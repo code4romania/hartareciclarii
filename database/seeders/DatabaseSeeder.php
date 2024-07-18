@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Issue;
 use App\Models\Permission;
 use App\Models\Point;
+use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -58,10 +59,28 @@ class DatabaseSeeder extends Seeder
         });
         $user->givePermissionTo($this->permissions);
 
-        Issue::factory(25)
-            ->create();
+        $serviceTypes = ServiceType::with(['issueTypes','pointTypes'])->get();
 
-        Point::factory(10)
-            ->create();
+        foreach ($serviceTypes as $serviceType)
+        {
+            foreach ($serviceType->pointTypes as $pointType)
+            {
+                Point::factory(5)
+                    ->create([
+                        'service_type_id' => $serviceType->id,
+                        'point_type_id' => $pointType->id,
+                    ]);
+            }
+            foreach ($serviceType->issueTypes as $issueType)
+            {
+                $point=Point::inRandomOrder()->first();
+                Issue::factory(5)
+                    ->create([
+                        'service_type_id' => $serviceType->id,
+                        'point_id' => $point->id,
+                    ]);
+
+            }
+        }
     }
 }
