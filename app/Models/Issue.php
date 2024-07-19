@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\IssueStatus;
-use App\Enums\Point\ServiceType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Issue extends Model
 {
@@ -14,8 +16,8 @@ class Issue extends Model
 
     protected $casts = [
         'issues' => 'array',
-        'type' => ServiceType::class,
-        'status' => IssueStatus::class
+        'status' => IssueStatus::class,
+        'issueTypes.pivot.value' => 'array',
     ];
 
     protected $fillable = [
@@ -28,6 +30,8 @@ class Issue extends Model
         'issues',
         'status_updated_at',
     ];
+
+    protected $with = ['issueTypes', 'issueTypes'];
 
     public function point(): BelongsTo
     {
@@ -44,4 +48,8 @@ class Issue extends Model
         return $this->belongsTo(ServiceType::class);
     }
 
+    public function issueTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(IssueType::class)->using(IssueTypePivot::class)->withPivot('value');
+    }
 }

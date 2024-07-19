@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\IssueType;
+declare(strict_types=1);
+
 use App\Models\ServiceType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,7 +24,9 @@ return new class extends Migration
         });
 
         Schema::table('issues', function (Blueprint $table) {
-            $table->foreignIdFor(ServiceType::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(ServiceType::class)->after('point_id')
+                ->constrained()
+                ->onDelete('cascade');
         });
     }
 

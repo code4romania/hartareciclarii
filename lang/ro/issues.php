@@ -13,11 +13,13 @@ return [
     'status_updated' => 'Status salvat',
     'header' => [
         'list' => 'Lista probleme raportate',
+        'view' => 'Probleme cu punctul  #:point_id',
     ],
     'columns' => [
         'reporter' => 'Utilizator',
         'created_at' => 'Raportat la',
         'issue_type' => 'Tip problema',
+        'service_type' => 'Tip serviciu',
         'status' => 'Status problema',
         'map_point_id' => 'ID punct',
         'no_user' => 'Utilizator necunoscut',

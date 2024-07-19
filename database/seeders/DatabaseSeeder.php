@@ -59,27 +59,25 @@ class DatabaseSeeder extends Seeder
         });
         $user->givePermissionTo($this->permissions);
 
-        $serviceTypes = ServiceType::with(['issueTypes','pointTypes'])->get();
+        $serviceTypes = ServiceType::with(['issueTypes', 'pointTypes'])->get();
 
-        foreach ($serviceTypes as $serviceType)
-        {
-            foreach ($serviceType->pointTypes as $pointType)
-            {
+        foreach ($serviceTypes as $serviceType) {
+            foreach ($serviceType->pointTypes as $pointType) {
                 Point::factory(5)
                     ->create([
-                        'service_type_id' => $serviceType->id,
+                        'service_type_id' => $pointType->service_type_id,
                         'point_type_id' => $pointType->id,
                     ]);
             }
-            foreach ($serviceType->issueTypes as $issueType)
-            {
-                $point=Point::inRandomOrder()->first();
-                Issue::factory(5)
+            foreach ($serviceType->issueTypes as $issueType) {
+                $point = Point::where('service_type_id', $serviceType->id)->inRandomOrder()->first();
+                $issue = Issue::factory()
                     ->create([
-                        'service_type_id' => $serviceType->id,
+                        'service_type_id' => $point->service_type_id,
                         'point_id' => $point->id,
                     ]);
 
+                $issue->issueTypes()->attach($issueType->id, ['value' => ['test'=>'test']]);
             }
         }
     }

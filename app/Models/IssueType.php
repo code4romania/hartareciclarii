@@ -1,14 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class IssueType extends Model
 {
+    protected $fillable = [
+        'name',
+        'slug',
+        'type',
+    ];
+    protected $casts = [
+      'issues.pivot.value' => 'json',
+    ];
 
     public function serviceType(): BelongsTo
     {
@@ -17,6 +26,6 @@ class IssueType extends Model
 
     public function issues(): BelongsToMany
     {
-        return $this->belongsToMany(Issue::class);
+        return $this->belongsToMany(Issue::class)->using(IssueTypePivot::class)->withPivot('value');
     }
 }

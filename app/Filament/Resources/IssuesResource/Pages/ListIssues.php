@@ -27,17 +27,23 @@ class ListIssues extends ListRecords
 
             Tab::make(ServiceType::WASTE_COLLECTION->label())
                 ->modifyQueryUsing(function ($query) {
-                    return $query->where('type', ServiceType::WASTE_COLLECTION);
+                    return $query->whereHas('serviceType', function ($query) {
+                        $query->where('slug', ServiceType::WASTE_COLLECTION);
+                    });
                 }),
 
             Tab::make(ServiceType::REPAIRS->label())
                 ->modifyQueryUsing(function ($query) {
-                    return $query->where('type', ServiceType::REPAIRS);
+                    return $query->whereHas('serviceType', function ($query) {
+                        $query->where('slug', ServiceType::REPAIRS);
+                    });
                 }),
 
             Tab::make(__('point_types.other'))
                 ->modifyQueryUsing(function ($query) {
-                    return $query->whereNot('type', ServiceType::REPAIRS)->whereNot('type', ServiceType::WASTE_COLLECTION);
+                    return $query->whereDoesntHave('serviceType', function ($query) {
+                        $query->whereIn('slug', [ServiceType::WASTE_COLLECTION, ServiceType::REPAIRS]);
+                    });
                 }),
 
         ];

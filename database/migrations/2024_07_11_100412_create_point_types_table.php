@@ -23,7 +23,7 @@ return new class extends Migration
         });
         Schema::table('points', function (Blueprint $table) {
             $table->foreignIdFor(ServiceType::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(PointType::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(PointType::class)->nullable()->constrained()->nullOnDelete();
         });
 
         $this->seedData();
@@ -35,6 +35,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('point_types');
+        Schema::table('points', function (Blueprint $table) {
+            $table->dropForeign(['service_type_id']);
+            $table->dropForeign(['point_type_id']);
+        });
     }
 
     public function seedData(): void
@@ -42,6 +46,7 @@ return new class extends Migration
         $serviceTypes = [
             [
                 'name' => 'Colectare separată deșeuri',
+                'slug' => App\Enums\Point\ServiceType::WASTE_COLLECTION,
                 'pointsTypes' => [
                     'Container stradal',
                     'Punct magazin',
@@ -49,8 +54,7 @@ return new class extends Migration
                     'Centru de aport voluntari',
                     'Centru de colectare',
                 ],
-                //Adresa nu este corectă (PRB_Tip_01); Locația punctului pe hartă nu este corectă (PRB_Tip_02); Materialele colectate nu sunt corecte (PRB_Tip_03A); Programul nu este corect (PRB_Tip_04); Containerul nu funcționează sau nu este bine întreținut (PRB_Tip_05); Mi s-a refuzat preluarea deșeului (PRB_Tip_06A); Altă problemă (PRB_Tip_99)
-                'possibleIssues'=>[
+                'possibleIssues' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -86,10 +90,11 @@ return new class extends Migration
                         'slug' => 'PRB_Tip_99',
                         'type' => 'other',
                     ],
-                ]
+                ],
             ],
             [
                 'name' => 'Reparații',
+                'slug' => App\Enums\Point\ServiceType::REPAIRS,
                 'pointsTypes' => [
                     'Croitorie',
                     'Reparații încălțăminte',
@@ -104,27 +109,6 @@ return new class extends Migration
                     'Reparații altele',
 
                 ],
-            ],
-            [
-                'name' => 'Reutilizare',
-                'pointsTypes' => [
-                    'Magazin haine second-hand',
-                    'Magazin electronice second-hand',
-                    'Magazin vintage & antichități',
-                    'Anticariat',
-                    'Consignație',
-                    'Magazine cu ambalaje returnabile',
-                    'Închiriere transport verde',
-                    'Închiriere echipament sportiv',
-                    'Închiriere obiecte pentru evenimente',
-                    'Închiriere echipamente IT&C',
-                    'Alte servicii de închiriere',
-                    'Upcycling',
-                    'Troc',
-                    'Alte servicii de reutilizare',
-
-                ],
-                //Adresa nu este corectă (PRB_Tip_01); Locația punctului pe hartă nu este corectă (PRB_Tip_02); Produsele reparate nu sunt corect listate in descrierea punctului (PRB_Tip_03B); Programul nu este corect (PRB_Tip_04); Mi s-a refuzat repararea produsului (PRB_Tip_06B); Altă problemă (PRB_Tip_99)
                 'possibleIssues' => [
                     [
                         'name' => 'Adresa nu este corectă',
@@ -155,12 +139,65 @@ return new class extends Migration
                         'name' => 'Altă problemă',
                         'slug' => 'PRB_Tip_99',
                         'type' => 'other',
-                    ]
-                ]
+                    ],
+                ],
             ],
+            [
+                'name' => 'Reutilizare',
+                'slug' => App\Enums\Point\ServiceType::REUSE,
+                'pointsTypes' => [
+                    'Magazin haine second-hand',
+                    'Magazin electronice second-hand',
+                    'Magazin vintage & antichități',
+                    'Anticariat',
+                    'Consignație',
+                    'Magazine cu ambalaje returnabile',
+                    'Închiriere transport verde',
+                    'Închiriere echipament sportiv',
+                    'Închiriere obiecte pentru evenimente',
+                    'Închiriere echipamente IT&C',
+                    'Alte servicii de închiriere',
+                    'Upcycling',
+                    'Troc',
+                    'Alte servicii de reutilizare',
 
+                ],
+                'possibleIssues' => [
+                    [
+                        'name' => 'Adresa nu este corectă',
+                        'slug' => 'PRB_Tip_01',
+                        'type' => 'address',
+                    ],
+                    [
+                        'name' => 'Locația punctului pe hartă nu este corectă',
+                        'slug' => 'PRB_Tip_02',
+                        'type' => 'location',
+                    ],
+                    [
+                        'name' => 'Produsele reparate nu sunt corect listate in descrierea punctului',
+                        'slug' => 'PRB_Tip_03B',
+                        'type' => 'materials',
+                    ],
+                    [
+                        'name' => 'Programul nu este corect',
+                        'slug' => 'PRB_Tip_04',
+                        'type' => 'schedule',
+                    ],
+                    [
+                        'name' => 'Mi s-a refuzat repararea produsului',
+                        'slug' => 'PRB_Tip_06B',
+                        'type' => 'refusal',
+                    ],
+                    [
+                        'name' => 'Altă problemă',
+                        'slug' => 'PRB_Tip_99',
+                        'type' => 'other',
+                    ],
+                ],
+            ],
             [
                 'name' => 'Reducere',
+                'slug' => App\Enums\Point\ServiceType::REDUCTION,
                 'pointsTypes' => [
                     'Magazin zero waste',
                     'Locație cu apă gratuită',
@@ -168,7 +205,6 @@ return new class extends Migration
                     'Magazine care acceptă ambalaje proprii',
                     'Alte servicii de reducere',
                 ],
-                //Adresa nu este corectă (PRB_Tip_01); Locația punctului pe hartă nu este corectă (PRB_Tip_02); Altă problemă (PRB_Tip_99)
                 'possibleIssues' => [
                     [
                         'name' => 'Adresa nu este corectă',
@@ -184,11 +220,12 @@ return new class extends Migration
                         'name' => 'Altă problemă',
                         'slug' => 'PRB_Tip_99',
                         'type' => 'other',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'name' => 'Donații',
+                'slug' => App\Enums\Point\ServiceType::DONATIONS,
                 'pointsTypes' => [
                     'Centre de donații',
                 ],
@@ -207,11 +244,12 @@ return new class extends Migration
                         'name' => 'Altă problemă',
                         'slug' => 'PRB_Tip_99',
                         'type' => 'other',
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'name' => 'Altele',
+                'slug' => App\Enums\Point\ServiceType::OTHER,
                 'pointsTypes' => [
                     'Altele',
                 ],
@@ -230,18 +268,20 @@ return new class extends Migration
                         'name' => 'Altă problemă',
                         'slug' => 'PRB_Tip_99',
                         'type' => 'other',
-                    ]
-                ]
+                    ],
+                ],
             ],
 
         ];
 
         foreach ($serviceTypes as $serviceType) {
-            $service = ServiceType::create(['name' => $serviceType['name']]);
+            $service = ServiceType::create(['name' => $serviceType['name'], 'slug' => $serviceType['slug']]);
             foreach ($serviceType['pointsTypes'] as $pointType) {
                 PointType::create(['name' => $pointType, 'service_type_id' => $service->id]);
             }
-
+            foreach ($serviceType['possibleIssues'] as $issueType) {
+                $issue = $service->issueTypes()->create($issueType);
+            }
         }
     }
 };

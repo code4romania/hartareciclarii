@@ -25,18 +25,15 @@ class IssueFactory extends Factory
         if ($this->faker->boolean) {
             $reporterId = User::factory();
         }
-        $point = Point::factory()->create();
 
-        $type = $this->faker->randomElement($point->service_type->issueTypes()::values());
-        $fields = $point->service_type->issueFields($type);
+        $point=Point::inRandomOrder()->first();
+
 
         return [
             'point_id' => $point->id,
+            'service_type_id' => $point->service_type_id,
             'user_id' => $reporterId,
             'status' => $this->faker->randomElement(IssueStatus::values()),
-            'type' => $point->service_type->value,
-            'type_value' => $type,
-            'issues' => $fields,
             'description' => $this->faker->sentence,
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),

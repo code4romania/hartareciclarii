@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\IssuesResource\Pages;
 use App\Models\Issue;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -27,19 +28,13 @@ class IssuesResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+            ->schema(
+                fn (Issue $record) => self::getProblemsFormSchema($record)
+            );
     }
 
     public static function table(Table $table): Table
     {
-        $actions = [
-            Tables\Actions\ViewAction::make()
-                ->label(__('issues.buttons.details')),
-            // ->icon('heroicon-m-eye'),
-        ];
-
         return $table
             ->columns([
                 TextColumn::make('point_id')
@@ -53,10 +48,13 @@ class IssuesResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('issues.columns.created_at'))
                     ->sortable(),
-                TextColumn::make('type_value')
-                    ->label(__('issues.columns.issue_type'))
+                TextColumn::make('serviceType.name')
+                    ->label(__('issues.columns.service_type'))
                     ->sortable()
                     ->html(),
+                TextColumn::make('issueTypes.name')
+                    ->label(__('issues.columns.issue_type'))
+                    ->sortable(),
                 TextColumn::make('status')
                     ->label(__('issues.columns.status'))
                     ->sortable()
@@ -67,7 +65,10 @@ class IssuesResource extends Resource
                 //
             ])
             ->actions(
-                $actions,
+                [
+                    Tables\Actions\ViewAction::make()
+                        ->label(__('issues.buttons.details')),
+                ],
             )
             ->headerActions(
                 [
@@ -115,5 +116,20 @@ class IssuesResource extends Resource
     public static function getPluralLabel(): ?string
     {
         return __('issues.label');
+    }
+
+    private static function getProblemsFormSchema(Issue $record)
+    {
+        return[
+            Section::make(__('issues.sections.reporter'), [
+                //
+            ]),
+            Section::make(__('issues.sections.problem'), [
+                //
+            ]),
+            Section::make(__('issues.sections.status'), [
+                //
+            ]),
+        ];
     }
 }

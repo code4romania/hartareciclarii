@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ServiceType extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'name',
+        'slug',
     ];
 
     protected $casts = [
         'name' => 'string',
+        'slug' => \App\Enums\Point\ServiceType::class,
     ];
 
     public function issueTypes(): HasMany
