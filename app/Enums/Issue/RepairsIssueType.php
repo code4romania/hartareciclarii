@@ -25,7 +25,7 @@ enum RepairsIssueType: string
 
     public static function fields($field): array
     {
-       return match ($field){
+        return match ($field) {
             self::INCORRECT_ADDRESS->value => [
                 ['label' => 'enums.issue.fields.address', 'type' => 'text'],
             ],
@@ -46,6 +46,6 @@ enum RepairsIssueType: string
                 ['label' => 'enums.issue.fields.repaired_products_not_repaired', 'type' => 'checkbox'],
             ],
             self::OTHER->value => [],
-       };
+        };
     }
 }

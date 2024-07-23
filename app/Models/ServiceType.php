@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ServiceType extends Model
 {
-
     protected $fillable = [
         'name',
         'slug',
@@ -38,6 +38,4 @@ class ServiceType extends Model
     {
         return $this->hasMany(Issue::class, 'service_type_id');
     }
-
-
 }

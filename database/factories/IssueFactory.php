@@ -26,8 +26,7 @@ class IssueFactory extends Factory
             $reporterId = User::factory();
         }
 
-        $point=Point::inRandomOrder()->first();
-
+        $point = Point::inRandomOrder()->first();
 
         return [
             'point_id' => $point->id,

@@ -8,7 +8,7 @@ return [
             'waste_collection' => 'Colectare deseuri',
         ],
     ],
-    'issue_status'=> [
+    'issue_status' => [
         'new' => 'Nou',
         'solved' => 'Rezolvat',
         'pending' => 'In asteptare',

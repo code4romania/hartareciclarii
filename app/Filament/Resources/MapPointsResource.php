@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Enums\MapPointTypes as MapPointTypesEnum;
 use App\Enums\Point\Status;
 use App\Filament\Resources\MapPointsResource\Pages;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
-use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\Point;
 use App\Models\RecycleMaterial as RecycleMaterialModel;

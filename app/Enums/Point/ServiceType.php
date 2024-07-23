@@ -39,14 +39,13 @@ enum ServiceType: string
         };
     }
 
-    public function issueTypes():string
+    public function issueTypes(): string
     {
         return match ($this) {
             self::WASTE_COLLECTION => WasteCollectionIssueType::class,
             self::REPAIRS => RepairsIssueType::class,
             self::REUSE, self::REDUCTION, self::DONATIONS, self::OTHER => DefaultIssueType::class,
         };
-
     }
 
     public function issueFields(string $type): array

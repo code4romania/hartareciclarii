@@ -79,5 +79,4 @@ class Point extends Model
     {
         return $this->belongsTo(PointType::class);
     }
-
 }

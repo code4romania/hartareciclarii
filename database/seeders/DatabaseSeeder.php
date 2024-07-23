@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
                         'point_id' => $point->id,
                     ]);
 
-                $issue->issueTypes()->attach($issueType->id, ['value' => ['test'=>'test']]);
+                $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
             }
         }
     }

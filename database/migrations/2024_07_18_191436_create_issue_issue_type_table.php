@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Issue;
 use App\Models\IssueType;
 use Illuminate\Database\Migrations\Migration;

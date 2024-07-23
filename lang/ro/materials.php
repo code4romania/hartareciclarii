@@ -8,7 +8,7 @@ return [
 
     'singular' => 'Material reciclabil',
     'plural' => 'Materiale reciclabile',
-    'categories'=> [
+    'categories' => [
         'singular' => 'Categorie material',
         'plural' => 'Categorii materiale',
         'fields' => [

@@ -23,7 +23,7 @@ return [
         'point' => 'Adăugare punct nou',
         'issue' => 'Raportare problemă',
     ],
-    'points_count'=> 'Număr puncte',
+    'points_count' => 'Număr puncte',
     'name' => 'Nume',
 
     'points_group' => [

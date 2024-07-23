@@ -15,8 +15,9 @@ class IssueType extends Model
         'slug',
         'type',
     ];
+
     protected $casts = [
-      'issues.pivot.value' => 'json',
+        'issues.pivot.value' => 'json',
     ];
 
     public function serviceType(): BelongsTo

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\Point\ServiceType;
 use App\Enums\Point\Source;
 use App\Enums\Point\Status;
 use App\Models\City;
@@ -36,13 +35,11 @@ class PointFactory extends Factory
         $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
         $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
 
-        if ($this->faker->boolean)
-        {
+        if ($this->faker->boolean) {
             $user = User::factory()->create();
         }
 
-        if ($this->faker->boolean)
-        {
+        if ($this->faker->boolean) {
             $pointGroup = PointGroup::factory()->create();
         }
 
