@@ -49,5 +49,15 @@ return [
         'update_location' => 'Editeaza locatia',
         'confirm_info' => 'Confirma informatiile',
     ],
+    'sections'=>[
+        'location' => 'Localizare',
+        'map' => 'Harta',
+
+    ],
+    'fields' => [
+        'address' => 'Adresa',
+        'coordinate' => 'Coordonate',
+        'notes' => 'Notițe localizare (private)',
+    ]
 
 ];

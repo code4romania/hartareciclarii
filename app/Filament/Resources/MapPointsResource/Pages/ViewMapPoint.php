@@ -6,22 +6,20 @@ namespace App\Filament\Resources\MapPointsResource\Pages;
 
 use App\Filament\Resources\PointResource;
 use App\Models\ActionLog as ActionLogModel;
-use App\Models\MapPointGroup as MapPointGroupModel;
-use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\Material;
 use App\Models\PointGroup;
-use App\Models\RecycleMaterial as RecycleMaterialModel;
 use App\Models\ServiceType;
-use App\Models\User as UserModel;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\ViewField;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Tables\Columns\TextColumn;
@@ -38,7 +36,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
 
     protected static string $resource = PointResource::class;
 
-    protected static string $view = 'filament.resources.puncte-harta-resource.pages.view-punct-harta';
+//    protected static string $view = 'filament.resources.puncte-harta-resource.pages.view-punct-harta';
 
     public $lat;
 
@@ -56,43 +54,6 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
         return [
             TextInput::make('title')->required(),
         ];
-    }
-
-    public function editLocationAction(): Action
-    {
-        return Action::make('editLocation')
-            ->icon('heroicon-m-pencil-square')
-            ->iconButton()
-            ->form([
-                Section::make('Location')
-                    ->description('Update map point location')
-                    ->schema([
-                        TextInput::make('county')
-                            ->required()
-                            ->default($this->getRecord()->county)->disabled(),
-                        TextInput::make('city')
-                            ->required()
-                            ->default($this->getRecord()->city)->disabled(),
-                        TextInput::make('address')
-                            ->required()
-                            ->default($this->getRecord()->address),
-                        // TextInput::make('lat')->required()->default($this->getRecord()->lat),
-                        // TextInput::make('lon')->required()->default($this->getRecord()->lon),
-                        TextInput::make('location_notes')
-                            ->required()
-                            ->default($this->getRecord()->location_notes),
-
-                    ])
-                    ->columns(2),
-                ViewField::make('map')->view('filament.forms.components.map'),
-
-            ])
-            ->action(function ($data) {
-                $data['lat'] = $this->lat;
-                $data['lon'] = $this->lon;
-                $data['city'] = $this->city;
-                $this->getRecord()->updateAddress(collect($data));
-            });
     }
 
     public function editDetailsAction(): Action
@@ -232,21 +193,60 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
         return $this->getRecord()->serviceType->name . ' ' . $this->getRecord()->managed_by;
     }
 
+    public function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema(
+            [
+                Section::make(__('map_points.sections.location'))
+                    ->schema(
+                        [
+                            TextEntry::make('address')
+                                ->icon('heroicon-s-map-pin')
+                                ->label(__('map_points.fields.address')),
+
+                            TextEntry::make('location')
+                                ->icon('heroicon-s-ellipsis-horizontal-circle')
+                                ->label(__('map_points.fields.coordinate')),
+
+                            TextEntry::make('notes')
+                                ->icon('heroicon-s-pencil-square')
+                                ->label(__('map_points.fields.notes')),
+                        ]
+                    )->headerActions(
+                        [
+                            \Filament\Infolists\Components\Actions\Action::make('updateLocation')
+                                ->hiddenLabel()
+                                ->icon('heroicon-s-pencil-square')
+                                ->form(
+                                    [
+                                        TextInput::make('lat')
+                                            ->label('Lat')
+                                            ->required(),
+                                        TextInput::make('lon')
+                                            ->label('Lon')
+                                            ->required(),
+                                        TextInput::make('city')
+                                            ->label('City')
+                                            ->required(),
+                                    ]
+                                ),
+                        ]
+                    )->columnSpan(3),
+                ViewEntry::make('map_location')
+                    ->columnSpan(9)
+                    ->view('filament.infolist.map'),
+
+            ]
+        )->columns(12);
+    }
+
     public function table(Table $table): Table
     {
         return $table
             ->query(ActionLogModel::whereModel(\get_class($this->getRecord()))->whereModelId($this->getRecord()->id)->orderBy('created_at', 'desc'))
             ->columns([
-                TextColumn::make('user_id')
+                TextColumn::make('user.name')
                     ->formatStateUsing(function (string $state, $record) {
-                        if ($record->user_id > 0) {
-                            $user = UserModel::find($record->user_id);
-                        } else {
-                            $user = new UserModel();
-                            $user->name = 'System';
-                        }
-
-                        return "[{$record->user_id}] {$user->name}";
                     })
                     ->html(),
                 TextColumn::make('action')
