@@ -132,6 +132,8 @@
     });
 
     const map_pop_up = ref(null);
+    const hasChanged = ref(false);
+    let mapAddress = ref(null);
 
     const point = ref(null);
     const loader = ref(false);
@@ -185,7 +187,9 @@
                     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
                 )
                 .then((response) => {
+                    hasChanged.value = true;
                     query.value = response.data.display_name;
+                    // mapAddress.value = response.data.display_name;
                     loader.value = false;
                 });
         }
