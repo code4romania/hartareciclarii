@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Point\ServiceType;
 use App\Enums\Point\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,11 +42,6 @@ class Point extends Model
     public function materials(): BelongsToMany
     {
         return $this->belongsToMany(Material::class);
-    }
-
-    public function getPointTypeEnumAttribute()
-    {
-        return $this->service_type->pointTypes();
     }
 
     public function issues(): HasMany

@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\MapPointsResource;
+use App\Filament\Resources\PointResource;
 use App\Models\ActionLog as ActionLogModel;
 use App\Models\MapPointGroup as MapPointGroupModel;
 use App\Models\MapPointType as MapPointTypeModel;
+use App\Models\Material;
+use App\Models\PointGroup;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
+use App\Models\ServiceType;
 use App\Models\User as UserModel;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
@@ -33,7 +36,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
 {
     use InteractsWithTable;
 
-    protected static string $resource = MapPointsResource::class;
+    protected static string $resource = PointResource::class;
 
     protected static string $view = 'filament.resources.puncte-harta-resource.pages.view-punct-harta';
 
@@ -100,12 +103,12 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
             ->form([
                 Select::make('type')
                     ->label(__('map_points.point_type_alt'))
-                    ->options(MapPointTypeModel::query()->pluck('display_name', 'id'))
-                    ->default($this->getRecord()->type->id)
+                    ->options(ServiceType::query()->pluck('name', 'id'))
+                    ->default($this->getRecord()->service_type_id)
                     ->required(),
                 Select::make('materials')
                     ->label(__('map_points.materials'))
-                    ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
+                    ->options(Material::query()->pluck('name', 'id'))
                     ->default($this->getRecord()->materials->pluck('id')->toArray())
                     ->multiple()
                     ->required(),
@@ -133,11 +136,11 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                             // ->default($this->getRecord()->materials->pluck('id')->toArray())
                             ->required(),
                         TimePicker::make('start_hour')
-                            ->seconds('false')
+                            ->seconds(false)
                             ->hoursStep(1)
                             ->minutesStep(10),
                         TimePicker::make('end_hour')
-                            ->seconds('false')
+                            ->seconds(false)
                             ->hoursStep(1)
                             ->minutesStep(10),
                     ])
@@ -176,7 +179,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
                     ->form([
                         Select::make('group_id')
                             ->label(__('map_points.buttons.group'))
-                            ->options(MapPointGroupModel::query()->pluck('name', 'id'))
+                            ->options(PointGroup::query()->pluck('name', 'id'))
                             ->required(),
                     ])
                     ->action(function (array $data, Collection $records): void {
@@ -226,7 +229,7 @@ class ViewMapPoint extends ViewRecord implements HasTable, HasActions
 
     public function getSubHeading(): string | Htmlable
     {
-        return $this->getRecord()->type->display_name . ' ' . $this->getRecord()->managed_by;
+        return $this->getRecord()->serviceType->name . ' ' . $this->getRecord()->managed_by;
     }
 
     public function table(Table $table): Table

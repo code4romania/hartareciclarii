@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Enums\Point\ServiceType;
-use App\Filament\Resources\MapPointsResource;
+use App\Filament\Resources\PointResource;
+use App\Models\ServiceType;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 
 class ListMapPoints extends ListRecords
 {
-    protected static string $resource = MapPointsResource::class;
+    protected static string $resource = PointResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -25,12 +25,12 @@ class ListMapPoints extends ListRecords
 
     public function getTabs(): array
     {
-        $services = ServiceType::options();
+        $services = ServiceType::all();
         $tabs = [];
-        foreach ($services as $key => $value) {
-            $tabs[$key] = Tab::make($value)->modifyQueryUsing(function ($query) use ($key) {
-                return $query->where('service_type', $key);
-            });
+        foreach ($services as $service) {
+            $tabs[$service->slug->value] = Tab::make($service->slug->value)->modifyQueryUsing(function ($query) use ($service) {
+                return $query->where('service_type_id', $service->id);
+            })->label($service->name);
         }
 
         return $tabs;

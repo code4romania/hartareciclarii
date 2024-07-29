@@ -107,7 +107,7 @@
 		    <form class="space-y-6" action="#">
 		        <div>
 		            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tip punct</label>
-		            <input value="{{ $record->type->display_name }}" type="email" disabled="true" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+		            <input value="{{ $record->serviceType->name }}" type="email" disabled="true" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
 		        </div>
 		        <div>
 		            <label for="materials" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Materiale colectate</label>
@@ -176,7 +176,7 @@
     	</div>
     	<div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
     		<h5 class=" flex items-center text-xl font-medium text-gray-900 dark:text-white" style="justify-content: space-between;">Activitate punct</h5>
-    		{{ $this->table }}
+{{--    		{{ $this->table }}--}}
     	</div>
 
     </div>
@@ -185,11 +185,11 @@
 </x-filament-panels::page>
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
-		var map = L.map('recycle-point-view-on-map').setView([{{ $record->lat }}, {{ $record->lon }}], 16);
+		var map = L.map('recycle-point-view-on-map').setView([{{ $record->location->latitude }}, {{ $record->location->longitude }}], 16);
 		setInterval(function() {
 		     map.invalidateSize();
 		  }, 200);
-		var marker = new L.Marker([{{ $record->lat }}, {{ $record->lon }}]);
+		var marker = new L.Marker([{{ $record->location->latitude }}, {{ $record->location->longitude }}]);
 		marker.addTo(map);
 
 		var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {

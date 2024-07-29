@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Filament\Resources\MapPointsResource;
+use App\Filament\Resources\PointResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMapPoints extends EditRecord
 {
-    protected static string $resource = MapPointsResource::class;
+    protected static string $resource = PointResource::class;
 
     protected function getHeaderActions(): array
     {

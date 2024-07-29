@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
 use App\Enums\MapPointTypes;
-use App\Filament\Resources\MapPointsResource;
+use App\Filament\Resources\PointResource;
 use App\Models\ActionLog as ActionLogModel;
 use App\Models\MapPoint as MapPointModel;
 use App\Models\MapPointService as MapPointServiceModel;
@@ -42,7 +42,7 @@ class CreateMapPoints extends CreateRecord implements HasForms
 
     public $city;
 
-    protected static string $resource = MapPointsResource::class;
+    protected static string $resource = PointResource::class;
 
     protected function getRedirectUrl(): string
     {

@@ -118,7 +118,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                 TextColumn::make('id')
                     ->label(__('map_points.id'))
                     ->formatStateUsing(function ($state) {
-                        return '<a href="' . \App\Filament\Resources\MapPointsResource::getUrl('view', ['record' => $state]) . '">' . $state . '</a>';
+                        return '<a href="' . \App\Filament\Resources\PointResource::getUrl('view', ['record' => $state]) . '">' . $state . '</a>';
                     })
                     ->sortable()
                     ->searchable()

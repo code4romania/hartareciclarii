@@ -6,11 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\Point\Status;
 use App\Filament\Resources\MapPointsResource\Pages;
-use App\Models\MapPoint as MapPointModel;
-use App\Models\MapPointGroup as MapPointGroupModel;
-use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\Point;
-use App\Models\RecycleMaterial as RecycleMaterialModel;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -30,7 +26,7 @@ use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
-class MapPointsResource extends Resource
+class PointResource extends Resource
 {
     protected static ?string $model = Point::class;
 
@@ -157,9 +153,9 @@ class MapPointsResource extends Resource
                     ->label(__('map_points.id'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('service_type')
-                    ->formatStateUsing(fn ($state) => $state->label())
+                TextColumn::make('serviceType.name')
                     ->label(__('map_points.point_type')),
+
                 TextColumn::make('administered_by')
                     ->label(__('map_points.managed_by'))
                     ->wrap(),
