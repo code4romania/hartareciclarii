@@ -15,6 +15,9 @@ return [
         'list' => 'Lista probleme raportate',
         'view' => 'Probleme cu punctul  #:point_id',
     ],
+    'subheader' => [
+        'view' => 'Raportata de :user la :created_at',
+    ],
     'columns' => [
         'reporter' => 'Utilizator',
         'created_at' => 'Raportat la',
@@ -23,6 +26,11 @@ return [
         'status' => 'Status problema',
         'map_point_id' => 'ID punct',
         'no_user' => 'Utilizator necunoscut',
+    ],
+
+    'infolistFields' => [
+        'issue_type' => 'Ce tip de problemă ai identificat?',
+        'description' => 'Descrie problema',
     ],
 
     'status' => [
@@ -48,6 +56,15 @@ return [
         'opening_hours' => 'Orar',
         'description' => 'Descriere problema',
         'decline_reason' => 'Motivul refuzului',
+    ],
+
+    'notifications' => [
+        'status_changed' => 'Statusul problemei a fost modificat',
+    ],
+    'actions'=> [
+        'delete' => 'Sterge problema',
+        'edit_point' => 'Editeaza punct',
+        'change_status' => 'Schimba status',
     ],
 
 ];

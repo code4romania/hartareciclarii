@@ -99,9 +99,9 @@ class ViewMapPoint extends ViewRecord
             'map_points.subheading',
             [
                 'serviceType' => $this->getRecord()->serviceType->name,
-                'pointType' => $this->getRecord()->pointGroup->name,
+                'pointType' => $this->getRecord()->pointType->name,
                 'administeredBy' => $this->getRecord()->administered_by,
-                'group' => $this->getRecord()->pointGroup->name,
+                'group' => $this->getRecord()->pointGroup?->name,
             ]
         );
     }

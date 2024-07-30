@@ -52,4 +52,12 @@ class Issue extends Model
     {
         return $this->belongsToMany(IssueType::class)->using(IssueTypePivot::class)->withPivot('value');
     }
+
+    public function changeStatus(string $status): void
+    {
+        $status = IssueStatus::tryFrom($status);
+        $this->status = $status;
+        $this->status_updated_at = now();
+        $this->save();
+    }
 }

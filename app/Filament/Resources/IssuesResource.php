@@ -6,8 +6,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\IssuesResource\Pages;
 use App\Models\Issue;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -25,12 +25,15 @@ class IssuesResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function infolist(Infolist $infolist): Infolist
     {
-        return $form
-            ->schema(
-                fn (Issue $record) => self::getProblemsFormSchema($record)
-            );
+        return $infolist->schema(
+            [
+                TextEntry::
+                TextEntry::make('issueTypes.name')
+                    ->label(__('issues.columns.issue_type')),
+            ]
+        );
     }
 
     public static function table(Table $table): Table
@@ -116,20 +119,5 @@ class IssuesResource extends Resource
     public static function getPluralLabel(): ?string
     {
         return __('issues.label');
-    }
-
-    private static function getProblemsFormSchema(Issue $record)
-    {
-        return[
-            Section::make(__('issues.sections.reporter'), [
-                //
-            ]),
-            Section::make(__('issues.sections.problem'), [
-                //
-            ]),
-            Section::make(__('issues.sections.status'), [
-                //
-            ]),
-        ];
     }
 }
