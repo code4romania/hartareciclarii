@@ -19,4 +19,13 @@ return [
         'needs_verification' => 'Necesita verificare',
         'with_problems' => 'Cu probleme',
     ],
+    'days' => [
+        'monday' => 'Luni',
+        'tuesday' => 'Marti',
+        'wednesday' => 'Miercuri',
+        'thursday' => 'Joi',
+        'friday' => 'Vineri',
+        'saturday' => 'Sambata',
+        'sunday' => 'Duminica',
+    ],
 ];

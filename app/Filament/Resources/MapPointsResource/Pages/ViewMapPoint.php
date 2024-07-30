@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
+use App\Enums\DaysEnum;
 use App\Enums\Point\Status;
 use App\Filament\Resources\PointResource;
 use App\Models\ActionLog as ActionLogModel;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\Actions\Action as InfolistAction;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -239,7 +243,71 @@ class ViewMapPoint extends ViewRecord
 
                     ])
                     ->columns(3)
-                    ->columnSpan(12),
+                    ->columnSpan(12)
+                    ->headerActions([
+                        InfolistAction::make('editDetails')
+                            ->fillForm($this->record->toArray())
+                            ->form(
+                                [
+                                    Select::make('point_type_id')
+                                        ->label(__('map_points.fields.point_type'))
+                                        ->relationship('pointType', 'name')
+                                        ->required(),
+                                    Select::make('materials')
+                                        ->label(__('map_points.fields.materials'))
+                                        ->relationship('materials', 'name')
+                                        ->multiple()
+                                        ->required(),
+                                    TextInput::make('administered_by')
+                                        ->label(__('map_points.fields.administered_by'))
+                                        ->required(),
+                                    TextInput::make('website')
+                                        ->label(__('map_points.fields.website')),
+                                    TextInput::make('email')
+                                        ->label(__('map_points.fields.email')),
+                                    TextInput::make('phone')
+                                        ->label(__('map_points.fields.phone')),
+                                    Repeater::make('schedule')
+                                        ->label(__('map_points.fields.schedule'))
+                                        ->itemLabel(fn (array $state) => __('enums.days.' . $state['day']) . ' ' . $state['start'] . ' - ' . $state['end'])
+                                        ->collapsed()
+                                        ->schema(
+                                            [
+                                                Select::make('day')
+                                                    ->label(__('map_points.fields.day'))
+                                                    ->options(
+                                                        DaysEnum::options()
+                                                    )
+                                                    ->required(),
+                                                TextInput::make('start')
+                                                    ->label(__('map_points.fields.opening_time'))
+                                                    ->required(),
+                                                TextInput::make('end')
+                                                    ->label(__('map_points.fields.closing_time'))
+                                                    ->required(),
+                                            ]
+                                        )
+                                        ->columns(3)
+                                        ->required(),
+                                    Textarea::make('observations')
+                                        ->label(__('map_points.fields.observations')),
+                                    Group::make(
+                                        [
+                                            Toggle::make('offers_transport')
+                                                ->label(__('map_points.fields.offers_transport')),
+                                            Toggle::make('offers_money')
+                                                ->label(__('map_points.fields.offers_money')),
+                                            Toggle::make('offers_vouchers')
+                                                ->label(__('map_points.fields.offers_vouchers')),
+                                            Toggle::make('free_of_charge')
+                                                ->label(__('map_points.fields.free_of_charge')),
+                                        ]
+                                    )->columns(4),
+
+                                ]
+                            )->label(__('map_points.buttons.edit_details'))
+                            ->action(fn (array $data) => $this->record->update($data)),
+                    ]),
 
             ]
         )->columns(12);

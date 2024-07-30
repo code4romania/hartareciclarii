@@ -46,6 +46,7 @@ return [
         'delete' => 'Sterge punct',
         'view_on_map' => 'Vezi pe harta',
         'edit' => 'Modifica punct',
+        'edit_details' => 'Modifica detalii',
         'validate' => 'Marcheaza ca verificat',
         'change_status' => 'Schimba status',
         'update_location' => 'Editeaza locatia',
