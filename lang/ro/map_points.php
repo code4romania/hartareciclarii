@@ -36,6 +36,8 @@ return [
     'suggest_new_point' => 'Sugereaza un nou punct pe harta',
     'point_save_success' => 'Punct salvat cu succes',
 
+    'subheading' => ':serviceType :pointType administrat de :administeredBy alocat la grup :group',
+
     'buttons' => [
         'set_group' => 'Aloca la grup',
         'location_type' => 'Tip locatie',
@@ -49,15 +51,35 @@ return [
         'update_location' => 'Editeaza locatia',
         'confirm_info' => 'Confirma informatiile',
     ],
-    'sections'=>[
+    'sections' => [
         'location' => 'Localizare',
         'map' => 'Harta',
+        'details' => 'Detalii',
 
     ],
     'fields' => [
         'address' => 'Adresa',
         'coordinate' => 'Coordonate',
         'notes' => 'Notițe localizare (private)',
-    ]
+        'status' => 'Status',
+        'group' => 'Grup',
+        'latitude' => 'Latitudine',
+        'longitude' => 'Longitudine',
+        'point_type' => 'Tip punct',
+        'materials' => 'Materiale',
+        'website' => 'Website',
+        'phone' => 'Telefon',
+        'email' => 'Email',
+        'administered_by' => 'Administrat de',
+        'day' => 'Zi',
+        'opening_time' => 'Ora de deschidere',
+        'closing_time' => 'Ora de inchidere',
+        'schedule' => 'Program',
+        'observations' => 'Observatii',
+        'offers_transport' => 'Ofera transport',
+        'offers_money' => 'Ofera bani',
+        'offers_vouchers' => 'Ofera vouchere',
+        'free_of_charge' => 'Gratuit',
+    ],
 
 ];

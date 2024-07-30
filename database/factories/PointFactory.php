@@ -57,31 +57,38 @@ class PointFactory extends Factory
             'notes' => $this->faker->sentence,
             'observations' => $this->faker->sentence,
             'schedule' => [
-                'monday' => [
+                [
+                    'day' => 'monday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'tuesday' => [
+                [
+                    'day' => 'tuesday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'wednesday' => [
+                [
+                    'day' => 'wednesday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'thursday' => [
+                [
+                    'day' => 'thursday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'friday' => [
+                [
+                    'day' => 'friday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'saturday' => [
+                [
+                    'day' => 'saturday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],
-                'sunday' => [
+                [
+                    'day' => 'sunday',
                     'start' => '08:00',
                     'end' => '16:00',
                 ],

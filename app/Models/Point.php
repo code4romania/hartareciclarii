@@ -19,24 +19,39 @@ class Point extends Model
     use HasSpatial;
 
     protected $fillable = [
+        'status',
+        'source',
+        'county_id',
+        'city_id',
+        'created_by',
+        'point_group_id',
         'address',
+        'location',
+        'notes',
+        'administered_by',
         'name',
         'phone',
         'email',
         'website',
-        'notes',
         'observations',
         'schedule',
-        'status',
-        'service_type',
-        'point_type',
-        'location',
+        'offers_money',
+        'offers_vouchers',
+        'offers_transport',
+        'free_of_charge',
+        'service_type_id',
+        'point_type_id',
     ];
 
     protected $casts = [
         'schedule' => 'array',
         'status' => Status::class,
         'location' => SpatialPoint::class,
+        'offers_money' => 'boolean',
+        'offers_vouchers' => 'boolean',
+        'offers_transport' => 'boolean',
+        'free_of_charge' => 'boolean',
+
     ];
 
     public function materials(): BelongsToMany
@@ -72,5 +87,20 @@ class Point extends Model
     public function pointType(): BelongsTo
     {
         return $this->belongsTo(PointType::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function changeStatus(Status $status): void
+    {
+        $this->update(['status' => $status]);
+    }
+
+    public function changeGroup(int $groupId): void
+    {
+        $this->update(['point_group_id' => $groupId]);
     }
 }
