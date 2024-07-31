@@ -62,9 +62,9 @@ class CreateMapPoints extends CreateRecord implements HasForms
                 Wizard::make([
                     Wizard\Step::make(__('map_points.buttons.location_type'))
                         ->schema([
-                            Select::make('service')
+                            Select::make('service_id')
                                 ->label(__('map_points.point_type_alt'))
-                                ->options(MapPointServiceModel::query()->pluck('display_name', 'id'))
+                                ->relationship('serviceType','name')
                                 ->required(),
                             TextInput::make('address'),
                             ViewField::make('map')
@@ -80,7 +80,7 @@ class CreateMapPoints extends CreateRecord implements HasForms
                                 ->required(),
                             Select::make('materials')
                                 ->label(__('map_points.materials'))
-                                ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
+                                ->relationship('recycleMaterials', 'name')
                                 ->multiple()
                                 ->required(),
                             TextInput::make('managed_by')->required(),
@@ -95,9 +95,9 @@ class CreateMapPoints extends CreateRecord implements HasForms
                                     Select::make('end_day')
                                         ->label(__('map_points.end_day'))
                                         ->options(__('common.week_days')),
-                                    TimePicker::make('start_hour')->seconds('false')->hoursStep(1)
+                                    TimePicker::make('start_hour')->seconds(false)->hoursStep(1)
                                         ->minutesStep(10),
-                                    TimePicker::make('end_hour')->seconds('false')->hoursStep(1)
+                                    TimePicker::make('end_hour')->seconds(false)->hoursStep(1)
                                         ->minutesStep(10),
                                 ])
                                 ->columns(4),
@@ -138,8 +138,7 @@ class CreateMapPoints extends CreateRecord implements HasForms
                 ->placeholder($get('type') ? MapPointTypeModel::find($get('type'))->display_name : $get('type')),
             Select::make('materials')
                 ->label(__('map_points.materials'))
-                ->options(RecycleMaterialModel::query()->pluck('name', 'id'))
-                ->default($get('materials'))
+                ->relationship('recycleMaterials', 'name')
                 ->multiple(),
             TextInput::make('address')
                 ->label(__('map_points.address'))
@@ -172,13 +171,13 @@ class CreateMapPoints extends CreateRecord implements HasForms
                     // >pluck('id')->toArray())
                     TimePicker::make('start_hour')
                         ->label(__('map_points.opening_time'))
-                        ->seconds('false')
+                        ->seconds(false)
                         ->hoursStep(1)
                         ->minutesStep(10)
                         ->readOnly(),
                     TimePicker::make('end_hour')
                         ->label(__('map_points.closing_time'))
-                        ->seconds('false')
+                        ->seconds(false)
                         ->hoursStep(1)
                         ->minutesStep(10)
                         ->readOnly(),
