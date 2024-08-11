@@ -69,7 +69,8 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id'),
                 TextColumn::make('name')
-                    ->sortable()
+//                    ->sortable()
+//                    ->getSearchColumns('firstname')
                     ->searchable(),
                 TextColumn::make('email')
                     ->sortable()

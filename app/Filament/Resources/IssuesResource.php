@@ -29,7 +29,7 @@ class IssuesResource extends Resource
     {
         return $infolist->schema(
             [
-                TextEntry::
+
                 TextEntry::make('issueTypes.name')
                     ->label(__('issues.columns.issue_type')),
             ]

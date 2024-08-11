@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MapPointsResource\Pages;
 
-use App\Enums\MapPointTypes;
 use App\Filament\Resources\PointResource;
-use App\Models\ActionLog as ActionLogModel;
-use App\Models\MapPoint as MapPointModel;
-use App\Models\MapPointService as MapPointServiceModel;
-use App\Models\MapPointToField as MapPointToFieldModel;
 use App\Models\MapPointType as MapPointTypeModel;
-use App\Models\MaterialToMapPoint as MaterialToMapPointModel;
-use App\Models\RecycleMaterial as RecycleMaterialModel;
+use App\Models\PointType;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -22,18 +16,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Components\Wizard;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\HtmlString;
 
-class CreateMapPoints extends CreateRecord implements HasForms
+class CreateMapPoints extends CreateRecord
 {
-    use InteractsWithForms;
-
     public ?array $data = [];
 
     public $lat;
@@ -49,38 +37,32 @@ class CreateMapPoints extends CreateRecord implements HasForms
         return $this->getResource()::getUrl('view', ['record' => $this->getRecord()->id]);
     }
 
-    public function getData()
-    {
-        return $this->data;
-    }
-
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Wizard::make([
                     Wizard\Step::make(__('map_points.buttons.location_type'))
                         ->schema([
-                            Select::make('service_id')
+                            Select::make('service_type_id')
                                 ->label(__('map_points.point_type_alt'))
-                                ->relationship('serviceType','name')
+                                ->relationship('serviceType', 'name')
                                 ->required(),
+
                             TextInput::make('address'),
                             ViewField::make('map')
                                 ->view('filament.forms.components.map'),
                         ]),
                     Wizard\Step::make(__('map_points.buttons.details'))
                         ->schema([
-                            Select::make('type')
-                                ->label(__('map_points.point_type_alt'))
-                                ->options(function (callable $get) {
-                                    return MapPointTypeModel::query()->where('service_id', $get('service'))->pluck('display_name', 'id');
-                                })
+                            Select::make('point_type_id')
+                                ->relationship('mapPointType', 'name')
+                                ->options(fn (Get $get) => PointType::where('service_type_id', $get('service_type_id'))->pluck('name', 'id')->toArray())
                                 ->required(),
                             Select::make('materials')
                                 ->label(__('map_points.materials'))
-                                ->relationship('recycleMaterials', 'name')
+                                ->relationship('materials', 'name')
+                                ->preload()
                                 ->multiple()
                                 ->required(),
                             TextInput::make('managed_by')->required(),
@@ -113,18 +95,9 @@ class CreateMapPoints extends CreateRecord implements HasForms
                         ->schema(function ($get) {
                             return self::getContentPreviewDescription($get);
                         }),
-                ])
-                    ->submitAction(new HtmlString(Blade::render(
-                        <<<'BLADE'
-						    <x-filament::button
-						        type="submit"
-						        size="sm"
-						    >
-						        Submit
-						    </x-filament::button>
-						BLADE
-                    ))),
-            ])->statePath('data');
+                ])->columnSpanFull(),
+
+            ]);
     }
 
     public static function getContentPreviewDescription($get)
@@ -208,115 +181,5 @@ class CreateMapPoints extends CreateRecord implements HasForms
         return [
             //  Actions\CreateAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['created_by'] = auth()->id();
-        $data['lat'] = $this->lat;
-        $data['lon'] = $this->lon;
-
-        return $data;
-    }
-
-    protected function handleRecordCreation(array $data): Model
-    {
-        $record = new MapPointModel();
-        $record->service_id = data_get($data, 'service');
-        $record->point_type_id = data_get($data, 'type');
-        $record->lat = data_get($data, 'lat');
-        $record->lon = data_get($data, 'lon');
-        $record->location = \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")');
-        $record->created_by = data_get($data, 'created_by');
-        $record->point_source = 'user';
-        $record->status = 0;
-
-        $judet = \DB::select(\DB::raw('SELECT * FROM judete_geo jg WHERE ST_CONTAINS(jg.pol, Point(' . data_get($data, 'lon') . ', ' . data_get($data, 'lat') . '))')->getValue(\DB::connection()->getQueryGrammar()));
-        $record->save();
-        if (! empty($judet)) {
-            $field = collect([
-                'field_type_id' => MapPointTypes::County,
-                'recycling_point_id' => $record->id,
-                'value' => $judet[0]->name,
-            ]);
-            MapPointToFieldModel::addValueToPoint($field);
-        }
-
-        $fields = [
-            collect([
-                'field_type_id' => MapPointTypes::City,
-                'recycling_point_id' => $record->id,
-                'value' => $this->city,
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::Address,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'address'),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::ManagedBy,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'managed_by'),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::Website,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'website'),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::Email,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'email'),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::OpeningHours,
-                'recycling_point_id' => $record->id,
-                'value' => json_encode(data_get($data, 'opening_hours', [])),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::Notes,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'notes'),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::OffersTransport,
-                'recycling_point_id' => $record->id,
-                'value' => (int) data_get($data, 'offers_transport', 0),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::OffersMoney,
-                'recycling_point_id' => $record->id,
-                'value' => (int) data_get($data, 'offers_money', 0),
-            ]),
-            collect([
-                'field_type_id' => MapPointTypes::PhoneNo,
-                'recycling_point_id' => $record->id,
-                'value' => data_get($data, 'phone_no'),
-            ]),
-        ];
-        MapPointToFieldModel::addValuesToPoint($fields);
-
-        if (! empty(data_get($data, 'materials'))) {
-            foreach (data_get($data, 'materials') as $material_id) {
-                $item = MaterialToMapPointModel::firstOrCreate(['material_id' => $material_id, 'recycling_point_id' => $record->id]);
-            }
-        }
-        $action = collect([
-            'model' => MapPointModel::class,
-            'model_id' => $record->id,
-            'user_id' => auth()->user()->id,
-            'action' => 'created',
-            'old_values' => [],
-            'new_values' => [],
-        ]);
-
-        ActionLogModel::logAction($action);
-
-        return $record;
-    }
-
-    public function getFormStatePath(): ?string
-    {
-        return 'data';
     }
 }
