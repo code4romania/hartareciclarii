@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\IssueStatus;
 use App\Filament\Resources\IssuesResource\Pages;
 use App\Models\Issue;
+use Carbon\Carbon;
+use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -46,6 +51,12 @@ class IssuesResource extends Resource
                     ->searchable(),
                 TextColumn::make('user.name')
                     ->default(__('issues.columns.no_user'))
+                    ->searchable(
+                        query: fn (Builder $query, $search) => $query->whereHas(
+                            'user',
+                            fn (Builder $query) => $query->whereAny(['firstname', 'lastname', 'email', 'phone'], 'LIKE', '%' . $search . '%')
+                        )
+                    )
                     ->label(__('issues.columns.reporter'))->sortable(),
 
                 TextColumn::make('created_at')
@@ -65,7 +76,38 @@ class IssuesResource extends Resource
 
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('issue_type')
+                    ->label(__('issues.columns.issue_type'))
+                    ->relationship('issueTypes', 'name'),
+
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(IssueStatus::options())
+                    ->label(__('issues.columns.status')),
+
+                Filter::make('created_period')
+                    ->label(__('issues.columns.created_at'))
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! $data['created_from'] && ! $data['created_until']) {
+                            return null;
+                        }
+
+                        return __('issues.filters.period') . Carbon::parse($data['created_from'])->format('d.m.Y') . ' - ' . Carbon::parse($data['created_until'])->format('d.m.Y');
+                    })
+                    ->form([
+                        DatePicker::make('created_from')->label(__('issues.columns.created_from'))->required(),
+                        DatePicker::make('created_until')->label(__('issues.columns.created_until'))->required(),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
             ])
             ->actions(
                 [

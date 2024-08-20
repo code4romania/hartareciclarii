@@ -26,6 +26,8 @@ return [
         'status' => 'Status problema',
         'map_point_id' => 'ID punct',
         'no_user' => 'Utilizator necunoscut',
+        'created_from' => 'Creat de la',
+        'created_until' => 'Creat pana la',
     ],
 
     'infolistFields' => [
@@ -61,10 +63,13 @@ return [
     'notifications' => [
         'status_changed' => 'Statusul problemei a fost modificat',
     ],
-    'actions'=> [
+    'actions' => [
         'delete' => 'Sterge problema',
         'edit_point' => 'Editeaza punct',
         'change_status' => 'Schimba status',
+    ],
+    'filters' => [
+        'period' => 'Perioada: ',
     ],
 
 ];

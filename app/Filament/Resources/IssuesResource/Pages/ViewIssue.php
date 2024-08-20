@@ -34,7 +34,7 @@ class ViewIssue extends ViewRecord
         return [
             DeleteAction::make()->label(__('issues.actions.delete')),
             Action::make('editPoint')->label(__('issues.actions.edit_point'))
-                ->url(PointResource::getUrl('view', ['record' => $this->record->point_id]),shouldOpenInNewTab: true),
+                ->url(PointResource::getUrl('view', ['record' => $this->record->point_id]), shouldOpenInNewTab: true),
             Action::make('changeStatus')
                 ->label(__('issues.actions.change_status'))
                 ->form([

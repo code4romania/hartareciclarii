@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
 use App\Concerns\Enums\Arrayable;
 use App\Concerns\Enums\HasLabel;
 
-enum DaysEnum:string
+enum DaysEnum: string
 {
     use HasLabel;
     use Arrayable;

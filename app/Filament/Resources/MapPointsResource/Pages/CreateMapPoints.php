@@ -49,8 +49,18 @@ class CreateMapPoints extends CreateRecord
                                 ->relationship('serviceType', 'name')
                                 ->required(),
 
-                            TextInput::make('address'),
+                            TextInput::make('address')
+                                ->live(debounce: 500)
+                                ->datalist(function (?string $state) {
+                                    return [
+                                        'Bucuresti',
+                                        'Iasi',
+
+                                    ];
+                                })
+                                ->required(),
                             ViewField::make('map')
+                                ->afterStateUpdated(fn (Get $get) => $this->lat = $get('lat'))
                                 ->view('filament.forms.components.map'),
                         ]),
                     Wizard\Step::make(__('map_points.buttons.details'))
@@ -59,6 +69,7 @@ class CreateMapPoints extends CreateRecord
                                 ->relationship('mapPointType', 'name')
                                 ->options(fn (Get $get) => PointType::where('service_type_id', $get('service_type_id'))->pluck('name', 'id')->toArray())
                                 ->required(),
+
                             Select::make('materials')
                                 ->label(__('map_points.materials'))
                                 ->relationship('materials', 'name')
