@@ -14,10 +14,12 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -233,38 +235,40 @@ class PointResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
 
-                    // BulkAction::make('associate')->button()->action(fn (Collection $records) => ...),
                     BulkAction::make('change-status')
                         ->label(__('map_points.buttons.change_status'))
+                        ->form([
+                            Select::make('status')
+                                ->label(__('map_points.fields.status'))
+                                ->options(Status::options())
+                                ->required(),
+                        ])
                         ->action(function (array $data, Collection $records): void {
-                            foreach ($records as $record) {
-                                $record->status = ! $record->status;
-                                $record->save();
+                            $recordsWithoutIssues = $records->filter(function ($record) {
+                                return $record->issues->isEmpty();
+                            });
+
+                            $recordsWithoutIssues->map->changeStatus(Status::from($data['status']));
+
+                            if ($records->count() === $recordsWithoutIssues->count()) {
+                                Notification::make('success_status_changed')
+                                    ->body(__('map_points.notifications.status_changed.success'))
+                                    ->success()
+                                    ->send();
+                            } else {
+                                Notification::make('warning_status_changed')
+                                    ->body(__('map_points.notifications.status_changed.warning', [
+                                        'count' => $records->count() - $recordsWithoutIssues->count(),
+                                    ]))
+                                    ->warning()
+                                    ->send();
                             }
                         })
                         ->deselectRecordsAfterCompletion()
                         ->icon('heroicon-o-check')
                         ->color('warning')
                         ->requiresConfirmation(),
-                    //                    BulkAction::make('updateGroup')
-                    //                        ->label(__('map_points.buttons.set_group'))
-                    //                        ->form([
-                    //                            Select::make('group_id')
-                    //                                ->label('Group')
-                    //                                ->options(MapPointGroupModel::query()->pluck('name', 'id'))
-                    //                                ->required()
-                    //                                ->relationship('group', 'name')
-                    //                                ->preload(),
-                    //                        ])
-                    //                        ->action(function (array $data, Collection $records): void {
-                    //                            foreach ($records as $record) {
-                    //                                $record->changeGroup($data['group_id']);
-                    //                            }
-                    //                        })
-                    //                        ->icon('heroicon-o-user-group')
-                    //                        ->color('info')
-                    //                        ->deselectRecordsAfterCompletion(),
-                    Tables\Actions\DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
+                    DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
 
                 ]),
             ])->deferLoading();

@@ -82,5 +82,11 @@ return [
         'offers_vouchers' => 'Ofera vouchere',
         'free_of_charge' => 'Gratuit',
     ],
+    'notifications' => [
+      'status_changed'=>[
+          'success' => 'Statusu actualizat cu succes',
+          'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
+      ]
+    ],
 
 ];
