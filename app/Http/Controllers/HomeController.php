@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Point\ServiceType;
 use App\Http\Requests\MapRequest;
+use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
 use App\Models\Material;
 use App\Models\Point;
@@ -26,7 +27,7 @@ class HomeController extends Controller
     {
         return $this->render($request, [
             'type' => 'point',
-            'point' => new PointResource($point),
+            'point' => PointDetailsResource::make($point),
         ]);
     }
 
@@ -47,16 +48,27 @@ class HomeController extends Controller
                 ->mapWithKeys(fn (ServiceType $serviceType) => [
                     $serviceType->value => $serviceType->pointTypes()::options(),
                 ]),
-            'points' => Inertia::lazy(
-                fn () => PointResource::collection(
+
+            'points' => function () use ($request) {
+                if (blank($request->bounds) || blank($request->center)) {
+                    return [];
+                }
+
+                return PointResource::collection(
                     Point::query()
-                        ->when(filled($request->bounds), function (Builder $query) use ($request) {
-                            $query->whereWithin('location', $request->bounds)
-                                ->orderByDistance('location', $request->center);
-                        })
+                        ->whereWithin('location', $request->bounds)
+                        ->orderByDistance('location', $request->center)
                         ->get()
-                )
-            ),
+                );
+            },
+            // 'points' => fn () => PointResource::collection(
+            //     Point::query()
+            //         ->when(filled($request->bounds), function (Builder $query) use ($request) {
+            //             $query->whereWithin('location', $request->bounds)
+            //                 ->orderByDistance('location', $request->center);
+            //         })
+            //         ->get()
+            // ),
             ...$props,
         ]);
     }

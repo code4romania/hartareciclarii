@@ -81,6 +81,7 @@
         const { coords, locatedAt, error, resume, pause } = useGeolocation({
             enableHighAccuracy: true,
         });
+
         watch(locatedAt, () => {
             pause();
 
@@ -88,8 +89,22 @@
                 animate: false,
             });
         });
+
+        watch(error, () => {
+            let coords = leafletObject.getCenter();
+
+            leafletObject.flyTo([coords.lat, coords.lng], 10, {
+                animate: false,
+            });
+        });
     };
+
     function show(point) {
-        router.visit(`/point/${point.id}`);
+        router.visit(`/point/${point.id}`, {
+            data: {
+                bounds: new URLSearchParams(window.location.search).get('bounds'),
+                center: new URLSearchParams(window.location.search).get('center'),
+            },
+        });
     }
 </script>
