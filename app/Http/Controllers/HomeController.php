@@ -9,99 +9,78 @@ use App\Http\Requests\MapRequest;
 use App\Http\Resources\PointResource;
 use App\Models\Material;
 use App\Models\Point;
+use App\Services\Nominatim;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 use Inertia\Response;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
-use NominatimLaravel\Content\Nominatim;
 
 class HomeController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(MapRequest $request): Response
+    public function index(MapRequest $request): Response
     {
-        return Inertia::render('Home', $this->defaultProps($request));
+        return $this->render($request);
     }
 
     public function point(MapRequest $request, Point $point): Response
     {
-        return Inertia::render(
-            'Home',
-            array_merge(
-                ['point' => new PointResource($point)],
-                $this->defaultProps($request)
-            )
-        );
+        return $this->render($request, [
+            'type' => 'point',
+            'point' => new PointResource($point),
+        ]);
     }
 
     public function material(MapRequest $request, Material $material): Response
     {
-        return Inertia::render(
-            'Home',
-            array_merge(
-                ['point' => new PointResource($material)],
-                $this->defaultProps($request)
-            )
-        );
+        return $this->render($request, [
+            'type' => 'material',
+            'material' => $material,
+        ]);
     }
 
-    private function getNominatimResults(string $search): array
+    protected function render(MapRequest $request, array $props = []): Response
     {
-        $url = 'https://nominatim.openstreetmap.org';
-        $nominatim = new Nominatim($url);
-        $nominatimSearch = $nominatim->newSearch()
-            ->polygon('geojson')    //or 'kml', 'svg' and 'text'
-            ->query($search);
-
-        return $nominatim->find($nominatimSearch);
-    }
-
-    private function getSearchResults($search, PointObject $center)
-    {
-        if (empty($search)) {
-            return [];
-        }
-
-        $points = Point::query()
-            ->whereAny(['name', 'address', 'phone', 'email', 'website', 'notes'], 'LIKE', '%' . $search . '%')
-            ->orderByDistance('location', $center)
-            ->get();
-
-        $nominatimResults = collect($this->getNominatimResults($search))
-            ->transform(fn ($item) => [
-                'name' => $item['display_name'],
-                'lat' => $item['lat'],
-                'lng' => $item['lon'],
-            ]);
-
-        $materials = Material::query()->where('name', 'LIKE', '%' . $search . '%')
-            ->whereHas('points', fn ($query) => $query->orderByDistance('location', $center))
-            ->get();
-
-        return [
-            'points' => $points,
-            'nominatim' => $nominatimResults,
-            'materials' => $materials,
-        ];
-    }
-
-    private function defaultProps(MapRequest $request): array
-    {
-        $points = Point::query();
-        if (! empty($request->bounds)) {
-            $points->whereWithin('location', $request->bounds)
-                ->orderByDistance('location', $request->center);
-        }
-
-        return [
+        return Inertia::render('Home', [
             'service_types' => ServiceType::options(),
             'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search, $request->center)),
             'point_types' => collect(ServiceType::cases())
                 ->mapWithKeys(fn (ServiceType $serviceType) => [
                     $serviceType->value => $serviceType->pointTypes()::options(),
                 ]),
-            'points' => Inertia::lazy(fn () => PointResource::collection($points->get())),
+            'points' => Inertia::lazy(
+                fn () => PointResource::collection(
+                    Point::query()
+                        ->when(filled($request->bounds), function (Builder $query) use ($request) {
+                            $query->whereWithin('location', $request->bounds)
+                                ->orderByDistance('location', $request->center);
+                        })
+                        ->get()
+                )
+            ),
+            ...$props,
+        ]);
+    }
+
+    private function getSearchResults(?string $query, PointObject $center)
+    {
+        if (blank($query)) {
+            return [];
+        }
+
+        return [
+            'points' => Point::query()
+                ->whereAny(['name', 'address', 'phone', 'email', 'website', 'notes'], 'LIKE', '%' . $query . '%')
+                ->orderByDistance('location', $center)
+                ->limit(10)
+                ->get(),
+
+            'materials' => Material::query()
+                ->where('name', 'LIKE', '%' . $query . '%')
+                ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $center))
+                ->limit(10)
+                ->get(),
+
+            'nominatim' => Nominatim::search($query),
         ];
     }
 }

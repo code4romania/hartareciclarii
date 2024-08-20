@@ -11,8 +11,7 @@
         :options="{
             zoomControl: false,
         }"
-
-        class="w-full h-full z-0"
+        class="z-0 w-full h-full"
     >
         <LControlZoom position="bottomright" />
         <LTileLayer
@@ -57,8 +56,7 @@
 
     const map = ref(null);
     const selectedPoint = computed(() => props.selectedPoint);
-    const point = computed(()=>props.point);
-
+    const point = computed(() => props.point);
 
     const moveend = (event) => {
         const bounds = event.target.getBounds();
@@ -69,7 +67,7 @@
                 bounds: bounds.toBBoxString(),
                 center: `${center.lat},${center.lng}`,
             },
-            only: ['points','search_results'],
+            only: ['points', 'search_results'],
         });
     };
 
@@ -82,7 +80,7 @@
     const ready = (leafletObject) => {
         const { coords, locatedAt, error, resume, pause } = useGeolocation({
             enableHighAccuracy: true,
-        })
+        });
         watch(locatedAt, () => {
             pause();
 
@@ -90,9 +88,8 @@
                 animate: false,
             });
         });
-
     };
     function show(point) {
-       router.visit(`/point/${point.id}`);
+        router.visit(`/point/${point.id}`);
     }
 </script>
