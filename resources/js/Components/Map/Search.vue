@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute w-full sm:w-80">
+    <div class="absolute w-full sm:w-80 md:w-96">
         <form
             class="relative z-10 flex items-center self-stretch flex-1 gap-2 overflow-hidden bg-white border-b border-gray-200 rounded-full shadow shrink-0 px-3.5"
             @submit.prevent="runQuery"
@@ -22,7 +22,7 @@
             <template v-for="(search, index) in searchResults">
                 <li v-for="item in search" :key="item">
                     <Link
-                        v-if="index==='points'"
+                        v-if="index === 'points'"
                         :href="`/point/${item.id}`"
                         @click="$emit('goToPoint', item)"
                         class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
@@ -31,7 +31,7 @@
                         <span class="flex-1 truncate" v-text="item.name" />
                     </Link>
                     <Link
-                        v-if="index==='materials'"
+                        v-if="index === 'materials'"
                         :href="`/material/${item.id}`"
                         @click="$emit('goToPoint', item)"
                         class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
@@ -40,7 +40,7 @@
                         <span class="flex-1 truncate" v-text="item.name" />
                     </Link>
                     <Link
-                        v-if="index==='nominatim'"
+                        v-if="index === 'nominatim'"
                         @click="$emit('goToPoint', item)"
                         class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >

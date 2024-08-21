@@ -16,7 +16,6 @@ class ServiceType extends Model
 
     protected $casts = [
         'name' => 'string',
-        'slug' => \App\Enums\Point\ServiceType::class,
     ];
 
     public function issueTypes(): HasMany

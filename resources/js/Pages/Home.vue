@@ -1,11 +1,23 @@
 <template>
-    <DefaultLayout>
-        <MapContainer />
-    </DefaultLayout>
+    <PointDetailsCard v-if="type === 'point'" :point="point" />
 </template>
 
 
 <script setup>
-    import MapContainer from '@/Components/Map/Container.vue';
     import DefaultLayout from '@/Layouts/DefaultLayout.vue';
+    import MapLayout from '@/Layouts/MapLayout.vue';
+    import PointDetailsCard from '@/Components/Map/PointDetailsCard.vue';
+
+    defineOptions({
+        layout: [DefaultLayout, MapLayout],
+    });
+
+    const props = defineProps({
+        type: {
+            type: String,
+        },
+        point: {
+            type: Object,
+        },
+    });
 </script>

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', HomeController::class)->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/point/{point}', [HomeController::class, 'point'])->name('point');

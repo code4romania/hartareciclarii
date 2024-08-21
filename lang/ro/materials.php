@@ -12,6 +12,7 @@ return [
         'singular' => 'Categorie material',
         'plural' => 'Categorii materiale',
         'fields' => [
+            'icon' => 'Icon',
             'name' => 'Nume',
             'category_rank' => 'Rang categorie',
         ],

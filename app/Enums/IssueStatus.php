@@ -11,6 +11,7 @@ enum IssueStatus: string
 {
     use Arrayable;
     use HasLabel;
+
     case New = 'new';
     case Solved = 'solved';
     case Pending = 'pending';

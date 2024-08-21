@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\IssueStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,7 +32,9 @@ class Issue extends Model
         'status_updated_at',
     ];
 
-    protected $with = ['issueTypes', 'issueTypes'];
+    protected $with = [
+        'issueTypes',
+    ];
 
     public function point(): BelongsTo
     {
@@ -55,9 +58,14 @@ class Issue extends Model
 
     public function changeStatus(string $status): void
     {
-        $status = IssueStatus::tryFrom($status);
-        $this->status = $status;
-        $this->status_updated_at = now();
-        $this->save();
+        $this->update([
+            'status' => IssueStatus::from($status),
+            'status_updated_at' => now(),
+        ]);
+    }
+
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where('status', IssueStatus::Pending);
     }
 }
