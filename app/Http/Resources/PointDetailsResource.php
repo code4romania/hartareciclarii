@@ -35,6 +35,12 @@ class PointDetailsResource extends JsonResource
                 'transport' => $this->offers_transport,
             ],
             'free_of_charge' => $this->free_of_charge,
+
+            'materials' => $this->materials()
+                ->with('categories')
+                ->get(['id', 'name'])
+                ->groupBy('categories.*.name')
+                ->map->pluck('name', 'id'),
         ];
     }
 }

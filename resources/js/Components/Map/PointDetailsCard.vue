@@ -43,7 +43,33 @@
                 </button>
             </div>
 
-            <div class="px-6 py-4">materials</div>
+            <div class="px-6 py-4">
+                <h2 class="font-medium">Materiale colectate</h2>
+
+                <div class="mt-4">
+                    {{ point.materials }}
+                </div>
+
+                <div class="mt-4">
+                    <Accordion v-for="(materials, category) in point.materials" :key="category">
+                        <template #title>
+                            {{ category }}
+                        </template>
+
+                        <ul class="divide-y divide-gray-200">
+                            <li v-for="(name, id) in materials" :key="id" class="py-1 pl-12">
+                                <Link
+                                    :href="route('material', id)"
+                                    :data="urlParams"
+                                    class="text-blue-500 hover:underline focus:underline"
+                                >
+                                    {{ name }}
+                                </Link>
+                            </li>
+                        </ul>
+                    </Accordion>
+                </div>
+            </div>
 
             <div v-if="point.schedule" class="flex items-start gap-2 px-6 py-4">
                 <ClockIcon class="w-5 h-5 text-gray-400 shrink-0" />
@@ -103,7 +129,8 @@
 </template>
 
 <script setup>
-    import { router } from '@inertiajs/vue3';
+    import { computed } from 'vue';
+    import { router, Link } from '@inertiajs/vue3';
     import {
         XMarkIcon,
         MapPinIcon,
@@ -117,6 +144,7 @@
     import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline';
     import { CheckIcon, XMarkIcon as XIcon } from '@heroicons/vue/16/solid';
     import { useClipboard } from '@vueuse/core';
+    import Accordion from '@/Components/Accordion.vue';
 
     const props = defineProps({
         point: {
@@ -126,12 +154,18 @@
 
     const { text, copy, copied } = useClipboard({ legacy: true });
 
+    const urlParams = computed(() => {
+        let params = new URLSearchParams(window.location.search);
+
+        return {
+            bounds: params.get('bounds'),
+            center: params.get('center'),
+        };
+    });
+
     const close = () => {
         router.visit('/', {
-            data: {
-                bounds: new URLSearchParams(window.location.search).get('bounds'),
-                center: new URLSearchParams(window.location.search).get('center'),
-            },
+            data: urlParams.value,
         });
     };
 </script>
