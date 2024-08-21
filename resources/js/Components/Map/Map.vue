@@ -14,6 +14,7 @@
         class="z-0 w-full h-full"
     >
         <LControlZoom position="bottomright" />
+
         <LTileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             layer-type="base"
@@ -21,8 +22,17 @@
             name="OpenStreetMap"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        <LMarkerClusterGroup>
-            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" @click="show(point)" />
+
+        <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
+            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" @click="show(point)">
+                <LIcon
+                    v-if="isCurrentPoint(point)"
+                    :icon-url="getMapPinIcon(point, 'lg')"
+                    :icon-size="[32, 43]"
+                    :icon-anchor="[16, 43]"
+                />
+                <LIcon v-else :icon-url="getMapPinIcon(point, 'sm')" :icon-size="[32, 32]" :icon-anchor="[16, 16]" />
+            </LMarker>
         </LMarkerClusterGroup>
     </LMap>
 </template>
@@ -31,7 +41,7 @@
     import L from 'leaflet';
     globalThis.L = L;
 
-    import { LMap, LTileLayer, LMarker, LControlZoom } from '@vue-leaflet/vue-leaflet';
+    import { LMap, LTileLayer, LMarker, LControlZoom, LIcon } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
 
     import 'leaflet/dist/leaflet.css';
@@ -41,7 +51,9 @@
     import { router, usePage } from '@inertiajs/vue3';
     import { useGeolocation } from '@vueuse/core';
 
-    const points = computed(() => usePage().props.points?.data || []);
+    const page = usePage();
+
+    const points = computed(() => page.props.points?.data || []);
 
     const props = defineProps({
         selectedPoint: {
@@ -99,12 +111,30 @@
         });
     };
 
-    function show(point) {
+    const show = (point) => {
         router.visit(`/point/${point.id}`, {
             data: {
                 bounds: new URLSearchParams(window.location.search).get('bounds'),
                 center: new URLSearchParams(window.location.search).get('center'),
             },
         });
-    }
+    };
+
+    const getMapPinIcon = (point, size) => page.props.icons[point.service][size];
+
+    const isCurrentPoint = (point) => {
+        if (page.props?.type !== 'point') {
+            return false;
+        }
+
+        return point.id === page.props.point.id;
+    };
+
+    const iconCreateFunction = (cluster) =>
+        new L.Icon({
+            iconUrl: page.props.icons.markercluster,
+
+            iconSize: [32, 32], // size of the icon
+            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+        });
 </script>

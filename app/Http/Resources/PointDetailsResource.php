@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\Material;
+use App\Models\MaterialCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class PointDetailsResource extends JsonResource
 {
@@ -36,11 +39,33 @@ class PointDetailsResource extends JsonResource
             ],
             'free_of_charge' => $this->free_of_charge,
 
-            'materials' => $this->materials()
-                ->with('categories')
-                ->get(['id', 'name'])
-                ->groupBy('categories.*.name')
-                ->map->pluck('name', 'id'),
+            'materials' => $this->getMaterialsByCategory(),
+            'service' => $this->serviceType->slug,
         ];
+    }
+
+    protected function getMaterialsByCategory(): Collection
+    {
+        $materials = $this->materials()
+            ->with('categories')
+            ->get(['id', 'name']);
+
+        $categories = $materials
+            ->pluck('categories')
+            ->flatten()
+            ->unique('id');
+
+        return $categories
+            ->map(fn (MaterialCategory $category) => [
+                'name' => $category->name,
+                'icon' => $category->getFirstMediaUrl() ?: null,
+                'materials' => $materials
+                    ->where(fn (Material $material) => $material->categories->contains($category))
+                    ->map(fn (Material $material) => [
+                        'id' => $material->id,
+                        'name' => $material->name,
+                    ])
+                    ->values(),
+            ]);
     }
 }

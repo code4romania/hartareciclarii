@@ -6,10 +6,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MaterialCategoryResource\Pages;
 use App\Models\MaterialCategory;
-use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -37,14 +39,23 @@ class MaterialCategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->label(__('materials.categories.fields.name'))
                     ->maxLength(255),
-                Forms\Components\TextInput::make('category_rank')
+
+                TextInput::make('category_rank')
                     ->required()
                     ->label(__('materials.categories.fields.category_rank'))
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0),
+
+                SpatieMediaLibraryFileUpload::make('icon')
+                    ->label(__('materials.categories.fields.icon'))
+                    ->rule('dimensions:max_width=128,max_height=128')
+                    ->image()
+                    ->columnSpanFull(),
+
             ]);
     }
 
@@ -52,17 +63,24 @@ class MaterialCategoryResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('icon')
+                    ->label(__('materials.categories.fields.icon'))
+                    ->toggleable(),
+
                 TextColumn::make('name')
                     ->label(__('materials.categories.fields.name'))
                     ->searchable(),
+
                 TextColumn::make('category_rank')
-                    ->numeric()
                     ->label(__('materials.categories.fields.category_rank'))
+                    ->numeric()
                     ->sortable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -70,8 +88,8 @@ class MaterialCategoryResource extends Resource
 
                 TextColumn::make('materials.name')
                     ->label(__('materials.plural'))
-                    ->wrap()
-                    ->searchable(),
+                    ->searchable()
+                    ->wrap(),
 
             ])
             ->filters([

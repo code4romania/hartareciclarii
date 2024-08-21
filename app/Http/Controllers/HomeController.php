@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\Point\ServiceType;
 use App\Http\Requests\MapRequest;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
 use App\Models\Material;
 use App\Models\Point;
+use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
@@ -41,13 +43,16 @@ class HomeController extends Controller
 
     protected function render(MapRequest $request, array $props = []): Response
     {
+        $serviceTypes = ServiceType::all(['id', 'name', 'slug']);
+
         return Inertia::render('Home', [
-            'service_types' => ServiceType::options(),
+            'icons' => $this->getIcons($serviceTypes),
+            'service_types' => $serviceTypes,
             'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search, $request->center)),
-            'point_types' => collect(ServiceType::cases())
-                ->mapWithKeys(fn (ServiceType $serviceType) => [
-                    $serviceType->value => $serviceType->pointTypes()::options(),
-                ]),
+            // 'point_types' => collect(ServiceType::cases())
+            //     ->mapWithKeys(fn (ServiceType $serviceType) => [
+            //         $serviceType->value => $serviceType->pointTypes()::options(),
+            //     ]),
 
             'points' => function () use ($request) {
                 if (blank($request->bounds) || blank($request->center)) {
@@ -56,19 +61,12 @@ class HomeController extends Controller
 
                 return PointResource::collection(
                     Point::query()
+                        ->with('serviceType:id,slug')
                         ->whereWithin('location', $request->bounds)
                         ->orderByDistance('location', $request->center)
                         ->get()
                 );
             },
-            // 'points' => fn () => PointResource::collection(
-            //     Point::query()
-            //         ->when(filled($request->bounds), function (Builder $query) use ($request) {
-            //             $query->whereWithin('location', $request->bounds)
-            //                 ->orderByDistance('location', $request->center);
-            //         })
-            //         ->get()
-            // ),
             ...$props,
         ]);
     }
@@ -93,6 +91,20 @@ class HomeController extends Controller
                 ->get(),
 
             'nominatim' => Nominatim::search($query),
+        ];
+    }
+
+    private function getIcons(Collection $serviceTypes): array
+    {
+        return [
+            'markercluster' => Vite::asset('resources/images/map/markercluster.svg'),
+            ...$serviceTypes
+                ->mapWithKeys(fn (ServiceType $serviceType) => [
+                    $serviceType->slug => [
+                        'sm' => Vite::asset("resources/images/map/{$serviceType->slug}-sm.svg"),
+                        'lg' => Vite::asset("resources/images/map/{$serviceType->slug}-lg.svg"),
+                    ],
+                ]),
         ];
     }
 }

@@ -10,12 +10,18 @@ use Filament\Notifications\Livewire\DatabaseNotifications;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        tap($this->app->isLocal(), function (bool $shouldBeEnabled) {
+            Model::preventLazyLoading($shouldBeEnabled);
+            Model::preventAccessingMissingAttributes($shouldBeEnabled);
+        });
+
         Filament::serving(function () {
             Filament::registerNavigationGroups([
                 NavigationGroup::make()
@@ -27,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerNavigationItems([
             ]);
         });
+
         Filament::registerNavigationGroups([
             'Harta' => NavigationGroup::make()->label(__('nav.harta')),
             'Rapoarte' => NavigationGroup::make()->label(__('nav.reports')),
@@ -40,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
+
         FilamentAsset::register([
             Js::make('custom-script', resource_path('js/admin.js')),
             Js::make('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),

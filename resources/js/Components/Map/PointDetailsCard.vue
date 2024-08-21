@@ -4,7 +4,7 @@
             class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 divide-y divide-gray-200 shadow rounded-2xl"
         >
             <header class="sticky top-0 flex items-start gap-4 px-6 py-4 bg-white ring-1 ring-gray-200">
-                <div class="w-8 h-8 shrink-0">icon</div>
+                <Icon :icon="`services/${point.service}`" class="w-8 h-8 shrink-0" />
 
                 <h1
                     class="flex-1 text-2xl font-bold break-words text-neutral-900 whitespace-break-spaces"
@@ -46,24 +46,28 @@
             <div class="px-6 py-4">
                 <h2 class="font-medium">Materiale colectate</h2>
 
-                <div class="mt-4">
-                    {{ point.materials }}
-                </div>
+                <div class="mt-4 grid gap-0.5">
+                    <Accordion v-for="(category, index) in point.materials" :key="`category-${index}`">
+                        <template #icon>
+                            <img :src="category.icon" alt="" />
+                        </template>
 
-                <div class="mt-4">
-                    <Accordion v-for="(materials, category) in point.materials" :key="category">
                         <template #title>
-                            {{ category }}
+                            {{ category.name }}
                         </template>
 
                         <ul class="divide-y divide-gray-200">
-                            <li v-for="(name, id) in materials" :key="id" class="py-1 pl-12">
+                            <li
+                                v-for="(material, index) in category.materials"
+                                :key="`material-${index}`"
+                                class="py-1 pl-12"
+                            >
                                 <Link
-                                    :href="route('material', id)"
+                                    :href="route('material', material.id)"
                                     :data="urlParams"
                                     class="text-blue-500 hover:underline focus:underline"
                                 >
-                                    {{ name }}
+                                    {{ material.name }}
                                 </Link>
                             </li>
                         </ul>
@@ -145,6 +149,7 @@
     import { CheckIcon, XMarkIcon as XIcon } from '@heroicons/vue/16/solid';
     import { useClipboard } from '@vueuse/core';
     import Accordion from '@/Components/Accordion.vue';
+    import Icon from '@/Components/Icon.vue';
 
     const props = defineProps({
         point: {

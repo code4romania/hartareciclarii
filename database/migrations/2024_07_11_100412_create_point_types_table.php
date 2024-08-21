@@ -197,7 +197,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Reducere',
-                'slug' => App\Enums\Point\ServiceType::REDUCTION,
+                'slug' => App\Enums\Point\ServiceType::REDUCE,
                 'pointsTypes' => [
                     'Magazin zero waste',
                     'Locație cu apă gratuită',
