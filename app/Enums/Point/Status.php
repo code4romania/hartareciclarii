@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums\Point;
 
 use App\Concerns\Enums\Arrayable;
+use App\Concerns\Enums\Comparable;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -12,6 +13,7 @@ use Filament\Support\Contracts\HasLabel;
 enum Status: string implements HasColor, HasIcon, HasLabel
 {
     use Arrayable;
+    use Comparable;
 
     case VERIFIED = 'verified';
     case NEEDS_VERIFICATION = 'needs_verification';
@@ -29,7 +31,7 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string
     {
         return match ($this) {
-            self::VERIFIED => 'info',
+            self::VERIFIED => 'success',
             self::NEEDS_VERIFICATION => 'warning',
             self::WITH_PROBLEMS => 'danger',
         };
@@ -39,7 +41,7 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::VERIFIED => 'check-circle',
-            self::NEEDS_VERIFICATION => 'exclamation-circle',
+            self::NEEDS_VERIFICATION => 'question-mark-circle',
             self::WITH_PROBLEMS => 'exclamation-triangle',
         };
     }
@@ -59,6 +61,4 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     {
         return $this->getColor();
     }
-
-
 }

@@ -22,6 +22,34 @@
                 </div>
 
                 <div class="mt-4">
+                    <div class="inline-flex items-center gap-1">
+                        <Icon
+                            :icon="
+                                {
+                                    'check-circle': CheckCircleIcon,
+                                    'question-mark-circle': QuestionMarkCircleIcon,
+                                    'exclamation-triangle': ExclamationTriangleIcon,
+                                }[point.status.icon]
+                            "
+                            class="w-4 h-4 shrink-0"
+                            :class="{
+                                'text-green-500': point.status.color === 'success',
+                                'text-amber-500': point.status.color === 'warning',
+                                'text-red-500': point.status.color === 'danger',
+                            }"
+                        />
+
+                        <span
+                            class="text-sm font-medium"
+                            :class="{
+                                'text-green-900': point.status.color === 'success',
+                                'text-yellow-900': point.status.color === 'warning',
+                                'text-red-900': point.status.color === 'danger',
+                            }"
+                            v-text="point.status.label"
+                        />
+                    </div>
+
                     <p class="text-sm" v-text="point.status" />
                 </div>
             </header>
@@ -146,7 +174,13 @@
         PhoneIcon,
     } from '@heroicons/vue/24/solid';
     import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline';
-    import { CheckIcon, XMarkIcon as XIcon } from '@heroicons/vue/16/solid';
+    import {
+        CheckIcon,
+        XMarkIcon as XIcon,
+        ExclamationTriangleIcon,
+        QuestionMarkCircleIcon,
+        CheckCircleIcon,
+    } from '@heroicons/vue/16/solid';
     import { useClipboard } from '@vueuse/core';
     import Accordion from '@/Components/Accordion.vue';
     import Icon from '@/Components/Icon.vue';

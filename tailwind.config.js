@@ -4,22 +4,22 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
-          colors:{
-              "primary": {
-                  "50": "#D6F2FF",
-                  "100": "#ADE5FF",
-                  "200": "#5CCBFF",
-                  "300": "#0AB1FF",
-                  "400": "#007DB8",
-                  "500": "#004667",
-                  "600": "#003852",
-                  "700": "#002A3D",
-                  "800": "#001C29",
-                  "900": "#000E14",
-                  "950": "#00070A"
-              }
-          }
-        }
+            colors: {
+                primary: {
+                    50: '#D6F2FF',
+                    100: '#ADE5FF',
+                    200: '#5CCBFF',
+                    300: '#0AB1FF',
+                    400: '#007DB8',
+                    500: '#004667',
+                    600: '#003852',
+                    700: '#002A3D',
+                    800: '#001C29',
+                    900: '#000E14',
+                    950: '#00070A',
+                },
+            },
+        },
     },
     content: [
         './app/**/*.php',
@@ -34,4 +34,4 @@ export default {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
     ],
-}
+};

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Enums\Point\Status;
 use App\Models\Material;
 use App\Models\MaterialCategory;
 use Illuminate\Http\Request;
@@ -16,6 +17,17 @@ class PointDetailsResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $issues = $this->status->is(Status::WITH_PROBLEMS)
+         /*
+          * @todo: Implement the following method:
+          *
+          * $this->issues()
+          * ->pending()
+          * ->get()
+          */
+            ? collect()
+            : collect();
+
         return [
             'id' => $this->id,
             'name' => $this->pointType->name,
@@ -23,6 +35,8 @@ class PointDetailsResource extends JsonResource
                 'color' => $this->status->getColor(),
                 'label' => $this->status->getLabel(),
                 'icon' => $this->status->getIcon(),
+                'issues_count' => $issues->count(),
+                'issues' => $issues,
             ],
             'latlng' => [$this->location->latitude, $this->location->longitude],
             'subheading' => $this->pointType->name . ' administrat de ' . $this->administered_by,
