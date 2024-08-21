@@ -18,7 +18,7 @@ class PointDetailsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->pointType->name,
             'status' => [
                 'color' => $this->status->getColor(),
                 'label' => $this->status->getLabel(),
