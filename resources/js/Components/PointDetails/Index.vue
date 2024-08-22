@@ -1,33 +1,31 @@
 <template>
-    <div class="absolute z-10 w-full sm:w-80 md:w-96 inset-x-3 lg:left-80 top-14 lg:right-auto bottom-3">
-        <article
-            class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow rounded-2xl"
-        >
-            <Heading :service="point.service" :name="point.name" @close="close" />
+    <article
+        class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
+    >
+        <Heading :service="point.service" :name="point.name" @close="close" />
 
-            <Subheading :subheading="point.subheading" :status="point.status" />
+        <Subheading :subheading="point.subheading" :status="point.status" />
 
-            <Actions :point="point" />
+        <Actions :point="point" />
 
-            <Address :address="point.address" />
+        <Address :address="point.address" />
 
-            <Materials v-if="materials" :materials="point.materials" />
+        <Materials v-if="materials" :materials="point.materials" />
 
-            <Schedule v-if="point.schedule" :schedule="point.schedule" />
+        <Schedule v-if="point.schedule" :schedule="point.schedule" />
 
-            <Observations :point="point" />
+        <Observations :point="point" />
 
-            <div class="py-2">
-                <Website v-if="point.website" :website="point.website" :url-params="urlParams" />
+        <div class="py-2">
+            <Website v-if="point.website" :website="point.website" :url-params="urlParams" />
 
-                <Email v-if="point.email" :email="point.email" />
+            <Email v-if="point.email" :email="point.email" />
 
-                <Phone v-if="point.phone" :phone="point.phone" />
-            </div>
+            <Phone v-if="point.phone" :phone="point.phone" />
+        </div>
 
-            <Footer />
-        </article>
-    </div>
+        <Footer />
+    </article>
 </template>
 
 <script setup>

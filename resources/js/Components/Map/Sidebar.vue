@@ -44,7 +44,7 @@
     import { FunnelIcon } from '@heroicons/vue/24/outline';
     import { usePage } from '@inertiajs/vue3';
     import CheckboxList from '@/Components/Form/CheckboxList.vue';
-    import {trans} from "laravel-vue-i18n";
+    import { trans } from 'laravel-vue-i18n';
 
     const hasResults = ref(false);
     const collectedFilters = ref({});
