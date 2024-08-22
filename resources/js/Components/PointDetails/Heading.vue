@@ -1,5 +1,5 @@
 <template>
-    <header class="sticky top-0 z-10 flex items-start gap-4 px-6 py-4 bg-white ring-1 ring-gray-200">
+    <header class="sticky top-0 z-10 flex items-start gap-4 px-6 py-4 bg-white">
         <Icon :icon="`services/${service}`" class="w-8 h-8 shrink-0" />
 
         <h1

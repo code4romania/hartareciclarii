@@ -1,5 +1,5 @@
 <template>
-    <div class="px-6 py-4">
+    <div class="px-6 py-4 ring-1 ring-gray-200">
         <h2 class="font-medium">Materiale colectate</h2>
 
         <div class="mt-4 grid gap-0.5">

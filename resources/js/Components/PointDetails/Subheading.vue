@@ -1,10 +1,8 @@
 <template>
     <div class="p-6">
-        <div>
-            <p class="text-sm" v-text="subheading" />
-        </div>
+        <p v-if="subheading" class="mb-4 text-sm" v-text="subheading" />
 
-        <div class="inline-flex items-center gap-1 mt-4">
+        <div class="inline-flex items-center gap-1">
             <Icon
                 :icon="statusIcon"
                 class="w-4 h-4 shrink-0"

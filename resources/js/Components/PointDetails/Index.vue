@@ -1,7 +1,7 @@
 <template>
     <div class="absolute z-10 w-full sm:w-80 md:w-96 inset-x-3 lg:left-80 top-14 lg:right-auto bottom-3">
         <article
-            class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 divide-y divide-gray-200 shadow rounded-2xl"
+            class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow rounded-2xl"
         >
             <Heading :service="point.service" :name="point.name" @close="close" />
 
@@ -11,19 +11,21 @@
 
             <Address :address="point.address" />
 
-            <Materials :materials="point.materials" />
+            <Materials v-if="materials" :materials="point.materials" />
 
             <Schedule v-if="point.schedule" :schedule="point.schedule" />
 
             <Observations :point="point" />
 
-            <Website v-if="point.website" :website="point.website" :url-params="urlParams" />
+            <div class="py-2">
+                <Website v-if="point.website" :website="point.website" :url-params="urlParams" />
 
-            <Email v-if="point.email" :email="point.email" />
+                <Email v-if="point.email" :email="point.email" />
 
-            <Phone v-if="point.phone" :phone="point.phone" />
+                <Phone v-if="point.phone" :phone="point.phone" />
+            </div>
 
-            <!-- {{ point }} -->
+            <Footer />
         </article>
     </div>
 </template>
@@ -32,6 +34,7 @@
     import Actions from '@/Components/PointDetails/Actions.vue';
     import Address from '@/Components/PointDetails/Address.vue';
     import Email from '@/Components/PointDetails/Email.vue';
+    import Footer from '@/Components/PointDetails/Footer.vue';
     import Heading from '@/Components/PointDetails/Heading.vue';
     import Materials from '@/Components/PointDetails/Materials.vue';
     import Observations from '@/Components/PointDetails/Observations.vue';
