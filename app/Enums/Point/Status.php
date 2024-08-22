@@ -40,9 +40,9 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::VERIFIED => 'check-circle',
-            self::NEEDS_VERIFICATION => 'question-mark-circle',
-            self::WITH_PROBLEMS => 'exclamation-triangle',
+            self::VERIFIED => 'heroicon-m-check-circle',
+            self::NEEDS_VERIFICATION => 'heroicon-m-question-mark-circle',
+            self::WITH_PROBLEMS => 'heroicon-m-exclamation-triangle',
         };
     }
 
