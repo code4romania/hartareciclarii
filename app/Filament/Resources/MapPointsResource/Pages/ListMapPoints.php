@@ -28,11 +28,10 @@ class ListMapPoints extends ListRecords
         $services = ServiceType::all();
         $tabs = [];
         foreach ($services as $service) {
-            $tabs[$service->slug->value] = Tab::make($service->slug->value)->modifyQueryUsing(function ($query) use ($service) {
+            $tabs[$service->slug] = Tab::make($service->slug)->modifyQueryUsing(function ($query) use ($service) {
                 return $query->where('service_type_id', $service->id);
             })->label($service->name);
         }
-
         return $tabs;
     }
 }

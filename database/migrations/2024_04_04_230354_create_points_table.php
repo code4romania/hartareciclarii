@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('website')->nullable();
             $table->text('observations')->nullable();
-            $table->json('schedule')->nullable();
+            $table->text('schedule')->nullable();
             $table->boolean('offers_money')->default(false);
             $table->boolean('offers_vouchers')->default(false);
             $table->boolean('offers_transport')->default(false);

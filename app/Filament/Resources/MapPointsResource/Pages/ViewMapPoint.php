@@ -267,27 +267,8 @@ class ViewMapPoint extends ViewRecord
                                         ->label(__('map_points.fields.email')),
                                     TextInput::make('phone')
                                         ->label(__('map_points.fields.phone')),
-                                    Repeater::make('schedule')
+                                    TextInput::make('schedule')
                                         ->label(__('map_points.fields.schedule'))
-                                        ->itemLabel(fn (array $state) => __('enums.days.' . $state['day']) . ' ' . $state['start'] . ' - ' . $state['end'])
-                                        ->collapsed()
-                                        ->schema(
-                                            [
-                                                Select::make('day')
-                                                    ->label(__('map_points.fields.day'))
-                                                    ->options(
-                                                        DaysEnum::options()
-                                                    )
-                                                    ->required(),
-                                                TextInput::make('start')
-                                                    ->label(__('map_points.fields.opening_time'))
-                                                    ->required(),
-                                                TextInput::make('end')
-                                                    ->label(__('map_points.fields.closing_time'))
-                                                    ->required(),
-                                            ]
-                                        )
-                                        ->columns(3)
                                         ->required(),
                                     Textarea::make('observations')
                                         ->label(__('map_points.fields.observations')),

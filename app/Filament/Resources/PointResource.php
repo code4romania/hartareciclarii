@@ -127,12 +127,6 @@ class PointResource extends Resource
             Tables\Actions\ViewAction::make()
                 ->label(__('map_points.buttons.details'))
                 ->icon('heroicon-m-eye'),
-            // Tables\Actions\Action::make('view-on-map')
-            //     ->label(__('map_points.buttons.view_on_map'))
-            //     ->icon('heroicon-m-map')
-            //     ->url(fn (MapPointModel $record): string => route('map_points.map-view', $record))
-            //     ->openUrlInNewTab(),
-
         ];
         if (auth()->user()->can('manage_map_points')) {
             $actions = array_merge($actions, [
@@ -199,13 +193,13 @@ class PointResource extends Resource
                 TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn (Status $state) => $state->color())
+                    ->color(fn (Status $state) => $state->getColor())
                     ->formatStateUsing(function (Status $state, $record) {
                         if ($record->issues->count() > 0) {
-                            return Status::WITH_PROBLEMS->label();
+                            return Status::WITH_PROBLEMS->getLabel();
                         }
 
-                        return $state->label();
+                        return $state->getLabel();
                     }),
             ])
             ->filters([
