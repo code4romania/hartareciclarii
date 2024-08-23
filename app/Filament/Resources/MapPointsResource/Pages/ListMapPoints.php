@@ -9,6 +9,7 @@ use App\Models\ServiceType;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListMapPoints extends ListRecords
 {
@@ -25,13 +26,12 @@ class ListMapPoints extends ListRecords
 
     public function getTabs(): array
     {
-        $services = ServiceType::all();
-        $tabs = [];
-        foreach ($services as $service) {
-            $tabs[$service->slug] = Tab::make($service->slug)->modifyQueryUsing(function ($query) use ($service) {
-                return $query->where('service_type_id', $service->id);
-            })->label($service->name);
-        }
-        return $tabs;
+        return ServiceType::all()
+            ->mapWithKeys(fn (ServiceType $serviceType) => [
+                $serviceType->slug => Tab::make($serviceType->slug)
+                    ->label($serviceType->name)
+                    ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type_id', $serviceType->id)),
+            ])
+            ->all();
     }
 }

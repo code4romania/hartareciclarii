@@ -12,10 +12,11 @@ class ServiceType extends Model
     protected $fillable = [
         'name',
         'slug',
+        'has_dedicated_issues_tab',
     ];
 
     protected $casts = [
-        'name' => 'string',
+        'has_dedicated_issues_tab' => 'boolean',
     ];
 
     public function issueTypes(): HasMany

@@ -17,28 +17,25 @@ return new class extends Migration
     {
         Schema::create('point_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(ServiceType::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(ServiceType::class)
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->string('name');
             $table->timestamps();
         });
         Schema::table('points', function (Blueprint $table) {
-            $table->foreignIdFor(ServiceType::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(PointType::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(ServiceType::class)
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignIdFor(PointType::class)
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
         });
 
         $this->seedData();
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('point_types');
-        Schema::table('points', function (Blueprint $table) {
-            $table->dropForeign(['service_type_id']);
-            $table->dropForeign(['point_type_id']);
-        });
     }
 
     public function seedData(): void
@@ -46,7 +43,7 @@ return new class extends Migration
         $serviceTypes = [
             [
                 'name' => 'Colectare separată deșeuri',
-                'slug' => App\Enums\Point\ServiceType::WASTE_COLLECTION,
+                'slug' => 'waste_collection',
                 'pointsTypes' => [
                     'Container stradal',
                     'Punct magazin',
@@ -54,7 +51,7 @@ return new class extends Migration
                     'Centru de aport voluntari',
                     'Centru de colectare',
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -94,7 +91,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Reparații',
-                'slug' => App\Enums\Point\ServiceType::REPAIRS,
+                'slug' => 'repairs',
                 'pointsTypes' => [
                     'Croitorie',
                     'Reparații încălțăminte',
@@ -109,7 +106,7 @@ return new class extends Migration
                     'Reparații altele',
 
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -144,7 +141,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Reutilizare',
-                'slug' => App\Enums\Point\ServiceType::REUSE,
+                'slug' => 'reuse',
                 'pointsTypes' => [
                     'Magazin haine second-hand',
                     'Magazin electronice second-hand',
@@ -162,7 +159,7 @@ return new class extends Migration
                     'Alte servicii de reutilizare',
 
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -197,7 +194,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Reducere',
-                'slug' => App\Enums\Point\ServiceType::REDUCE,
+                'slug' => 'reduce',
                 'pointsTypes' => [
                     'Magazin zero waste',
                     'Locație cu apă gratuită',
@@ -205,7 +202,7 @@ return new class extends Migration
                     'Magazine care acceptă ambalaje proprii',
                     'Alte servicii de reducere',
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -225,11 +222,11 @@ return new class extends Migration
             ],
             [
                 'name' => 'Donații',
-                'slug' => App\Enums\Point\ServiceType::DONATIONS,
+                'slug' => 'donations',
                 'pointsTypes' => [
                     'Centre de donații',
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -249,11 +246,11 @@ return new class extends Migration
             ],
             [
                 'name' => 'Altele',
-                'slug' => App\Enums\Point\ServiceType::OTHER,
+                'slug' => 'other',
                 'pointsTypes' => [
                     'Altele',
                 ],
-                'possibleIssues' => [
+                'issueTypes' => [
                     [
                         'name' => 'Adresa nu este corectă',
                         'slug' => 'PRB_Tip_01',
@@ -271,17 +268,20 @@ return new class extends Migration
                     ],
                 ],
             ],
-
         ];
 
-        foreach ($serviceTypes as $serviceType) {
-            $service = ServiceType::create(['name' => $serviceType['name'], 'slug' => $serviceType['slug']]);
-            foreach ($serviceType['pointsTypes'] as $pointType) {
-                PointType::create(['name' => $pointType, 'service_type_id' => $service->id]);
-            }
-            foreach ($serviceType['possibleIssues'] as $issueType) {
-                $issue = $service->issueTypes()->create($issueType);
-            }
-        }
+        collect($serviceTypes)
+            ->each(function (array $options) {
+                $serviceType = ServiceType::create([
+                    'name' => $options['name'],
+                    'slug' => $options['slug'],
+                ]);
+
+                $serviceType->pointTypes()->createMany(
+                    collect($options['pointsTypes'])
+                        ->map(fn (string $pointType) => ['name' => $pointType])
+                );
+                $serviceType->issueTypes()->createMany($options['issueTypes']);
+            });
     }
 };

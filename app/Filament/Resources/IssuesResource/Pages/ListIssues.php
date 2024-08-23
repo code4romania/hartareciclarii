@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\IssuesResource\Pages;
 
-use App\Enums\Point\ServiceType;
 use App\Filament\Resources\IssuesResource;
+use App\Models\ServiceType;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListIssues extends ListRecords
 {
@@ -23,30 +24,21 @@ class ListIssues extends ListRecords
 
     public function getTabs(): array
     {
-        return [
+        $dedicatedServiceTypes = ServiceType::query()
+            ->where('has_dedicated_issues_tab', true)
+            ->get();
 
-            Tab::make(ServiceType::WASTE_COLLECTION->label())
-                ->modifyQueryUsing(function ($query) {
-                    return $query->whereHas('serviceType', function ($query) {
-                        $query->where('slug', ServiceType::WASTE_COLLECTION);
-                    });
-                }),
-
-            Tab::make(ServiceType::REPAIRS->label())
-                ->modifyQueryUsing(function ($query) {
-                    return $query->whereHas('serviceType', function ($query) {
-                        $query->where('slug', ServiceType::REPAIRS);
-                    });
-                }),
-
-            Tab::make(__('point_types.other'))
-                ->modifyQueryUsing(function ($query) {
-                    return $query->whereDoesntHave('serviceType', function ($query) {
-                        $query->whereIn('slug', [ServiceType::WASTE_COLLECTION, ServiceType::REPAIRS]);
-                    });
-                }),
-
-        ];
+        return $dedicatedServiceTypes
+            ->mapWithKeys(fn (ServiceType $serviceType) => [
+                $serviceType->slug => Tab::make($serviceType->name)
+                    ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type_id', $serviceType->id)),
+            ])
+            ->put(
+                'other',
+                Tab::make(__('point_types.other'))
+                    ->modifyQueryUsing(fn (Builder $query) => $query->whereNotIn('service_type_id', $dedicatedServiceTypes->pluck('id')))
+            )
+            ->all();
     }
 
     public function getTitle(): string | Htmlable
