@@ -196,27 +196,7 @@ class ViewMapPoint extends ViewRecord
                             ->label(__('map_points.fields.email')),
                         TextEntry::make('phone')
                             ->label(__('map_points.fields.phone')),
-                        Section::make(__('map_points.fields.schedule'))
-                            ->collapsed()
-                            ->schema([
-                                RepeatableEntry::make('schedule')
-                                    ->hiddenLabel()
-                                    ->schema([
-                                        TextEntry::make('day')
-                                            ->hiddenLabel()
-                                            ->inlineLabel()
-                                            ->label(__('map_points.fields.day')),
-                                        TextEntry::make('start')
-                                            ->inlineLabel()
-                                            ->hiddenLabel()
-                                            ->label(__('map_points.fields.opening_time')),
-                                        TextEntry::make('end')
-                                            ->inlineLabel()
-                                            ->hiddenLabel()
-                                            ->label(__('map_points.fields.closing_time')),
-                                    ])
-                                    ->columns(3),
-                            ])
+                        TextEntry::make('schedule')
                             ->columns(1)
                             ->label(__('map_points.fields.schedule')),
                         TextEntry::make('observations')

@@ -124,9 +124,7 @@ class PointResource extends Resource
     public static function table(Table $table): Table
     {
         $actions = [
-            Tables\Actions\ViewAction::make()
-                ->label(__('map_points.buttons.details'))
-                ->icon('heroicon-m-eye'),
+
         ];
         if (auth()->user()->can('manage_map_points')) {
             $actions = array_merge($actions, [
@@ -206,7 +204,9 @@ class PointResource extends Resource
                 //
             ])
             ->actions([
-                ActionGroup::make($actions),
+                Tables\Actions\ViewAction::make()
+                    ->label(__('map_points.buttons.details'))
+                    ->icon('heroicon-m-eye'),
             ])
             ->headerActions(
                 [
@@ -265,7 +265,8 @@ class PointResource extends Resource
                     DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
 
                 ]),
-            ])->deferLoading();
+            ])
+            ->deferLoading();
     }
 
     public static function getRelations(): array
