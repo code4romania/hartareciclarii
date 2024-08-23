@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\Point\Status;
-use App\Filament\Resources\MapPointsResource\Pages;
+use App\Filament\Resources\PointResource\Pages;
 use App\Models\Point;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;

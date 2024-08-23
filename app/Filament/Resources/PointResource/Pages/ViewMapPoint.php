@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\MapPointsResource\Pages;
+namespace App\Filament\Resources\PointResource\Pages;
 
-use App\Enums\DaysEnum;
+
 use App\Enums\Point\Status;
 use App\Filament\Resources\PointResource;
 use App\Models\ActionLog as ActionLogModel;
