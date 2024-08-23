@@ -48,11 +48,11 @@ class PointDetailsResource extends JsonResource
             'schedule' => $this->schedule,
             'materials' => $this->getMaterialsByCategory(),
             'service' => $this->serviceType->slug,
-            'free_of_charge' => $this->free_of_charge,
-            'offers' => collect([
-                'money' => $this->offers_money,
-                'vouchers' => $this->offers_vouchers,
-                'transport' => $this->offers_transport,
+            'info' => collect([
+                'offers_money' => $this->offers_money,
+                'offers_vouchers' => $this->offers_vouchers,
+                'offers_transport' => $this->offers_transport,
+                'free_of_charge' => $this->free_of_charge,
             ])->reject(fn (bool | null $value) => \is_null($value)),
 
         ];
