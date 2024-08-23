@@ -1,12 +1,12 @@
 <template>
-    <PointDetailsCard v-if="type === 'point'" :point="point" />
+    <PointDetails v-if="type === 'point'" :point="point" />
 </template>
 
 
 <script setup>
     import DefaultLayout from '@/Layouts/DefaultLayout.vue';
     import MapLayout from '@/Layouts/MapLayout.vue';
-    import PointDetailsCard from '@/Components/Map/PointDetailsCard.vue';
+    import PointDetails from '@/Components/PointDetails/Index.vue';
 
     defineOptions({
         layout: [DefaultLayout, MapLayout],

@@ -16,7 +16,10 @@ return new class extends Migration
     {
         Schema::create('issue_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(ServiceType::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(ServiceType::class)
+                ->constrained()
+                ->onDelete('cascade');
+
             $table->string('name');
             $table->string('slug');
             $table->string('type');
@@ -25,17 +28,10 @@ return new class extends Migration
         });
 
         Schema::table('issues', function (Blueprint $table) {
-            $table->foreignIdFor(ServiceType::class)->after('point_id')
+            $table->foreignIdFor(ServiceType::class)
+                ->after('point_id')
                 ->constrained()
                 ->onDelete('cascade');
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('issue_types');
     }
 };

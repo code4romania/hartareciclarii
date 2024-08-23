@@ -12,7 +12,7 @@
                     class="flex items-center justify-between w-full text-gray-700"
                     type="button"
                     @click="selectedServiceType = type"
-                    v-text="trans(label)"
+                    v-text="label"
                 />
             </li>
         </ul>
@@ -23,7 +23,7 @@
                 <h2>{{ serviceTypes[selectedServiceType] }}</h2>
             </div>
 
-            <CheckboxList v-model="selectedMaterialTypes" :options="collectionPointsTypes" class="flex-col" />
+            <CheckboxList v-model="selectedMaterialTypes" :options="pointsTypes" class="flex-col" />
         </section>
 
         <div class="fixed bottom-0 px-6 py-3 mt-2 bg-white border-t lg:w-96" :class="{ fixed: filtersOpen }">
@@ -44,7 +44,9 @@
     import { FunnelIcon } from '@heroicons/vue/24/outline';
     import { usePage } from '@inertiajs/vue3';
     import CheckboxList from '@/Components/Form/CheckboxList.vue';
-    import {trans} from "laravel-vue-i18n";
+    import { trans } from 'laravel-vue-i18n';
+
+    const page = usePage();
 
     const hasResults = ref(false);
     const collectedFilters = ref({});
@@ -62,14 +64,26 @@
         search_key: '',
         service_id: null,
     });
-
-    const serviceTypes = computed(() => usePage().props.service_types || []);
     const selectedServiceType = ref(null);
 
-    const collectionPointsTypes = computed(() =>
-        Object.entries(usePage().props.point_types[selectedServiceType.value] || []).map(([label, value]) => ({
-            value,
-            label,
-        }))
+    const serviceTypes = computed(
+        () => []
+        // page.props.service_types.map((service) => ({
+        //     label: service.name,
+        //     value: service.id,
+        // }))
     );
+
+    const pointTypes = computed(() => {
+        if (!selectedServiceType.value) {
+            return [];
+        }
+
+        return page.props.service_types
+            .find((serviceType) => serviceType.id === selectedServiceType.value)
+            .point_types.map((pointType) => ({
+                label: pointType.name,
+                value: pointType.id,
+            }));
+    });
 </script>

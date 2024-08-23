@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col min-h-screen overflow-hidden md:h-screen">
+    <div class="flex flex-col h-screen overflow-hidden">
         <Header class="shrink-0" />
 
         <div class="relative flex-1">

@@ -7,7 +7,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PointResource extends JsonResource
+class ServiceTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,8 +19,8 @@ class PointResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'service' => $this->serviceType->slug,
-            'latlng' => [$this->location->latitude, $this->location->longitude],
+            'slug' => $this->slug,
+            'point_types' => PointTypeResource::collection($this->pointTypes),
         ];
     }
 }

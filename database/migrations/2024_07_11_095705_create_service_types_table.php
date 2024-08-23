@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->boolean('has_dedicated_issues_tab')->default(false);
             $table->timestamps();
         });
     }

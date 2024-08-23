@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MapRequest;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
+use App\Http\Resources\ServiceTypeResource;
 use App\Models\Material;
 use App\Models\Point;
 use App\Models\ServiceType;
@@ -43,16 +44,14 @@ class HomeController extends Controller
 
     protected function render(MapRequest $request, array $props = []): Response
     {
-        $serviceTypes = ServiceType::all(['id', 'name', 'slug']);
+        $serviceTypes = ServiceType::query()
+            ->with('pointTypes')
+            ->get();
 
         return Inertia::render('Home', [
             'icons' => $this->getIcons($serviceTypes),
-            'service_types' => $serviceTypes,
+            'service_types' => ServiceTypeResource::collection($serviceTypes),
             'search_results' => Inertia::lazy(fn () => $this->getSearchResults($request->search, $request->center)),
-            // 'point_types' => collect(ServiceType::cases())
-            //     ->mapWithKeys(fn (ServiceType $serviceType) => [
-            //         $serviceType->value => $serviceType->pointTypes()::options(),
-            //     ]),
 
             'points' => function () use ($request) {
                 if (blank($request->bounds) || blank($request->center)) {

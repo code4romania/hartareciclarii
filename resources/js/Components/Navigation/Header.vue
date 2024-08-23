@@ -4,7 +4,7 @@
             <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
 
             <div class="hidden md:flex md:gap-4 md:items-center">
-                <AddPoint/>
+                <AddPoint />
 
                 <PillButton
                     color="white"
@@ -125,9 +125,9 @@
     import Icon from '@/Components/Icon.vue';
     import PillButton from '@/Components/Buttons/PillButton.vue';
     import Login from '@/Components/Navigation/Login.vue';
-    import AddPoint from "@/Components/Navigation/AddPoint.vue";
-    import {trans} from "laravel-vue-i18n";
-    import route from "@/Helpers/useRoute.js";
+    import AddPoint from '@/Components/Navigation/AddPoint.vue';
+    import { trans } from 'laravel-vue-i18n';
+    import route from '@/Helpers/useRoute.js';
 
     const navigation = [
         { name: 'Dashboard', href: '#', current: true },

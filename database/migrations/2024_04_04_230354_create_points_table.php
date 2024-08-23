@@ -35,10 +35,10 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->text('observations')->nullable();
             $table->text('schedule')->nullable();
-            $table->boolean('offers_money')->default(false);
-            $table->boolean('offers_vouchers')->default(false);
-            $table->boolean('offers_transport')->default(false);
-            $table->boolean('free_of_charge')->default(false);
+            $table->boolean('offers_money')->nullable();
+            $table->boolean('offers_vouchers')->nullable();
+            $table->boolean('offers_transport')->nullable();
+            $table->boolean('free_of_charge')->nullable();
             $table->timestamps();
         });
     }

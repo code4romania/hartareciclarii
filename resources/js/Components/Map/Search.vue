@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute w-full sm:w-80 md:w-96">
+    <div>
         <form
             class="relative z-10 flex items-center self-stretch flex-1 gap-2 overflow-hidden bg-white border-b border-gray-200 rounded-full shadow shrink-0 px-3.5"
             @submit.prevent="runQuery"
