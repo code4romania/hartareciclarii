@@ -53,7 +53,7 @@
 
     const page = usePage();
 
-    const points = computed(() => page.props.points?.data || []);
+    const points = computed(() => page.props.points || []);
 
     const props = defineProps({
         selectedPoint: {
