@@ -56,43 +56,7 @@ class PointFactory extends Factory
             'website' => $this->faker->url,
             'notes' => $this->faker->sentence,
             'observations' => $this->faker->sentence,
-            'schedule' => [
-                [
-                    'day' => 'monday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'tuesday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'wednesday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'thursday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'friday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'saturday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-                [
-                    'day' => 'sunday',
-                    'start' => '08:00',
-                    'end' => '16:00',
-                ],
-            ],
+            'schedule' => 'Monday to Friday, 9am to 5pm',
             'offers_money' => $this->faker->boolean,
             'offers_vouchers' => $this->faker->boolean,
             'offers_transport' => $this->faker->boolean,
