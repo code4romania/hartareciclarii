@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-    import { defineProps, defineEmits } from 'vue';
+    import { defineProps } from 'vue';
     import { XMarkIcon } from '@heroicons/vue/24/solid';
     import Icon from '@/Components/Icon.vue';
 
