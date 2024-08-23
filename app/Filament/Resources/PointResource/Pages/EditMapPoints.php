@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\MapPointsResource\Pages;
+namespace App\Filament\Resources\PointResource\Pages;
 
 use App\Filament\Resources\PointResource;
 use Filament\Actions;
