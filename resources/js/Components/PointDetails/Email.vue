@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-    import { defineProps } from 'vue';
     import { EnvelopeIcon } from '@heroicons/vue/24/solid';
 
     const props = defineProps({

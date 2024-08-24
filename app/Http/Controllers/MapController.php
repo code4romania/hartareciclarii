@@ -96,12 +96,14 @@ class MapController extends Controller
             ->get();
 
         return Inertia::render('Home', [
-            'has_bounds' => $coordinates->hasBounds(),
-            'center' => [
-                $coordinates->getCenter()->latitude,
-                $coordinates->getCenter()->longitude,
+            'mapOptions' => [
+                'bounds' => $coordinates->getBoundsBBox(),
+                'center' => [
+                    'lat' => $coordinates->getCenter()->latitude,
+                    'lng' => $coordinates->getCenter()->longitude,
+                ],
+                'zoom' => $coordinates->getZoom(),
             ],
-            'zoom' => $coordinates->getZoom(),
 
             'service_types' => ServiceTypeResource::collection($serviceTypes),
             'icons' => fn () => [

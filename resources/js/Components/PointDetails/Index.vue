@@ -2,7 +2,7 @@
     <article
         class="relative max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
     >
-        <Heading :service="point.service" :name="point.name" @close="close" />
+        <Heading :service="point.service" :name="point.name" @close="closePanel()" />
 
         <Subheading :subheading="point.subheading" :status="point.status" />
 
@@ -42,27 +42,12 @@
     import Website from '@/Components/PointDetails/Website.vue';
 
     import { computed } from 'vue';
-    import { router } from '@inertiajs/vue3';
+    import { closePanel } from '@/Helpers/useMap.js';
 
     const props = defineProps({
         point: {
             type: Object,
         },
     });
-
-    const urlParams = computed(() => {
-        let params = new URLSearchParams(window.location.search);
-
-        return {
-            bounds: params.get('bounds'),
-            center: params.get('center'),
-        };
-    });
-
-    const close = () => {
-        router.visit('/', {
-            data: urlParams.value,
-        });
-    };
 </script>
 

@@ -112,6 +112,15 @@ class MapCoordinates
         ]);
     }
 
+    public function getBoundsBBox(): ?string
+    {
+        if (blank($this->bounds)) {
+            return null;
+        }
+
+        return implode(',', $this->bounds);
+    }
+
     public function getCenter(): Point
     {
         return new Point($this->latitude, $this->longitude);

@@ -30,6 +30,7 @@ class SearchResultResource extends JsonResource
     {
         return [
             'name' => $this->name,
+            'description' => $this->address,
             'url' => route('point', $this),
             'type' => 'point',
             'icon' => $this->serviceType->slug,

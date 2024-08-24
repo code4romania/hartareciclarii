@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Point\Status;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -105,11 +104,6 @@ class Point extends Model
     public function changeGroup(int $groupId): void
     {
         $this->update(['point_group_id' => $groupId]);
-    }
-
-    protected function makeSearchableUsing(Builder $query): Builder
-    {
-        return $query->with(['county', 'city']);
     }
 
     /**

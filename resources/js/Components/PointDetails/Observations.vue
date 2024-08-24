@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-    import { defineProps } from 'vue';
     import { ChatBubbleOvalLeftIcon } from '@heroicons/vue/24/solid';
     import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid';
 

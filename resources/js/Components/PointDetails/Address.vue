@@ -13,7 +13,6 @@
 </template>
 
 <script setup>
-    import { defineProps } from 'vue';
     import { useClipboard } from '@vueuse/core';
     import { MapPinIcon, ClipboardDocumentCheckIcon } from '@heroicons/vue/24/solid';
     import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline';

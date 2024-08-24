@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6">
+    <div class="p-6 pt-2">
         <p v-if="subheading" class="mb-4 text-sm" v-text="subheading" />
 
         <div class="inline-flex items-center gap-1">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-    import { computed, defineProps } from 'vue';
+    import { computed } from 'vue';
     import { ExclamationTriangleIcon, QuestionMarkCircleIcon, CheckCircleIcon } from '@heroicons/vue/16/solid';
     import Icon from '@/Components/Icon.vue';
 

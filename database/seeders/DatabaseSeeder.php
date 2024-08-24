@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($serviceTypes as $serviceType) {
             foreach ($serviceType->pointTypes as $pointType) {
-                Point::factory(5)
+                Point::factory(100)
                     ->create([
                         'service_type_id' => $pointType->service_type_id,
                         'point_type_id' => $pointType->id,

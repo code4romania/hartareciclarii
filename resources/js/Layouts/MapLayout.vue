@@ -57,41 +57,187 @@
         <div
             class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-80 lg:right-auto sm:w-80 md:w-96"
         >
-            <Search class="pointer-events-auto" @go-to-point="setSelectedPoint" @fit-bounds="setBounds" />
+            <Search class="z-20 pointer-events-auto" :map="map" @fit-bounds="setBounds" />
 
-            <slot />
+            <slot :map="map" />
         </div>
 
-        <Map :selected-point="selectedPoint" :bounds="bounds" />
+        <LMap
+            ref="map"
+            :useGlobalLeaflet="true"
+            :min-zoom="10"
+            :max-zoom="18"
+            :center="mapOptions.center"
+            :zoom="mapOptions.zoom"
+            @ready="ready"
+            @moveend="moveend"
+            :options="{
+                zoomControl: false,
+            }"
+            class="z-0 w-full h-full"
+        >
+            <LControlZoom position="bottomright" />
+
+            <LControlScale position="bottomleft" :imperial="false" />
+
+            <LTileLayer
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                layer-type="base"
+                subdomains="abcd"
+                name="OpenStreetMap"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            />
+
+            <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
+                <LMarker
+                    v-for="point in points"
+                    :key="point.id"
+                    :lat-lng="point.latlng"
+                    @click="() => openPoint(map.leafletObject, point)"
+                >
+                    <LIcon
+                        v-if="isCurrentPoint(point)"
+                        :icon-url="getMapPinIcon(point, 'lg')"
+                        :icon-size="[32, 43]"
+                        :icon-anchor="[16, 43]"
+                    />
+
+                    <LIcon
+                        v-else
+                        :icon-url="getMapPinIcon(point, 'sm')"
+                        :icon-size="[32, 32]"
+                        :icon-anchor="[16, 16]"
+                    />
+                </LMarker>
+            </LMarkerClusterGroup>
+        </LMap>
     </div>
 </template>
 
 <script setup>
+    import L from 'leaflet';
+
     import DefaultLayout from '@/Layouts/DefaultLayout.vue';
-    import { ref } from 'vue';
+
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/outline';
-    import Map from '@/Components/Map/Map.vue';
+
+    import { LMap, LControl, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
+    import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
+    import 'leaflet.locatecontrol';
+
+    import 'leaflet/dist/leaflet.css';
+    import 'vue-leaflet-markercluster/dist/style.css';
+    import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
+
+    import { ref, computed, watch } from 'vue';
+    import { router } from '@inertiajs/vue3';
+    import { useDebounceFn } from '@vueuse/core';
+
+    import { refreshPoints, openPoint } from '@/Helpers/useMap.js';
+
     import Sidebar from '@/Components/Map/Sidebar.vue';
     import Search from '@/Components/Map/Search.vue';
-
-    const selectedPoint = ref(null);
-    const bounds = ref(null);
+    import route from '@/Helpers/useRoute.js';
 
     const props = defineProps({
-        selectedPoint: {
+        type: {
+            type: String,
+        },
+        point: {
             type: Object,
             default: null,
         },
+        points: {
+            type: Array,
+            default: () => [],
+        },
+        icons: {
+            type: Object,
+            default: () => ({}),
+        },
+        mapOptions: {
+            type: Object,
+            validator: (options) => ['bounds', 'center', 'zoom'].every((el) => options.hasOwnProperty(el)),
+        },
+        center: {
+            type: Array,
+        },
+        zoom: {
+            type: Number,
+        },
     });
 
-    function setSelectedPoint(e) {
-        selectedPoint.value = e;
-    }
+    const map = ref(null);
+    const bounds = ref(null);
 
     function setBounds(value) {
         bounds.value = value;
     }
 
     const sidebarOpen = ref(true);
+
+    const moveend = (event) => refreshPoints(event.target);
+
+    watch(bounds, (value) => {
+        if (!value) {
+            return;
+        }
+
+        var polygon = L.polygon(
+            [
+                [value[0], value[2]],
+                [value[0], value[3]],
+                [value[1], value[3]],
+                [value[1], value[2]],
+            ],
+            { color: 'red' }
+        ).addTo(map.value.leafletObject);
+
+        // let bounds = L.latLngBounds(L.latLng(value[0], value[2]), L.latLng(value[1], value[3]));
+
+        map.value.leafletObject.flyToBounds(polygon.getBounds(), {
+            animate: false,
+        });
+    });
+
+    const ready = (leafletObject) => {
+        const locateControl = L.control
+            .locate({
+                position: 'bottomright',
+                showPopup: false,
+                locateOptions: {
+                    enableHighAccuracy: true,
+                },
+                clickBehavior: {
+                    inView: 'setView',
+                    outOfView: 'setView',
+                    inViewNotFollowing: 'setView',
+                },
+                onLocationError: (error) => {
+                    refreshPoints(map.value.leafletObject);
+                },
+            })
+            .addTo(leafletObject);
+
+        locateControl.start();
+    };
+
+    const getMapPinIcon = (point, size) => props.icons[point.service][size];
+
+    const isCurrentPoint = (point) => {
+        if (props?.type !== 'point') {
+            return false;
+        }
+
+        return point.id === props.point.id;
+    };
+
+    const iconCreateFunction = (cluster) =>
+        new L.Icon({
+            iconUrl: props.icons.markercluster,
+
+            iconSize: [32, 32], // size of the icon
+            iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+        });
 </script>

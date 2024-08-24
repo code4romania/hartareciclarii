@@ -28,43 +28,30 @@ class PointFactory extends Factory
      */
     public function definition(): array
     {
-        $latitudeRange = [45.0, 48.0];
-        $longitudeRange = [23.0, 28.0];
         $city = City::query()->inRandomOrder()->first();
 
-        $latitude = fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]);
-        $longitude = fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1]);
-
-        if ($this->faker->boolean) {
-            $user = User::factory()->create();
-        }
-
-        if ($this->faker->boolean) {
-            $pointGroup = PointGroup::factory()->create();
-        }
-
         return [
-            'location' => new SpatialPoint($latitude, $longitude),
+            'location' => new SpatialPoint(
+                fake()->latitude(min: 43.66, max: 48.21),
+                fake()->longitude(min: 20.29, max: 29.61)
+            ),
             'county_id' => $city->county_id,
-            'point_group_id' => $pointGroup->id ?? null,
-            'created_by' => $user->id ?? null,
             'city_id' => $city->id,
-            'address' => $this->faker->address,
-            'name' => 'Point-' . $this->faker->unique()->numberBetween(1, 10000),
-            'phone' => $this->faker->phoneNumber,
-            'email' => $this->faker->email,
-            'website' => $this->faker->url,
-            'notes' => $this->faker->sentence,
-            'observations' => $this->faker->sentence,
+            'address' => fake()->address(),
+            'name' => fake()->word(),
+            'phone' => fake()->phoneNumber(),
+            'email' => fake()->email(),
+            'website' => fake()->url(),
+            'notes' => fake()->sentence(),
+            'observations' => fake()->sentence(),
             'schedule' => 'Monday to Friday, 9am to 5pm',
-            'offers_money' => $this->faker->boolean,
-            'offers_vouchers' => $this->faker->boolean,
-            'offers_transport' => $this->faker->boolean,
-            'free_of_charge' => $this->faker->boolean,
-            'status' => $this->faker->randomElement(Status::values()),
-            'source' => $this->faker->randomElement(Source::values()),
-            'administered_by' => $this->faker->company,
-
+            'offers_money' => fake()->boolean(),
+            'offers_vouchers' => fake()->boolean(),
+            'offers_transport' => fake()->boolean(),
+            'free_of_charge' => fake()->boolean(),
+            'status' => fake()->randomElement(Status::values()),
+            'source' => fake()->randomElement(Source::values()),
+            'administered_by' => fake()->company(),
         ];
     }
 
@@ -82,9 +69,23 @@ class PointFactory extends Factory
 
         return $this->state(fn (array $attributes) => [
             'location' => new SpatialPoint(
-                fake()->randomFloat(6, $latitudeRange[0], $latitudeRange[1]),
-                fake()->randomFloat(6, $longitudeRange[0], $longitudeRange[1])
+                fake()->latitude(min: 38.80, max: 38.70),
+                fake()->longitude(min: -9.18, max: -9.10)
             ),
+        ]);
+    }
+
+    public function createdByUser(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'created_by' => User::factory(),
+        ]);
+    }
+
+    public function inGroup(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'point_group_id' => PointGroup::factory(),
         ]);
     }
 }

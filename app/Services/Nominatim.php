@@ -17,6 +17,7 @@ class Nominatim
             ->language(app()->getLocale())
             ->addressDetails()
             ->countryCode('ro')
+            ->format('jsonv2')
             ->query($query)
             ->limit($limit);
 

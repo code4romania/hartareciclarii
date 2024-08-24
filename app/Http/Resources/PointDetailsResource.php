@@ -80,6 +80,7 @@ class PointDetailsResource extends JsonResource
                         'name' => $material->name,
                     ])
                     ->values(),
-            ]);
+            ])
+            ->values();
     }
 }

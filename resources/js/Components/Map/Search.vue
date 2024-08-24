@@ -1,5 +1,5 @@
 <template>
-    <div class="relative z-10" v-click-away="close">
+    <div class="relative z-20" v-click-away="close">
         <form class="relative z-20" @submit.prevent="search">
             <MagnifyingGlassIcon
                 class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4 shrink-0"
@@ -49,7 +49,9 @@
                             />
                             <img v-else-if="result.type === 'material'" :src="result.icon" class="w-5 h-5 shrink-0" />
 
-                            <span class="flex-1 truncate" v-text="result.name" />
+                            <span class="font-semibold" v-text="result.name" />
+
+                            <span class="flex-1 text-gray-500 truncate" v-text="result.description" />
                         </Link>
 
                         <button
@@ -86,6 +88,10 @@
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
 
+    const props = defineProps({
+        map: Object,
+    });
+
     const page = usePage();
 
     const input = ref(null);
@@ -116,15 +122,19 @@
         loading.value = true;
         searching.value = true;
 
+        const center = props.map.leafletObject.getCenter();
+
         axios
             .get(
                 route('suggest', {
-                    center: new URLSearchParams(window.location.search).get('center'),
+                    center: `${center.lat.toFixed(6)},${center.lng.toFixed(6)}`,
                     query: query.value,
                 })
             )
             .then((response) => {
-                results.value = response.data;
+                if (Array.isArray(response.data)) {
+                    results.value = response.data;
+                }
             })
             .catch((error) => {
                 console.error(error);
@@ -132,7 +142,7 @@
             .finally(() => {
                 loading.value = false;
             });
-    }, 250);
+    }, 500);
 
     watch(query, search);
 
