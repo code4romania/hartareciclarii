@@ -39,7 +39,7 @@ return [
         ],
     ],
     'nominatim' => [
-        'url' => 'https://nominatim.openstreetmap.org',
+        'url' => env('NOMINATIM_URL', 'https://nominatim.openstreetmap.org'),
         'reverse' => '/reverse?format=jsonv2&lat={latitude}&lon={longitude}',
     ],
 

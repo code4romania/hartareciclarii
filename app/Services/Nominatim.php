@@ -9,19 +9,17 @@ use NominatimLaravel\Content\Nominatim as NominatimClient;
 
 class Nominatim
 {
-    public static function search(string $query): Collection
+    public static function search(string $query, int $limit = 5): Collection
     {
         $nominatim = new NominatimClient(config('services.nominatim.url'));
 
         $request = $nominatim->newSearch()
-            ->polygon('geojson')
-            ->query($query);
+            ->language(app()->getLocale())
+            ->addressDetails()
+            ->countryCode('ro')
+            ->query($query)
+            ->limit($limit);
 
-        return collect($nominatim->find($request))
-            ->map(fn (array $item) => [
-                'name' => $item['display_name'],
-                'lat' => $item['lat'],
-                'lng' => $item['lon'],
-            ]);
+        return collect($nominatim->find($request));
     }
 }

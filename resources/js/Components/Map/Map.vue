@@ -3,9 +3,9 @@
         ref="map"
         :useGlobalLeaflet="true"
         :min-zoom="10"
-        :zoom="10"
         :max-zoom="18"
-        :center="[45.9432, 24.9668]"
+        :center="center"
+        :zoom="zoom"
         @ready="ready"
         @moveend="moveend"
         :options="{
@@ -14,6 +14,8 @@
         class="z-0 w-full h-full"
     >
         <LControlZoom position="bottomright" />
+
+        <LControlScale position="bottomleft" :imperial="false" />
 
         <LTileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -24,13 +26,19 @@
         />
 
         <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
-            <LMarker v-for="point in points" :key="point.id" :lat-lng="point.latlng" @click="show(point)">
+            <LMarker
+                v-for="point in points"
+                :key="point.id"
+                :lat-lng="point.latlng"
+                @click="() => openPoint(map.leafletObject, point)"
+            >
                 <LIcon
                     v-if="isCurrentPoint(point)"
                     :icon-url="getMapPinIcon(point, 'lg')"
                     :icon-size="[32, 43]"
                     :icon-anchor="[16, 43]"
                 />
+
                 <LIcon v-else :icon-url="getMapPinIcon(point, 'sm')" :icon-size="[32, 32]" :icon-anchor="[16, 16]" />
             </LMarker>
         </LMarkerClusterGroup>
@@ -41,19 +49,24 @@
     import L from 'leaflet';
     globalThis.L = L;
 
-    import { LMap, LTileLayer, LMarker, LControlZoom, LIcon } from '@vue-leaflet/vue-leaflet';
+    import route from '@/Helpers/useRoute.js';
+    import { refreshPoints, openPoint } from '@/Helpers/useMap.js';
+    import { LMap, LControl, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
+    import 'leaflet.locatecontrol';
 
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
+    import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
     import { ref, computed, watch } from 'vue';
     import { router, usePage } from '@inertiajs/vue3';
-    import { useGeolocation } from '@vueuse/core';
 
     const page = usePage();
 
-    const points = computed(() => page.props.points || []);
+    const points = computed(() => page.props.points);
+    const center = computed(() => page.props.center);
+    const zoom = computed(() => page.props.zoom);
 
     const props = defineProps({
         selectedPoint: {
@@ -64,24 +77,18 @@
             type: Object,
             default: null,
         },
+        bounds: {
+            type: Array,
+            default: null,
+        },
     });
 
     const map = ref(null);
     const selectedPoint = computed(() => props.selectedPoint);
+    const bounds = computed(() => props.bounds);
     const point = computed(() => props.point);
 
-    const moveend = (event) => {
-        const bounds = event.target.getBounds();
-        const center = event.target.getCenter();
-
-        router.reload({
-            data: {
-                bounds: bounds.toBBoxString(),
-                center: `${center.lat},${center.lng}`,
-            },
-            only: ['points', 'search_results'],
-        });
-    };
+    const moveend = (event) => refreshPoints(event.target);
 
     watch(selectedPoint, (value) => {
         map.value.leafletObject.flyTo({ lat: value.lat, lng: value.lng }, 17, {
@@ -89,35 +96,48 @@
         });
     });
 
+    watch(bounds, (value) => {
+        if (!value) {
+            return;
+        }
+
+        var polygon = L.polygon(
+            [
+                [value[0], value[2]],
+                [value[0], value[3]],
+                [value[1], value[3]],
+                [value[1], value[2]],
+            ],
+            { color: 'red' }
+        ).addTo(map.value.leafletObject);
+
+        // let bounds = L.latLngBounds(L.latLng(value[0], value[2]), L.latLng(value[1], value[3]));
+
+        map.value.leafletObject.flyToBounds(polygon.getBounds(), {
+            animate: false,
+        });
+    });
+
     const ready = (leafletObject) => {
-        const { coords, locatedAt, error, resume, pause } = useGeolocation({
-            enableHighAccuracy: true,
-        });
+        const locateControl = L.control
+            .locate({
+                position: 'bottomright',
+                showPopup: false,
+                locateOptions: {
+                    enableHighAccuracy: true,
+                },
+                clickBehavior: {
+                    inView: 'setView',
+                    outOfView: 'setView',
+                    inViewNotFollowing: 'setView',
+                },
+                onLocationError: (error) => {
+                    refreshPoints(map.value.leafletObject);
+                },
+            })
+            .addTo(leafletObject);
 
-        watch(locatedAt, () => {
-            pause();
-
-            leafletObject.flyTo([coords.value.latitude, coords.value.longitude], 17, {
-                animate: false,
-            });
-        });
-
-        watch(error, () => {
-            let coords = leafletObject.getCenter();
-
-            leafletObject.flyTo([coords.lat, coords.lng], 10, {
-                animate: false,
-            });
-        });
-    };
-
-    const show = (point) => {
-        router.visit(`/point/${point.id}`, {
-            data: {
-                bounds: new URLSearchParams(window.location.search).get('bounds'),
-                center: new URLSearchParams(window.location.search).get('center'),
-            },
-        });
+        locateControl.start();
     };
 
     const getMapPinIcon = (point, size) => page.props.icons[point.service][size];

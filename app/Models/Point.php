@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Point\Status;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 
@@ -17,6 +19,7 @@ class Point extends Model
 {
     use HasFactory;
     use HasSpatial;
+    use Searchable;
 
     protected $fillable = [
         'status',
@@ -102,5 +105,29 @@ class Point extends Model
     public function changeGroup(int $groupId): void
     {
         $this->update(['point_group_id' => $groupId]);
+    }
+
+    protected function makeSearchableUsing(Builder $query): Builder
+    {
+        return $query->with(['county', 'city']);
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'address' => $this->address,
+            // 'city' => $this->city->name,
+            // 'county' => $this->county->name,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'website' => $this->website,
+        ];
     }
 }

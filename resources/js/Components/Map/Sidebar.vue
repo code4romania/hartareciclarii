@@ -6,7 +6,7 @@
             <div class="font-semibold text-gray-900">Filtre</div>
         </div>
 
-        <ul v-if="selectedServiceType === null">
+        <!-- <ul v-if="selectedServiceType === null">
             <li v-for="(label, type) in serviceTypes" :key="type">
                 <button
                     class="flex items-center justify-between w-full text-gray-700"
@@ -35,7 +35,7 @@
                 <desktop-filter-clear-icon></desktop-filter-clear-icon>
                 {{ $t('sidebar.clear_filters_label') }}
             </button>
-        </div>
+        </div> -->
     </aside>
 </template>
 

@@ -21,7 +21,6 @@ class HandleInertiaRequests extends Middleware
             ]),
             [
                 'user' => $request->user(),
-                'everyrequest' => true,
             ]
         );
     }

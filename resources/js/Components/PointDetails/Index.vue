@@ -1,6 +1,6 @@
 <template>
     <article
-        class="max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
+        class="relative max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
     >
         <Heading :service="point.service" :name="point.name" @close="close" />
 
@@ -10,7 +10,7 @@
 
         <Address :address="point.address" />
 
-        <Materials v-if="materials" :materials="point.materials" />
+        <Materials v-if="point.materials" :materials="point.materials" />
 
         <Schedule v-if="point.schedule" :schedule="point.schedule" />
 

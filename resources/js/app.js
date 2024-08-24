@@ -3,6 +3,8 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '@/Helpers/useRoute';
 import { i18nVue } from 'laravel-vue-i18n';
+import VueClickAway from 'vue3-click-away';
+
 import 'virtual:svg-icons-register';
 
 import.meta.glob(['../images/**']);
@@ -19,6 +21,7 @@ createInertiaApp({
                     return await langs[`../../lang/${lang}.json`]();
                 },
             })
+            .use(VueClickAway)
             .use(plugin)
             .mount(el);
     },

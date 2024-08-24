@@ -57,12 +57,12 @@
         <div
             class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-80 lg:right-auto sm:w-80 md:w-96"
         >
-            <Search class="relative pointer-events-auto" @go-to-point="setSelectedPoint" />
+            <Search class="pointer-events-auto" @go-to-point="setSelectedPoint" @fit-bounds="setBounds" />
 
             <slot />
         </div>
 
-        <Map :selected-point="selectedPoint" />
+        <Map :selected-point="selectedPoint" :bounds="bounds" />
     </div>
 </template>
 
@@ -76,6 +76,7 @@
     import Search from '@/Components/Map/Search.vue';
 
     const selectedPoint = ref(null);
+    const bounds = ref(null);
 
     const props = defineProps({
         selectedPoint: {
@@ -86,6 +87,10 @@
 
     function setSelectedPoint(e) {
         selectedPoint.value = e;
+    }
+
+    function setBounds(value) {
+        bounds.value = value;
     }
 
     const sidebarOpen = ref(true);

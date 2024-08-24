@@ -21,6 +21,7 @@
         "jbohme/nominatim-laravel": "^1.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/scout": "^10.11",
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.28",
         "matanyadaev/laravel-eloquent-spatial": "^4.2",

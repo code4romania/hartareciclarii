@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,11 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/point/{point}/{coordinates?}', [MapController::class, 'point'])->name('point');
+Route::get('/material/{material}/{coordinates?}', [MapController::class, 'material'])->name('material');
+Route::get('/search', [MapController::class, 'search'])->name('search');
+Route::get('/suggest', [MapController::class, 'suggest'])->name('suggest');
+
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::get('/point/{point}', [HomeController::class, 'point'])->name('point');
-Route::get('/material/{material}', [HomeController::class, 'material'])->name('material');
+
 Route::prefix('cont')->middleware('auth:web')->group(function () {
     Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/edit', [UserController::class, 'edit'])->name('profile.edit');
@@ -31,10 +34,12 @@ Route::prefix('cont')->middleware('auth:web')->group(function () {
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('profile.change-password');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::middleware('auth')->group(function () {
-        Route::get('validate-point/{point_id}', [MapPointsController::class, 'validatePoint'])->name('map-points.validate');
-        Route::get('map-view/{point}', [MapPointsController::class, 'mapView'])->name('map_points.map-view');
-        Route::get('download-xlsx-example', [MapPointsController::class, 'downloadXlsxExample'])->name('import.xlsx-example');
-    });
-});
+// Route::prefix('admin')->group(function () {
+//     Route::middleware('auth')->group(function () {
+//         Route::get('validate-point/{point_id}', [MapPointsController::class, 'validatePoint'])->name('map-points.validate');
+//         Route::get('map-view/{point}', [MapPointsController::class, 'mapView'])->name('map_points.map-view');
+//         Route::get('download-xlsx-example', [MapPointsController::class, 'downloadXlsxExample'])->name('import.xlsx-example');
+//     });
+// });
+
+Route::get('/{coordinates?}', [MapController::class, 'index'])->name('home');

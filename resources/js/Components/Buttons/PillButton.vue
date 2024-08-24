@@ -69,7 +69,7 @@
     const buttonBase =
         'flex items-center justify-center w-full font-medium rounded-full whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2';
 
-    const iconBaase = 'shrink-0';
+    const iconBase = 'shrink-0';
 
     const buttonSize = computed(
         () =>

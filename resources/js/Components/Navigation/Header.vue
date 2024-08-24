@@ -1,7 +1,9 @@
 <template>
     <Disclosure as="header" class="bg-white border-b border-gray-200 shadow md:bg-gray-50" v-slot="{ open }">
         <div class="flex justify-between px-4 py-2 md:px-6 md:py-4 md:gap-6">
-            <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
+            <a :href="route('home')">
+                <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
+            </a>
 
             <div class="hidden md:flex md:gap-4 md:items-center">
                 <AddPoint />
