@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-11-22 12:18:24
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-22 12:20:37
- */
 return [
     'columns' => [
         'file' => 'Fisier',

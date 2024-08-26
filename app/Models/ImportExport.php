@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * @Author: bib
- * @Date:   2023-10-03 10:55:55
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-23 13:21:45
- */
-
 namespace App\Models;
 
 use App\Models\County as CountyModel;

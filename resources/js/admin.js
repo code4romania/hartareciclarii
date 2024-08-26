@@ -1,9 +1,3 @@
-/*
-* @Author: Bogdan Bocioaca
-* @Date:   2023-10-04 12:16:53
-* @Last Modified by:   Bogdan Bocioaca
-* @Last Modified time: 2023-10-23 18:14:10
-*/
 latitude = null;
 longitude = null;
 reverse_url = null;

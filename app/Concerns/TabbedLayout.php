@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-21 13:00:46
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-23 11:56:24
- */
-
 declare(strict_types=1);
 
 namespace App\Concerns;

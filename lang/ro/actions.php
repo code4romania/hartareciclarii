@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-04 21:09:08
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-06 09:57:03
- */
 return [
     'change_status' => '<strong>Schimbare status</strong>',
     'status' => [

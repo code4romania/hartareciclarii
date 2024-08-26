@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-27 11:21:34
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-27 11:46:36
- */
-
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;

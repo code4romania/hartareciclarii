@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-11-27 07:54:52
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-27 07:59:03
- */
-
 namespace App\Livewire\Issues;
 
 use App\Models\IssueOld;

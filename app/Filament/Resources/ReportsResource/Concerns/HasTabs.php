@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-21 13:00:01
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-31 14:40:07
- */
-
 declare(strict_types=1);
 
 namespace App\Filament\Resources\ReportsResource\Concerns;

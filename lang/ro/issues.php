@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-31 09:27:44
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-27 07:59:35
- */
 return [
     'label' => 'Probleme raportate',
     'status_updated' => 'Status salvat',

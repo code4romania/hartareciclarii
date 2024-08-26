@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-31 11:05:30
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-23 17:10:24
- */
-
 namespace App\Filament\Resources\ReportsResource\Traits;
 
 use App\Enums\MapPointTypes;

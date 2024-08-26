@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-03 17:08:19
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-10-04 21:23:16
- */
 return [
     'id' => 'ID Punct',
     'point_type' => 'Tip',
@@ -83,10 +77,10 @@ return [
         'free_of_charge' => 'Gratuit',
     ],
     'notifications' => [
-      'status_changed'=>[
-          'success' => 'Statusu actualizat cu succes',
-          'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
-      ]
+        'status_changed' => [
+            'success' => 'Statusu actualizat cu succes',
+            'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
+        ],
     ],
 
 ];

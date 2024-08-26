@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @Author: Bogdan Bocioaca
- * @Date:   2023-10-23 10:36:09
- * @Last Modified by:   Bogdan Bocioaca
- * @Last Modified time: 2023-11-01 11:39:46
- */
 return [
     'column' => [
         'service_type' => 'Tip serviciu',
