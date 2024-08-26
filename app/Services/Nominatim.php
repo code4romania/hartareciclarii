@@ -21,6 +21,8 @@ class Nominatim
             ->query($query)
             ->limit($limit);
 
-        return collect($nominatim->find($request));
+        return collect(
+            rescue(fn () => $nominatim->find($request))
+        );
     }
 }

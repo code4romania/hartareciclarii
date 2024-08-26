@@ -25,6 +25,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.28",
         "matanyadaev/laravel-eloquent-spatial": "^4.2",
+        "meilisearch/meilisearch-php": "^1.9",
         "phpoffice/phpspreadsheet": "^1.29",
         "pxlrbt/filament-excel": "^2.1",
         "spatie/laravel-permission": "^5.11",

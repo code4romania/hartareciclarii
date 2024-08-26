@@ -10,6 +10,7 @@ use App\Models\Point;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -80,5 +81,7 @@ class DatabaseSeeder extends Seeder
                 $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
             }
         }
+
+        Artisan::call('scout:import', ['model' => Point::class]);
     }
 }
