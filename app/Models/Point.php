@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -96,6 +98,12 @@ class Point extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function scopeWhereMatchesCoordinates(Builder $query, MapCoordinates $mapCoordinates): Builder
+    {
+        return $query->whereWithin('location', $mapCoordinates->getBounds())
+            ->orderByDistance('location', $mapCoordinates->getCenter());
+    }
+
     public function changeStatus(Status $status): void
     {
         $this->update(['status' => $status]);
@@ -106,6 +114,18 @@ class Point extends Model
         $this->update(['point_group_id' => $groupId]);
     }
 
+    protected function makeAllSearchableUsing(Builder $query): Builder
+    {
+        return $query->with([
+            'serviceType:id,name',
+            'pointType:id,name',
+            'materials:id,name',
+            'materials.categories:id,name',
+            'city:id,name',
+            'county:id,name',
+        ]);
+    }
+
     /**
      * Get the indexable data array for the model.
      *
@@ -114,14 +134,25 @@ class Point extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id' => (int) $this->id,
+            'service_type' => $this->serviceType->name,
             'address' => $this->address,
-            // 'city' => $this->city->name,
-            // 'county' => $this->county->name,
-            'phone' => $this->phone,
+            'point_type' => $this->pointType->name,
+            'materials' => $this->materials
+                ->pluck('name'),
+
+            'materials_categories' => $this->materials
+                ->pluck('categories.*.name')
+                ->flatten(),
+
+            'administered_by' => $this->administered_by,
             'email' => $this->email,
-            'website' => $this->website,
+            'phone' => $this->phone,
+            'observations' => $this->observations,
+
+            'name' => $this->name,
+            'city' => $this->city->name,
+            'county' => $this->county->name,
         ];
     }
 }

@@ -6,21 +6,22 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\DataTransferObjects\NominatimSuggestion;
-use App\Http\Requests\MapSearchRequest;
+use App\Enums\Point\Status;
+use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
 use App\Http\Resources\SearchResultResource;
 use App\Http\Resources\ServiceTypeResource;
+use App\Http\Resources\SuggestionResource;
 use App\Models\Material;
+use App\Models\MaterialCategory;
 use App\Models\Point;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,7 +35,7 @@ class MapController extends Controller
     public function point(Point $point, MapCoordinates $coordinates): Response
     {
         return $this->render($coordinates, [
-            'type' => 'point',
+            'context' => 'point',
             'point' => PointDetailsResource::make($point),
         ]);
     }
@@ -42,51 +43,79 @@ class MapController extends Controller
     public function material(Material $material, MapCoordinates $coordinates): Response
     {
         return $this->render($coordinates, [
-            'type' => 'material',
+            'context' => 'material',
             'material' => $material,
         ]);
     }
 
-    public function suggest(Request $request): JsonResource
+    public function suggest(Request $request, MapCoordinates $coordinates): JsonResource
     {
         $attributes = $request->validate([
-            'query' => ['required', 'string', 'min:3'],
+            'query' => ['required', 'string'],
         ]);
 
         $results = collect();
 
         $results->push(
             ...Point::search($attributes['query'])
+                ->take(5)
                 ->query(
                     fn (Builder $query) => $query
-                        ->with('county')
-                        ->with('city')
                         ->with('serviceType:id,slug')
-                        // ->orderByDistance('location', $request->center)
-                        ->limit(5)
+                        ->orderByDistance('location', $coordinates->getCenter())
                 )
                 ->get()
         );
 
         $results->push(
             ...Material::search($attributes['query'])
+                ->take(5)
                 ->query(
                     fn (Builder $query) => $query
                         ->with('categories')
-                        ->whereHas('points'/* , fn (Builder $query) => $query->orderByDistance('location', $request->center) */)
-                        ->limit(5)
+                        ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
                 )
                 ->get()
         );
 
         $results->push(
             ...Nominatim::search($attributes['query'], 5)
-                ->map(
-                    fn (array $suggestion) => new NominatimSuggestion($suggestion['display_name'], $suggestion['boundingbox'])
-                )
+                ->map(fn (array $suggestion) => new NominatimSuggestion($suggestion))
         );
 
-        return SearchResultResource::collection($results);
+        return SuggestionResource::collection($results);
+    }
+
+    public function search(Request $request, MapCoordinates $coordinates): Response
+    {
+        $attributes = $request->validate([
+            'query' => ['required', 'string'],
+        ]);
+
+        return $this->render($coordinates, [
+            'context' => 'search',
+            'query' => $attributes['query'],
+            'points' => function () use ($attributes, $coordinates) {
+                if (! $coordinates->hasBounds()) {
+                    return [];
+                }
+
+                return SearchResultResource::collection(
+                    Point::search($attributes['query'])
+                        ->take(100)
+                        ->query(
+                            fn (Builder $query) => $query
+                                ->with('serviceType:id,slug')
+                                ->with('pointType:id,name')
+                                ->whereMatchesCoordinates($coordinates)
+                        )
+                        ->get()
+                );
+            },
+            'point' => Inertia::lazy(fn () => PointDetailsResource::make(
+                Point::findOrFail($request->header('Map-Point'))
+            )),
+        ]);
     }
 
     protected function render(MapCoordinates $coordinates, array $props = []): Response
@@ -117,6 +146,20 @@ class MapController extends Controller
                     ]),
             ],
 
+            'materials' => fn () => MaterialCategoryResource::collection(
+                MaterialCategory::query()
+                    ->with('materials')
+                    ->get()
+            ),
+
+            'statuses' => collect(Status::options())
+                ->reject(fn ($value, $key) => Status::WITH_PROBLEMS->is($key))
+                ->map(fn ($value, $key) => [
+                    'value' => $key,
+                    'label' => $value,
+                ])
+                ->values(),
+
             'points' => function () use ($coordinates) {
                 if (! $coordinates->hasBounds()) {
                     return [];
@@ -125,61 +168,11 @@ class MapController extends Controller
                 return PointResource::collection(
                     Point::query()
                         ->with('serviceType:id,slug')
-                        ->whereWithin('location', $coordinates->getBounds())
-                        ->orderByDistance('location', $coordinates->getCenter())
+                        ->whereMatchesCoordinates($coordinates)
                         ->get()
                 );
             },
             ...$props,
         ]);
-    }
-
-    public function search(MapSearchRequest $request): JsonResource
-    {
-        $attributes = $request->validated();
-
-        $query = Str::of($attributes['query'])
-            ->stripTags();
-
-        $results = collect();
-
-        $results->push(
-            ...Point::search($query)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('county')
-                        ->with('city')
-                        ->with('serviceType:id,slug')
-                        ->orderByDistance('location', $request->center)
-                        ->limit(10)
-                )
-                ->get(),
-            ...Material::search($query)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('categories')
-                        ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $request->center))
-                        ->limit(10)
-                )
-                ->get(),
-        );
-
-        return SearchResultResource::collection($results);
-
-        // return response()->json(
-        //     $results
-
-        //     [
-        //     'points' => PointResource::collection(
-        //         Point::search($query)
-        //             ->query(
-        //                 fn (Builder $query) => $query
-        //                     ->with('serviceType:id,slug')
-        //                     ->orderByDistance('location', $request->center)
-        //                     ->limit(10)
-        //             )
-        //             ->get()
-        //     ),
-        // ]);
     }
 }

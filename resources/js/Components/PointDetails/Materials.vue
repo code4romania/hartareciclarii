@@ -16,7 +16,6 @@
                     <li v-for="(material, index) in category.materials" :key="`material-${index}`" class="py-1 pl-12">
                         <Link
                             :href="route('material', material.id)"
-                            :data="urlParams"
                             class="text-blue-500 hover:underline focus:underline"
                         >
                             {{ material.name }}
@@ -36,10 +35,6 @@
         materials: {
             type: Array,
             required: true,
-        },
-        urlParams: {
-            type: Object,
-            required: false,
         },
     });
 </script>

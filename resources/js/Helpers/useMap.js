@@ -3,21 +3,32 @@ import route from '@/Helpers/useRoute.js';
 
 const page = usePage();
 
+export const getCenterCoordinates = ({ lat, lng }) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
+export const getCenterCoordinatesWithZoom = (center, zoom) => `@${getCenterCoordinates(center)},${zoom}z`;
+
 export const updateMap = (leafletObject, routeName, routeParams = {}, options = {}) => {
     const center = leafletObject.getCenter();
     const zoom = leafletObject.getZoom();
     const bounds = leafletObject.getBounds();
 
-    const coordinates = `@${center.lat.toFixed(6)},${center.lng.toFixed(6)},${zoom}z`;
+    Object.assign(routeParams, {
+        coordinates: getCenterCoordinatesWithZoom(center, zoom),
+    });
 
-    router.visit(route(routeName, Object.assign(routeParams, { coordinates })), {
-        headers: {
-            'Map-Bounds': bounds.toBBoxString(),
-        },
+    let headers = {
+        'Map-Bounds': bounds.toBBoxString(),
+    };
+
+    if (options.hasOwnProperty('headers')) {
+        headers = { ...headers, ...options.headers };
+        delete options.headers;
+    }
+
+    router.visit(route(routeName, routeParams), {
+        headers,
         ...options,
     });
 };
-
 export const refreshPoints = (leafletObject) => {
     updateMap(leafletObject, route().current(), route().params, {
         only: ['points', 'mapOptions'],
@@ -26,12 +37,29 @@ export const refreshPoints = (leafletObject) => {
 };
 
 export const openPoint = (leafletObject, point) => {
-    updateMap(leafletObject, 'point', { point });
+    updateMap(
+        leafletObject,
+        'point',
+        { point },
+        {
+            only: ['context', 'point'],
+        }
+    );
+};
+
+export const fetchPoint = (leafletObject, point) => {
+    updateMap(leafletObject, route().current(), route().params, {
+        only: ['point'],
+        replace: true,
+        headers: {
+            'Map-Point': point,
+        },
+    });
 };
 
 export const closePanel = () => {
     const props = page.props.mapOptions;
-    const coordinates = `@${props.center.lat.toFixed(6)},${props.center.lng.toFixed(6)},${props.zoom}z`;
+    const coordinates = getCenterCoordinatesWithZoom(props.center, props.zoom);
 
     router.visit(route('home', { coordinates }), {
         headers: {

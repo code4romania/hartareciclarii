@@ -40,8 +40,8 @@
                                 </button>
                             </div>
                         </TransitionChild>
-                        <!-- Sidebar component, swap this element with another sidebar if you like -->
-                        <Sidebar />
+
+                        <Sidebar class="flex" @select-point="selectPoint" />
                     </DialogPanel>
                 </TransitionChild>
             </div>
@@ -49,68 +49,71 @@
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden lg:absolute lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
-        <Sidebar class="border-r border-gray-200" />
-    </div>
+    <Sidebar
+        class="hidden border-r border-gray-200 lg:absolute lg:inset-y-0 lg:z-50 lg:flex"
+        @select-point="selectPoint"
+    />
 
-    <div class="relative h-full lg:pl-72">
-        <div
-            class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-80 lg:right-auto sm:w-80 md:w-96"
-        >
-            <Search class="z-20 pointer-events-auto" :map="map" @fit-bounds="setBounds" />
+    <div class="h-full lg:pl-80">
+        <div class="relative h-full">
+            <div
+                class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-6 lg:top-4 lg:right-auto sm:w-80 md:w-96"
+            >
+                <Search class="z-20 pointer-events-auto" :map="map" @fit-bounds="setBounds" />
 
-            <slot :map="map" />
+                <slot :map="map" />
+            </div>
+
+            <LMap
+                ref="map"
+                :useGlobalLeaflet="true"
+                :min-zoom="8"
+                :max-zoom="18"
+                :center="mapOptions.center"
+                :zoom="mapOptions.zoom"
+                @ready="ready"
+                @moveend="moveend"
+                :options="{
+                    zoomControl: false,
+                }"
+                class="z-0 w-full h-full"
+            >
+                <LControlZoom position="bottomright" />
+
+                <LControlScale position="bottomleft" :imperial="false" />
+
+                <LTileLayer
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                    layer-type="base"
+                    subdomains="abcd"
+                    name="OpenStreetMap"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                />
+
+                <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
+                    <LMarker
+                        v-for="point in points"
+                        :key="`${point.id}-${point.current ? 'current' : 'default'}`"
+                        :lat-lng="point.latlng"
+                        @click="() => selectPoint(point.id)"
+                    >
+                        <LIcon
+                            v-if="point.current"
+                            :icon-url="getMapPinIcon(point, 'lg')"
+                            :icon-size="[32, 43]"
+                            :icon-anchor="[16, 43]"
+                        />
+
+                        <LIcon
+                            v-else
+                            :icon-url="getMapPinIcon(point, 'sm')"
+                            :icon-size="[32, 32]"
+                            :icon-anchor="[16, 16]"
+                        />
+                    </LMarker>
+                </LMarkerClusterGroup>
+            </LMap>
         </div>
-
-        <LMap
-            ref="map"
-            :useGlobalLeaflet="true"
-            :min-zoom="10"
-            :max-zoom="18"
-            :center="mapOptions.center"
-            :zoom="mapOptions.zoom"
-            @ready="ready"
-            @moveend="moveend"
-            :options="{
-                zoomControl: false,
-            }"
-            class="z-0 w-full h-full"
-        >
-            <LControlZoom position="bottomright" />
-
-            <LControlScale position="bottomleft" :imperial="false" />
-
-            <LTileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                layer-type="base"
-                subdomains="abcd"
-                name="OpenStreetMap"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            />
-
-            <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
-                <LMarker
-                    v-for="point in points"
-                    :key="point.id"
-                    :lat-lng="point.latlng"
-                    @click="() => openPoint(map.leafletObject, point)"
-                >
-                    <LIcon
-                        v-if="isCurrentPoint(point)"
-                        :icon-url="getMapPinIcon(point, 'lg')"
-                        :icon-size="[32, 43]"
-                        :icon-anchor="[16, 43]"
-                    />
-
-                    <LIcon
-                        v-else
-                        :icon-url="getMapPinIcon(point, 'sm')"
-                        :icon-size="[32, 32]"
-                        :icon-anchor="[16, 16]"
-                    />
-                </LMarker>
-            </LMarkerClusterGroup>
-        </LMap>
     </div>
 </template>
 
@@ -134,14 +137,14 @@
     import { router } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
 
-    import { refreshPoints, openPoint } from '@/Helpers/useMap.js';
+    import { refreshPoints, openPoint, fetchPoint } from '@/Helpers/useMap.js';
 
     import Sidebar from '@/Components/Map/Sidebar.vue';
-    import Search from '@/Components/Map/Search.vue';
+    import Search from '@/Components/Map/Search/Search.vue';
     import route from '@/Helpers/useRoute.js';
 
     const props = defineProps({
-        type: {
+        context: {
             type: String,
         },
         point: {
@@ -171,11 +174,26 @@
     const map = ref(null);
     const bounds = ref(null);
 
-    function setBounds(value) {
-        bounds.value = value;
-    }
+    const points = computed(() =>
+        props.points.map((point) => ({
+            ...point,
+            current: point.id === props.point?.id,
+        }))
+    );
 
-    const sidebarOpen = ref(true);
+    const setBounds = (value) => {
+        bounds.value = value;
+    };
+
+    const selectPoint = (p) => {
+        if (['filter', 'search'].includes(props.context)) {
+            return fetchPoint(map.value.leafletObject, p);
+        }
+
+        openPoint(map.value.leafletObject, p);
+    };
+
+    const sidebarOpen = ref(false);
 
     const moveend = (event) => refreshPoints(event.target);
 
@@ -224,14 +242,6 @@
     };
 
     const getMapPinIcon = (point, size) => props.icons[point.service][size];
-
-    const isCurrentPoint = (point) => {
-        if (props?.type !== 'point') {
-            return false;
-        }
-
-        return point.id === props.point.id;
-    };
 
     const iconCreateFunction = (cluster) =>
         new L.Icon({

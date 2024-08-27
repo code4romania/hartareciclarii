@@ -1,0 +1,29 @@
+<template>
+    <div class="flex items-center justify-start gap-2 px-4 pt-4">
+        <MagnifyingGlassIcon class="w-6 h-6 text-gray-900" />
+
+        <div class="font-semibold text-gray-900">{{ results.length }} rezultate</div>
+    </div>
+
+    <div class="flex flex-col items-start flex-1 overflow-y-scroll divide-y divide-gray-300">
+        <template v-if="results.length">
+            <Result v-for="point in results" :key="point.id" :point="point" @click="$emit('selectPoint', point.id)" />
+        </template>
+        <EmptyState v-else />
+    </div>
+</template>
+
+<script setup>
+    import { computed, ref, watch, defineAsyncComponent } from 'vue';
+    import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+    import { usePage } from '@inertiajs/vue3';
+    import Result from '@/Components/Map/Search/Result.vue';
+    import EmptyState from '@/Components/Map/Search/EmptyState.vue';
+
+    const emit = defineEmits(['selectPoint']);
+
+    const page = usePage();
+
+    const results = computed(() => page.props.points || []);
+</script>
+

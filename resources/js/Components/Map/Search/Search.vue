@@ -1,6 +1,6 @@
 <template>
-    <div class="relative z-20" v-click-away="close">
-        <form class="relative z-20" @submit.prevent="search">
+    <form class="relative z-20" @submit.prevent="search" v-click-away="close">
+        <div class="relative z-20">
             <MagnifyingGlassIcon
                 class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4 shrink-0"
                 :class="{
@@ -14,13 +14,13 @@
                 name="search"
                 ref="input"
                 class="block w-full rounded-full border-0 pl-12 pr-4 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6 shadow"
-                placeholder="Caută o adresă, un punct, sau un material"
+                placeholder="Caută"
                 autocomplete="off"
                 v-model="query"
                 @keydown.esc.stop="clear"
                 @focus="open"
             />
-        </form>
+        </div>
 
         <transition
             enter-active-class="transition duration-100 ease-out"
@@ -31,11 +31,17 @@
             leave-to-class="transform scale-95 opacity-0"
         >
             <div
-                v-if="searching"
-                class="absolute z-10 w-full pt-10 -mt-10 overflow-hidden text-sm bg-white border border-gray-300 shadow-lg rounded-2xl"
+                v-if="suggesting"
+                class="absolute z-10 w-full pt-10 -mt-10 overflow-hidden text-sm bg-white border border-gray-300 shadow-lg rounded-2xl empty:hidden"
             >
-                <ol v-if="hasResults" class="py-2">
-                    <li v-for="(result, index) in results" :key="index">
+                <div v-if="!queryIsValid" class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52">
+                    Caută o adresă, un punct, sau un material
+                </div>
+
+                <ArrowPathIcon v-else-if="loading" class="w-5 h-5 m-4 mx-auto text-gray-400 animate-spin" />
+
+                <ol v-else class="py-2">
+                    <li v-for="(result, index) in suggestions" :key="index">
                         <Link
                             v-if="result.type !== 'location'"
                             :href="result.url"
@@ -65,28 +71,30 @@
                             <span class="flex-1 truncate" v-text="result.name" />
                         </button>
                     </li>
+
+                    <li v-if="showFallback">
+                        <button type="submit" class="flex w-full gap-2 px-4 py-2 text-sm text-left hover:bg-gray-100">
+                            <MagnifyingGlassIcon class="w-5 h-5 fill-gray-400" />
+                            <span class="flex-1 truncate" v-text="query" />
+                        </button>
+                    </li>
                 </ol>
-
-                <div v-else-if="loading" class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52">loading</div>
-
-                <div
-                    v-else
-                    class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52"
-                    v-text="$t('app.search.empty')"
-                />
             </div>
         </transition>
-    </div>
+    </form>
 </template>
 
 <script setup>
     import axios from 'axios';
     import route from '@/Helpers/useRoute.js';
-    import { MagnifyingGlassIcon, MapPinIcon } from '@heroicons/vue/16/solid';
+    import { MagnifyingGlassIcon, MapPinIcon, ArrowPathIcon } from '@heroicons/vue/16/solid';
     import { computed, ref, watch } from 'vue';
     import { router, usePage, Link } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
+    import { getCenterCoordinatesWithZoom, updateMap } from '@/Helpers/useMap.js';
+
+    const emit = defineEmits(['fitBounds']);
 
     const props = defineProps({
         map: Object,
@@ -95,45 +103,56 @@
     const page = usePage();
 
     const input = ref(null);
-    const query = ref(null);
+    const query = ref(page.props.query || null);
     const loading = ref(false);
-    const searching = ref(false);
+    const suggesting = ref(false);
+    const showFallback = ref(false);
     const highlightedItem = ref(null);
 
-    const results = ref([]);
+    const suggestions = ref([]);
 
-    const emit = defineEmits(['fitBounds']);
-
-    const hasResults = computed(() => {
-        if (!results.value.length) {
+    const hasSuggestions = computed(() => {
+        if (!suggestions.value.length) {
             return false;
         }
 
         return true;
     });
 
-    const search = useDebounceFn(() => {
-        if (query.value === null || query.value.length < 3) {
-            close();
+    const queryIsValid = computed(() => query.value !== null && query.value.length);
+
+    const search = (event) => {
+        updateMap(props.map.leafletObject, 'search', {
+            query: query.value,
+        });
+
+        close();
+    };
+
+    const suggest = useDebounceFn(() => {
+        highlightedItem.value = null;
+        suggesting.value = true;
+        showFallback.value = false;
+
+        if (!queryIsValid.value) {
             return;
         }
 
-        highlightedItem.value = null;
         loading.value = true;
-        searching.value = true;
 
         const center = props.map.leafletObject.getCenter();
+        const zoom = props.map.leafletObject.getZoom();
 
         axios
             .get(
                 route('suggest', {
-                    center: `${center.lat.toFixed(6)},${center.lng.toFixed(6)}`,
+                    coordinates: getCenterCoordinatesWithZoom(center, zoom),
                     query: query.value,
                 })
             )
             .then((response) => {
                 if (Array.isArray(response.data)) {
-                    results.value = response.data;
+                    suggestions.value = response.data;
                 }
             })
             .catch((error) => {
@@ -141,30 +160,32 @@
             })
             .finally(() => {
                 loading.value = false;
+                showFallback.value = true;
             });
     }, 500);
 
-    watch(query, search);
+    watch(query, suggest);
 
     const open = () => {
-        searching.value = true;
-        // query.value = '';
-        // input.value.focus();
+        suggesting.value = true;
+        // query.value = null;
+        input.value.focus();
     };
 
     const clear = () => {
         close();
-        input.value.blur();
         query.value = null;
-        results.value = [];
+        suggestions.value = [];
     };
 
     const close = () => {
         loading.value = false;
-        searching.value = false;
+        suggesting.value = false;
+        input.value.blur();
     };
 
     const fitBounds = (result) => {
+        console.log(result);
         emit('fitBounds', result.bounds);
     };
 </script>

@@ -6,9 +6,20 @@ namespace App\DataTransferObjects;
 
 readonly class NominatimSuggestion
 {
-    public function __construct(
-        public string $name,
-        public array $bounds
-    ) {
+    public string $name;
+
+    public array $bounds;
+
+    public array $center;
+
+    public function __construct(array $suggestion)
+    {
+        $this->name = $suggestion['display_name'];
+        $this->bounds = $suggestion['boundingbox'];
+
+        $this->center = [
+            $suggestion['lat'],
+            $suggestion['lon'],
+        ];
     }
 }

@@ -18,7 +18,6 @@ class PointResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
             'service' => $this->serviceType->slug,
             'latlng' => [$this->location->latitude, $this->location->longitude],
         ];

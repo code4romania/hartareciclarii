@@ -28,7 +28,7 @@
             <div
                 class="inline-flex items-center justify-center w-12 h-12 p-3 bg-gray-100 rounded-full text-blue-950 group-hover:bg-blue-800 group-hover:text-white group-focus:bg-blue-800 group-focus:text-white group-focus:ring-2 group-focus:ring-blue-800 ring-offset-2"
             >
-                <ShareIcon v-if="!copied || text !== currentUrl" class="w-full h-full" />
+                <ShareIcon v-if="!copied || text !== url" class="w-full h-full" />
                 <LinkIcon v-else class="w-full h-full" />
             </div>
 
@@ -41,6 +41,7 @@
     import { computed } from 'vue';
     import { useShare, useClipboard } from '@vueuse/core';
     import { ArrowTurnUpRightIcon, FlagIcon, ShareIcon, LinkIcon } from '@heroicons/vue/16/solid';
+    import route from '@/Helpers/useRoute.js';
 
     const props = defineProps({
         point: {
@@ -50,19 +51,21 @@
 
     const googleMapsUrl = computed(() => `https://www.google.com/maps/place/${props.point.latlng.join(',')}`);
 
+    const { coordinates } = route().params;
+
+    const url = computed(() => route('point', { point: props.point, coordinates }));
+
     const { share, isSupported: shareIsSupported } = useShare();
     const { text, copy, copied } = useClipboard({ legacy: true });
-
-    const currentUrl = computed(() => window.location.href);
 
     const shareOrCopy = () => {
         if (shareIsSupported.value) {
             share({
                 title: props.point.name,
-                url: currentUrl.value,
+                url: url.value,
             });
         } else {
-            copy(currentUrl.value);
+            copy(url.value);
         }
     };
 </script>

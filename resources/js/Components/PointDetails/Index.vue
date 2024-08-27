@@ -2,7 +2,7 @@
     <article
         class="relative max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
     >
-        <Heading :service="point.service" :name="point.name" @close="closePanel()" />
+        <Heading :service="point.service" :name="point.name" @close="closePanel" />
 
         <Subheading :subheading="point.subheading" :status="point.status" />
 
@@ -17,7 +17,7 @@
         <Observations :point="point" />
 
         <div class="py-2">
-            <Website v-if="point.website" :website="point.website" :url-params="urlParams" />
+            <Website v-if="point.website" :website="point.website" />
 
             <Email v-if="point.email" :email="point.email" />
 

@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/point/{point}/{coordinates?}', [MapController::class, 'point'])->name('point');
-Route::get('/material/{material}/{coordinates?}', [MapController::class, 'material'])->name('material');
-Route::get('/search', [MapController::class, 'search'])->name('search');
-Route::get('/suggest', [MapController::class, 'suggest'])->name('suggest');
+Route::get('/material/{material}/{coordnates?}', [MapController::class, 'material'])->name('material');
+Route::get('/search/{coordinates}', [MapController::class, 'search'])->name('search');
+Route::get('/suggest/{coordinates}', [MapController::class, 'suggest'])->name('suggest');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
