@@ -17,7 +17,7 @@ export default {
                 {
                     'ring-gray-300': !context.checked && !props.invalid,
                     'bg-white': !context.checked && !props.invalid && !props.disabled,
-                    'ring-primary-600 bg-primary-600 text-white': context.checked,
+                    'ring-primary-700 bg-primary-700 text-white': context.checked,
                 },
                 // Invalid State
                 'invalid:focus:ring-red-200',
@@ -57,7 +57,7 @@ export default {
                 'h-[0.75rem]',
                 {
                     'text-white': context.checked,
-                    'text-primary-600': state.d_indeterminate,
+                    'text-primary-700': state.d_indeterminate,
                 },
             ],
         }),
@@ -79,7 +79,7 @@ export default {
                 // Spacing
                 'gap-2',
                 // Colors
-                context.selected ? 'bg-highlight text-primary-600' : 'bg-transparent text-gray-600',
+                context.selected ? 'bg-highlight text-primary-700' : 'bg-transparent text-gray-600',
                 // States
                 {
                     'hover:bg-gray-50':
@@ -103,7 +103,7 @@ export default {
                 'bg-transparent',
                 {
                     'text-gray-600': !context.selected,
-                    'text-primary-600': context.selected,
+                    'text-primary-700': context.selected,
                     invisible: context.leaf,
                 },
                 // States
@@ -123,7 +123,7 @@ export default {
                 // Color
                 {
                     'text-gray-600': !context.selected,
-                    'text-primary-600': context.selected,
+                    'text-primary-700': context.selected,
                 },
             ],
         }),

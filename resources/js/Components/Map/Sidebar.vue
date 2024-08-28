@@ -1,5 +1,5 @@
 <template>
-    <aside class="flex-col gap-4 overflow-hidden bg-white grow w-80">
+    <aside class="flex-col gap-4 overflow-hidden bg-white w-80">
         <Filters v-if="showFilters" />
 
         <SearchResults v-else @select-point="$emit('selectPoint', $event)" />

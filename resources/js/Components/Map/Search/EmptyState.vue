@@ -4,12 +4,12 @@
 
         <p v-text="$t('sidebar.no_results_found', { query: $page.props.query })" />
 
-        <PillButton color="white" :label="$t('sidebar.see_all_points')" @click="closePanel" />
+        <Button color="white" :label="$t('sidebar.see_all_points')" @click="closePanel" />
     </div>
 </template>
 
 <script setup>
     import Icon from '@/Components/Icon.vue';
-    import PillButton from '@/Components/Buttons/PillButton.vue';
+    import Button from '@/Components/Button.vue';
     import { closePanel } from '@/Helpers/useMap.js';
 </script>
