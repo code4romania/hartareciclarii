@@ -1,5 +1,5 @@
-import { ref } from 'vue'
-import ZiggyRoute from 'ziggy-js';
+import { ref } from 'vue';
+import { route as ZiggyRoute } from 'ziggy-js';
 
 const Ziggy = ref(null);
 
@@ -19,4 +19,4 @@ export const ZiggyVue = {
 
         app.provide('route', route);
     },
-}
+};
