@@ -53,6 +53,6 @@
         "vue-tsc": "^2.0.29",
         "vue3-click-away": "^1.2.4",
         "vue3-treeselect": "^0.1.10",
-        "ziggy-js": "^1.8.1"
+        "ziggy-js": "^2.3.0"
     }
 }
