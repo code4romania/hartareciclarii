@@ -2,7 +2,7 @@
     <DashboardLayout>
         <div class="container ms-16 pt-28 ">
             <div class="mb-10 w-1/4 start-0">
-                <Link :href="route('dashboard')" class="flex justify-items-center items-center ">
+                <Link :href="route('front.dashboard')" class="flex justify-items-center items-center ">
                 <ArrowLongLeftIcon class="w-8 h-8 mr-2 "/>
                     <p v-text="$t('profile.back_to_my_profile')" class="text-lg"/>
                 </Link>

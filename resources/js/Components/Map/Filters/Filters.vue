@@ -13,6 +13,7 @@
             :options="serviceTypes"
             option-value-key="id"
             option-label-key="name"
+            disabled
         />
 
         <template v-for="type in serviceTypes" :key="type.slug">
@@ -24,11 +25,11 @@
             />
         </template>
 
-        <CheckboxList name="status" label="Status punct" v-model="filter.status" :options="statuses" />
+        <CheckboxList name="status" label="Status punct" v-model="filter.status" :options="statuses" disabled />
     </div>
 
     <button
-        v-if="hasFilters"
+        v-if="false"
         type="button"
         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-red-700 border-t hover:bg-red-700 hover:text-white"
         @click="clearFilters"

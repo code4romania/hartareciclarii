@@ -2,7 +2,7 @@
     <form class="relative z-20" @submit.prevent="search" v-click-away="close">
         <div class="relative z-20">
             <MagnifyingGlassIcon
-                class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4 shrink-0"
+                class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4"
                 :class="{
                     'text-primary-600': query,
                     'text-gray-400': !query,
@@ -13,13 +13,22 @@
                 type="search"
                 name="search"
                 ref="input"
-                class="block w-full rounded-full border-0 pl-12 pr-4 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6 shadow"
+                class="block w-full rounded-full border-0 pl-12 pr-4 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6 shadow [&::-webkit-search-cancel-button]:hidden"
                 placeholder="Caută"
                 autocomplete="off"
                 v-model="query"
                 @keydown.esc.stop="clear"
                 @focus="open"
             />
+
+            <button
+                v-if="queryIsValid"
+                type="button"
+                class="absolute w-5 h-5 overflow-hidden text-gray-500 rounded-full inset-y-3 right-4"
+                @click="closeSearch"
+            >
+                <XMarkIcon />
+            </button>
         </div>
 
         <transition
@@ -64,7 +73,7 @@
                             v-else
                             type="button"
                             class="flex w-full gap-2 px-4 py-2 text-sm text-left hover:bg-gray-100"
-                            @click="fitBounds(result)"
+                            @click="$emit('locate', result)"
                         >
                             <MapPinIcon class="w-5 h-5 fill-gray-400" />
 
@@ -87,14 +96,14 @@
 <script setup>
     import axios from 'axios';
     import route from '@/Helpers/useRoute.js';
-    import { MagnifyingGlassIcon, MapPinIcon, ArrowPathIcon } from '@heroicons/vue/16/solid';
+    import { MagnifyingGlassIcon, MapPinIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/16/solid';
     import { computed, ref, watch } from 'vue';
     import { router, usePage, Link } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
-    import { getCenterCoordinatesWithZoom, updateMap } from '@/Helpers/useMap.js';
+    import { getCenterCoordinatesWithZoom, updateMap, closePanel } from '@/Helpers/useMap.js';
 
-    const emit = defineEmits(['fitBounds']);
+    const emit = defineEmits(['locate']);
 
     const props = defineProps({
         map: Object,
@@ -122,7 +131,7 @@
     const queryIsValid = computed(() => query.value !== null && query.value.length);
 
     const search = (event) => {
-        updateMap(props.map.leafletObject, 'search', {
+        updateMap(props.map.leafletObject, 'front.map.search', {
             query: query.value,
         });
 
@@ -131,13 +140,13 @@
 
     const suggest = useDebounceFn(() => {
         highlightedItem.value = null;
-        suggesting.value = true;
         showFallback.value = false;
 
         if (!queryIsValid.value) {
             return;
         }
 
+        suggesting.value = true;
         loading.value = true;
 
         const center = props.map.leafletObject.getCenter();
@@ -145,7 +154,7 @@
 
         axios
             .get(
-                route('suggest', {
+                route('front.map.suggest', {
                     coordinates: getCenterCoordinatesWithZoom(center, zoom),
                     query: query.value,
                 })
@@ -173,9 +182,9 @@
     };
 
     const clear = () => {
-        close();
         query.value = null;
         suggestions.value = [];
+        close();
     };
 
     const close = () => {
@@ -187,5 +196,10 @@
     const fitBounds = (result) => {
         console.log(result);
         emit('fitBounds', result.bounds);
+    };
+
+    const closeSearch = () => {
+        clear();
+        closePanel();
     };
 </script>

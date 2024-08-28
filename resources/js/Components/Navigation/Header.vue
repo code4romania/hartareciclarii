@@ -1,7 +1,7 @@
 <template>
     <Disclosure as="header" class="bg-white border-b border-gray-200 shadow md:bg-gray-50" v-slot="{ open }">
         <div class="flex justify-between px-4 py-2 md:px-6 md:py-4 md:gap-6">
-            <a :href="route('home')">
+            <a :href="route('front.map.index')">
                 <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
             </a>
 
@@ -139,9 +139,9 @@
     ];
 
     const userNavigation = [
-        { name: trans('profile.my_profile'), href: route('dashboard') },
-        { name: trans('profile.settings'), href: route('profile.edit') },
-        { name: trans('profile.logout'), href: route('logout') },
+        { name: trans('profile.my_profile'), href: route('front.dashboard') },
+        { name: trans('profile.settings'), href: route('front.profile.edit') },
+        { name: trans('profile.logout'), href: route('front.logout') },
     ];
 
     const showLoginModal = ref(true);

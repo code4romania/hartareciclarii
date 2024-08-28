@@ -31,7 +31,7 @@ class SuggestionResource extends JsonResource
         return [
             'name' => $this->name,
             'description' => $this->address,
-            'url' => route('point', $this),
+            'url' => route('front.map.point', $this),
             'type' => 'point',
             'icon' => $this->serviceType->slug,
         ];
@@ -41,7 +41,7 @@ class SuggestionResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'url' => route('material', $this),
+            'url' => route('front.map.material', $this),
             'type' => 'material',
             'icon' => $this->icon,
         ];

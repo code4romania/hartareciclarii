@@ -14,7 +14,7 @@ createInertiaApp({
 
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
-            .use(ZiggyVue, props.initialPage.props.ziggy)
+            .use(ZiggyVue)
             .use(i18nVue, {
                 resolve: async (lang) => {
                     const langs = import.meta.glob('../../lang/*.json');
