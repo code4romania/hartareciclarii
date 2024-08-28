@@ -2,16 +2,11 @@
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled">
         <div class="grid gap-2">
             <label v-for="(option, index) in options" class="flex gap-x-2" :key="index">
-                <input
-                    type="checkbox"
-                    :id="`field-${name}`"
-                    :name="name"
-                    class="text-blue-600 border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 my-0.5"
-                    v-model="proxyChecked"
-                    :value="option.value"
-                    :required="required"
-                    :disabled="disabled"
-                />
+                <Checkbox v-model="proxyChecked" :value="option.value" :required="required" :disabled="disabled">
+                    <template #icon="{ checked }">
+                        <CheckIcon v-if="checked" />
+                    </template>
+                </Checkbox>
 
                 <span class="text-sm font-medium text-gray-700" v-text="$t(option.label)" />
             </label>
@@ -21,7 +16,8 @@
 
 <script setup>
     import { computed, ref } from 'vue';
-    import { trans } from 'laravel-vue-i18n';
+    import { CheckIcon } from '@heroicons/vue/16/solid';
+    import Checkbox from 'primevue/checkbox';
     import FormField from '@/Components/Form/Field.vue';
 
     const props = defineProps({

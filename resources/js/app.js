@@ -4,6 +4,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '@/Helpers/useRoute';
 import { i18nVue } from 'laravel-vue-i18n';
 import VueClickAway from 'vue3-click-away';
+import PrimeVue from 'primevue/config';
+import pt from './primevue.js';
 
 import 'virtual:svg-icons-register';
 
@@ -14,6 +16,10 @@ createInertiaApp({
 
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
+            .use(PrimeVue, {
+                unstyled: true,
+                pt,
+            })
             .use(ZiggyVue)
             .use(i18nVue, {
                 resolve: async (lang) => {
