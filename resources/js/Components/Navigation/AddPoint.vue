@@ -1,5 +1,5 @@
 <template>
-    <Modal dismissable overlay-dismissable>
+    <Modal dismissable form>
         <template #trigger="{ open }">
             <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" @click="open" />
         </template>
@@ -8,7 +8,7 @@
             {{ $t('add_point.title') }}
         </template>
 
-        <template #footer>
+        <template #footer="{ close }">
             <Button size="sm" :label="$t('common.cancel')" @click="close" />
             <Button size="sm" :label="$t('common.save')" @click="submitForm" primary />
         </template>
@@ -22,7 +22,6 @@
     import route from '@/Helpers/useRoute';
 
     import { MapPinIcon } from '@heroicons/vue/20/solid/index.js';
-    import { XMarkIcon } from '@heroicons/vue/20/solid';
 
     import Button from '@/Components/Button.vue';
     import SearchList from '@/Components/AddPoint/SearchList.vue';
@@ -72,7 +71,7 @@
     };
 
     const submitForm = (e) => {
-        form.post(route('point.store'));
+        form.post(route('front.point.store'));
 
         if (!validateInputs()) {
             return;
