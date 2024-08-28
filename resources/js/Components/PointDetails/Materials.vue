@@ -15,11 +15,14 @@
                 <ul class="divide-y divide-gray-200">
                     <li v-for="(material, index) in category.materials" :key="`material-${index}`" class="py-1 pl-12">
                         <Link
-                            :href="route('material', material.id)"
+                            v-if="material.url"
+                            :href="material.url"
                             class="text-blue-500 hover:underline focus:underline"
                         >
                             {{ material.name }}
                         </Link>
+
+                        <span v-else v-text="material.name" />
                     </li>
                 </ul>
             </Accordion>

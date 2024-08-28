@@ -53,7 +53,7 @@
 
     const { coordinates } = route().params;
 
-    const url = computed(() => route('point', { point: props.point, coordinates }));
+    const url = computed(() => route('front.map.point', { point: props.point, coordinates }));
 
     const { share, isSupported: shareIsSupported } = useShare();
     const { text, copy, copied } = useClipboard({ legacy: true });

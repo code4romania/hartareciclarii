@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
 {
     public static function getDashboardUrl(): string
     {
-        return route('dashboard');
+        return route('front.dashboard');
     }
 
     /**
@@ -33,6 +33,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
+                ->name('front.')
                 ->group(base_path('routes/web.php'));
         });
 

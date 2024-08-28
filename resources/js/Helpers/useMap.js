@@ -1,7 +1,10 @@
+import { ref } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import route from '@/Helpers/useRoute.js';
 
 const page = usePage();
+
+const cancelTokens = ref([]);
 
 export const getCenterCoordinates = ({ lat, lng }) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
 export const getCenterCoordinatesWithZoom = (center, zoom) => `@${getCenterCoordinates(center)},${zoom}z`;
@@ -26,6 +29,7 @@ export const updateMap = (leafletObject, routeName, routeParams = {}, options = 
 
     router.visit(route(routeName, routeParams), {
         headers,
+        onCancelToken: (cancelToken) => cancelTokens.value.push(cancelToken),
         ...options,
     });
 };
@@ -39,7 +43,7 @@ export const refreshPoints = (leafletObject) => {
 export const openPoint = (leafletObject, point) => {
     updateMap(
         leafletObject,
-        'point',
+        'front.map.point',
         { point },
         {
             only: ['context', 'point'],
@@ -61,9 +65,14 @@ export const closePanel = () => {
     const props = page.props.mapOptions;
     const coordinates = getCenterCoordinatesWithZoom(props.center, props.zoom);
 
-    router.visit(route('home', { coordinates }), {
+    router.visit(route('front.map.index', { coordinates }), {
         headers: {
             'Map-Bounds': props.bounds,
         },
     });
+};
+
+export const cancelMapVisits = () => {
+    cancelTokens.value.forEach((cancelToken) => cancelToken.cancel());
+    cancelTokens.value = [];
 };

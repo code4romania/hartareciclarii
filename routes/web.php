@@ -18,10 +18,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/point/{point}/{coordinates?}', [MapController::class, 'point'])->name('point');
-Route::get('/material/{material}/{coordnates?}', [MapController::class, 'material'])->name('material');
-Route::get('/search/{coordinates}', [MapController::class, 'search'])->name('search');
-Route::get('/suggest/{coordinates}', [MapController::class, 'suggest'])->name('suggest');
+Route::group([
+    // 'prefix' => 'map',
+    'as' => 'map.',
+    'controller' => MapController::class,
+], function () {
+    Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
+    Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
+    Route::get('/search/{coordinates}', 'search')->name('search');
+    Route::get('/suggest/{coordinates}', 'suggest')->name('suggest');
+    Route::get('/{coordinates?}', 'index')->name('index');
+});
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -33,13 +40,3 @@ Route::prefix('cont')->middleware('auth:web')->group(function () {
     Route::post('/update', [UserController::class, 'update'])->name('profile.update');
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('profile.change-password');
 });
-
-// Route::prefix('admin')->group(function () {
-//     Route::middleware('auth')->group(function () {
-//         Route::get('validate-point/{point_id}', [MapPointsController::class, 'validatePoint'])->name('map-points.validate');
-//         Route::get('map-view/{point}', [MapPointsController::class, 'mapView'])->name('map_points.map-view');
-//         Route::get('download-xlsx-example', [MapPointsController::class, 'downloadXlsxExample'])->name('import.xlsx-example');
-//     });
-// });
-
-Route::get('/{coordinates?}', [MapController::class, 'index'])->name('home');
