@@ -66,8 +66,7 @@
 
     const isLink = computed(() => props.href !== null);
 
-    const buttonBase =
-        'flex items-center justify-center w-full font-medium rounded-full whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2';
+    const buttonBase = `flex items-center justify-center w-full ring-1 ring-inset font-medium rounded-full whitespace-nowrap focus:outline-none`;
 
     const iconBase = 'shrink-0';
 
@@ -83,7 +82,7 @@
     const buttonColor = computed(
         () =>
             ({
-                white: 'bg-white text-gray-700',
+                white: 'bg-white text-gray-700 ring-gray-300 hover:bg-gray-50',
             }[props.color])
     );
 
@@ -102,11 +101,4 @@
                 white: 'text-gray-500',
             }[props.color])
     );
-
-    // <div class="pl-3.5 pr-4 py-2 bg-white rounded-full shadow justify-center items-center gap-3 flex">
-    //     <div class="relative w-5 h-5"></div>
-    //     <div class="text-gray-700 text-base font-medium font-['Inter'] leading-normal">Adaugă punct</div>
-    //   </div>
 </script>
-
-

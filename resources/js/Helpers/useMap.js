@@ -47,12 +47,12 @@ export const openPoint = (leafletObject, point) => {
     );
 };
 
-export const fetchPoint = (leafletObject, point) => {
+export const fetchPoint = (leafletObject, pointId) => {
     updateMap(leafletObject, route().current(), route().params, {
         only: ['point'],
         replace: true,
         headers: {
-            'Map-Point': point,
+            'Map-Point': pointId,
         },
     });
 };
