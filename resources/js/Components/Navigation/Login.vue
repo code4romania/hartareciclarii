@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PillButton color="white" :label="$t('auth.login')" :icon="UserIcon" @click="open"/>
+        <PillButton color="white" :label="$t('auth.login')" :icon="UserIcon" @click="open" />
         <div>
             <TransitionRoot appear :show="loginModal" as="template">
                 <Dialog as="div" @close="close" class="relative z-10">
@@ -13,13 +13,11 @@
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div class="fixed inset-0 bg-black/25"/>
+                        <div class="fixed inset-0 bg-black/25" />
                     </TransitionChild>
 
                     <div class="fixed inset-0 overflow-y-auto">
-                        <div
-                            class="flex min-h-full items-center justify-center p-4 text-center"
-                        >
+                        <div class="flex items-center justify-center min-h-full p-4 text-center">
                             <TransitionChild
                                 as="template"
                                 enter="duration-300 ease-out"
@@ -30,24 +28,20 @@
                                 leave-to="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class="w-96 max-w-md transform overflow-hidden rounded-3xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                    class="max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl w-96 rounded-3xl"
                                 >
                                     <DialogTitle
                                         as="div"
-                                        class="text-lg font-medium leading-6 text-gray-900 flex items-center justify-between"
+                                        class="flex items-center justify-between text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        <h3 v-text="$t('auth.login')"/>
-                                        <button
-                                            type="button"
-                                            class="text-gray-400 hover:text-gray-500"
-                                            @click="close">
-                                            <XMarkIcon class="w-6 h-6" aria-hidden="true"/>
+                                        <h3 v-text="$t('auth.login')" />
+                                        <button type="button" class="text-gray-400 hover:text-gray-500" @click="close">
+                                            <XMarkIcon class="w-6 h-6" aria-hidden="true" />
                                         </button>
-
                                     </DialogTitle>
                                     <div class="mt-2">
                                         <form @submit="submitLogin">
-                                            <div class="space-y-1 mb-3">
+                                            <div class="mb-3 space-y-1">
                                                 <label
                                                     for="email"
                                                     class="block text-sm font-medium leading-6 text-gray-900"
@@ -65,7 +59,7 @@
                                                     />
                                                 </div>
                                             </div>
-                                            <div class="space-y-1 mb-1">
+                                            <div class="mb-1 space-y-1">
                                                 <label
                                                     for="password"
                                                     class="block text-sm font-medium leading-6 text-gray-900"
@@ -87,12 +81,13 @@
                                                 <a class="cursor-pointer">{{ $t('auth.recover') }}</a>
                                             </div>
                                             <template v-if="errors.email">
-                                                <div class="rounded-md bg-red-50 p-4">
+                                                <div class="p-4 rounded-md bg-red-50">
                                                     <div class="flex">
-                                                        <XMarkIcon class="h-5 w-5 text-red-700" aria-hidden="true"/>
+                                                        <XMarkIcon class="w-5 h-5 text-red-700" aria-hidden="true" />
                                                         <div class="ml-3">
                                                             <h4 class="text-sm font-medium text-red-800">
-                                                                {{ errors.email }}</h4>
+                                                                {{ errors.email }}
+                                                            </h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -103,14 +98,18 @@
                                     <div class="mt-8">
                                         <button
                                             type="submit"
-                                            class="w-full inline-flex justify-center rounded-md border border-black bg-primary-500 px-3 py-2 text-sm text-white shadow-sm sm:col-start-2"
+                                            class="inline-flex justify-center w-full px-3 py-2 text-sm text-white border border-black rounded-md shadow-sm bg-primary-700 sm:col-start-2"
                                             @click="submitLogin"
-                                            v-text="$t('auth.login')"/>
+                                            v-text="$t('auth.login')"
+                                        />
                                     </div>
-                                    <div class="mt-4 flex justify-center">
-                                        <p class="text-sm " v-html="$t('auth.register')"/>
-                                        <button class="text-sm btn text-primary-500 ml-2"
-                                                v-text="$t('auth.register_link')" @click="registerOpen"/>
+                                    <div class="flex justify-center mt-4">
+                                        <p class="text-sm" v-html="$t('auth.register')" />
+                                        <button
+                                            class="ml-2 text-sm btn text-primary-500"
+                                            v-text="$t('auth.register_link')"
+                                            @click="registerOpen"
+                                        />
                                     </div>
                                 </DialogPanel>
                             </TransitionChild>
@@ -132,13 +131,11 @@
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div class="fixed inset-0 bg-black/25"/>
+                        <div class="fixed inset-0 bg-black/25" />
                     </TransitionChild>
 
                     <div class="fixed inset-0 overflow-y-auto">
-                        <div
-                            class="flex min-h-full items-center justify-center p-4 text-center"
-                        >
+                        <div class="flex items-center justify-center min-h-full p-4 text-center">
                             <TransitionChild
                                 as="template"
                                 enter="duration-300 ease-out"
@@ -149,20 +146,20 @@
                                 leave-to="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class="w-full max-w-md transform overflow-hidden rounded-3xl bg-white p-6 text-left align-middle shadow-xl transition-all h-1/2"
+                                    class="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-3xl h-1/2"
                                 >
                                     <DialogTitle
                                         as="div"
-                                        class="text-lg font-medium leading-6 text-gray-900 flex items-center justify-between"
+                                        class="flex items-center justify-between text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        <h3 v-text="$t('auth.register.title')"/>
+                                        <h3 v-text="$t('auth.register.title')" />
                                         <button
                                             type="button"
                                             class="text-gray-400 hover:text-gray-500"
-                                            @click="registerClose">
-                                            <XMarkIcon class="w-6 h-6" aria-hidden="true"/>
+                                            @click="registerClose"
+                                        >
+                                            <XMarkIcon class="w-6 h-6" aria-hidden="true" />
                                         </button>
-
                                     </DialogTitle>
                                     <div class="mt-2">
                                         <form @submit="submitRegister" class="mt-8">
@@ -240,22 +237,24 @@
                                                     />
                                                 </div>
                                             </div>
-
                                         </form>
                                     </div>
-                                    <div class="mt-8 flex justify-center">
+                                    <div class="flex justify-center mt-8">
                                         <button
                                             type="submit"
-                                            class="w-1/2 inline-flex justify-center rounded-2xl border border-black bg-primary-500 px-3 py-2 text-sm text-white shadow-sm sm:col-start-2"
+                                            class="inline-flex justify-center w-1/2 px-3 py-2 text-sm text-white border border-black shadow-sm rounded-2xl bg-primary-500 sm:col-start-2"
                                             @click="submitRegister"
-                                            v-text="$t('auth.register.submit')"/>
+                                            v-text="$t('auth.register.submit')"
+                                        />
                                     </div>
 
-
-                                    <div class="mt-4 flex justify-center">
-                                        <p class="text-sm " v-html="$t('auth.register.already_have_account')"/>
-                                        <button class="text-sm btn text-primary-500 ml-2"
-                                                v-text="$t('auth.register.login')" @click="registerClose"/>
+                                    <div class="flex justify-center mt-4">
+                                        <p class="text-sm" v-html="$t('auth.register.already_have_account')" />
+                                        <button
+                                            class="ml-2 text-sm btn text-primary-500"
+                                            v-text="$t('auth.register.login')"
+                                            @click="registerClose"
+                                        />
                                     </div>
                                 </DialogPanel>
                             </TransitionChild>
@@ -264,81 +263,78 @@
                 </Dialog>
             </TransitionRoot>
         </div>
-
     </div>
 </template>
 
 <script setup>
-import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue';
-import {UserIcon, XMarkIcon} from '@heroicons/vue/20/solid';
-import PillButton from '@/Components/Buttons/PillButton.vue';
-import route from '@/Helpers/useRoute.js';
+    import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+    import { UserIcon, XMarkIcon } from '@heroicons/vue/20/solid';
+    import PillButton from '@/Components/Buttons/PillButton.vue';
+    import route from '@/Helpers/useRoute.js';
 
-import {computed, ref} from 'vue';
-import {useForm, usePage} from "@inertiajs/vue3";
-import InputComponent from "@/Components/InputComponent.vue";
-import CheckboxComponent from "@/Components/CheckboxComponent.vue";
+    import { computed, ref } from 'vue';
+    import { useForm, usePage } from '@inertiajs/vue3';
+    import InputComponent from '@/Components/InputComponent.vue';
+    import CheckboxComponent from '@/Components/CheckboxComponent.vue';
 
-const loginModal = ref(false);
-const registerModal = ref(false);
+    const loginModal = ref(false);
+    const registerModal = ref(false);
 
-const registerOpen = () => {
-    loginModal.value = false;
-    registerModal.value = true;
-};
+    const registerOpen = () => {
+        loginModal.value = false;
+        registerModal.value = true;
+    };
 
-const registerClose = () => {
-    registerModal.value = false;
-    loginModal.value = true;
-};
+    const registerClose = () => {
+        registerModal.value = false;
+        loginModal.value = true;
+    };
 
-const open = () => {
-    loginModal.value = true;
-};
+    const open = () => {
+        loginModal.value = true;
+    };
 
-const close = () => {
-    loginModal.value = false;
-};
+    const close = () => {
+        loginModal.value = false;
+    };
 
-const form = useForm({
-    'email': '',
-    'password': '',
-})
-
-const registerForm = useForm({
-    'first_name': '',
-    'last_name': '',
-    'phone': '',
-    'email': '',
-    'password': '',
-    'password_confirmation': '',
-    'accept_terms': false,
-    'subscribe_to_newsletter': false,
-})
-
-const submitLogin = () => {
-    form.post(route('login'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            close();
-        }
-
+    const form = useForm({
+        email: '',
+        password: '',
     });
-}
 
-const submitRegister = () => {
-    console.log('register');
-    console.log(registerForm)
-    registerForm.post(route('register'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            registerClose();
-        },
-        onError: () => {
-            console.log('error');
-        }
-
+    const registerForm = useForm({
+        first_name: '',
+        last_name: '',
+        phone: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        accept_terms: false,
+        subscribe_to_newsletter: false,
     });
-}
-const errors = computed(() => usePage().props.errors)
+
+    const submitLogin = () => {
+        form.post(route('login'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                close();
+            },
+        });
+    };
+
+    const submitRegister = () => {
+        console.log('register');
+        console.log(registerForm);
+        registerForm.post(route('register'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                registerClose();
+            },
+            onError: () => {
+                console.log('error');
+            },
+        });
+    };
+    const errors = computed(() => usePage().props.errors);
 </script>

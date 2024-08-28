@@ -8,7 +8,7 @@
             <div class="hidden md:flex md:gap-4 md:items-center">
                 <AddPoint />
 
-                <PillButton
+                <Button
                     color="white"
                     :label="$t('top_menu.dictionary')"
                     :icon="BookOpenIcon"
@@ -16,7 +16,7 @@
                     external
                 />
 
-                <PillButton
+                <Button
                     color="white"
                     :label="$t('top_menu.faq')"
                     :icon="QuestionMarkCircleIcon"
@@ -125,7 +125,7 @@
     import { BookOpenIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/vue/20/solid';
 
     import Icon from '@/Components/Icon.vue';
-    import PillButton from '@/Components/Buttons/PillButton.vue';
+    import Button from '@/Components/Button.vue';
     import Login from '@/Components/Navigation/Login.vue';
     import AddPoint from '@/Components/Navigation/AddPoint.vue';
     import { trans } from 'laravel-vue-i18n';
