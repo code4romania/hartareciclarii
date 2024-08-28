@@ -5,12 +5,11 @@
         <div class="font-semibold text-gray-900">{{ results.length }} rezultate</div>
     </div>
 
-    <div class="flex flex-col items-start flex-1 overflow-y-scroll divide-y divide-gray-300">
-        <template v-if="results.length">
-            <Result v-for="point in results" :key="point.id" :point="point" @click="$emit('selectPoint', point.id)" />
-        </template>
-        <EmptyState v-else />
+    <div v-if="results.length" class="flex flex-col items-start flex-1 overflow-y-scroll divide-y divide-gray-300">
+        <Result v-for="point in results" :key="point.id" :point="point" @click="$emit('selectPoint', point.id)" />
     </div>
+
+    <EmptyState v-else />
 </template>
 
 <script setup>

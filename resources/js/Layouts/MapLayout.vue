@@ -185,12 +185,12 @@
         bounds.value = value;
     };
 
-    const selectPoint = (p) => {
+    const selectPoint = (pointId) => {
         if (['filter', 'search'].includes(props.context)) {
-            return fetchPoint(map.value.leafletObject, p);
+            return fetchPoint(map.value.leafletObject, pointId);
         }
 
-        openPoint(map.value.leafletObject, p);
+        openPoint(map.value.leafletObject, pointId);
     };
 
     const sidebarOpen = ref(false);
