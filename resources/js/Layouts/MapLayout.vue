@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full">
+    <div class="flex h-full">
         <TransitionRoot as="template" :show="sidebarOpen">
             <Dialog as="div" class="relative lg:hidden" @close="sidebarOpen = false">
                 <TransitionChild
@@ -50,72 +50,67 @@
         </TransitionRoot>
 
         <!-- Static sidebar for desktop -->
-        <Sidebar
-            class="hidden border-r border-gray-200 lg:absolute lg:inset-y-0 lg:z-50 lg:flex"
-            @select-point="selectPoint"
-        />
+        <Sidebar class="hidden border-r border-gray-200 lg:flex" @select-point="selectPoint" />
 
-        <div class="h-full lg:pl-80">
-            <div class="relative h-full">
-                <div
-                    class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-6 lg:top-4 lg:right-auto sm:w-80 md:w-96"
-                >
-                    <Search class="z-20 pointer-events-auto" :map="map" @locate="locate" />
+        <div class="relative flex-1">
+            <div
+                class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-6 lg:top-4 lg:right-auto sm:w-80 md:w-96"
+            >
+                <Search class="z-20 pointer-events-auto" :map="map" @locate="locate" />
 
-                    <slot :map="map" />
-                </div>
-
-                <LMap
-                    ref="map"
-                    :useGlobalLeaflet="true"
-                    :min-zoom="8"
-                    :max-zoom="18"
-                    :center="mapOptions.center"
-                    :zoom="mapOptions.zoom"
-                    @ready="ready"
-                    @movestart="cancelMapVisits"
-                    @moveend="moveend"
-                    :options="{
-                        zoomControl: false,
-                    }"
-                    class="z-0 w-full h-full"
-                >
-                    <LControlZoom position="bottomright" />
-
-                    <LControlScale position="bottomleft" :imperial="false" />
-
-                    <LTileLayer
-                        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                        layer-type="base"
-                        subdomains="abcd"
-                        name="OpenStreetMap"
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    />
-
-                    <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
-                        <LMarker
-                            v-for="point in points"
-                            :key="`${point.id}-${point.current ? 'current' : 'default'}`"
-                            :lat-lng="point.latlng"
-                            @click="() => selectPoint(point.id)"
-                        >
-                            <LIcon
-                                v-if="point.current"
-                                :icon-url="getMapPinIcon(point, 'lg')"
-                                :icon-size="[32, 43]"
-                                :icon-anchor="[16, 43]"
-                            />
-
-                            <LIcon
-                                v-else
-                                :icon-url="getMapPinIcon(point, 'sm')"
-                                :icon-size="[32, 32]"
-                                :icon-anchor="[16, 16]"
-                            />
-                        </LMarker>
-                    </LMarkerClusterGroup>
-                </LMap>
+                <slot :map="map" />
             </div>
+
+            <LMap
+                ref="map"
+                :useGlobalLeaflet="true"
+                :min-zoom="8"
+                :max-zoom="18"
+                :center="mapOptions.center"
+                :zoom="mapOptions.zoom"
+                @ready="ready"
+                @movestart="cancelMapVisits"
+                @moveend="moveend"
+                :options="{
+                    zoomControl: false,
+                }"
+                class="z-0 w-full h-full"
+            >
+                <LControlZoom position="bottomright" />
+
+                <LControlScale position="bottomleft" :imperial="false" />
+
+                <LTileLayer
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                    layer-type="base"
+                    subdomains="abcd"
+                    name="OpenStreetMap"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                />
+
+                <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
+                    <LMarker
+                        v-for="point in points"
+                        :key="`${point.id}-${point.current ? 'current' : 'default'}`"
+                        :lat-lng="point.latlng"
+                        @click="() => selectPoint(point.id)"
+                    >
+                        <LIcon
+                            v-if="point.current"
+                            :icon-url="getMapPinIcon(point, 'lg')"
+                            :icon-size="[32, 43]"
+                            :icon-anchor="[16, 43]"
+                        />
+
+                        <LIcon
+                            v-else
+                            :icon-url="getMapPinIcon(point, 'sm')"
+                            :icon-size="[32, 32]"
+                            :icon-anchor="[16, 16]"
+                        />
+                    </LMarker>
+                </LMarkerClusterGroup>
+            </LMap>
         </div>
     </div>
 </template>

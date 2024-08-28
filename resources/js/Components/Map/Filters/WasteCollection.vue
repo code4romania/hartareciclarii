@@ -11,19 +11,15 @@
     />
 
     <div>Materials</div>
-
-    <!-- <CheckboxList
-        :name="`${serviceType.slug}.offers`"
-        label="Caracteristici reciclator"
-        v-model="filter.pt[serviceType.slug].offers"
-        :options="serviceType.point_types"
-    /> -->
+    <Tree v-model:selectionKeys="filter.pt.materials" :value="materials" selectionMode="checkbox" />
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { usePage } from '@inertiajs/vue3';
     import CheckboxList from '@/Components/Form/CheckboxList.vue';
+    import Checkbox from 'primevue/checkbox';
+    import Tree from 'primevue/tree';
 
     const page = usePage();
 

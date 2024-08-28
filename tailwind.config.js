@@ -30,6 +30,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
     ],
     plugins: [
+        //
         require('@tailwindcss/aspect-ratio'),
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
