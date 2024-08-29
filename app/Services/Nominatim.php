@@ -9,20 +9,57 @@ use NominatimLaravel\Content\Nominatim as NominatimClient;
 
 class Nominatim
 {
-    public static function search(string $query, int $limit = 5): Collection
-    {
-        $nominatim = new NominatimClient(config('services.nominatim.url'));
+    private NominatimClient $nominatim;
 
-        $request = $nominatim->newSearch()
+    private int $limit = 5;
+
+    private array $viewBox = [];
+
+    public function __construct()
+    {
+        $this->nominatim = new NominatimClient(config('services.nominatim.url'));
+    }
+
+    public static function make(): static
+    {
+        return new static;
+    }
+
+    public function limit(int $limit): static
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    public function viewBox(?string $viewBox): static
+    {
+        if (filled($viewBox)) {
+            $this->viewBox = explode(',', $viewBox);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @see https://nominatim.org/release-docs/latest/customize/Ranking/#search-rank For possible place_rank values.
+     */
+    public function search(string $query): Collection
+    {
+        $request = $this->nominatim->newSearch()
             ->language(app()->getLocale())
             ->addressDetails()
             ->countryCode('ro')
             ->format('jsonv2')
-            ->query($query)
-            ->limit($limit);
+            ->query($query);
 
-        return collect(
-            rescue(fn () => $nominatim->find($request))
-        );
+        if (filled($this->viewBox) && \count($this->viewBox) === 4) {
+            $request->viewBox(...$this->viewBox);
+        }
+
+        return collect(rescue(fn () => $this->nominatim->find($request)))
+            ->filter(fn (array $result) => $result['place_rank'] >= 13)
+            ->take($this->limit);
+    }
     }
 }

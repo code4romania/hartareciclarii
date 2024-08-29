@@ -52,38 +52,56 @@ class MapController extends Controller
     {
         $attributes = $request->validate([
             'query' => ['required', 'string'],
+            'type' => ['nullable', 'string', 'in:point,material,location'],
         ]);
+
+        $type = data_get($attributes, 'type');
 
         $results = collect();
 
-        $results->push(
-            ...Point::search($attributes['query'])
-                ->take(5)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('serviceType:id,slug')
-                        ->orderByDistance('location', $coordinates->getCenter())
-                )
-                ->get()
-        );
+        if (blank($type) || $type === 'point') {
+            $results->push(
+                ...Point::search($attributes['query'])
+                    ->take(5)
+                    ->query(
+                        fn (Builder $query) => $query
+                            ->with('serviceType:id,slug')
+                            ->orderByDistance('location', $coordinates->getCenter())
+                    )
+                    ->get()
+            );
+        }
 
-        $results->push(
-            ...Material::search($attributes['query'])
-                ->take(5)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('categories')
-                        ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
-                )
-                ->get()
-        );
+        if (blank($type) || $type === 'material') {
+            $results->push(
+                ...Material::search($attributes['query'])
+                    ->take(5)
+                    ->query(
+                        fn (Builder $query) => $query
+                            ->with('categories')
+                            ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
+                    )
+                    ->get()
+            );
+        }
 
-        $results->push(
-            ...Nominatim::search($attributes['query'], 5)
-                ->map(fn (array $suggestion) => new NominatimSuggestion($suggestion))
-        );
+        if (blank($type) || $type === 'location') {
+            $results->push(
+                ...Nominatim::make()
+                    ->limit(5)
+                    ->viewBox($coordinates->getBoundsBBox())
+                    ->search($attributes['query'])
+                    ->map(fn (array $suggestion) => new NominatimSuggestion($suggestion))
+            );
+        }
 
         return SuggestionResource::collection($results);
+    }
+
+    public function locate(Request $request, MapCoordinates $coordinates)
+    {
+        return Nominatim::make()
+            ->reverse($coordinates->latitude, $coordinates->longitude);
     }
 
     public function search(Request $request, MapCoordinates $coordinates): Response

@@ -100,19 +100,18 @@
     "add_point.success_message": "Punct adăugat cu succes. Un moderator Harta Reciclării va valida informația în cel mai scurt timp.",
     "add_point.cancel": "Renunță",
     "add_point.back": "Înapoi",
-    "add_point.first_step.subtitle": "Pasul 1/3 - Tip și locație",
+    "add_point.first_step.subtitle": "Pasul 1: Tip și locație",
+    "add_point.first_step.service_type": "Tip serviciu",
     "add_point.first_step.service_type_placeholder": "Selectează un tip de punct",
-    "add_point.first_step.service_type_label": "Tip serviciu",
     "add_point.first_step.place_pin": "Plasează pinul",
-    "add_point.first_step.exact_address_label": "Adresa exactă",
+    "add_point.first_step.exact_address": "Adresa exactă",
     "add_point.first_step.exact_address_placeholder": "Introdu adresa exactă a punctului",
     "add_point.first_step.adjust_point_on_map": "Ajustează punctul pe hartă",
-    "add_point.first_step.service_type_required": "Tip serviciu este obligatoriu!",
-    "add_point.first_step.address_required": "Adresa este obligatorie!",
-    "add_point.first_step.point_required": "Pinul pe hartă este obligatoriu!",
+
     "add_point.first_step.use_my_current_location": "Folosește locația mea curentă",
-    "add_point.first_step.address_not_found": "Nu s-a putut găsi adresa!",
-    "add_point.second_step.subtitle": "Pasul 2/3 - Detalii punct",
+    "add_point.first_step.map_placeholder": "Introdu o adresă pentru a plasa punctul pe hartă. Ulterior vei putea modifica manual locația punctului pe hartă, dacă acesta nu indică poziția exactă.",
+
+    "add_point.second_step.subtitle": "Pasul 2: Detalii punct",
     "add_point.second_step.point_type": "Tip punct",
     "add_point.second_step.point_type_required": "Tip punct este obligatoriu!",
     "add_point.second_step.collected_materials": "Materiale colectate",
@@ -149,6 +148,7 @@
     "add_point.third_step.phone": "Telefon",
     "add_point.third_step.add_picture": "Adaugă poze",
     "add_point.third_step.add_picture_subtitle": "Orice fel de poze sugestive sau utile pentru a identifica locația sau punctul adăugat",
+
     "api": {
         "invalid_credentials": "Email sau parolă incorecte!"
     },

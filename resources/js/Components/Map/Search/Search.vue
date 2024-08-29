@@ -151,13 +151,19 @@
 
         const center = props.map.leafletObject.getCenter();
         const zoom = props.map.leafletObject.getZoom();
+        const bounds = props.map.leafletObject.getBounds();
 
         axios
             .get(
                 route('front.map.suggest', {
                     coordinates: getCenterCoordinatesWithZoom(center, zoom),
                     query: query.value,
-                })
+                }),
+                {
+                    headers: {
+                        'Map-Bounds': bounds.toBBoxString(),
+                    },
+                }
             )
             .then((response) => {
                 if (Array.isArray(response.data)) {

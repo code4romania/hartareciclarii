@@ -4,7 +4,7 @@
 
         <p v-text="$t('sidebar.no_results_found', { query: $page.props.query })" />
 
-        <Button color="white" :label="$t('sidebar.see_all_points')" @click="closePanel" />
+        <Button :label="$t('sidebar.see_all_points')" @click="closePanel" />
     </div>
 </template>
 

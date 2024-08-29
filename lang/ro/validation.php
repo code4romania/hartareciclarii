@@ -141,6 +141,7 @@ return [
     'uppercase' => ':Attribute trebuie să fie majuscule.',
     'url' => 'Câmpul :attribute nu este un URL valid.',
     'uuid' => 'Câmpul :attribute trebuie să fie un cod UUID valid.',
+    'location' => 'Nu am putut localiza adresa introdusă.',
     'user_belongs_to_organization' => 'Acest utilizator este deja un administrator ONG, nu-l poți adăuga ca manager.',
     'attributes' => [
         'address' => 'abordare',

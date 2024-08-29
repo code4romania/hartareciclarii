@@ -9,7 +9,6 @@
                 <AddPoint />
 
                 <Button
-                    color="white"
                     :label="$t('top_menu.dictionary')"
                     :icon="BookOpenIcon"
                     href="https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all"
@@ -17,7 +16,6 @@
                 />
 
                 <Button
-                    color="white"
                     :label="$t('top_menu.faq')"
                     :icon="QuestionMarkCircleIcon"
                     href="https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/"

@@ -1,6 +1,6 @@
 <template>
     <slot name="trigger" :open="open" :isOpen="isOpen">
-        <Button color="white" @click="open">
+        <Button @click="open">
             <span>Open Modal</span>
         </Button>
     </slot>
@@ -58,7 +58,7 @@
                                     </DialogTitle>
                                 </div>
 
-                                <div class="flex-1 px-4 py-5 overflow-y-auto sm:px-6">
+                                <div class="flex-1 px-4 py-px overflow-y-auto sm:px-6">
                                     <slot />
                                 </div>
 
@@ -83,7 +83,7 @@
     import { XMarkIcon } from '@heroicons/vue/24/solid';
     import Button from '@/Components/Button.vue';
 
-    defineEmits(['submit']);
+    const emit = defineEmits(['submit']);
 
     const isOpen = ref(false);
 
