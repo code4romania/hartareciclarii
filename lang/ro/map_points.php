@@ -83,4 +83,9 @@ return [
         ],
     ],
 
+    'wizard'=>[
+        'step_1' => 'Selecteaza tipul de locatie',
+        'step_2' => 'Detalii punct',
+    ]
+
 ];

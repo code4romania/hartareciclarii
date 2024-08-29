@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\PointResource\Pages;
 
 use App\Filament\Resources\PointResource;
+use App\Filament\Resources\PointResource\Actions\Page\AddPoint;
 use App\Models\ServiceType;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
@@ -18,9 +19,7 @@ class ListMapPoints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->label(__('map_points.buttons.create'))
-                ->icon('heroicon-m-plus'),
+           AddPoint::make()
         ];
     }
 

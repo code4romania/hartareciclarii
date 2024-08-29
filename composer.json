@@ -10,7 +10,7 @@
   	],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "aws/aws-sdk-php": "^3.285",
         "biscolab/laravel-recaptcha": "^6.0",
         "filament/filament": "^3.0-stable",

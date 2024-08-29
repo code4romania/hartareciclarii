@@ -25,4 +25,19 @@ class Nominatim
             rescue(fn () => $nominatim->find($request))
         );
     }
+
+    public static function getPlaceById(int $placeId): Collection
+    {
+        $nominatim = new NominatimClient(config('services.nominatim.url'));
+
+        $request = $nominatim->newDetails()
+            ->language(app()->getLocale())
+            ->addressDetails()
+            ->placeId($placeId);
+
+
+        return collect(
+            rescue(fn () => $nominatim->find($request))
+        );
+    }
 }
