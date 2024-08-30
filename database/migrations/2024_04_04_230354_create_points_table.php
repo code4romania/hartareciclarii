@@ -29,7 +29,7 @@ return new class extends Migration
             $table->point('location')->isGeometry()->nullable();
             $table->text('notes')->nullable();
             $table->string('administered_by')->nullable();
-            $table->string('name');
+            $table->string('business_name')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->string('website')->nullable();

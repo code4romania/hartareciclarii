@@ -58,7 +58,7 @@
                                     </DialogTitle>
                                 </div>
 
-                                <div class="flex-1 px-4 py-px overflow-y-auto sm:px-6">
+                                <div class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6">
                                     <slot />
                                 </div>
 

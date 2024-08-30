@@ -14,6 +14,8 @@ class MaterialCategoryResource extends JsonResource
         return [
             'key' => $this->id,
             'label' => $this->name,
+            'type' => 'category',
+            'icon' => $this->getFirstMediaUrl() ?: null,
             'children' => MaterialResource::collection($this->materials),
         ];
     }

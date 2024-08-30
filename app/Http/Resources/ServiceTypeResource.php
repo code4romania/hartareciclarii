@@ -20,6 +20,13 @@ class ServiceTypeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'can' => [
+                'have_business_name' => $this->can_have_business_name,
+                'offer_money' => $this->can_offer_money,
+                'offer_vouchers' => $this->can_offer_vouchers,
+                'offer_transportation' => $this->can_offer_transport,
+                'request_payment' => $this->can_request_payment,
+            ],
             'point_types' => PointTypeResource::collection($this->pointTypes),
         ];
     }

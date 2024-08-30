@@ -9,32 +9,37 @@
         </template>
 
         <div class="grid gap-4">
-            <Step1 v-if="form.step === 1" :form="form" :serviceTypes="serviceTypes" />
-            <Step2 v-if="form.step === 2" :form="form" :pointTypes="pointTypes" />
+            <TypeStep
+                v-if="isStep('type')"
+                :form="form"
+                :serviceTypes="serviceTypes"
+                @changePinLocation="() => goToStep('location')"
+            />
+
+            <LocationStep v-if="isStep('location')" :form="form" />
+
+            <DetailsStep v-if="isStep('details')" :form="form" :serviceType="serviceType" :pointTypes="pointTypes" />
+
+            <MaterialsStep v-if="isStep('materials')" :form="form" />
+
+            <ReviewStep v-if="isStep('review')" :form="form" :serviceType="serviceType" :pointType="pointType" />
         </div>
 
         <template #footer="{ close }">
-            <template v-if="form.step === 1">
-                <Button size="sm" :label="$t('add_point.cancel')" @click="close" :disabled="form.processing" />
-                <Button
-                    size="sm"
-                    :label="$t('add_point.next_step')"
-                    type="submit"
-                    :disabled="form.processing"
-                    primary
-                />
-            </template>
+            <Button
+                size="sm"
+                :label="secondaryButtonLabel"
+                @click="() => previousStep(close)"
+                :disabled="form.validating || form.processing"
+            />
 
-            <template v-else>
-                <Button size="sm" :label="$t('add_point.back')" @click="previousStep" :disabled="form.processing" />
-                <Button
-                    size="sm"
-                    :label="$t('add_point.finish_steps')"
-                    type="submit"
-                    :disabled="form.processing"
-                    primary
-                />
-            </template>
+            <Button
+                size="sm"
+                :label="primaryButtonLabel"
+                type="submit"
+                :disabled="form.validating || form.processing"
+                primary
+            />
         </template>
     </Modal>
 </template>
@@ -47,13 +52,14 @@
     import { trans } from 'laravel-vue-i18n';
     import route from '@/Helpers/useRoute';
 
-    import { MapPinIcon } from '@heroicons/vue/20/solid/index.js';
-
     import Button from '@/Components/Button.vue';
 
     import Modal from '@/Components/Modal.vue';
-    import Step1 from '@/Components/AddPoint/Step1.vue';
-    import Step2 from '@/Components/AddPoint/Step2.vue';
+    import TypeStep from '@/Components/AddPointSteps/Type.vue';
+    import LocationStep from '@/Components/AddPointSteps/Location.vue';
+    import DetailsStep from '@/Components/AddPointSteps/Details.vue';
+    import MaterialsStep from '@/Components/AddPointSteps/Materials.vue';
+    import ReviewStep from '@/Components/AddPointSteps/Review.vue';
 
     const page = usePage();
 
@@ -61,26 +67,95 @@
 
     const unknownAdministration = ref(false);
 
-    const form = useForm('post', route('front.point.submit'), {
-        step: 1,
+    const steps = ['type', 'location', 'details', 'materials', 'review'];
 
-        // step1
+    const form = useForm('post', route('front.point.submit'), {
+        step: steps[0],
+
+        // step 1: Type
         service_type: null,
+
+        // step 1 & 2: Location
         address: null,
         location: {
             lat: null,
             lng: null,
         },
 
-        // step2
+        // step 3: Details
         point_type: null,
-        administrated_by: null,
+        business_name: null,
+        administered_by: null,
+        administered_by_unknown: false,
+        offers_money: null,
+        offers_vouchers: null,
+        offers_transport: null,
+        free_of_charge: null,
+        schedule: null,
+        schedule_unknown: false,
+        website: null,
+        email: null,
+        phone: null,
+        observations: null,
+
+        // step 4: Materials
+        materials: {},
     });
+
+    const primaryButtonLabel = computed(
+        () =>
+            ({
+                type: trans('add_point.action.next_step'),
+                location: trans('add_point.action.save'),
+                details: trans('add_point.action.next_step'),
+                materials: trans('add_point.action.next_step'),
+                review: trans('add_point.action.finish_steps'),
+            }[form.step])
+    );
+
+    const secondaryButtonLabel = computed(
+        () =>
+            ({
+                type: trans('add_point.action.cancel'),
+                location: trans('add_point.action.reset'),
+                details: trans('add_point.action.back'),
+                materials: trans('add_point.action.back'),
+                review: trans('add_point.action.back'),
+            }[form.step])
+    );
 
     const getFieldsByStep = (step) =>
         ({
-            1: ['service_type', 'address', 'location.lat', 'location.lng'],
-            2: ['point_type', 'administrated_by'],
+            type: [
+                //
+                'service_type',
+                'address',
+                'location.lat',
+                'location.lng',
+            ],
+            location: [
+                //
+                'address',
+                'location.lat',
+                'location.lng',
+            ],
+            details: [
+                'point_type',
+                'business_name',
+                'administered_by',
+                'administered_by_unknown',
+                'offers_money',
+                'offers_vouchers',
+                'offers_transport',
+                'free_of_charge',
+                'schedule',
+                'schedule_unknown',
+                'website',
+                'email',
+                'phone',
+                'observations',
+            ],
+            materials: ['materials'],
         }[step]);
 
     const serviceTypes = computed(() =>
@@ -90,28 +165,33 @@
         }))
     );
 
-    const pointTypes = computed(() => {
+    const serviceType = computed(() => {
         if (!form.service_type) {
-            return [];
+            return null;
         }
 
-        return page.props.service_types
-            .find((serviceType) => serviceType.id === form.service_type)
-            .point_types.map((pointType) => ({
-                label: pointType.name,
-                value: pointType.id,
-            }));
+        return page.props.service_types.find((serviceType) => serviceType.id === form.service_type);
+    });
+
+    const pointType = computed(() => {
+        if (!form.point_type) {
+            return null;
+        }
+
+        return serviceType.value.point_types.find((pointType) => pointType.id === form.point_type);
     });
 
     const submit = () => {
-        form.touch(getFieldsByStep(form.step)).validate({
-            onSuccess: (response) => {
-                console.log(response);
+        if (!isStep('review')) {
+            return form.touch(getFieldsByStep(form.step)).validate({
+                onSuccess: (response) => {
+                    console.log(response);
 
-                nextStep();
-            },
-        });
-        return;
+                    nextStep();
+                },
+            });
+        }
+
         form.submit({
             preserveState: true,
             preserveScroll: true,
@@ -119,21 +199,51 @@
                 console.log(error);
             },
         });
-
-        // if (!validateInputs()) {
-        //     return;
-        // }
-
-        // if (form.step !== 3) {
-        //     form.step = form.step + 1;
-        //     return;
-        // }
     };
 
-    const previousStep = () => {
-        form.step = Math.min(1, form.step - 1);
+    const isStep = (step) => form.step === step;
+
+    const goToStep = (step) => (form.step = step);
+
+    const previousStep = (close) => {
+        if (isStep('type')) {
+            close();
+            form.reset();
+            return;
+        }
+
+        if (isStep('location')) {
+            return goToStep('type');
+        }
+
+        if (isStep('details')) {
+            return goToStep('type');
+        }
+
+        if (isStep('materials')) {
+            return goToStep('details');
+        }
+
+        if (isStep('review')) {
+            return goToStep('materials');
+        }
     };
+
     const nextStep = () => {
-        form.step = Math.max(2, form.step + 1);
+        if (isStep('type')) {
+            return goToStep('details');
+        }
+
+        if (isStep('location')) {
+            return goToStep('details');
+        }
+
+        if (isStep('details')) {
+            return goToStep('materials');
+        }
+
+        if (isStep('materials')) {
+            return goToStep('review');
+        }
     };
 </script>

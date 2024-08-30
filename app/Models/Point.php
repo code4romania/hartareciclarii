@@ -7,6 +7,7 @@ namespace App\Models;
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,7 +34,7 @@ class Point extends Model
         'location',
         'notes',
         'administered_by',
-        'name',
+        'business_name',
         'phone',
         'email',
         'website',
@@ -102,6 +103,16 @@ class Point extends Model
     {
         return $query->whereWithin('location', $mapCoordinates->getBounds())
             ->orderByDistance('location', $mapCoordinates->getCenter());
+    }
+
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            fn () => route('front.map.point', [
+                'point' => $this,
+                'coordinates' => "@{$this->location->latitude},{$this->location->longitude},17z",
+            ])
+        );
     }
 
     public function changeStatus(Status $status): void

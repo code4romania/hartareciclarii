@@ -17,7 +17,7 @@
             />
         </label>
 
-        <div class="relative flex flex-wrap" :class="[errors.length ? 'border-red-600' : 'border-gray-400']">
+        <div class="flex flex-wrap" :class="[errors.length ? 'border-red-600' : 'border-gray-400']">
             <slot :invalid="errors.length > 0" />
         </div>
 

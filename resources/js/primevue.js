@@ -192,7 +192,6 @@ export default {
             ],
         }),
     },
-
     inputtext: {
         root: ({ props, context, parent }) => ({
             class: [
@@ -221,9 +220,7 @@ export default {
                 'border',
                 { 'border-gray-300': !props.invalid },
                 // Invalid State
-                'invalid:focus:ring-red-200',
-                'invalid:hover:border-red-500',
-                { 'border-red-500': props.invalid },
+                { 'border-red-500 invalid:focus:ring-red-200 invalid:hover:border-red-500': props.invalid },
                 // States
                 {
                     'hover:border-gray-400': !context.disabled && !props.invalid,
@@ -242,7 +239,6 @@ export default {
             ],
         }),
     },
-
     select: {
         root: ({ props, state, parent }) => ({
             class: [
@@ -401,9 +397,47 @@ export default {
             leaveToClass: 'opacity-0',
         },
     },
+    textarea: {
+        root: ({ context, props, parent }) => ({
+            class: [
+                // Font
+                'text-sm leading-normal resize-none',
+                // Spacing
+                'm-0',
+                'py-2 px-3',
+                // Shape
+                'rounded-md',
+                // Colors
+                'text-gray-800',
+                'placeholder:text-gray-400',
+                { 'bg-white': !context.disabled },
+                'border',
+                { 'border-gray-300': !props.invalid },
+                // Invalid State
+                { 'border-red-500 invalid:focus:ring-red-200 invalid:hover:border-red-500': props.invalid },
+                // States
+                {
+                    'hover:border-gray-400': !context.disabled && !props.invalid,
+                    'focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10':
+                        !context.disabled,
+                    'bg-gray-200 select-none pointer-events-none cursor-default': context.disabled,
+                },
+                // Filled State *for FloatLabel
+                {
+                    filled:
+                        (parent.instance === null ? void 0 : parent.instance.$name) == 'FloatLabel' &&
+                        props.modelValue !== null &&
+                        (props.modelValue === null ? void 0 : props.modelValue.length) !== 0,
+                },
+                // Misc
+                'appearance-none',
+                'transition-colors duration-200',
+            ],
+        }),
+    },
     tree: {
         root: {
-            class: ['[&_[data-pc-name=pcfilter]]:w-full'],
+            class: ['w-full'],
         },
 
         node: {
@@ -418,7 +452,7 @@ export default {
                 // Spacing
                 'gap-2',
                 // Colors
-                context.selected ? 'bg-highlight text-primary-700' : 'bg-transparent text-gray-600',
+                context.selected ? 'bg-highlight text-primary-700' : 'text-gray-600',
                 // States
                 {
                     'hover:bg-gray-50':
@@ -439,15 +473,13 @@ export default {
                 // Size
                 'w-7 h-7',
                 // Colors
-                'bg-transparent',
                 {
                     'text-gray-600': !context.selected,
                     'text-primary-700': context.selected,
                     invisible: context.leaf,
                 },
                 // States
-                'hover:bg-gray-200/20',
-                'focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500',
+                'focus:outline-none',
                 // Transition
                 'transition duration-200',
                 // Misc

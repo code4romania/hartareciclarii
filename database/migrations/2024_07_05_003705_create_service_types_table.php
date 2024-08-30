@@ -18,15 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->boolean('has_dedicated_issues_tab')->default(false);
+            $table->boolean('can_have_business_name')->default(false);
+            $table->boolean('can_offer_money')->default(false);
+            $table->boolean('can_offer_vouchers')->default(false);
+            $table->boolean('can_offer_transport')->default(false);
+            $table->boolean('can_request_payment')->default(false);
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('service_types');
     }
 };

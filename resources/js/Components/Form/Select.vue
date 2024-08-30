@@ -4,10 +4,14 @@
             <Select
                 v-model="modelValue"
                 :options="options"
-                optionValue="value"
-                optionLabel="label"
                 class="w-full"
+                :placeholder="placeholder"
+                :required="required"
+                :disabled="disabled"
+                :errors="errors"
                 :invalid="invalid"
+                :optionValue="optionValue"
+                :optionLabel="optionLabel"
             />
         </template>
     </FormField>
@@ -36,6 +40,10 @@
             type: String,
             default: null,
         },
+        placeholder: {
+            type: String,
+            default: null,
+        },
         help: {
             type: String,
             default: null,
@@ -44,16 +52,16 @@
             type: Array,
             default: () => [],
         },
-        optionValueKey: {
+        optionValue: {
             type: String,
             default: 'value',
         },
-        optionLabelKey: {
+        optionLabel: {
             type: String,
             default: 'label',
         },
         modelValue: {
-            type: [Array, String, Number],
+            type: [Array, String, Number, Boolean],
             default: null,
         },
         errors: {
@@ -63,15 +71,6 @@
     });
 
     const emit = defineEmits(['update:modelValue']);
-
-    const getOption = (option, key) => (option.hasOwnProperty(key) ? option[key] : option);
-
-    const options = computed(() =>
-        props.options.map((option) => ({
-            value: getOption(option, props.optionValueKey),
-            label: getOption(option, props.optionLabelKey),
-        }))
-    );
 
     const modelValue = computed({
         get: () => props.modelValue,

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubmitPointRequest;
+use App\Models\Point;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class SubmitPointController extends Controller
 {
@@ -15,10 +17,17 @@ class SubmitPointController extends Controller
         $this->middleware(HandlePrecognitiveRequests::class);
     }
 
-    public function __invoke(SubmitPointRequest $request): JsonResponse
+    public function __invoke(SubmitPointRequest $request): RedirectResponse
     {
         $attributes = $request->validated();
 
-        return response()->json($attributes);
+        $attributes['location'] = new SpatialPoint(
+            $attributes['location']['lat'],
+            $attributes['location']['lng']
+        );
+
+        $point = Point::create($attributes);
+
+        return redirect()->route('front.map.point', $point);
     }
 }
