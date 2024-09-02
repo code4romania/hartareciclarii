@@ -201,7 +201,7 @@ export default {
                 { 'flex-1 w-[1%]': parent.instance.$name == 'InputGroup' },
                 // Spacing
                 'm-0',
-                { 'w-full': props.fluid },
+                'w-full',
                 // Size
                 {
                     'py-3 px-3.5': props.size == 'large',
@@ -439,11 +439,12 @@ export default {
         root: {
             class: ['w-full'],
         },
+        wrapper: ({ props }) => ({
+            class: [{ 'mt-4': props.filter }],
+        }),
 
         node: {
-            class: [
-                'focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-inset focus:ring-primary-500 focus:z-10',
-            ],
+            class: ['focus:outline-none'],
         },
         nodeContent: ({ context, props }) => ({
             class: [
@@ -499,7 +500,7 @@ export default {
             ],
         }),
         nodeLabel: {
-            class: ['flex-1', 'text-sm font-medium', 'text-gray-700'],
+            class: ['flex-1', 'text-sm font-medium', 'text-gray-700', 'cursor-pointer'],
         },
         nodeChildren: {
             class: ['m-0 list-none p-0 pl-4 [&:not(ul)]:pl-0 [&:not(ul)]:my-[2px]'],

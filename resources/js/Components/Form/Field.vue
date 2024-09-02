@@ -6,12 +6,12 @@
             class="mb-4 text-sm font-medium"
             :class="[errors.length ? 'text-red-600' : 'text-gray-700']"
         >
-            <span class="inline-block" v-text="label" />
+            <span v-text="label" />
 
             <span
                 role="presentation"
                 :title="$t('field.required')"
-                class="inline-block font-bold text-red-500 ml-0.5"
+                class="font-bold text-red-500 ml-0.5"
                 v-if="required && !disabled"
                 v-text="'*'"
             />

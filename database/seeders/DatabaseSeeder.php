@@ -58,9 +58,12 @@ class DatabaseSeeder extends Seeder
 
             ]);
         });
+
         $user->givePermissionTo($this->permissions);
 
-        $serviceTypes = ServiceType::with(['issueTypes', 'pointTypes'])->get();
+        $serviceTypes = ServiceType::query()
+            ->with(['issueTypes', 'pointTypes'])
+            ->get();
 
         foreach ($serviceTypes as $serviceType) {
             foreach ($serviceType->pointTypes as $pointType) {

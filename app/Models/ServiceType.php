@@ -18,6 +18,7 @@ class ServiceType extends Model
         'can_offer_vouchers',
         'can_offer_transport',
         'can_request_payment',
+        'can_collect_materials',
     ];
 
     protected $casts = [
@@ -27,6 +28,7 @@ class ServiceType extends Model
         'can_offer_vouchers' => 'boolean',
         'can_offer_transport' => 'boolean',
         'can_request_payment' => 'boolean',
+        'can_collect_materials' => 'boolean',
     ];
 
     public function issueTypes(): HasMany

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('can_offer_vouchers')->default(false);
             $table->boolean('can_offer_transport')->default(false);
             $table->boolean('can_request_payment')->default(false);
+            $table->boolean('can_collect_materials')->default(false);
             $table->timestamps();
         });
     }

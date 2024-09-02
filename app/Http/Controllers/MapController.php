@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\DataTransferObjects\MapCoordinates;
 use App\DataTransferObjects\NominatimSuggestion;
 use App\Enums\Point\Status;
+use App\Http\Requests\SubmitPointRequest;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
@@ -19,11 +20,13 @@ use App\Models\Point;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class MapController extends Controller
 {
@@ -134,6 +137,25 @@ class MapController extends Controller
                 Point::findOrFail($request->header('Map-Point'))
             )),
         ]);
+    }
+
+    public function submit(SubmitPointRequest $request): RedirectResponse
+    {
+        $attributes = $request->validated();
+
+        $attributes['location'] = new SpatialPoint(
+            $attributes['location']['lat'],
+            $attributes['location']['lng']
+        );
+
+        $point = Point::create($attributes);
+
+        return redirect()->route('front.map.point', $point);
+    }
+
+    public function report($request)
+    {
+        //
     }
 
     protected function render(MapCoordinates $coordinates, array $props = []): Response

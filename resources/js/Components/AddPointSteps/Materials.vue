@@ -13,7 +13,7 @@
                     filterMode="lenient"
                     required
                     fluid
-                    expandedKeys
+                    :expandedKeys="expandedKeys"
                     :pt="{
                         nodeContent: ({ global, context }) => ({
                             class: [
@@ -29,6 +29,10 @@
                         }),
                     }"
                 >
+                    <template #filtericon>
+                        <span />
+                    </template>
+
                     <template #category="slotProps">
                         <div class="flex items-center justify-start w-full gap-2 px-2 py-3 text-left bg-gray-50">
                             <div class="flex items-center justify-center w-8 h-8 shrink-0">
@@ -67,4 +71,14 @@
             selectable: false,
         }))
     );
+
+    const expandedKeys = computed(() => {
+        const keys = {};
+
+        materials.value.forEach((category) => {
+            keys[category.key] = true;
+        });
+
+        return keys;
+    });
 </script>

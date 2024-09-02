@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
-use App\Http\Controllers\SubmitPointController;
 use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,13 +30,15 @@ Route::prefix('cont')->middleware('auth:web')->group(function () {
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('profile.change-password');
 });
 
-Route::post('/point/new', SubmitPointController::class)->name('point.submit');
-
 Route::group([
     // 'prefix' => 'map',
     'as' => 'map.',
     'controller' => MapController::class,
 ], function () {
+    Route::post('/point/submit', 'submit')
+        ->middleware(HandlePrecognitiveRequests::class)
+        ->name('point.submit');
+
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
     Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');

@@ -151,6 +151,7 @@
     "add_point.details.add_picture_subtitle": "Orice fel de poze sugestive sau utile pentru a identifica locația sau punctul adăugat",
 
     "add_point.materials.subtitle": "Pasul 3: Materiale colectate",
+    "add_point.materials.label": "Marchează care dintre următoarele materiale se colectează la acest punct",
 
     "add_point.review.subtitle": "Pasul 4: Confirmă informațiile",
     "add_point.review.service_administered": ":service administrat de :administrator",

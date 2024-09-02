@@ -49,6 +49,7 @@ return new class extends Migration
                 'can_offer_vouchers' => true,
                 'can_offer_transport' => true,
                 'can_have_business_name' => false,
+                'can_collect_materials' => true,
                 'pointsTypes' => [
                     'Container stradal',
                     'Punct magazin',
@@ -294,6 +295,7 @@ return new class extends Migration
                     'can_offer_transport' => data_get($options, 'can_offer_transport', false),
                     'can_request_payment' => data_get($options, 'can_request_payment', false),
                     'can_have_business_name' => data_get($options, 'can_have_business_name', false),
+                    'can_collect_materials' => data_get($options, 'can_collect_materials', false),
                 ]);
 
                 $serviceType->pointTypes()->createMany(

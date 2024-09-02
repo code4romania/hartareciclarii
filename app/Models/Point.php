@@ -161,7 +161,7 @@ class Point extends Model
             'phone' => $this->phone,
             'observations' => $this->observations,
 
-            'name' => $this->name,
+            'business_name' => $this->business_name,
             'city' => $this->city->name,
             'county' => $this->county->name,
         ];

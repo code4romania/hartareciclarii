@@ -18,7 +18,7 @@
 
             <LocationStep v-if="isStep('location')" :form="form" />
 
-            <DetailsStep v-if="isStep('details')" :form="form" :serviceType="serviceType" :pointTypes="pointTypes" />
+            <DetailsStep v-if="isStep('details')" :form="form" :serviceType="serviceType" />
 
             <MaterialsStep v-if="isStep('materials')" :form="form" />
 
@@ -53,13 +53,14 @@
     import route from '@/Helpers/useRoute';
 
     import Button from '@/Components/Button.vue';
-
     import Modal from '@/Components/Modal.vue';
     import TypeStep from '@/Components/AddPointSteps/Type.vue';
     import LocationStep from '@/Components/AddPointSteps/Location.vue';
     import DetailsStep from '@/Components/AddPointSteps/Details.vue';
     import MaterialsStep from '@/Components/AddPointSteps/Materials.vue';
     import ReviewStep from '@/Components/AddPointSteps/Review.vue';
+
+    import { MapPinIcon } from '@heroicons/vue/20/solid';
 
     const page = usePage();
 
@@ -69,7 +70,7 @@
 
     const steps = ['type', 'location', 'details', 'materials', 'review'];
 
-    const form = useForm('post', route('front.point.submit'), {
+    const form = useForm('post', route('front.map.point.submit'), {
         step: steps[0],
 
         // step 1: Type
@@ -130,6 +131,8 @@
                 //
                 'service_type',
                 'address',
+                'city',
+                'county',
                 'location.lat',
                 'location.lng',
             ],
@@ -225,6 +228,10 @@
         }
 
         if (isStep('review')) {
+            if (!serviceType.value.can.collect_materials) {
+                return goToStep('details');
+            }
+
             return goToStep('materials');
         }
     };
@@ -239,6 +246,10 @@
         }
 
         if (isStep('details')) {
+            if (!serviceType.value.can.collect_materials) {
+                return goToStep('review');
+            }
+
             return goToStep('materials');
         }
 
