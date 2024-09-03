@@ -187,7 +187,7 @@
         ({
             type: [
                 //
-                'service_type',
+                'service_type_id',
                 'address',
                 'city',
                 'county',
@@ -201,7 +201,7 @@
             //     'location.lng',
             // ],
             details: [
-                'point_type',
+                'point_type_id',
                 'business_name',
                 'administered_by',
                 'administered_by_unknown',

@@ -31,9 +31,9 @@ class SubmitPointRequest extends FormRequest
             // Step 3: Details
             'point_type_id' => ['required', 'exists:point_types,id'],
             'business_name' => ['nullable', 'string', 'max:50'],
-            'administered_by' => ['sometimes', 'exclude_if:administrated_by_unknown,true', 'required_if_accepted:administrated_by_unknown', 'nullable', 'string', 'max:50'],
-            'administrated_by_unknown' => ['sometimes', 'boolean'],
-            'schedule' => ['exclude_if:schedule_unknown,true', 'required_if_accepted:schedule_unknown', 'nullable', 'string', 'max:50'],
+            'administered_by' => ['sometimes', 'exclude_if:administered_by_unknown,true', 'required_if:administered_by_unknown,false', 'nullable', 'string', 'max:50'],
+            'administered_by_unknown' => ['sometimes', 'boolean'],
+            'schedule' => ['exclude_if:schedule_unknown,true', 'required_if:schedule_unknown,false', 'nullable', 'string', 'max:50'],
             'schedule_unknown' => ['sometimes', 'boolean'],
 
             'offers_money' => ['nullable', Rule::excludeIf(fn () => $this->offers_money === -1), 'boolean'],
