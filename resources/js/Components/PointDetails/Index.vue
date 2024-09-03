@@ -12,16 +12,16 @@
 
         <Materials v-if="point.materials" :materials="point.materials" />
 
-        <Schedule v-if="point.schedule" :schedule="point.schedule" />
+        <Schedule v-if="point.schedule" :schedule="point.schedule" class="px-6 py-4" />
 
-        <Observations :point="point" />
+        <Observations :observations="point.observations" :info="point.info" class="px-6 py-4" />
 
         <div class="py-2">
-            <Website v-if="point.website" :website="point.website" />
+            <Website v-if="point.website" :website="point.website" class="px-6 py-2" />
 
-            <Email v-if="point.email" :email="point.email" />
+            <Email v-if="point.email" :email="point.email" class="px-6 py-2" />
 
-            <Phone v-if="point.phone" :phone="point.phone" />
+            <Phone v-if="point.phone" :phone="point.phone" class="px-6 py-2" />
         </div>
 
         <Footer />

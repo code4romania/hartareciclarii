@@ -11,13 +11,14 @@ use MatanYadaev\EloquentSpatial\Objects\Polygon;
 
 class MapCoordinates
 {
-    private float $latitude = 45.9432;
+    public float $latitude = 44.4327;
 
-    private float $longitude = 24.9668;
+    public float $longitude = 26.1038;
 
-    private int $zoom = 10;
+    // TODO: Change this to 14
+    public int $zoom = 10;
 
-    private array $bounds = [];
+    public array $bounds = [];
 
     public function __construct(?string $coordinates = null)
     {

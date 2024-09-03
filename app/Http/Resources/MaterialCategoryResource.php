@@ -12,8 +12,10 @@ class MaterialCategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'key' => $this->id,
+            'key' => "cat-{$this->id}",
             'label' => $this->name,
+            'type' => 'category',
+            'icon' => $this->getFirstMediaUrl() ?: null,
             'children' => MaterialResource::collection($this->materials),
         ];
     }

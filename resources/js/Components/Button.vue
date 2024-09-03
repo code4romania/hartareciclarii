@@ -19,7 +19,7 @@
         </Link>
     </template>
 
-    <button v-else :type="type" :class="[buttonBase, buttonSize, buttonColor]">
+    <button v-else :type="type" :class="[buttonBase, buttonSize, buttonColor]" :disabled="disabled">
         <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
 
         <slot>{{ label }}</slot>
@@ -61,11 +61,15 @@
             type: Boolean,
             default: false,
         },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
     });
 
     const isLink = computed(() => props.href !== null);
 
-    const buttonBase = `flex items-center justify-center ring-inset font-medium rounded-full whitespace-nowrap `;
+    const buttonBase = `flex items-center justify-center ring-inset select-none font-medium rounded-full whitespace-nowrap disabled:opacity-75 disabled:cursor-default`;
 
     const iconBase = 'shrink-0';
 
@@ -80,8 +84,8 @@
 
     const buttonColor = computed(() =>
         props.primary
-            ? 'bg-primary-800 text-white ring-primary-800 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 focus:outline-none'
-            : 'ring-1 bg-white text-gray-700 ring-gray-300 hover:bg-gray-50'
+            ? 'bg-primary-800 text-white ring-primary-800 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 focus:outline-none disabled:hover:bg-primary-800'
+            : 'ring-1 bg-white text-gray-700 ring-gray-300 hover:bg-gray-50 disabled:bg-gray-200 disabled:hover:bg-gray-200 '
     );
 
     const iconSize = computed(

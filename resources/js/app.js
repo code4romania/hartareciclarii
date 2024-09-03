@@ -13,22 +13,24 @@ import.meta.glob(['../images/**']);
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
-
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(PrimeVue, {
                 unstyled: true,
                 pt,
             })
             .use(ZiggyVue)
-            .use(i18nVue, {
-                resolve: async (lang) => {
-                    const langs = import.meta.glob('../../lang/*.json');
-                    return await langs[`../../lang/${lang}.json`]();
-                },
-            })
             .use(VueClickAway)
-            .use(plugin)
-            .mount(el);
+            .use(plugin);
+
+        return app.use(i18nVue, {
+            resolve: async (lang) => {
+                const langs = import.meta.glob('../../lang/*.json');
+                return await langs[`../../lang/${lang}.json`]();
+            },
+            onLoad: () => {
+                app.mount(el);
+            },
+        });
     },
 });

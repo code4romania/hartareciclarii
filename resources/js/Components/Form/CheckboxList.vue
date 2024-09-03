@@ -1,15 +1,16 @@
 <template>
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled">
         <div class="grid gap-2">
-            <label v-for="(option, index) in options" class="flex gap-x-2" :key="index">
-                <Checkbox v-model="proxyChecked" :value="option.value" :required="required" :disabled="disabled">
-                    <template #icon="{ checked }">
-                        <CheckIcon v-if="checked" />
-                    </template>
-                </Checkbox>
-
-                <span class="text-sm font-medium text-gray-700" v-text="$t(option.label)" />
-            </label>
+            <Checkbox
+                v-for="(option, index) in options"
+                :key="index"
+                class="flex gap-x-2"
+                v-model="modelValue"
+                :value="option.value"
+                :label="option.label"
+                :required="required"
+                :disabled="disabled"
+            />
         </div>
     </FormField>
 </template>
@@ -17,7 +18,7 @@
 <script setup>
     import { computed, ref } from 'vue';
     import { CheckIcon } from '@heroicons/vue/16/solid';
-    import Checkbox from 'primevue/checkbox';
+    import Checkbox from '@/Components/Form/Checkbox.vue';
     import FormField from '@/Components/Form/Field.vue';
 
     const props = defineProps({
@@ -57,10 +58,6 @@
             type: Array,
             default: [],
         },
-        default: {
-            type: [String, Number],
-            default: null,
-        },
     });
 
     const emit = defineEmits(['update:modelValue']);
@@ -74,14 +71,8 @@
         }))
     );
 
-    const proxyChecked = computed({
+    const modelValue = computed({
         get: () => props.modelValue,
         set: (value) => emit('update:modelValue', value),
     });
-
-    // onMounted(() => {
-    //     if (props.modelValue === null || props.modelValue === 0) {
-    //         proxyChecked.value = props.default;
-    //     }
-    // });
 </script>

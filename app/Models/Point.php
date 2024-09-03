@@ -7,6 +7,7 @@ namespace App\Models;
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,7 +34,7 @@ class Point extends Model
         'location',
         'notes',
         'administered_by',
-        'name',
+        'business_name',
         'phone',
         'email',
         'website',
@@ -55,7 +56,6 @@ class Point extends Model
         'offers_vouchers' => 'boolean',
         'offers_transport' => 'boolean',
         'free_of_charge' => 'boolean',
-
     ];
 
     public function materials(): BelongsToMany
@@ -104,6 +104,16 @@ class Point extends Model
             ->orderByDistance('location', $mapCoordinates->getCenter());
     }
 
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            fn () => route('front.map.point', [
+                'point' => $this,
+                'coordinates' => "@{$this->location->latitude},{$this->location->longitude},18z",
+            ])
+        );
+    }
+
     public function changeStatus(Status $status): void
     {
         $this->update(['status' => $status]);
@@ -134,14 +144,19 @@ class Point extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id' => (int) $this->id,
+            'id' => (string) $this->id,
+            'point_id' => (string) $this->id,
+            'location' => [
+                $this->location->latitude,
+                $this->location->longitude,
+            ],
             'service_type' => $this->serviceType->name,
             'address' => $this->address,
             'point_type' => $this->pointType->name,
             'materials' => $this->materials
                 ->pluck('name'),
 
-            'materials_categories' => $this->materials
+            'material_categories' => $this->materials
                 ->pluck('categories.*.name')
                 ->flatten(),
 
@@ -150,9 +165,94 @@ class Point extends Model
             'phone' => $this->phone,
             'observations' => $this->observations,
 
-            'name' => $this->name,
+            'business_name' => $this->business_name,
             'city' => $this->city->name,
             'county' => $this->county->name,
+
+            'created_at' => $this->created_at->timestamp,
+        ];
+    }
+
+    public static function getTypesenseModelSettings(): array
+    {
+        return [
+            'collection-schema' => [
+                'fields' => [
+                    [
+                        'name' => 'id',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'point_id',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'location',
+                        'type' => 'geopoint',
+                    ],
+                    [
+                        'name' => 'service_type',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'point_type',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'address',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'materials',
+                        'type' => 'string[]',
+                    ],
+                    [
+                        'name' => 'material_categories',
+                        'type' => 'string[]',
+                    ],
+                    [
+                        'name' => 'administered_by',
+                        'type' => 'string',
+                        'optional' => true,
+                    ],
+                    [
+                        'name' => 'email',
+                        'type' => 'string',
+                        'optional' => true,
+                    ],
+                    [
+                        'name' => 'phone',
+                        'type' => 'string',
+                        'optional' => true,
+                    ],
+                    [
+                        'name' => 'observations',
+                        'type' => 'string',
+                        'optional' => true,
+                    ],
+                    [
+                        'name' => 'business_name',
+                        'type' => 'string',
+                        'optional' => true,
+                    ],
+                    [
+                        'name' => 'city',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'county',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'created_at',
+                        'type' => 'int64',
+                    ],
+                ],
+                'default_sorting_field' => 'created_at',
+            ],
+            'search-parameters' => [
+                'query_by' => 'point_id, service_type, point_type, business_name, administered_by, address, materials, material_categories, city, county, email, phone, observations',
+            ],
         ];
     }
 }

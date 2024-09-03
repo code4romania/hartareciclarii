@@ -1,9 +1,5 @@
 <template>
-    <slot name="trigger" :open="open" :isOpen="isOpen">
-        <Button color="white" @click="open">
-            <span>Open Modal</span>
-        </Button>
-    </slot>
+    <slot name="trigger" :open="open" :isOpen="isOpen" />
 
     <TransitionRoot as="template" :show="isOpen">
         <Dialog class="relative z-10" @close="overlayDismissable && close()">
@@ -30,7 +26,11 @@
                         leave-from="opacity-100 translate-y-0 sm:scale-100"
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
-                        <DialogPanel class="w-full h-screen sm:py-8 sm:max-w-lg">
+                        <DialogPanel
+                            class="w-full h-screen sm:py-8 sm:max-w-lg"
+                            :as="form ? 'form' : 'div'"
+                            @submit.prevent="submit"
+                        >
                             <div
                                 class="relative flex flex-col w-full max-h-full overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl"
                             >
@@ -49,20 +49,23 @@
                                         v-if="$slots.title"
                                         as="h3"
                                         class="text-base font-semibold text-gray-900 sm:text-lg"
+                                        :class="{
+                                            'pr-6': dismissable,
+                                        }"
                                     >
                                         <slot name="title" />
                                     </DialogTitle>
                                 </div>
 
-                                <div class="flex-1 px-4 py-5 overflow-y-auto sm:px-6">
+                                <div class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6">
                                     <slot />
                                 </div>
 
                                 <div
                                     v-if="$slots.footer"
-                                    class="flex flex-col-reverse justify-end gap-4 px-4 py-5 sm:flex-row sm:px-6 shrink-0"
+                                    class="relative flex flex-col-reverse justify-end gap-4 px-4 py-5 sm:flex-row sm:px-6 shrink-0"
                                 >
-                                    <slot name="footer" />
+                                    <slot name="footer" :open="open" :close="close" />
                                 </div>
                             </div>
                         </DialogPanel>
@@ -79,6 +82,8 @@
     import { XMarkIcon } from '@heroicons/vue/24/solid';
     import Button from '@/Components/Button.vue';
 
+    const emit = defineEmits(['submit']);
+
     const isOpen = ref(false);
 
     const props = defineProps({
@@ -90,6 +95,10 @@
             type: Boolean,
             default: false,
         },
+        form: {
+            type: Boolean,
+            default: false,
+        },
     });
 
     const open = () => {
@@ -98,5 +107,11 @@
 
     const close = () => {
         isOpen.value = false;
+    };
+
+    const submit = (event) => {
+        if (props.form) {
+            emit('submit', event);
+        }
     };
 </script>

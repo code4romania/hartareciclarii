@@ -13,10 +13,22 @@ class ServiceType extends Model
         'name',
         'slug',
         'has_dedicated_issues_tab',
+        'can_have_business_name',
+        'can_offer_money',
+        'can_offer_vouchers',
+        'can_offer_transport',
+        'can_request_payment',
+        'can_collect_materials',
     ];
 
     protected $casts = [
         'has_dedicated_issues_tab' => 'boolean',
+        'can_have_business_name' => 'boolean',
+        'can_offer_money' => 'boolean',
+        'can_offer_vouchers' => 'boolean',
+        'can_offer_transport' => 'boolean',
+        'can_request_payment' => 'boolean',
+        'can_collect_materials' => 'boolean',
     ];
 
     public function issueTypes(): HasMany

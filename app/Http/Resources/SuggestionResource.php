@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\DataTransferObjects\NominatimSuggestion;
+use App\DataTransferObjects\Location;
 use App\Models\Material;
 use App\Models\Point;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class SuggestionResource extends JsonResource
         return match (\get_class($this->resource)) {
             Point::class => $this->getPointArray(),
             Material::class => $this->getMaterialArray(),
-            NominatimSuggestion::class => $this->getNominatimArray(),
+            Location::class => $this->getLocationArray(),
         };
     }
 
@@ -47,13 +47,15 @@ class SuggestionResource extends JsonResource
         ];
     }
 
-    protected function getNominatimArray(): array
+    protected function getLocationArray(): array
     {
         return [
             'name' => $this->name,
             'type' => 'location',
             'bounds' => $this->bounds,
             'center' => $this->center,
+            'city' => $this->city,
+            'county' => $this->county,
         ];
     }
 }

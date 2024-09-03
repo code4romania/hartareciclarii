@@ -58,13 +58,16 @@ class DatabaseSeeder extends Seeder
 
             ]);
         });
+
         $user->givePermissionTo($this->permissions);
 
-        $serviceTypes = ServiceType::with(['issueTypes', 'pointTypes'])->get();
+        $serviceTypes = ServiceType::query()
+            ->with(['issueTypes', 'pointTypes'])
+            ->get();
 
         foreach ($serviceTypes as $serviceType) {
             foreach ($serviceType->pointTypes as $pointType) {
-                Point::factory(100)
+                Point::factory(1000)
                     ->create([
                         'service_type_id' => $pointType->service_type_id,
                         'point_type_id' => $pointType->id,
@@ -82,6 +85,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        Artisan::call('scout:import', ['model' => Point::class]);
+        Artisan::call('scout:rebuild');
     }
 }
