@@ -38,7 +38,7 @@ class PointFactory extends Factory
             'county_id' => $city->county_id,
             'city_id' => $city->id,
             'address' => fake()->address(),
-            'name' => fake()->word(),
+            'business_name' => fake()->boolean() ? fake()->company() : null,
             'phone' => fake()->phoneNumber(),
             'email' => fake()->email(),
             'website' => fake()->url(),

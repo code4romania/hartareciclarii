@@ -13,7 +13,6 @@
             :options="serviceTypes"
             option-value-key="id"
             option-label-key="name"
-            disabled
         />
 
         <template v-for="type in serviceTypes" :key="type.slug">

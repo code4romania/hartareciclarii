@@ -125,20 +125,19 @@
 
     import { LMap, LControl, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
-    import 'leaflet.locatecontrol';
 
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
-    import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
     import { ref, computed, watch } from 'vue';
     import { router } from '@inertiajs/vue3';
 
+    import route from '@/Helpers/useRoute.js';
     import { refreshPoints, openPoint, fetchPoint, cancelMapVisits } from '@/Helpers/useMap.js';
+    import useLocate from '@/Helpers/useLocate.js';
 
     import Sidebar from '@/Components/Map/Sidebar.vue';
     import Search from '@/Components/Map/Search/Search.vue';
-    import route from '@/Helpers/useRoute.js';
 
     const props = defineProps({
         context: {
@@ -220,27 +219,14 @@
         });
     });
 
-    const ready = (leafletObject) => {
-        const locateControl = L.control
-            .locate({
-                position: 'bottomright',
-                showPopup: false,
-                locateOptions: {
-                    enableHighAccuracy: true,
-                },
-                clickBehavior: {
-                    inView: 'setView',
-                    outOfView: 'setView',
-                    inViewNotFollowing: 'setView',
-                },
-                onLocationError: (error) => {
-                    refreshPoints(map.value.leafletObject);
-                },
-            })
-            .addTo(leafletObject);
+    const { locateControl } = useLocate();
 
-        locateControl.start();
-    };
+    const ready = (leafletObject) =>
+        locateControl({
+            onLocationError: () => refreshPoints(map.value.leafletObject),
+        })
+            .addTo(leafletObject)
+            .start();
 
     const getMapPinIcon = (point, size) => props.icons[point.service][size];
 

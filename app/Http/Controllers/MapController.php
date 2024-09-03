@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
-use App\DataTransferObjects\NominatimSuggestion;
 use App\Enums\Point\Status;
+use App\Http\Requests\SubmitPointRequest;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
+use App\Http\Resources\ReverseResource;
 use App\Http\Resources\SearchResultResource;
 use App\Http\Resources\ServiceTypeResource;
 use App\Http\Resources\SuggestionResource;
@@ -21,9 +22,11 @@ use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class MapController extends Controller
 {
@@ -52,38 +55,57 @@ class MapController extends Controller
     {
         $attributes = $request->validate([
             'query' => ['required', 'string'],
+            'type' => ['nullable', 'string', 'in:point,material,location'],
         ]);
+
+        $type = data_get($attributes, 'type');
 
         $results = collect();
 
-        $results->push(
-            ...Point::search($attributes['query'])
-                ->take(5)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('serviceType:id,slug')
-                        ->orderByDistance('location', $coordinates->getCenter())
-                )
-                ->get()
-        );
+        if (blank($type) || $type === 'point') {
+            $results->push(
+                ...Point::search($attributes['query'])
+                    ->take(5)
+                    ->query(
+                        fn (Builder $query) => $query
+                            ->with('serviceType:id,slug')
+                            ->orderByDistance('location', $coordinates->getCenter())
+                    )
+                    ->get()
+            );
+        }
 
-        $results->push(
-            ...Material::search($attributes['query'])
-                ->take(5)
-                ->query(
-                    fn (Builder $query) => $query
-                        ->with('categories')
-                        ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
-                )
-                ->get()
-        );
+        if (blank($type) || $type === 'material') {
+            $results->push(
+                ...Material::search($attributes['query'])
+                    ->take(5)
+                    ->query(
+                        fn (Builder $query) => $query
+                            ->with('categories')
+                            ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
+                    )
+                    ->get()
+            );
+        }
 
-        $results->push(
-            ...Nominatim::search($attributes['query'], 5)
-                ->map(fn (array $suggestion) => new NominatimSuggestion($suggestion))
-        );
+        if (blank($type) || $type === 'location') {
+            $results->push(
+                ...Nominatim::make()
+                    ->limit(5)
+                    ->viewBox($coordinates->getBoundsBBox())
+                    ->search($attributes['query'])
+            );
+        }
 
         return SuggestionResource::collection($results);
+    }
+
+    public function reverse(Request $request, MapCoordinates $coordinates): JsonResource
+    {
+        return ReverseResource::make(
+            Nominatim::make()
+                ->reverse($coordinates->latitude, $coordinates->longitude)
+        );
     }
 
     public function search(Request $request, MapCoordinates $coordinates): Response
@@ -116,6 +138,29 @@ class MapController extends Controller
                 Point::findOrFail($request->header('Map-Point'))
             )),
         ]);
+    }
+
+    public function submit(SubmitPointRequest $request): IlluminateResponse
+    {
+        $attributes = $request->validated();
+
+        $attributes['location'] = new SpatialPoint(
+            $attributes['location']['lat'],
+            $attributes['location']['lng']
+        );
+
+        $attributes['status'] = Status::NEEDS_VERIFICATION;
+
+        $point = Point::create($attributes);
+
+        $point->materials()->attach(data_get($attributes, 'materials', []));
+
+        return Inertia::location($point->url);
+    }
+
+    public function report($request)
+    {
+        //
     }
 
     protected function render(MapCoordinates $coordinates, array $props = []): Response

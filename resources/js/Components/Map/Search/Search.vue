@@ -101,7 +101,8 @@
     import { router, usePage, Link } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
-    import { getCenterCoordinatesWithZoom, updateMap, closePanel } from '@/Helpers/useMap.js';
+    import { getCoordinatesParameter } from '@/Helpers/useCoordinates.js';
+    import { updateMap, closePanel } from '@/Helpers/useMap.js';
 
     const emit = defineEmits(['locate']);
 
@@ -151,13 +152,19 @@
 
         const center = props.map.leafletObject.getCenter();
         const zoom = props.map.leafletObject.getZoom();
+        const bounds = props.map.leafletObject.getBounds();
 
         axios
             .get(
                 route('front.map.suggest', {
-                    coordinates: getCenterCoordinatesWithZoom(center, zoom),
+                    coordinates: getCoordinatesParameter(center, zoom),
                     query: query.value,
-                })
+                }),
+                {
+                    headers: {
+                        'Map-Bounds': bounds.toBBoxString(),
+                    },
+                }
             )
             .then((response) => {
                 if (Array.isArray(response.data)) {

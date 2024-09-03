@@ -44,6 +44,12 @@ return new class extends Migration
             [
                 'name' => 'Colectare separată deșeuri',
                 'slug' => 'waste_collection',
+                'has_dedicated_issues_tab' => true,
+                'can_offer_money' => true,
+                'can_offer_vouchers' => true,
+                'can_offer_transport' => true,
+                'can_have_business_name' => false,
+                'can_collect_materials' => true,
                 'pointsTypes' => [
                     'Container stradal',
                     'Punct magazin',
@@ -92,6 +98,8 @@ return new class extends Migration
             [
                 'name' => 'Reparații',
                 'slug' => 'repairs',
+                'can_request_payment' => true,
+                'can_have_business_name' => true,
                 'pointsTypes' => [
                     'Croitorie',
                     'Reparații încălțăminte',
@@ -142,6 +150,7 @@ return new class extends Migration
             [
                 'name' => 'Reutilizare',
                 'slug' => 'reuse',
+                'can_have_business_name' => true,
                 'pointsTypes' => [
                     'Magazin haine second-hand',
                     'Magazin electronice second-hand',
@@ -195,6 +204,7 @@ return new class extends Migration
             [
                 'name' => 'Reducere',
                 'slug' => 'reduce',
+                'can_have_business_name' => true,
                 'pointsTypes' => [
                     'Magazin zero waste',
                     'Locație cu apă gratuită',
@@ -223,6 +233,8 @@ return new class extends Migration
             [
                 'name' => 'Donații',
                 'slug' => 'donations',
+                'can_offer_transport' => true,
+                'can_have_business_name' => true,
                 'pointsTypes' => [
                     'Centre de donații',
                 ],
@@ -247,6 +259,7 @@ return new class extends Migration
             [
                 'name' => 'Altele',
                 'slug' => 'other',
+                'can_have_business_name' => true,
                 'pointsTypes' => [
                     'Altele',
                 ],
@@ -275,6 +288,14 @@ return new class extends Migration
                 $serviceType = ServiceType::create([
                     'name' => $options['name'],
                     'slug' => $options['slug'],
+
+                    'has_dedicated_issues_tab' => data_get($options, 'has_dedicated_issues_tab', false),
+                    'can_offer_money' => data_get($options, 'can_offer_money', false),
+                    'can_offer_vouchers' => data_get($options, 'can_offer_vouchers', false),
+                    'can_offer_transport' => data_get($options, 'can_offer_transport', false),
+                    'can_request_payment' => data_get($options, 'can_request_payment', false),
+                    'can_have_business_name' => data_get($options, 'can_have_business_name', false),
+                    'can_collect_materials' => data_get($options, 'can_collect_materials', false),
                 ]);
 
                 $serviceType->pointTypes()->createMany(

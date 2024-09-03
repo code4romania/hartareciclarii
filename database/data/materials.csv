@@ -1,0 +1,85 @@
+ID_Material,Material_label,Material_category_primary,Material_category_secondary,Category_rank,Usage_Notes,Mapping_OLD_DB
+AM_01,Acumulatori auto,Auto-moto,,7,,Yes
+AM_02,Anvelope,Auto-moto,,,,Yes
+AM_03,Ulei auto,Auto-moto,Uleiuri & grăsimi,,Poliierarhie cu locație primara in Auto Moto,Yes
+AM_04,Radiatoare,Auto-moto,,,,Yes
+AM_05,Vehicule scoase din uz ,Auto-moto,,,,Yes
+AM_06,Filtre auto,Auto-moto,,,,Yes
+AM_07,Parbrize/ geamuri auto (sticlă),Auto-moto,Sticlă,,Poliierarhie cu locație primara in Auto Moto,Yes
+AM_08,"Alte componente metalice, plastice automoto",Auto-moto,,,,Yes
+CON_01,Azbest,Construcții,Periculoase,8,Poliierarhie cu locație primara in Construcții,Yes
+CON_02,"Cărămizi, beton, moloz",Construcții,,,,Yes
+CON_03,"Uși, grinzi, alte lemne din demolări",Construcții ,Lemn,,Poliierarhie cu locație primara in Construcții,Yes
+CON_04,Tablă,Construcții,,,,Yes
+CON_05,"Geamuri, polistiren, PVC (rame termopan)",Construcții,,,,Yes
+LMN_01,Mobilă din lemn,Lemn,,9,,Yes
+LMN_02,Rumeguș,Lemn,,,,Yes
+LMN_03,Paleți,Lemn,,,,Yes
+LMN_04,Brazi de Crăciun,Lemn,Compostabile,,Poliierarhie cu locație primară în Lemn,No
+CON_03,"Uși, grinzi, alte lemne din demolări",Construcții,Lemn,,Poliierarhie cu locație primara in Construcții,Yes
+HC_01,Hârtie,Hârtie & carton,,1,,Yes
+HC_02,Carton,Hârtie & carton,,,,Yes
+DE_01,DEEE mici,Deseuri de Echipamente Electrice și Electronice (DEEE),,4,,Yes
+DE_02,DEEE mari,Deseuri de Echipamente Electrice și Electronice (DEEE),,,Poliierarhie cu locație primara in DEEE,Yes
+DE_03,Telefoane mobile,Deseuri de Echipamente Electrice și Electronice (DEEE),,,,Yes
+DE_04,Baterii,Deseuri de Echipamente Electrice și Electronice (DEEE),,,,Yes
+DE_05,"Becuri, neoane, LED",Deseuri de Echipamente Electrice și Electronice (DEEE),,,,Yes
+DE_06,Cartușe și toner de imprimantă,Deseuri de Echipamente Electrice și Electronice (DEEE),,,,Yes
+PL_01,PET,Plastic & PET,,2,,Yes
+PL_02,"Flacon plastic (ex: detergent, șampon s.a.)",Plastic & PET,,,,Yes
+PL_04,Folie plastic,Plastic & PET,,,,Yes
+PL_05,Alte tipuri de plastic,Plastic & PET,,,,Yes
+PL_06,Polistiren expandat,Plastic & PET,,,,Yes
+PL_07,"Tetra Pak (cutii de lapte, suc)",Plastic & PET,Altele,,Poliierarhie cu locație primara in Plastic,Yes
+PL_08,ABS,Plastic & PET,Altele,,Poliierarhie cu locație primara in Plastic,Yes
+SB_01,Sticle,Sticlă ,,5,,Yes
+SB_02,Borcane,Sticlă ,,,,
+SB_03,Alte tipuri de sticlă,Sticlă ,,,,
+AM_07	,Parbrize / geamuri auto (sticlă) ,Auto-moto,Sticlă,,Poliierarhie cu locație primara in Auto Moto,Yes
+MA_01,Doze de aluminiu,Metal & aluminiu,,3,,Yes
+MA_02,Folie de aluminiu,Metal & aluminiu,,,,Yes
+MA_03,Capsule de cafea,Metal & aluminiu,,,,No
+MA_04,Tuburi de aluminiu cu aerosoli,Metal & aluminiu,Periculoase,,Poliierarhie cu locație primara in Metal,Yes
+MA_05,Capace de metal,Metal & aluminiu,,,,Yes
+MA_06,Cutii de conserve,Metal & aluminiu,,,,Yes
+MA_07,Alamă,Metal & aluminiu,,,,Yes
+MA_08,Alte obiecte din aluminiu ,Metal & aluminiu,,,,Yes
+MA_09,Bronz,Metal & aluminiu,,,,Yes
+MA_10,Cupru,Metal & aluminiu,,,,Yes
+MA_11,Fier,Metal & aluminiu,,,,Yes
+MA_12,Fontă,Metal & aluminiu,,,,Yes
+MA_13,Inox,Metal & aluminiu,,,,Yes
+MA_14,Oțel,Metal & aluminiu,,,,Yes
+MA_15,Plumb,Metal & aluminiu,,,,Yes
+MA_16,Zinc,Metal & aluminiu,,,,Yes
+TEX_01,Haine,Textile,,10,,Yes
+TEX_02,Incălțăminte,Textile,,,,Yes
+TEX_03,Genți,Textile,,,,Yes
+TEX_04,Deșeuri textile pre-producție,Textile,,,,Yes
+TEX_05,Alte textile ,Textile,Voluminoase,,Poliierarhie cu locație primara in Textile,Yes
+UAU_01,Ulei alimentar uzat,Uleiuri & grăsimi,,11,,Yes
+UAU_02,Grăsimi alimentare,Uleiuri & grăsimi,,,,Yes
+AM_03,Ulei auto,Auto-moto,Uleiuri & grăsimi,,Poliierarhie cu locație primara in Auto Moto,Yes
+UAU_03,Alte tipuri de uleiuri,Uleiuri & grăsimi,,,,No
+ORG_01,"Deșeuri organice (deseuri vegetale, resturi alimentare)",Compostabile,,12,,Yes
+ORG_02,"Deșeuri de grădină (iarbă tăiată, frunze uscate, crengi)",Compostabile,,,,No
+LMN_04,Brazi de Crăciun,Lemn,Compostabile,,Poliierarhie cu locație primară în Lemn,No
+PER_01,Măști faciale,Periculoase,,6,,Yes
+PER_02,Solvenți,Periculoase,,,,Yes
+PER_03,Vopsea,Periculoase,,,,Yes
+PER_04,Pesticide,Periculoase,,,,Yes
+PER_05,Erbicide,Periculoase,,,,Yes
+PER_06,Îngrășăminte,Periculoase,,,,Yes
+PER_07,Dispozitive medicale de uz personal,Periculoase,,,,No
+MA_04,Tuburi de aluminiu cu aerosoli,Metal si Aluminiu,Periculoase,,Poliierarhie cu locație primara in Metal & Aluminiu,No 
+ALT_01,ABS,Plastic,Altele,15,Poliierarhie cu locație primara in Plastic,Yes
+ALT_02,Filtre de apă,Altele,,,,Yes
+ALT_03,Fibră optică,Altele,,,,Yes
+ALT_04,Mesh-uri publicitare,Altele,,,,Yes
+ALT_05,Jucării,Altele,,,,Yes
+VOL_01,Saltele,Voluminoase,,13,,No
+VOL_02,Alte obiecte voluminoase,Voluminoase,,,,No
+LMN_01,Mobilă din lemn,Lemn,Voluminoase,,Poliierarhie cu locație primară în Lemn,Yes
+DE_02,DEEE mari,DEEE,,,Poliierarhie cu locație primara in DEEE-uri,Yes
+TEX_05,Alte textile,Textile,Voluminoase,,Poliierarhie cu locație primara in Textile,Yes
+MED_01,Medicamente,Medicamente,,14,,mark it as yes or no? (erau Periculoase>Medicamente)
