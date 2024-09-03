@@ -1,9 +1,5 @@
 <template>
-    <slot name="trigger" :open="open" :isOpen="isOpen">
-        <Button @click="open">
-            <span>Open Modal</span>
-        </Button>
-    </slot>
+    <slot name="trigger" :open="open" :isOpen="isOpen" />
 
     <TransitionRoot as="template" :show="isOpen">
         <Dialog class="relative z-10" @close="overlayDismissable && close()">
@@ -53,6 +49,9 @@
                                         v-if="$slots.title"
                                         as="h3"
                                         class="text-base font-semibold text-gray-900 sm:text-lg"
+                                        :class="{
+                                            'pr-6': dismissable,
+                                        }"
                                     >
                                         <slot name="title" />
                                     </DialogTitle>
@@ -64,7 +63,7 @@
 
                                 <div
                                     v-if="$slots.footer"
-                                    class="flex flex-col-reverse justify-end gap-4 px-4 py-5 sm:flex-row sm:px-6 shrink-0"
+                                    class="relative flex flex-col-reverse justify-end gap-4 px-4 py-5 sm:flex-row sm:px-6 shrink-0"
                                 >
                                     <slot name="footer" :open="open" :close="close" />
                                 </div>

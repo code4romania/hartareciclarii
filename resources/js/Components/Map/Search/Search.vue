@@ -101,7 +101,8 @@
     import { router, usePage, Link } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
-    import { getCenterCoordinatesWithZoom, updateMap, closePanel } from '@/Helpers/useMap.js';
+    import { getCoordinatesParameter } from '@/Helpers/useCoordinates.js';
+    import { updateMap, closePanel } from '@/Helpers/useMap.js';
 
     const emit = defineEmits(['locate']);
 
@@ -156,7 +157,7 @@
         axios
             .get(
                 route('front.map.suggest', {
-                    coordinates: getCenterCoordinatesWithZoom(center, zoom),
+                    coordinates: getCoordinatesParameter(center, zoom),
                     query: query.value,
                 }),
                 {

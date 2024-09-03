@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DataTransferObjects\Location;
 use Illuminate\Support\Collection;
 use NominatimLaravel\Content\Nominatim as NominatimClient;
 
@@ -59,7 +60,23 @@ class Nominatim
 
         return collect(rescue(fn () => $this->nominatim->find($request)))
             ->filter(fn (array $result) => $result['place_rank'] >= 13)
-            ->take($this->limit);
+            ->take($this->limit)
+            ->map(fn (array $result) => new Location($result));
     }
+
+    public function reverse(float $latitude, float $longitude): Location
+    {
+        $request = $this->nominatim->newReverse()
+            ->language(app()->getLocale())
+            ->addressDetails()
+            ->format('jsonv2')
+            ->zoom(18)
+            ->latlon($latitude, $longitude);
+
+        $result = $this->nominatim->find($request);
+
+        abort_if(data_get($result, 'error'), 404);
+
+        return new Location($result);
     }
 }

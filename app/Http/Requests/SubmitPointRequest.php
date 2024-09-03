@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,21 +13,19 @@ class SubmitPointRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'step' => ['sometimes', 'string', 'in:type,location,details,materials,review'],
+            'step' => ['sometimes', 'string', 'in:type,details,materials,review'],
 
-            // Step 1: Type
-            'service_type' => ['required', 'exists:service_types,id'],
-
-            // Step 1 & 2: Location
+            // Step 1 & 2: Type & Location
+            'service_type_id' => ['required', 'exists:service_types,id'],
             'address' => ['required', 'string', 'max:100'],
-            'city' => ['nullable', 'string', 'max:50'],
-            'county' => ['nullable', 'string', 'max:50'],
+            'city_id' => ['required', 'exists:cities,id'],
+            'county_id' => ['required', 'exists:counties,id'],
             'location' => ['required', 'array', 'size:2'],
             'location.lat' => ['required', 'numeric', 'between:-90,90'],
             'location.lng' => ['required', 'numeric', 'between:-180,180'],
 
             // Step 3: Details
-            'point_type' => ['required', 'exists:point_types,id'],
+            'point_type_id' => ['required', 'exists:point_types,id'],
             'business_name' => ['nullable', 'string', 'max:50'],
             'administered_by' => ['sometimes', 'exclude_if:administrated_by_unknown,true', 'required_if_accepted:administrated_by_unknown', 'nullable', 'string', 'max:50'],
             'administrated_by_unknown' => ['sometimes', 'boolean'],
@@ -45,6 +44,7 @@ class SubmitPointRequest extends FormRequest
 
             // Step 4: Materials
             'materials' => ['required', 'array', 'min:1'],
+            'materials.*' => ['required', 'exists:materials,id'],
         ];
     }
 
@@ -54,5 +54,30 @@ class SubmitPointRequest extends FormRequest
             'location.lat.*' => __('validation.location'),
             'location.lng.*' => __('validation.location'),
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->findCityAndCounty();
+    }
+
+    private function findCityAndCounty(): void
+    {
+        if (blank($this->city) || blank($this->county)) {
+            return;
+        }
+
+        $city = City::search($this->city)
+            ->where('county', $this->county)
+            ->first();
+
+        if (blank($city)) {
+            return;
+        }
+
+        $this->merge([
+            'city_id' => $city->id,
+            'county_id' => $city->county_id,
+        ]);
     }
 }

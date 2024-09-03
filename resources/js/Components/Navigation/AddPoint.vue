@@ -1,11 +1,21 @@
 <template>
-    <Modal dismissable form @submit="submit">
+    <Modal :dismissable="!isStep('location')" form @submit="submit">
         <template #trigger="{ open }">
             <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" @click="open" />
         </template>
 
         <template #title>
-            {{ $t('add_point.title') }}
+            <template v-if="isStep('location')">
+                <div class="flex gap-2">
+                    <button type="button" @click="() => goToStep('type')">
+                        <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
+                    </button>
+
+                    <span v-text="$t('add_point.type.change_pin_location')" />
+                </div>
+            </template>
+
+            <span v-else v-text="$t('add_point.title')" />
         </template>
 
         <div class="grid gap-4">
@@ -13,7 +23,7 @@
                 v-if="isStep('type')"
                 :form="form"
                 :serviceTypes="serviceTypes"
-                @changePinLocation="() => goToStep('location')"
+                @changePinLocation="changePinLocation"
             />
 
             <LocationStep v-if="isStep('location')" :form="form" />
@@ -27,19 +37,61 @@
 
         <template #footer="{ close }">
             <Button
-                size="sm"
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
                 :disabled="form.validating || form.processing"
+                size="sm"
             />
 
             <Button
-                size="sm"
-                :label="primaryButtonLabel"
+                v-if="!isStep('location') || form.address_override === null"
                 type="submit"
+                :label="primaryButtonLabel"
                 :disabled="form.validating || form.processing"
+                size="sm"
                 primary
             />
+
+            <Modal v-else>
+                <template #trigger="{ open }">
+                    <Button
+                        :label="primaryButtonLabel"
+                        @click="open"
+                        :disabled="form.validating || form.processing"
+                        size="sm"
+                        primary
+                    />
+                </template>
+
+                <template #title>
+                    <span v-text="$t('add_point.location.alert.title')" />
+                </template>
+
+                <p
+                    class="py-3 text-sm"
+                    v-html="
+                        $t('add_point.location.alert.body', {
+                            old: form.address,
+                            new: form.address_override,
+                        })
+                    "
+                />
+
+                <template #footer="{ close }">
+                    <Button
+                        :label="$t('add_point.location.alert.keep_old')"
+                        @click="cancelAddressOverride(close)"
+                        size="sm"
+                    />
+
+                    <Button
+                        :label="$t('add_point.location.alert.update_address')"
+                        @click="confirmAddressOverride(close)"
+                        size="sm"
+                        primary
+                    />
+                </template>
+            </Modal>
         </template>
     </Modal>
 </template>
@@ -60,31 +112,37 @@
     import MaterialsStep from '@/Components/AddPointSteps/Materials.vue';
     import ReviewStep from '@/Components/AddPointSteps/Review.vue';
 
-    import { MapPinIcon } from '@heroicons/vue/20/solid';
+    import { ArrowLeftIcon, MapPinIcon } from '@heroicons/vue/20/solid';
 
     const page = usePage();
 
     const errors = computed(() => page.props.errors || {});
 
-    const unknownAdministration = ref(false);
+    // const steps = ['type', 'location', 'details', 'materials', 'review'];
 
-    const steps = ['type', 'location', 'details', 'materials', 'review'];
+    const originalLocation = ref({
+        lat: null,
+        lng: null,
+    });
 
     const form = useForm('post', route('front.map.point.submit'), {
-        step: steps[0],
+        step: 'type',
 
         // step 1: Type
-        service_type: null,
+        service_type_id: null,
 
         // step 1 & 2: Location
         address: null,
+        address_override: null,
         location: {
             lat: null,
             lng: null,
         },
+        city: null,
+        county: null,
 
         // step 3: Details
-        point_type: null,
+        point_type_id: null,
         business_name: null,
         administered_by: null,
         administered_by_unknown: false,
@@ -136,12 +194,12 @@
                 'location.lat',
                 'location.lng',
             ],
-            location: [
-                //
-                'address',
-                'location.lat',
-                'location.lng',
-            ],
+            // location: [
+            //     //
+            //     'address',
+            //     'location.lat',
+            //     'location.lng',
+            // ],
             details: [
                 'point_type',
                 'business_name',
@@ -169,33 +227,54 @@
     );
 
     const serviceType = computed(() => {
-        if (!form.service_type) {
+        if (!form.service_type_id) {
             return null;
         }
 
-        return page.props.service_types.find((serviceType) => serviceType.id === form.service_type);
+        return page.props.service_types.find((serviceType) => serviceType.id === form.service_type_id);
     });
 
     const pointType = computed(() => {
-        if (!form.point_type) {
+        if (!form.point_type_id) {
             return null;
         }
 
-        return serviceType.value.point_types.find((pointType) => pointType.id === form.point_type);
+        return serviceType.value.point_types.find((pointType) => pointType.id === form.point_type_id);
     });
 
-    const submit = () => {
-        if (!isStep('review')) {
-            return form.touch(getFieldsByStep(form.step)).validate({
-                onSuccess: (response) => {
-                    console.log(response);
+    const changePinLocation = () => {
+        originalLocation.value.lat = form.location.lat;
+        originalLocation.value.lng = form.location.lng;
 
-                    nextStep();
-                },
+        goToStep('location');
+    };
+
+    const resetLocation = () => {
+        form.location.lat = originalLocation.value.lat;
+        form.location.lng = originalLocation.value.lng;
+
+        originalLocation.value.lat = null;
+        originalLocation.value.lng = null;
+    };
+
+    const transform = (data) => {
+        data.materials = Object.keys(data.materials).filter((key) => !key.startsWith('cat-'));
+
+        return data;
+    };
+
+    const submit = () => {
+        if (isStep('location')) {
+            return nextStep();
+        }
+
+        if (!isStep('review')) {
+            return form.transform(transform).touch(getFieldsByStep(form.step)).validate({
+                onSuccess: nextStep,
             });
         }
 
-        form.submit({
+        form.transform(transform).submit({
             preserveState: true,
             preserveScroll: true,
             onError: (error) => {
@@ -216,6 +295,7 @@
         }
 
         if (isStep('location')) {
+            resetLocation();
             return goToStep('type');
         }
 
@@ -236,13 +316,13 @@
         }
     };
 
-    const nextStep = () => {
+    const nextStep = (event) => {
         if (isStep('type')) {
             return goToStep('details');
         }
 
         if (isStep('location')) {
-            return goToStep('details');
+            return goToStep('type');
         }
 
         if (isStep('details')) {
@@ -256,5 +336,21 @@
         if (isStep('materials')) {
             return goToStep('review');
         }
+    };
+
+    const cancelAddressOverride = (close) => {
+        close();
+
+        form.address_override = null;
+
+        goToStep('type');
+    };
+
+    const confirmAddressOverride = (close) => {
+        close();
+        form.address = form.address_override;
+        form.address_override = null;
+
+        goToStep('type');
     };
 </script>

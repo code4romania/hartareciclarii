@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
-use App\DataTransferObjects\NominatimSuggestion;
 use App\Enums\Point\Status;
 use App\Http\Requests\SubmitPointRequest;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
+use App\Http\Resources\ReverseResource;
 use App\Http\Resources\SearchResultResource;
 use App\Http\Resources\ServiceTypeResource;
 use App\Http\Resources\SuggestionResource;
@@ -20,9 +20,9 @@ use App\Models\Point;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -94,17 +94,18 @@ class MapController extends Controller
                     ->limit(5)
                     ->viewBox($coordinates->getBoundsBBox())
                     ->search($attributes['query'])
-                    ->map(fn (array $suggestion) => new NominatimSuggestion($suggestion))
             );
         }
 
         return SuggestionResource::collection($results);
     }
 
-    public function locate(Request $request, MapCoordinates $coordinates)
+    public function reverse(Request $request, MapCoordinates $coordinates): JsonResource
     {
-        return Nominatim::make()
-            ->reverse($coordinates->latitude, $coordinates->longitude);
+        return ReverseResource::make(
+            Nominatim::make()
+                ->reverse($coordinates->latitude, $coordinates->longitude)
+        );
     }
 
     public function search(Request $request, MapCoordinates $coordinates): Response
@@ -139,7 +140,7 @@ class MapController extends Controller
         ]);
     }
 
-    public function submit(SubmitPointRequest $request): RedirectResponse
+    public function submit(SubmitPointRequest $request): IlluminateResponse
     {
         $attributes = $request->validated();
 
@@ -148,9 +149,13 @@ class MapController extends Controller
             $attributes['location']['lng']
         );
 
+        $attributes['status'] = Status::NEEDS_VERIFICATION;
+
         $point = Point::create($attributes);
 
-        return redirect()->route('front.map.point', $point);
+        $point->materials()->attach($attributes['materials']);
+
+        return Inertia::location($point->url);
     }
 
     public function report($request)

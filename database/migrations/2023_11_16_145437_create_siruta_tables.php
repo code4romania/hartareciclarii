@@ -21,7 +21,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('siruta');
             $table->string('name');
-            $table->polygon('pol')->nullable();
         });
 
         Schema::create('cities', function (Blueprint $table) {
@@ -38,14 +37,5 @@ return new class extends Migration
                 File::get(database_path('data/siruta.sql'))
             );
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('cities');
-        Schema::dropIfExists('counties');
     }
 };

@@ -23,14 +23,13 @@
             <address class="flex-1 text-sm not-italic" v-text="form.address" />
         </div>
 
-        <div class="flex items-center overflow-hidden bg-gray-400 justify-stretch aspect-w-3 aspect-h-1">
-            <img src="../../../images/map/placeholder.png" class="absolute inset-0 z-0 object-cover select-none" />
-        </div>
+        <MapPreview :form="form" />
     </fieldset>
 </template>
 
 <script setup>
     import { MapPinIcon } from '@heroicons/vue/20/solid';
+    import MapPreview from '@/Components/Form/MapPreview.vue';
 
     const props = defineProps({
         form: {

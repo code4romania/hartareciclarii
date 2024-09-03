@@ -36,7 +36,7 @@ class Material extends Model
 
     protected function makeAllSearchableUsing(Builder $query): Builder
     {
-        return $query->with('categories');
+        return $query->with('categories:id,name');
     }
 
     /**
@@ -47,8 +47,40 @@ class Material extends Model
     public function toSearchableArray(): array
     {
         return [
+            'id' => (string) $this->id,
             'name' => $this->name,
-            // 'categories' => $this->categories->pluck('name'),
+            'categories' => $this->categories->pluck('name'),
+            'created_at' => $this->created_at->timestamp,
+        ];
+    }
+
+    public static function getTypesenseModelSettings(): array
+    {
+        return [
+            'collection-schema' => [
+                'fields' => [
+                    [
+                        'name' => 'id',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'name',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'categories',
+                        'type' => 'string[]',
+                    ],
+                    [
+                        'name' => 'created_at',
+                        'type' => 'int64',
+                    ],
+                ],
+                'default_sorting_field' => 'created_at',
+            ],
+            'search-parameters' => [
+                'query_by' => 'name, categories',
+            ],
         ];
     }
 }

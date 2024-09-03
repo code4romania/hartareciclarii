@@ -85,6 +85,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        Artisan::call('scout:import', ['model' => Point::class]);
+        Artisan::call('scout:rebuild');
     }
 }

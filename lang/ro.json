@@ -123,6 +123,11 @@
     "add_point.type.map_placeholder": "Introdu o adresă pentru a plasa punctul pe hartă. Ulterior vei putea modifica manual locația punctului pe hartă, dacă acesta nu indică poziția exactă.",
     "add_point.type.change_pin_location": "Modifică poziția pe hartă",
 
+    "add_point.location.alert.title": "Atenție! Punctul pe hartă este poziționat la altă adresă",
+    "add_point.location.alert.body": "După modificarea locației punctului, acesta pare să fie la adresa <strong>:new</strong>. Poți actualiza adresa sau poți păstra adresa introdusă inițial la <strong>:old</strong>.",
+    "add_point.location.alert.keep_old": "Păstrează adresa inițială",
+    "add_point.location.alert.update_address": "Actualizează adresa",
+
     "add_point.details.subtitle": "Pasul 2: Detalii punct",
     "add_point.details.point_type": "Tip punct",
     "add_point.details.point_type_placeholder": "Selectează un tip de punct",

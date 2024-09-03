@@ -1,13 +1,11 @@
 import { ref } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import route from '@/Helpers/useRoute.js';
+import { getCoordinatesParameter } from '@/Helpers/useCoordinates';
 
 const page = usePage();
 
 const cancelTokens = ref([]);
-
-export const getCenterCoordinates = ({ lat, lng }) => `${lat.toFixed(6)},${lng.toFixed(6)}`;
-export const getCenterCoordinatesWithZoom = (center, zoom) => `@${getCenterCoordinates(center)},${zoom}z`;
 
 export const updateMap = (leafletObject, routeName, routeParams = {}, options = {}) => {
     const center = leafletObject.getCenter();
@@ -15,7 +13,7 @@ export const updateMap = (leafletObject, routeName, routeParams = {}, options = 
     const bounds = leafletObject.getBounds();
 
     Object.assign(routeParams, {
-        coordinates: getCenterCoordinatesWithZoom(center, zoom),
+        coordinates: getCoordinatesParameter(center, zoom),
     });
 
     let headers = {
@@ -63,7 +61,7 @@ export const fetchPoint = (leafletObject, pointId) => {
 
 export const closePanel = () => {
     const props = page.props.mapOptions;
-    const coordinates = getCenterCoordinatesWithZoom(props.center, props.zoom);
+    const coordinates = getCoordinatesParameter(props.center, props.zoom);
 
     router.visit(route('front.map.index', { coordinates }), {
         headers: {

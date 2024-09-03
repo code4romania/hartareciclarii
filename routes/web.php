@@ -39,10 +39,11 @@ Route::group([
         ->middleware(HandlePrecognitiveRequests::class)
         ->name('point.submit');
 
+    Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
+    Route::get('/reverse/{coordinates?}', 'reverse')->name('reverse');
+
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
     Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');
-    Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
-    Route::get('/locate/{coordinates?}', 'locate')->name('locate');
     Route::get('/{coordinates?}', 'index')->name('index');
 });
