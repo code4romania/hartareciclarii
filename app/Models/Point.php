@@ -156,7 +156,7 @@ class Point extends Model
             'materials' => $this->materials
                 ->pluck('name'),
 
-            'materials_categories' => $this->materials
+            'material_categories' => $this->materials
                 ->pluck('categories.*.name')
                 ->flatten(),
 
@@ -207,7 +207,7 @@ class Point extends Model
                         'type' => 'string[]',
                     ],
                     [
-                        'name' => 'materials_categories',
+                        'name' => 'material_categories',
                         'type' => 'string[]',
                     ],
                     [
@@ -251,7 +251,7 @@ class Point extends Model
                 'default_sorting_field' => 'created_at',
             ],
             'search-parameters' => [
-                'query_by' => 'point_id, service_type, point_type, address, materials, materials_categories, administered_by, email, phone, observations, business_name, city, county',
+                'query_by' => 'point_id, service_type, point_type, business_name, administered_by, address, materials, material_categories, city, county, email, phone, observations',
             ],
         ];
     }

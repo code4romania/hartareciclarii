@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-start gap-2 px-6 py-2">
+    <div class="flex items-start gap-2 text-sm">
         <GlobeEuropeAfricaIcon class="w-5 h-5 text-gray-400 shrink-0" />
 
         <a
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-    import { GlobeEuropeAfricaIcon } from '@heroicons/vue/24/solid';
+    import { GlobeEuropeAfricaIcon } from '@heroicons/vue/20/solid';
 
     const props = defineProps({
         website: {

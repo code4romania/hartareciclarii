@@ -153,7 +153,7 @@ class MapController extends Controller
 
         $point = Point::create($attributes);
 
-        $point->materials()->attach($attributes['materials']);
+        $point->materials()->attach(data_get($attributes, 'materials', []));
 
         return Inertia::location($point->url);
     }

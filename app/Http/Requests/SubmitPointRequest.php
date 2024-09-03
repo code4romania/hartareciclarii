@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\City;
+use App\Models\ServiceType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 class SubmitPointRequest extends FormRequest
 {
     public function rules(): array
     {
+        $serviceTypes = ServiceType::all();
+
         return [
             'step' => ['sometimes', 'string', 'in:type,details,materials,review'],
 
             // Step 1 & 2: Type & Location
-            'service_type_id' => ['required', 'exists:service_types,id'],
+            'service_type_id' => ['required', Rule::in($serviceTypes->pluck('id'))],
             'address' => ['required', 'string', 'max:100'],
             'city_id' => ['required', 'exists:cities,id'],
             'county_id' => ['required', 'exists:counties,id'],
@@ -39,12 +43,11 @@ class SubmitPointRequest extends FormRequest
 
             'website' => ['nullable', 'url', 'max:50'],
             'email' => ['nullable', 'email', 'max:50'],
-            'phone' => ['nullable', 'numeric', 'max:14'],
+            'phone' => ['nullable', 'numeric', 'max_digits:14'],
             'observations' => ['nullable', 'string', 'max:500'],
 
             // Step 4: Materials
-            'materials' => ['required', 'array', 'min:1'],
-            'materials.*' => ['required', 'exists:materials,id'],
+            ...$this->getMaterialRules($serviceTypes),
         ];
     }
 
@@ -61,14 +64,34 @@ class SubmitPointRequest extends FormRequest
         $this->findCityAndCounty();
     }
 
+    protected function getMaterialRules(Collection $serviceTypes): array
+    {
+        $canCollectMaterials = $serviceTypes
+            ->where('can_collect_materials', true)
+            ->pluck('id')
+            ->contains($this->service_type_id);
+
+        if (! $canCollectMaterials) {
+            return [
+                'materials' => ['exclude'],
+                'materials.*' => ['exclude'],
+            ];
+        }
+
+        return [
+            'materials' => ['required', 'array', 'min:1'],
+            'materials.*' => ['required', 'exists:materials,id'],
+        ];
+    }
+
     private function findCityAndCounty(): void
     {
         if (blank($this->city) || blank($this->county)) {
             return;
         }
 
-        $city = City::search($this->city)
-            ->where('county', $this->county)
+        $city = City::search((string) $this->city)
+            ->where('county', (string) $this->county)
             ->first();
 
         if (blank($city)) {
