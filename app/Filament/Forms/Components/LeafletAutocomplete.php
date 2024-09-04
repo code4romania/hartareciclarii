@@ -20,9 +20,6 @@ class LeafletAutocomplete extends Component
 {
     use Concerns\HasName;
 
-    /**
-     * @var view-string
-     */
     protected string $view = 'filament-forms::components.fieldset';
 
     protected bool|Closure $isRequired = false;
@@ -30,6 +27,8 @@ class LeafletAutocomplete extends Component
     protected array $params = [];
 
     public ?array $withFields = [];
+
+    public array $location = [];
 
     protected string|Closure $autocompleteFieldColumnSpan = 'full';
 
@@ -64,33 +63,24 @@ class LeafletAutocomplete extends Component
             ->allowHtml()
             ->live()
             ->searchDebounce($this->getAutocompleteSearchDebounce()) // 2 seconds
-            ->searchingMessage(__('filament-google-autocomplete-field::filament-google-autocomplete-field.autocomplete.searching.message'))
-            ->searchPrompt(__('filament-google-autocomplete-field::filament-google-autocomplete-field.autocomplete.search.prompt'))
+            ->searchingMessage(__(''))
+            ->searchPrompt(__('Type to search...'))
             ->searchable()
             ->hint(new HtmlString(Blade::render('<x-filament::loading-indicator class="h5 w-5" wire:loading wire:target="data.google_autocomplete" />')))
             ->columnSpan($this->getAutocompleteFieldColumnSpan())
             ->getSearchResultsUsing(function (string $search): array {
-                $key = 'nomatim_result'.auth()->user()->id;
-                $result = Nominatim::search($search, 10);
-                if (!empty($result)) {
-                    Cache::put($key, $result, 6000);
-                }
-                Cache::remember($key, 6000, fn () =>$result );
-                return $result->pluck('display_name', 'place_id')
+                $result = Nominatim::make()->search($search);
+                return $result->pluck('name', 'id')
                     ->toArray();
             })
             ->afterStateUpdated(function (?string $state, Set $set) {
-                if ($state === null) {
-                    return;
-                }
-                $key = 'nomatim_result'.auth()->user()->id;
 
-                $places = Cache::get($key);
-                $place = $places->firstWhere('place_id', $state);
+                $place = Nominatim::make()
+                    ->getPlaceById((int)$state);
+
                 debug($place);
-                Cache::forget($key);
                 $addressObject = collect(Arr::get($place, 'address'));
-                $city = $addressObject->get('city')??$addressObject->get('village');
+                $city = $addressObject->get('city') ?? $addressObject->get('village');
                 $county = $addressObject->get('county');
                 $countyModel = County::where('name', $county)->with('cities')->first();
                 $cityModel = $countyModel->cities->firstWhere('name', $city);
@@ -99,10 +89,9 @@ class LeafletAutocomplete extends Component
                 $set('address', $place['display_name']);
                 $set('lat', $place['lat']);
                 $set('long', $place['lon']);
-
             });
 
-        $components[]=Forms\Components\ViewField::make('map')
+        $components[] = Forms\Components\ViewField::make('map')
             ->columnSpanFull()
             ->view('filament.forms.components.leaflet-autocomplete');
 
