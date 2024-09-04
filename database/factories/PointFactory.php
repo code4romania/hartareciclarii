@@ -9,6 +9,8 @@ use App\Enums\Point\Status;
 use App\Models\City;
 use App\Models\Point;
 use App\Models\PointGroup;
+use App\Models\PointType;
+use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
@@ -34,7 +36,7 @@ class PointFactory extends Factory
                 fake()->longitude(min: 20.29, max: 29.61)
             ),
             'address' => fake()->address(),
-            'business_name' => fake()->boolean() ? fake()->company() : null,
+            'business_name' => null,
             'phone' => fake()->phoneNumber(),
             'email' => fake()->email(),
             'website' => fake()->url(),
@@ -49,6 +51,15 @@ class PointFactory extends Factory
             'source' => fake()->randomElement(Source::values()),
             'administered_by' => fake()->company(),
         ];
+    }
+
+    public function withType(ServiceType $serviceType, PointType $pointType): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'business_name' => $serviceType->can_have_business_name ? fake()->company() : null,
+            'service_type_id' => $serviceType->id,
+            'point_type_id' => $pointType->id,
+        ]);
     }
 
     public function withMaterials(Collection $materials): static

@@ -90,12 +90,11 @@ class DatabaseSeeder extends Seeder
                     ...Point::factory(500)
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
-                        ->create([
-                            'service_type_id' => $pointType->service_type_id,
-                            'point_type_id' => $pointType->id,
-                        ])
+                        ->withType($serviceType, $pointType)
+                        ->create()
                 );
             }
+
             foreach ($serviceType->issueTypes as $issueType) {
                 $point = $points->random();
 

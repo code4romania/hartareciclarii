@@ -22,7 +22,6 @@ readonly class Location
 
     public function __construct(array $location)
     {
-        // dump($location);
         $this->address = $this->collectAddress($location);
 
         $this->county = $this->firstFromAddress(['county'], 'București');

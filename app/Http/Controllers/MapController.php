@@ -69,6 +69,7 @@ class MapController extends Controller
                     ->query(
                         fn (Builder $query) => $query
                             ->with('serviceType:id,slug')
+                            ->with('pointType')
                             ->orderByDistance('location', $coordinates->getCenter())
                     )
                     ->get()
