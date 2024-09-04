@@ -215,7 +215,7 @@ class MapController extends Controller
                     Point::query()
                         ->with('serviceType:id,slug')
                         ->whereMatchesCoordinates($coordinates)
-                        ->get()
+                        ->get(['id', 'location', 'service_type_id'])
                 );
             },
             ...$props,
