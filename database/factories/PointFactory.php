@@ -7,11 +7,13 @@ namespace Database\Factories;
 use App\Enums\Point\Source;
 use App\Enums\Point\Status;
 use App\Models\City;
-use App\Models\Material;
 use App\Models\Point;
 use App\Models\PointGroup;
+use App\Models\PointType;
+use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 /**
@@ -28,17 +30,13 @@ class PointFactory extends Factory
      */
     public function definition(): array
     {
-        $city = City::query()->inRandomOrder()->first();
-
         return [
             'location' => new SpatialPoint(
                 fake()->latitude(min: 43.66, max: 48.21),
                 fake()->longitude(min: 20.29, max: 29.61)
             ),
-            'county_id' => $city->county_id,
-            'city_id' => $city->id,
             'address' => fake()->address(),
-            'business_name' => fake()->boolean() ? fake()->company() : null,
+            'business_name' => null,
             'phone' => fake()->phoneNumber(),
             'email' => fake()->email(),
             'website' => fake()->url(),
@@ -55,11 +53,28 @@ class PointFactory extends Factory
         ];
     }
 
-    public function configure(): static
+    public function withType(ServiceType $serviceType, PointType $pointType): static
     {
-        return $this->afterCreating(function (Point $point) {
-            $point->materials()->attach(Material::query()->inRandomOrder()->limit(3)->get());
+        return $this->state(fn (array $attributes) => [
+            'business_name' => $serviceType->can_have_business_name ? fake()->company() : null,
+            'service_type_id' => $serviceType->id,
+            'point_type_id' => $pointType->id,
+        ]);
+    }
+
+    public function withMaterials(Collection $materials): static
+    {
+        return $this->afterCreating(function (Point $point) use ($materials) {
+            $point->materials()->attach($materials);
         });
+    }
+
+    public function inCity(City $city): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'county_id' => $city->county_id,
+            'city_id' => $city->id,
+        ]);
     }
 
     public function inLisbon(): static

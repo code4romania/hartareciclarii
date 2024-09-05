@@ -79,18 +79,4 @@ class Nominatim
 
         return new Location($result);
     }
-
-    public function getPlaceById(int $placeId): Location
-    {
-        $request = $this->nominatim->newDetails()
-            ->language(app()->getLocale())
-            ->addressDetails()
-            ->placeId($placeId);
-
-        $result = $this->nominatim->find($request);
-
-        abort_if(data_get($result, 'error'), 404);
-
-        return new Location($result);
-    }
 }

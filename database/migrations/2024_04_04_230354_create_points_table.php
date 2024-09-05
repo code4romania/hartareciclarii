@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignIdFor(PointGroup::class)->nullable()->constrained()->onDelete('set null');
             $table->string('address');
-            $table->point('location')->isGeometry()->nullable();
+            $table->geometry('location', 'point')->nullable();
             $table->text('notes')->nullable();
             $table->string('administered_by')->nullable();
             $table->string('business_name')->nullable();
@@ -41,13 +41,5 @@ return new class extends Migration
             $table->boolean('free_of_charge')->nullable();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('points');
     }
 };

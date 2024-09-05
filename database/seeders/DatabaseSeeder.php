@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\City;
 use App\Models\Issue;
+use App\Models\Material;
 use App\Models\Permission;
 use App\Models\Point;
 use App\Models\ServiceType;
@@ -41,40 +43,61 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        Artisan::call('cache:clear');
 
-        $user = User::factory()
-            ->create([
-                'firstname' => 'Admin',
-                'lastname' => 'User',
-                'email' => 'admin@example.com',
-                'password' => bcrypt('password'),
+        collect([
+            Point::class,
+            Material::class,
+            City::class,
+        ])->each(function (string $model) {
+            Artisan::call('scout:delete-index', [
+                'name' => (new $model)->searchableAs(),
             ]);
 
-        collect($this->permissions)->each(function ($permission) {
-            Permission::create([
-                'name' => $permission,
-                'guard_name' => 'web',
-
-            ]);
+            $model::disableSearchSyncing();
         });
 
-        $user->givePermissionTo($this->permissions);
+        Permission::insert(
+            collect($this->permissions)
+                ->map(fn (string $permission) => [
+                    'name' => $permission,
+                    'guard_name' => 'web',
+                ])
+                ->all()
+        );
+
+        $admin = User::factory(['email' => 'admin@example.com'])
+            ->create();
+
+        $admin->givePermissionTo($this->permissions);
 
         $serviceTypes = ServiceType::query()
             ->with(['issueTypes', 'pointTypes'])
             ->get();
 
+        $cities = City::query()
+            ->inRandomOrder()
+            ->limit(100)
+            ->get();
+
+        $materials = Material::all();
+
         foreach ($serviceTypes as $serviceType) {
+            $points = collect();
+
             foreach ($serviceType->pointTypes as $pointType) {
-                Point::factory(1000)
-                    ->create([
-                        'service_type_id' => $pointType->service_type_id,
-                        'point_type_id' => $pointType->id,
-                    ]);
+                $points->push(
+                    ...Point::factory(500)
+                        ->inCity($cities->random())
+                        ->withMaterials($materials->random(3))
+                        ->withType($serviceType, $pointType)
+                        ->create()
+                );
             }
+
             foreach ($serviceType->issueTypes as $issueType) {
-                $point = Point::where('service_type_id', $serviceType->id)->inRandomOrder()->first();
+                $point = $points->random();
+
                 $issue = Issue::factory()
                     ->create([
                         'service_type_id' => $point->service_type_id,

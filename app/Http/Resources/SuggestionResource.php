@@ -29,7 +29,7 @@ class SuggestionResource extends JsonResource
     protected function getPointArray(): array
     {
         return [
-            'name' => $this->name,
+            'name' => $this->business_name ?? $this->pointType->name,
             'description' => $this->address,
             'url' => route('front.map.point', $this),
             'type' => 'point',
