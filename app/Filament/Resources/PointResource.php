@@ -17,7 +17,6 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
@@ -165,7 +164,7 @@ class PointResource extends Resource
                             if ($index < 3) {
                                 $state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
                             } else {
-                                $state .= sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
+                                $state .= \sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
                                 break;
                             }
                         }

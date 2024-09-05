@@ -7,7 +7,6 @@ namespace App\Filament\Resources\PointResource\Pages;
 use App\Filament\Resources\PointResource;
 use App\Filament\Resources\PointResource\Actions\Page\AddPoint;
 use App\Models\ServiceType;
-use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +18,7 @@ class ListMapPoints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-           AddPoint::make()
+            AddPoint::make(),
         ];
     }
 
