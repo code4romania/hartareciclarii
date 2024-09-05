@@ -8,6 +8,7 @@ return [
 
     'singular' => 'Material reciclabil',
     'plural' => 'Materiale reciclabile',
+    'url' => 'Url',
     'categories' => [
         'singular' => 'Categorie material',
         'plural' => 'Categorii materiale',

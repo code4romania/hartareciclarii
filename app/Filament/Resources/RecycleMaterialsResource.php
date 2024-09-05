@@ -29,7 +29,7 @@ class RecycleMaterialsResource extends Resource
         return  __('materials.singular');
     }
 
-    public static function getModelName(): string
+    public static function getPluralLabel(): string
     {
         return  __('materials.plural');
     }
@@ -44,11 +44,14 @@ class RecycleMaterialsResource extends Resource
                     ->description(__('materials.heading'))
                     ->schema([
                         TextInput::make('name')->required()->unique(ignoreRecord: true),
+                        TextInput::make('url')
+                            ->label(__('materials.url'))
+                            ->url(),
                         Select::make('categories')
                             ->relationship('categories', 'name')
                             ->multiple()
                             ->preload(),
-                        TextInput::make('icon'),
+
                     ]),
             ]);
     }
@@ -103,8 +106,6 @@ class RecycleMaterialsResource extends Resource
     {
         return [
             'index' => Pages\ListRecycleMaterials::route('/'),
-            'create' => Pages\CreateRecycleMaterials::route('/create'),
-            'edit' => Pages\EditRecycleMaterials::route('/{record}/edit'),
         ];
     }
 
