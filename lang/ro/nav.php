@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'harta' => 'Harta',
-    'settings' => 'Setari',
+    'harta' => 'Hartă',
+    'settings' => 'Setări',
     'reports' => 'Rapoarte',
-    'map_points' => 'Puncte harta',
+    'map_points' => 'Puncte hartă',
     'duplicates' => 'Duplicate',
 ];
