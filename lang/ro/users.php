@@ -11,4 +11,10 @@ return [
         'link_label' => 'Reseteaza parola',
         'reset_time' => 'Link-ul de resetare a parolei va expira in ' . config('auth.passwords.users.expire') . ' minute',
     ],
+    'group' => [
+        'singular' => 'Grup utilizator',
+        'plural' => 'Grupuri utilizator',
+        'name' => 'Nume',
+        'users_count' => 'Numar utilizatori',
+    ],
 ];
