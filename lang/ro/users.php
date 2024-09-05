@@ -3,28 +3,28 @@
 declare(strict_types=1);
 
 return [
-    'heading' => 'Creează / actualizează un utilizator Admin',
-    'label' => 'Utilizatori',
+    'heading' => 'Create / update an admin user',
+    'label' => 'Users',
     'reset_password' => [
-        'subject' => 'Recuperare parolă',
+        'subject' => 'Recuperare parola',
         'email_heading' => 'Salut! Primesti acest email deoarece s-a efectuat o resetare a parolei pentru contul tau.',
-        'link_label' => 'Resetează parola',
-        'reset_time' => 'Link-ul de resetare a parolei va expira în ' . config('auth.passwords.users.expire') . ' minute',
+        'link_label' => 'Reseteaza parola',
+        'reset_time' => 'Link-ul de resetare a parolei va expira in ' . config('auth.passwords.users.expire') . ' minute',
     ],
     'group' => [
         'singular' => 'Grup utilizator',
         'plural' => 'Grupuri utilizator',
         'name' => 'Nume',
-        'users_count' => 'Număr utilizatori',
+        'users_count' => 'Numar utilizatori',
     ],
     'role' => 'Rol',
     'email' => 'Email',
     'name' => 'Nume',
     'phone' => 'Telefon',
-    'password' => 'Parolă',
+    'password' => 'Parola',
     'roles' => 'Roluri',
-    'points_count' => 'Număr puncte adǎugate',
-    'issues_count' => 'Număr probleme adǎugate',
+    'points_count' => 'Numar puncte adǎugate',
+    'issues_count' => 'Numar probleme adǎugate',
     'last_login_date' => 'Ultima datǎ de conectare',
 
 ];
