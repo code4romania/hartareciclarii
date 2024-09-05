@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 return [
-    'heading' => 'Creazǎ/Editeazǎ materialul reciclabil',
+    'heading' => 'Creeazǎ/Editeazǎ materialul reciclabil',
     'label' => 'Material reciclabil',
 
     'singular' => 'Material reciclabil',
     'plural' => 'Materiale reciclabile',
-    'url' => 'Url',
+    'url' => 'Link URL',
     'categories' => [
         'singular' => 'Categorie material',
         'plural' => 'Categorii materiale',
