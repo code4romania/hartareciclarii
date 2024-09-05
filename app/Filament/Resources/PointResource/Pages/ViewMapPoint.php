@@ -190,7 +190,6 @@ class ViewMapPoint extends ViewRecord
                             ->hidden($this->showField('can_have_business_name'))
                             ->label(__('map_points.fields.business_name')),
 
-
                         TextEntry::make('administered_by')
                             ->label(__('map_points.fields.administered_by')),
 
@@ -268,7 +267,7 @@ class ViewMapPoint extends ViewRecord
                                         ->required(fn (Get $get) => $get('unknown_administered_by') === false),
                                     Checkbox::make('unknown_administered_by')
                                         ->live()
-                                        ->afterStateUpdated(function (Set $set){
+                                        ->afterStateUpdated(function (Set $set) {
                                             $set('administered_by', null);
                                         })
                                         ->label(__('add_point.details.unknown_program'))
@@ -280,7 +279,7 @@ class ViewMapPoint extends ViewRecord
                                         ->required(fn (Get $get) => $get('unknown_schedule') === false),
                                     Checkbox::make('unknown_schedule')
                                         ->live()
-                                        ->afterStateUpdated(function (Set $set){
+                                        ->afterStateUpdated(function (Set $set) {
                                             $set('schedule', null);
                                         })
                                         ->label(__('add_point.details.unknown_program'))
@@ -289,16 +288,16 @@ class ViewMapPoint extends ViewRecord
                                     TextInput::make('website')
                                         ->url()
                                         ->label(__('map_points.fields.website'))
-                                        ->hidden(fn () => $this->showField( 'can_have_business_name')),
+                                        ->hidden(fn () => $this->showField('can_have_business_name')),
 
                                     TextInput::make('email')
                                         ->label(__('map_points.fields.email'))
                                         ->email()
-                                        ->hidden(fn () => $this->showField( 'can_have_business_name')),
+                                        ->hidden(fn () => $this->showField('can_have_business_name')),
 
                                     TextInput::make('phone')
                                         ->label(__('map_points.fields.phone'))
-                                        ->hidden(fn () => $this->showField( 'can_have_business_name')),
+                                        ->hidden(fn () => $this->showField('can_have_business_name')),
 
                                     Textarea::make('observations')
                                         ->label(__('map_points.fields.observations')),
@@ -365,6 +364,6 @@ class ViewMapPoint extends ViewRecord
             return false;
         }
 
-        return  !data_get($this->record->serviceType->toArray(), $string, false);
+        return  ! data_get($this->record->serviceType->toArray(), $string, false);
     }
 }
