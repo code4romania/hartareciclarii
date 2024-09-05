@@ -15,6 +15,7 @@ use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,6 +42,7 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         'phone',
         'email',
         'password',
+        'user_group_id',
     ];
 
     /**
@@ -172,5 +174,10 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     public function points(): HasMany
     {
         return $this->hasMany(Point::class, 'created_by');
+    }
+
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
     }
 }

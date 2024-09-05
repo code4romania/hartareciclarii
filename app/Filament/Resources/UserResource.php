@@ -57,7 +57,10 @@ class UserResource extends Resource
                         Select::make('roles')
                             ->relationship('roles', 'name')
                             ->preload(),
-
+                        Select::make('user_group_id')
+                            ->label(__('users.group.singular'))
+                            ->relationship('userGroup', 'name')
+                            ->preload(),
                     ])
                     ->columns(2),
 
@@ -69,18 +72,28 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
+
                 TextColumn::make('name')
-                    ->searchable(true, fn(Builder $query, $search) => $query->where('firstname', 'like', "%{$search}%")
+                    ->searchable(true, fn (Builder $query, $search) => $query->where('firstname', 'like', "%{$search}%")
                         ->orWhere('lastname', 'like', "%{$search}%")),
+
                 TextColumn::make('email')
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('roles.name')
                     ->sortable()
                     ->searchable(),
+
+                TextColumn::make('userGroup.name')
+                    ->label(__('users.group.singular'))
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('points_count')
                     ->counts('points')
                     ->sortable(),
+
                 TextColumn::make('issues_count')
                     ->counts('issues')
                     ->sortable(),
