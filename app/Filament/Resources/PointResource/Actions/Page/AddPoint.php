@@ -183,7 +183,7 @@ class AddPoint extends Action
         });
     }
 
-    private function showField(Get $get, string $string)
+    private function showField(Get $get, string $string): bool
     {
         if ($get('chosenService') === null) {
             return false;
