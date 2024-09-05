@@ -17,4 +17,14 @@ return [
         'name' => 'Nume',
         'users_count' => 'Numar utilizatori',
     ],
+    'role' => 'Rol',
+    'email' => 'Email',
+    'name' => 'Nume',
+    'phone' => 'Telefon',
+    'password' => 'Parola',
+    'roles' => 'Roluri',
+    'points_count' => 'Numar puncte adǎugate',
+    'issues_count' => 'Numar probleme adǎugate',
+    'last_login_date' => 'Ultima datǎ de conectare',
+
 ];

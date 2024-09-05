@@ -74,14 +74,17 @@ class UserResource extends Resource
                 TextColumn::make('id'),
 
                 TextColumn::make('name')
+                    ->label(__('users.name'))
                     ->searchable(true, fn (Builder $query, $search) => $query->where('firstname', 'like', "%{$search}%")
                         ->orWhere('lastname', 'like', "%{$search}%")),
 
                 TextColumn::make('email')
+                    ->label(__('users.email'))
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('roles.name')
+                    ->label(__('users.role'))
                     ->sortable()
                     ->searchable(),
 
@@ -91,14 +94,17 @@ class UserResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('points_count')
+                    ->label(__('users.points_count'))
                     ->counts('points')
                     ->sortable(),
 
                 TextColumn::make('issues_count')
+                    ->label(__('users.issues_count'))
                     ->counts('issues')
                     ->sortable(),
 
                 TextColumn::make('last_login_date')->date('Y-m-d H:i:s')
+                    ->label(__('users.last_login_date'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')
@@ -106,7 +112,11 @@ class UserResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('user_group_id')
+                    ->label(__('users.group.singular'))
+                    ->relationship('userGroup', 'name')
+                    ->preload()
+                    ->multiple(),
             ])
             ->actions([
                 ActionGroup::make([
