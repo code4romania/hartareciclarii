@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -69,9 +70,8 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id'),
                 TextColumn::make('name')
-//                    ->sortable()
-//                    ->getSearchColumns('firstname')
-                    ->searchable(),
+                    ->searchable(true, fn(Builder $query, $search) => $query->where('firstname', 'like', "%{$search}%")
+                        ->orWhere('lastname', 'like', "%{$search}%")),
                 TextColumn::make('email')
                     ->sortable()
                     ->searchable(),
