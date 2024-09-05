@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 return [
-    'heading' => 'Create / update a permission',
-    'role_heading' => 'Create / update a user role',
+    'heading' => 'Creează / actualizează o permisiune',
+    'role_heading' => 'Creează / actualizează un rol de utilizator',
     'label' => 'Permisiuni',
-    'roles_label' => 'User roles',
+    'roles_label' => 'Roluri utilizatori',
 ];
