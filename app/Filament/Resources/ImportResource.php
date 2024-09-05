@@ -156,4 +156,9 @@ class ImportResource extends Resource
     {
         return parent::getEloquentQuery();
     }
+
+    public static function canAccess(): bool
+    {
+        return false;
+    }
 }

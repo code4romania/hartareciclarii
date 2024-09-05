@@ -17,6 +17,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -110,6 +111,8 @@ class PointResource extends Resource
                     ->label(__('map_points.county'))
                     ->relationship('county', 'name')
                     ->multiple(),
+
+                TrashedFilter::make(),
 
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)

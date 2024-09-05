@@ -115,4 +115,8 @@ class DuplicatesResource extends Resource
     {
         return static::getModel()::count() > 10 ? 'danger' : 'primary';
     }
+    public static function canAccess(): bool
+    {
+     return  false;
+    }
 }
