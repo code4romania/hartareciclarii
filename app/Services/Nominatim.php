@@ -80,18 +80,17 @@ class Nominatim
         return new Location($result);
     }
 
-    public static function getPlaceById(int $placeId): Collection
+    public function getPlaceById(int $placeId): Location
     {
-        $nominatim = new NominatimClient(config('services.nominatim.url'));
-
-        $request = $nominatim->newDetails()
+        $request = $this->nominatim->newDetails()
             ->language(app()->getLocale())
             ->addressDetails()
             ->placeId($placeId);
 
+        $result = $this->nominatim->find($request);
 
-        return collect(
-            rescue(fn () => $nominatim->find($request))
-        );
+        abort_if(data_get($result, 'error'), 404);
+
+        return new Location($result);
     }
 }

@@ -20,16 +20,19 @@ readonly class Location
 
     public ?string $city;
 
+    public ?int $id;
+
     public function __construct(array $location)
     {
-        // dump($location);
+        $this->id = data_get($location, 'place_id');
         $this->address = $this->collectAddress($location);
 
         $this->county = $this->firstFromAddress(['county'], 'București');
         $this->city = $this->firstFromAddress(['city_district', 'district', 'city', 'town', 'village']);
 
         $this->name = $this->computeName();
-        $this->bounds = collect($location['boundingbox'])
+
+        $this->bounds = collect(data_get($location, 'boundingbox', []))
             ->map([$this, 'formatCoordinate'])
             ->all();
 

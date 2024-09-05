@@ -237,6 +237,7 @@ class PointResource extends Resource
                                 ->options(Status::options())
                                 ->required(),
                         ])
+
                         ->action(function (array $data, Collection $records): void {
                             $recordsWithoutIssues = $records->filter(function ($record) {
                                 return $record->issues->isEmpty();

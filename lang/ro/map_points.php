@@ -53,9 +53,10 @@ return [
 
     ],
     'fields' => [
-        'address' => 'Adresa',
+        'address' => 'Adresǎ',
         'coordinate' => 'Coordonate',
         'notes' => 'Notițe localizare (private)',
+        'service_type' => 'Tip serviciu',
         'status' => 'Status',
         'group' => 'Grup',
         'latitude' => 'Latitudine',
@@ -74,18 +75,29 @@ return [
         'offers_transport' => 'Ofera transport',
         'offers_money' => 'Ofera bani',
         'offers_vouchers' => 'Ofera vouchere',
-        'free_of_charge' => 'Gratuit',
+        'free_of_charge' => 'Oferă servicii gratuite',
+        'business_name' => 'Nume business',
+
     ],
     'notifications' => [
         'status_changed' => [
             'success' => 'Statusu actualizat cu succes',
             'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
         ],
+
+        'point_added_body' => 'Punctul a fost adǎugat cu succes. :point',
     ],
 
-    'wizard'=>[
+    'wizard' => [
         'step_1' => 'Selecteaza tipul de locatie',
         'step_2' => 'Detalii punct',
-    ]
+        'step_3' => 'Materiale',
+    ],
+    'new_point' => 'Punct nou',
+    'edit_point' => 'Modificǎ punct',
+    'new_address' => 'Adresa nouǎ:',
+    'change_pin_location' => 'Schimbǎ locația',
+    'change_address' => 'Schimbǎ adresa',
+    'submit' => 'Adaugǎ punct',
 
 ];
