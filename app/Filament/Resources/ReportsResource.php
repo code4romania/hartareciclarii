@@ -45,7 +45,7 @@ class ReportsResource extends Resource
     {
         return collect(explode(', ', $segments))
             ->filter()
-            ->map(fn (string $segment) => __(sprintf('report.segment.value.%s.%s', $group, $segment)))
+            ->map(fn (string $segment) => __(\sprintf('report.segment.value.%s.%s', $group, $segment)))
             ->join(', ');
     }
 

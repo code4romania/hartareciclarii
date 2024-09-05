@@ -39,7 +39,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
 
     public function getSubHeading(): string | Htmlable
     {
-        return sprintf(__('imports.sub_heading'), $this->getRecord()->createdBy->fullname, $this->getRecord()->created_at, $this->getRecord()->finished_at);
+        return \sprintf(__('imports.sub_heading'), $this->getRecord()->createdBy->fullname, $this->getRecord()->created_at, $this->getRecord()->finished_at);
     }
 
     protected function getHeaderActions(): array
@@ -50,7 +50,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
         $processed = (isset($record->result['processed'])) ? \count($record->result['processed']) : 0;
         $actions = array_merge($actions, [
             Action::make('failed')
-                ->label(sprintf(__('imports.not_imported'), $failed))
+                ->label(\sprintf(__('imports.not_imported'), $failed))
                 ->icon('heroicon-m-check')
                 ->hidden(function () use ($failed) {
                     return $this->view_type == 'failed' || $failed == 0;
@@ -58,7 +58,7 @@ class ViewImport extends ViewRecord implements HasTable, HasActions
                 ->url(fn (ImportExportModel $record): string => ImportResource::getUrl('view_report', ['record' => $record->id]) . '?show=failed')
                 ->color('danger'),
             Action::make('processed')
-                ->label(sprintf(__('imports.imported'), $processed))
+                ->label(\sprintf(__('imports.imported'), $processed))
                 ->icon('heroicon-m-check')
                 ->hidden(function () use ($processed) {
                     return $this->view_type == 'processed' || $processed == 0;
