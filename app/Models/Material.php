@@ -19,6 +19,8 @@ class Material extends Model
 
     protected $fillable = ['name', 'url'];
 
+    protected $with = ['categories'];
+
     public function categories(): MorphToMany
     {
         return $this->morphedByMany(MaterialCategory::class, 'model', 'model_has_materials');
