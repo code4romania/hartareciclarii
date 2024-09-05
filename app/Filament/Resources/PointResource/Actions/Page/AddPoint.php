@@ -214,7 +214,6 @@ class AddPoint extends Action
                         ->hiddenLabel()
                         ->action(function (array $data, Set $set, Get $get) use ($category) {
                             $materials = $get('category_' . $category->id);
-                            debug($get());
                             foreach ($materials as $material => $value) {
                                 $set('category_' . $category->id . '.' . $material, true);
                             }
