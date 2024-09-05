@@ -85,6 +85,8 @@ return [
             'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
         ],
 
+        'point_allocated_to_group' => 'Punctele (:number) au fost alocat cu succes la grupul :group',
+
         'point_added_body' => 'Punctul a fost adǎugat cu succes. :point',
     ],
 

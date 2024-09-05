@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Enums\Point\Status;
 use App\Filament\Resources\PointResource\Pages;
 use App\Models\Point;
+use App\Models\PointGroup;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -122,24 +123,6 @@ class PointResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $actions = [
-
-        ];
-        if (auth()->user()->can('manage_map_points')) {
-            $actions = array_merge($actions, [
-                Tables\Actions\Action::make('validate-point')
-                    ->label(__('map_points.buttons.validate'))
-                    ->icon('heroicon-m-check')
-                    ->url(fn (MapPointModel $record): string => route('map-points.validate', $record))
-                    ->requiresConfirmation()
-                    ->visible(function ($record): bool {
-                        return $record->status == 0;
-                    }),
-                // Tables\Actions\EditAction::make()->label(__('map_points.buttons.edit')),
-                Tables\Actions\DeleteAction::make()->label(__('map_points.buttons.delete')),
-            ]);
-        }
-
         return $table
             ->columns([
                 TextColumn::make('id')
@@ -236,7 +219,6 @@ class PointResource extends Resource
                                 ->options(Status::options())
                                 ->required(),
                         ])
-
                         ->action(function (array $data, Collection $records): void {
                             $recordsWithoutIssues = $records->filter(function ($record) {
                                 return $record->issues->isEmpty();
@@ -262,6 +244,34 @@ class PointResource extends Resource
                         ->icon('heroicon-o-check')
                         ->color('warning')
                         ->requiresConfirmation(),
+                    BulkAction::make('allocate_to_group')
+                        ->label(__('map_points.buttons.set_group'))
+                        ->form([
+                            Select::make('group_id')
+                                ->label(__('map_points.fields.group'))
+                                ->options(PointGroup::all()->pluck('name', 'id'))
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Collection $records): void {
+                            $group = PointGroup::find($data['group_id']);
+                            Point::whereIn('id', $records->pluck('id')->toArray())
+                                ->update([
+                                    'point_group_id' => $group->id,
+                                ]);
+
+                            Notification::make('success_point_allocated_to_group')
+                                ->body(__('map_points.notifications.point_allocated_to_group',[
+                                    'number' => $records->count(),
+                                    'group' => $group->name,
+                                ]))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->icon('heroicon-o-users')
+                        ->color('info')
+                        ->requiresConfirmation(),
+
                     DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
 
                 ]),
