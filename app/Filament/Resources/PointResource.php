@@ -15,6 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -47,35 +49,27 @@ class PointResource extends Resource
                     ->label(__('map_points.managed_by'))
                     ->wrap(),
 
-                TextColumn::make('materials')
+                TextColumn::make('materials.name')
                     ->label(__('map_points.materials'))
-                    ->sortable()
-                    // ->searchable()
-                    ->formatStateUsing(function (string $state, $record) {
-                        $icons = collect(explode(',', $state))->unique();
-                        $state = '<div style="display:inline-flex; flex-wrap:wrap">';
-                        foreach ($icons as $index => $icon) {
-                            if ($index < 3) {
-                                $state .= "<img style='width:30px;padding:5px' src='" . str_replace(' ', '', $icon) . "'>";
-                            } else {
-                                $state .= \sprintf('<span class="badge badge-primary">+%s</span>', $icons->count() - 3);
-                                break;
-                            }
-                        }
-                        $state = rtrim($state) . '</div>';
+                    ->searchable()
+                    ->limitList(2)
+                    ->sortable(),
 
-                        return $state;
-                    })
-                    ->html(),
                 TextColumn::make('county.name')
-                    ->label(__('map_points.county')),
+                    ->label(__('map_points.county'))
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('city.name')
-                    ->label(__('map_points.city')),
+                    ->label(__('map_points.city'))
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('address')
                     ->label(__('map_points.address'))
                     ->searchable()
                     ->wrap(),
+
                 TextColumn::make('pointGroup.name')
                     ->label(__('map_points.group'))
                     ->sortable()
@@ -94,8 +88,31 @@ class PointResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label(__('map_points.fields.status'))
+                    ->options(Status::options()),
+                SelectFilter::make('point_group_id')
+                    ->label(__('map_points.fields.group'))
+                    ->relationship('pointGroup', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('point_type_id')
+                    ->label(__('map_points.fields.point_type'))
+                    ->relationship('pointType', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('city_id')
+                    ->label(__('map_points.city'))
+                    ->relationship('city', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('county_id')
+                    ->label(__('map_points.county'))
+                    ->relationship('county', 'name')
+                    ->multiple(),
+
             ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->label(__('map_points.buttons.details'))
