@@ -62,7 +62,7 @@ class ViewMapPoint extends ViewRecord
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    $this->record->changeGroup($data['group_id']);
+                    $this->record->changeGroup((int)$data['group_id']);
                     Notification::make()
                         ->title(__('map_points.point_save_success'))
                         ->success()
