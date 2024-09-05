@@ -17,7 +17,7 @@ class Material extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'url'];
 
     public function categories(): MorphToMany
     {

@@ -14,6 +14,7 @@ class MaterialResource extends JsonResource
         return [
             'key' => $this->id,
             'label' => $this->name,
+            'url' => $this->url,
         ];
     }
 }
