@@ -184,6 +184,7 @@ class ViewMapPoint extends ViewRecord
                             ->label(__('map_points.fields.point_type')),
 
                         TextEntry::make('materials.name')
+                            ->hidden($this->showField('can_collect_materials'))
                             ->label(__('map_points.fields.materials')),
 
                         TextEntry::make('business_name')
@@ -254,6 +255,7 @@ class ViewMapPoint extends ViewRecord
                                         ->required(),
                                     Select::make('materials')
                                         ->label(__('map_points.fields.materials'))
+                                        ->hidden($this->showField('can_collect_materials'))
                                         ->relationship('materials', 'name')
                                         ->multiple()
                                         ->required(),
