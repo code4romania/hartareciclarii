@@ -18,7 +18,6 @@ export default {
                 },
             ],
         }),
-        // py-2 px-3 text-gray-800 dark:text-white/80 placeholder:text-gray-400 dark:placeholder:text-gray-500 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-gray-400 dark:hover:border-gray-600 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 dark:focus:ring-primary-400 focus:z-10 appearance-none transition-colors duration-200
         inputMultiple: ({ props, state }) => ({
             class: [
                 // Font

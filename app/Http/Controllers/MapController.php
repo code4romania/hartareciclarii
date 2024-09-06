@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
-use App\Http\Requests\SubmitPointRequest;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
@@ -22,11 +21,9 @@ use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
-use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class MapController extends Controller
 {
@@ -141,24 +138,6 @@ class MapController extends Controller
         ]);
     }
 
-    public function submit(SubmitPointRequest $request): IlluminateResponse
-    {
-        $attributes = $request->validated();
-
-        $attributes['location'] = new SpatialPoint(
-            $attributes['location']['lat'],
-            $attributes['location']['lng']
-        );
-
-        $attributes['status'] = Status::NEEDS_VERIFICATION;
-
-        $point = Point::create($attributes);
-
-        $point->materials()->attach(data_get($attributes, 'materials', []));
-
-        return Inertia::location($point->url);
-    }
-
     public function report($request)
     {
         //
@@ -194,7 +173,7 @@ class MapController extends Controller
 
             'materials' => fn () => MaterialCategoryResource::collection(
                 MaterialCategory::query()
-                    ->with('materials')
+                    ->with('media', 'materials')
                     ->get()
             ),
 
@@ -215,6 +194,7 @@ class MapController extends Controller
                     Point::query()
                         ->with('serviceType:id,slug')
                         ->whereMatchesCoordinates($coordinates)
+                        ->take(2000)
                         ->get(['id', 'location', 'service_type_id'])
                 );
             },

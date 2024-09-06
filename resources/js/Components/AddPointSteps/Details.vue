@@ -133,6 +133,15 @@
             v-model="form.observations"
             :errors="[form.errors.observations]"
         />
+
+        <FileUpload
+            name="images"
+            :label="$t('add_point.details.images')"
+            :help="$t('add_point.details.images_help')"
+            v-model="form.images"
+            :errors="[form.errors.images]"
+            :chooseLabel="$t('add_point.details.images_add')"
+        />
     </fieldset>
 </template>
 
@@ -143,6 +152,7 @@
     import Input from '@/Components/Form/Input.vue';
     import Select from '@/Components/Form/Select.vue';
     import Textarea from '@/Components/Form/Textarea.vue';
+    import FileUpload from '@/Components/Form/FileUpload.vue';
 
     const props = defineProps({
         form: {

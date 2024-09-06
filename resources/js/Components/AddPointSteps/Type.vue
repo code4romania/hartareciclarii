@@ -57,6 +57,7 @@
     import { LMap, LControl, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import AutoComplete from 'primevue/autocomplete';
     import route from '@/Helpers/useRoute.js';
+    import { reverse } from '@/Helpers/useReverse.js';
 
     import Button from '@/Components/Button.vue';
     import Modal from '@/Components/Modal.vue';
@@ -82,28 +83,33 @@
 
     const emit = defineEmits(['changePinLocation']);
 
-    const address = ref(props.form.address);
+    const address = computed({
+        get: () => props.form.address,
+        set: (address) => {
+            if (typeof address === 'string') {
+                props.form.address = address;
 
-    const located = ({ lat, lng }) => updatePoint(lat, lng);
+                return;
+            }
+
+            props.form.address = address.name;
+            props.form.city = address.city;
+            props.form.county = address.county;
+
+            updatePoint(address.center[0], address.center[1]);
+        },
+    });
+
+    const located = async ({ lat, lng }) => {
+        updatePoint(lat, lng);
+
+        props.form.address = await reverse({ lat, lng });
+    };
 
     const updatePoint = (lat, lng) => {
         props.form.location.lat = lat;
         props.form.location.lng = lng;
     };
-
-    watch(address, (address) => {
-        if (typeof address === 'string') {
-            props.form.address = address;
-
-            return;
-        }
-
-        props.form.address = address.name;
-        props.form.city = address.city;
-        props.form.county = address.county;
-
-        updatePoint(address.center[0], address.center[1]);
-    });
 
     const suggestions = ref([]);
 

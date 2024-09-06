@@ -80,9 +80,9 @@
     watch(
         () => props.form.location,
         ({ lat, lng }) => {
-            marker.value.leafletObject.setLatLng({ lat, lng });
-        }
-        // { deep: true }
+            marker.value?.leafletObject.setLatLng({ lat, lng });
+        },
+        { deep: true }
     );
 </script>
 

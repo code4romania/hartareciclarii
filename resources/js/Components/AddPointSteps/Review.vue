@@ -80,6 +80,23 @@
         <Email v-if="form.email" :email="form.email" />
 
         <Phone v-if="form.phone" :phone="form.phone" />
+
+        <FormField
+            name="images"
+            v-if="form.images.length"
+            :label="$t('add_point.details.images')"
+            :errors="[form.errors.images]"
+        >
+            <ul class="flex flex-wrap gap-4">
+                <li
+                    v-for="{ uuid, url } in form.images"
+                    :key="uuid"
+                    class="relative w-24 h-24 overflow-hidden rounded-lg bg-gray-50"
+                >
+                    <img role="presentation" alt="" :src="url" class="object-cover w-24 h-24" />
+                </li>
+            </ul>
+        </FormField>
     </fieldset>
 </template>
 

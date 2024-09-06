@@ -17,13 +17,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Point extends Model
+class Point extends Model implements HasMedia
 {
     use HasFactory;
     use HasSpatial;
     use Searchable;
     use SoftDeletes;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'status',
@@ -59,6 +63,18 @@ class Point extends Model
         'offers_transport' => 'boolean',
         'free_of_charge' => 'boolean',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('default')
+            ->registerMediaConversions(function (Media $media) {
+                $this
+                    ->addMediaConversion('thumb')
+                    ->fit(Fit::Crop, 96, 96)
+                    ->keepOriginalImageFormat()
+                    ->optimize();
+            });
+    }
 
     public function materials(): BelongsToMany
     {

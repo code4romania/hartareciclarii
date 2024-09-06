@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\SubmitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
@@ -31,14 +32,20 @@ Route::prefix('cont')->middleware('auth:web')->group(function () {
 });
 
 Route::group([
+    'prefix' => 'submit',
+    'as' => 'submit.',
+    'controller' => SubmitController::class,
+], function () {
+    Route::post('/point', 'point')->name('point')->middleware(HandlePrecognitiveRequests::class);
+    Route::post('/image', 'image')->name('image');
+    Route::delete('/image/{media:uuid}', 'deleteImage')->name('deleteImage');
+});
+
+Route::group([
     // 'prefix' => 'map',
     'as' => 'map.',
     'controller' => MapController::class,
 ], function () {
-    Route::post('/point/submit', 'submit')
-        ->middleware(HandlePrecognitiveRequests::class)
-        ->name('point.submit');
-
     Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
     Route::get('/reverse/{coordinates?}', 'reverse')->name('reverse');
 

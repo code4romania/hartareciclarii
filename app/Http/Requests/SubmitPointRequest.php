@@ -6,9 +6,10 @@ namespace App\Http\Requests;
 
 use App\Models\City;
 use App\Models\ServiceType;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Collection;
+use App\Models\TemporaryUpload;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Collection;
+use Illuminate\Foundation\Http\FormRequest;
 
 class SubmitPointRequest extends FormRequest
 {
@@ -31,10 +32,10 @@ class SubmitPointRequest extends FormRequest
             // Step 3: Details
             'point_type_id' => ['required', 'exists:point_types,id'],
             'business_name' => ['nullable', 'string', 'max:50'],
-            'administered_by' => ['sometimes', 'exclude_if:administered_by_unknown,true', 'required_if:administered_by_unknown,false', 'nullable', 'string', 'max:50'],
-            'administered_by_unknown' => ['sometimes', 'boolean'],
+            'administered_by' => ['exclude_if:administered_by_unknown,true', 'required_if:administered_by_unknown,false', 'nullable', 'string', 'max:50'],
+            'administered_by_unknown' => ['boolean'],
             'schedule' => ['exclude_if:schedule_unknown,true', 'required_if:schedule_unknown,false', 'nullable', 'string', 'max:50'],
-            'schedule_unknown' => ['sometimes', 'boolean'],
+            'schedule_unknown' => ['boolean'],
 
             'offers_money' => ['nullable', Rule::excludeIf(fn () => $this->offers_money === -1), 'boolean'],
             'offers_vouchers' => ['nullable', Rule::excludeIf(fn () => $this->offers_vouchers === -1), 'boolean'],
@@ -45,6 +46,9 @@ class SubmitPointRequest extends FormRequest
             'email' => ['nullable', 'email', 'max:50'],
             'phone' => ['nullable', 'numeric', 'max_digits:14'],
             'observations' => ['nullable', 'string', 'max:500'],
+
+            'images' => ['nullable', 'array', 'max:5'],
+            'images.*' => ['required', Rule::exists('media', 'uuid')->where('model_type', app(TemporaryUpload::class)->getMorphClass())],
 
             // Step 4: Materials
             ...$this->getMaterialRules($serviceTypes),

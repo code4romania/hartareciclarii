@@ -71,7 +71,7 @@
                     class="py-3 text-sm"
                     v-html="
                         $t('add_point.location.alert.body', {
-                            old: form.address,
+                            old: form.address || '',
                             new: form.address_override,
                         })
                     "
@@ -125,7 +125,7 @@
         lng: null,
     });
 
-    const form = useForm('post', route('front.map.point.submit'), {
+    const form = useForm('post', route('front.submit.point'), {
         step: 'type',
 
         // step 1: Type
@@ -156,6 +156,7 @@
         email: null,
         phone: null,
         observations: null,
+        images: [],
 
         // step 4: Materials
         materials: {},
@@ -215,6 +216,7 @@
                 'email',
                 'phone',
                 'observations',
+                'images',
             ],
             materials: ['materials'],
         }[step]);
@@ -258,6 +260,19 @@
     };
 
     const transform = (data) => {
+        Object.entries(data).forEach(([key, value]) => {
+            /**
+             * Ensure this matches Laravel's own boolean validator.
+             *
+             * @see https://laravel.com/docs/11.x/validation#rule-boolean
+             */
+            if (typeof value === 'boolean') {
+                data[key] = value ? 1 : 0;
+            }
+        });
+
+        data.images = data.images.map((image) => image.uuid);
+
         data.materials = Object.keys(data.materials).filter((key) => !key.startsWith('cat-'));
 
         return data;
@@ -269,6 +284,10 @@
         }
 
         if (!isStep('review')) {
+            if (isStep('details')) {
+                form.validateFiles();
+            }
+
             return form.transform(transform).touch(getFieldsByStep(form.step)).validate({
                 onSuccess: nextStep,
             });

@@ -152,8 +152,10 @@
     "add_point.details.offers_transport": "Oferă transport?",
     "add_point.details.observations": "Observații",
     "add_point.details.observations_placeholder": "Alte detalii despre locație sau despre modul de oferire al serviciului",
-    "add_point.details.add_picture": "Adaugă poze",
-    "add_point.details.add_picture_subtitle": "Orice fel de poze sugestive sau utile pentru a identifica locația sau punctul adăugat",
+
+    "add_point.details.images": "Poze locație",
+    "add_point.details.images_help": "Orice fel de poze sugestive sau utile pentru a identifica locația sau punctul adăugat. Acestea nu vor fi publicate, însă vor ajuta echipa Viitor Plus sa gestioneze informațiile pe site.",
+    "add_point.details.images_add": "Adaugă poze",
 
     "add_point.materials.subtitle": "Pasul 3: Materiale colectate",
     "add_point.materials.label": "Marchează care dintre următoarele materiale se colectează la acest punct",
