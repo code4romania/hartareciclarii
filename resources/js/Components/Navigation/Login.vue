@@ -166,14 +166,14 @@
                                             <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                                                 <InputComponent
                                                     id="first-name"
-                                                    :label="$t('auth.register.firstname')"
+                                                    :label="$t('auth.register.first_name')"
                                                     v-model="registerForm.first_name"
                                                     :error="errors.first_name"
                                                     is-required
                                                 />
                                                 <InputComponent
                                                     id="last-name"
-                                                    :label="$t('auth.register.lastname')"
+                                                    :label="$t('auth.register.last_name')"
                                                     v-model="registerForm.last_name"
                                                     :error="errors.last_name"
                                                     is-required

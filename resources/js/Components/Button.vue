@@ -3,7 +3,7 @@
         <a
             v-if="external"
             :href="href"
-            :class="[buttonBase, buttonSize, buttonColor]"
+            :class="[buttonBase, buttonSize, buttonShadow, buttonColor]"
             target="_blank"
             rel="noopener noreferrer"
         >
@@ -12,14 +12,14 @@
             <slot>{{ label }}</slot>
         </a>
 
-        <Link v-else :href="href" :class="[buttonBase, buttonSize, buttonColor]">
+        <Link v-else :href="href" :class="[buttonBase, buttonSize, buttonShadow, buttonColor]">
             <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
 
             <slot>{{ label }}</slot>
         </Link>
     </template>
 
-    <button v-else :type="type" :class="[buttonBase, buttonSize, buttonColor]" :disabled="disabled">
+    <button v-else :type="type" :class="[buttonBase, buttonSize, buttonShadow, buttonColor]" :disabled="disabled">
         <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
 
         <slot>{{ label }}</slot>
@@ -65,28 +65,52 @@
             type: Boolean,
             default: false,
         },
+        simple: {
+            type: Boolean,
+            default: false,
+        },
     });
 
     const isLink = computed(() => props.href !== null);
 
-    const buttonBase = `flex items-center justify-center ring-inset select-none font-medium rounded-full whitespace-nowrap disabled:opacity-75 disabled:cursor-default`;
+    const buttonBase = computed(() => ({
+        'flex items-center ring-inset select-none font-medium whitespace-nowrap disabled:opacity-75 disabled:cursor-default': true,
+        'justify-start': props.simple,
+        'justify-center rounded-full': !props.simple,
+    }));
 
     const iconBase = 'shrink-0';
 
     const buttonSize = computed(
         () =>
             ({
-                sm: 'gap-2 px-4 py-2 text-sm shadow-sm',
-                md: 'gap-2 px-4 py-2 text-base shadow',
-                lg: 'gap-3 px-4 py-2 text-lg shadow-lg',
-            }[props.size])
+                sm: 'gap-2 px-4 py-2 text-sm',
+                md: 'gap-2 px-4 py-2 text-base',
+                lg: 'gap-3 px-4 py-2 text-lg',
+            })[props.size]
     );
 
-    const buttonColor = computed(() =>
-        props.primary
+    const buttonShadow = computed(() => {
+        if (props.simple) {
+            return null;
+        }
+
+        return {
+            sm: 'shadow-sm',
+            md: 'shadow',
+            lg: 'shadow-lg',
+        }[props.size];
+    });
+
+    const buttonColor = computed(() => {
+        if (props.simple) {
+            return props.primary ? 'text-primary-800' : 'text-gray-700';
+        }
+
+        return props.primary
             ? 'bg-primary-800 text-white ring-primary-800 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 focus:outline-none disabled:hover:bg-primary-800'
-            : 'ring-1 bg-white text-gray-700 ring-gray-300 hover:bg-gray-50 disabled:bg-gray-200 disabled:hover:bg-gray-200 '
-    );
+            : 'ring-1 bg-white text-gray-700 ring-gray-300 hover:bg-gray-50 disabled:bg-gray-200 disabled:hover:bg-gray-200 ';
+    });
 
     const iconSize = computed(
         () =>
@@ -94,13 +118,13 @@
                 sm: 'h-4 w-4',
                 md: 'h-5 w-5',
                 lg: 'h-5 w-5',
-            }[props.size])
+            })[props.size]
     );
 
     const iconColor = computed(
         () =>
             ({
                 white: 'text-gray-500',
-            }[props.color])
+            })[props.color]
     );
 </script>

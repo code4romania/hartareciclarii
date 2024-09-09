@@ -14,7 +14,7 @@ class UserController extends Controller
     public function dashboard(): Response
     {
         return Inertia::render(
-            'Dashboard',
+            'Account/Dashboard',
             [
                 'contributions' => [
                     [

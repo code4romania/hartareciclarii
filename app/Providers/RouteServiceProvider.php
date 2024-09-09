@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
 {
     public static function getDashboardUrl(): string
     {
-        return route('front.dashboard');
+        return route('front.account.dashboard');
     }
 
     /**
@@ -28,9 +28,9 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('coordinates', fn (string $coordinates) => new MapCoordinates($coordinates));
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            Route::middleware('web')
+                ->name('auth.')
+                ->group(base_path('routes/auth.php'));
 
             Route::middleware('web')
                 ->name('front.')
@@ -40,8 +40,17 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perMinute(config('throttle.register_limit'))->by($request->ip());
         });
+
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(config('throttle.login_limit'))->by($request->ip());
+        });
+    }
+
+    public static function getRedirectUrl(): string
+    {
+        return route('front.account.dashboard');
     }
 }

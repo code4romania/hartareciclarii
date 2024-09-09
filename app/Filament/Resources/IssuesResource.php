@@ -54,7 +54,7 @@ class IssuesResource extends Resource
                     ->searchable(
                         query: fn (Builder $query, $search) => $query->whereHas(
                             'user',
-                            fn (Builder $query) => $query->whereAny(['firstname', 'lastname', 'email', 'phone'], 'LIKE', '%' . $search . '%')
+                            fn (Builder $query) => $query->whereAny(['first_name', 'last_name', 'email', 'phone'], 'LIKE', '%' . $search . '%')
                         )
                     )
                     ->label(__('issues.columns.reporter'))->sortable(),

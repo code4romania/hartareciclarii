@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -15,21 +13,22 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(
             parent::share($request),
-            $this->shareOnce($request, fn (Request $request) => [
-                'recaptcha_site_key' => config('recaptcha.api_site_key'),
-            ]),
+            $this->shareOnce($request),
             [
-                'user' => $request->user(),
+                'auth' => $request->user(),
             ]
         );
     }
 
-    public function shareOnce(Request $request, Closure $callback): array
+    protected function shareOnce(Request $request): array
     {
         if ($request->inertia()) {
             return [];
         }
 
-        return Arr::wrap($callback($request));
+        return [
+            'recaptcha_site_key' => config('recaptcha.api_site_key'),
+            'appName' => config('app.name'),
+        ];
     }
 }

@@ -214,9 +214,10 @@
             return;
         }
 
-        map.value.leafletObject.flyToBounds(L.latLngBounds(L.latLng(value[0], value[2]), L.latLng(value[1], value[3])), {
-            animate: false,
-        });
+        map.value.leafletObject.flyToBounds(
+            L.latLngBounds(L.latLng(value[0], value[2]), L.latLng(value[1], value[3])),
+            { animate: false }
+        );
     });
 
     const { locateControl } = useLocate();

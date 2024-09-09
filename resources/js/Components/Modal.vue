@@ -2,7 +2,7 @@
     <slot name="trigger" :open="open" :isOpen="isOpen" />
 
     <TransitionRoot as="template" :show="isOpen">
-        <Dialog class="relative z-10" @close="overlayDismissable && close()">
+        <Dialog class="relative z-50" @close="overlayDismissable && close()">
             <TransitionChild
                 as="template"
                 enter="ease-out duration-300"
@@ -34,7 +34,7 @@
                             <div
                                 class="relative flex flex-col w-full max-h-full overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl"
                             >
-                                <div class="sticky top-0 px-4 py-5 sm:px-6">
+                                <div v-if="$slots.title || dismissable" class="sticky top-0 px-4 py-5 sm:px-6">
                                     <button
                                         v-if="dismissable"
                                         type="button"
@@ -58,7 +58,7 @@
                                 </div>
 
                                 <div class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6">
-                                    <slot />
+                                    <slot :close="close" />
                                 </div>
 
                                 <div

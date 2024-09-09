@@ -20,7 +20,7 @@
     @routes
 </head>
 
-<body class="min-h-screen antialiased ">
+<body class="min-h-screen antialiased">
     @inertia
 </body>
 

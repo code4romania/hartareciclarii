@@ -12,14 +12,13 @@ use App\Models\Media;
 use App\Models\Point;
 use App\Models\TemporaryUpload;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class SubmitController extends Controller
 {
-    public function point(SubmitPointRequest $request): IlluminateResponse
+    public function point(SubmitPointRequest $request)
     {
         $attributes = $request->validated();
 
@@ -43,7 +42,9 @@ class SubmitController extends Controller
                 ]);
         }
 
-        return Inertia::location($point->url);
+        return redirect()->to($point->url);
+
+        // return Inertia::location($point->url);
     }
 
     public function image(SubmitImageRequest $request)

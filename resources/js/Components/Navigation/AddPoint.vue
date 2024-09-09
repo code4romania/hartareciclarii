@@ -1,10 +1,10 @@
 <template>
-    <Modal :dismissable="!isStep('location')" form @submit="submit">
+    <Modal :dismissable="!isStep('location') && !isStep('thanks')" form @submit="submit">
         <template #trigger="{ open }">
-            <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" @click="open" />
+            <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" :simple="simple" @click.bubble="open" />
         </template>
 
-        <template #title>
+        <template v-if="!isStep('thanks')" #title>
             <template v-if="isStep('location')">
                 <div class="flex gap-2">
                     <button type="button" @click="() => goToStep('type')">
@@ -18,24 +18,28 @@
             <span v-else v-text="$t('add_point.title')" />
         </template>
 
-        <div class="grid gap-4">
-            <TypeStep
-                v-if="isStep('type')"
-                :form="form"
-                :serviceTypes="serviceTypes"
-                @changePinLocation="changePinLocation"
-            />
+        <template #default="{ close }">
+            <div class="grid gap-4">
+                <TypeStep
+                    v-if="isStep('type')"
+                    :form="form"
+                    :serviceTypes="serviceTypes"
+                    @changePinLocation="changePinLocation"
+                />
 
-            <LocationStep v-if="isStep('location')" :form="form" />
+                <LocationStep v-if="isStep('location')" :form="form" />
 
-            <DetailsStep v-if="isStep('details')" :form="form" :serviceType="serviceType" />
+                <DetailsStep v-if="isStep('details')" :form="form" :serviceType="serviceType" />
 
-            <MaterialsStep v-if="isStep('materials')" :form="form" />
+                <MaterialsStep v-if="isStep('materials')" :form="form" />
 
-            <ReviewStep v-if="isStep('review')" :form="form" :serviceType="serviceType" :pointType="pointType" />
-        </div>
+                <ReviewStep v-if="isStep('review')" :form="form" :serviceType="serviceType" :pointType="pointType" />
 
-        <template #footer="{ close }">
+                <ThanksStep v-if="isStep('thanks')" :close="close" />
+            </div>
+        </template>
+
+        <template v-if="!isStep('thanks')" #footer="{ close }">
             <Button
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
@@ -111,8 +115,16 @@
     import DetailsStep from '@/Components/AddPointSteps/Details.vue';
     import MaterialsStep from '@/Components/AddPointSteps/Materials.vue';
     import ReviewStep from '@/Components/AddPointSteps/Review.vue';
+    import ThanksStep from '@/Components/AddPointSteps/Thanks.vue';
 
     import { ArrowLeftIcon, MapPinIcon } from '@heroicons/vue/20/solid';
+
+    const props = defineProps({
+        simple: {
+            type: Boolean,
+            default: false,
+        },
+    });
 
     const page = usePage();
 
@@ -170,7 +182,7 @@
                 details: trans('add_point.action.next_step'),
                 materials: trans('add_point.action.next_step'),
                 review: trans('add_point.action.finish_steps'),
-            }[form.step])
+            })[form.step]
     );
 
     const secondaryButtonLabel = computed(
@@ -181,7 +193,7 @@
                 details: trans('add_point.action.back'),
                 materials: trans('add_point.action.back'),
                 review: trans('add_point.action.back'),
-            }[form.step])
+            })[form.step]
     );
 
     const getFieldsByStep = (step) =>
@@ -219,7 +231,7 @@
                 'images',
             ],
             materials: ['materials'],
-        }[step]);
+        })[step];
 
     const serviceTypes = computed(() =>
         page.props.service_types.map((service) => ({
@@ -296,6 +308,7 @@
         form.transform(transform).submit({
             preserveState: true,
             preserveScroll: true,
+            onSuccess: nextStep,
             onError: (error) => {
                 console.log(error);
             },
@@ -354,6 +367,10 @@
 
         if (isStep('materials')) {
             return goToStep('review');
+        }
+
+        if (isStep('review')) {
+            return goToStep('thanks');
         }
     };
 

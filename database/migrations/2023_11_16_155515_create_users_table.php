@@ -17,20 +17,22 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname', 191);
-            $table->string('lastname', 191);
-            $table->string('email', 191)->nullable()->unique('users_hr_email_unique');
-            $table->string('password', 191)->default('#####');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('full_name')->virtualAs(<<<'SQL'
+                NULLIF(CONCAT_WS(" ", first_name, last_name), " ")
+            SQL);
+
+            $table->string('email')->unique();
+            $table->string('password');
             $table->string('phone')->nullable();
-            $table->boolean('accept_terms')->default(0);
-            $table->boolean('send_newsletter')->default(0);
+
+            $table->boolean('accept_terms')->default(false);
+            $table->boolean('send_newsletter')->default(false);
+
             $table->rememberToken();
-            $table->unsignedInteger('email_confirmed')->default(1);
-            $table->unsignedInteger('last_login_ip')->default(1);
-            $table->timestamp('last_login_date')->nullable();
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable()->useCurrent();
-            $table->string('image');
+            $table->timestamps();
+            $table->timestamp('email_verified_at')->nullable();
         });
     }
 

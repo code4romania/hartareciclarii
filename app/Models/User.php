@@ -8,7 +8,6 @@ namespace App\Models;
 use App\Http\Resources\IssueResource;
 use App\Http\Resources\MapPointResource;
 use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
-use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
@@ -19,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
@@ -35,14 +33,15 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
      * @var array<int, string>
      */
     protected $fillable = [
-        'firstname',
-        'lastname',
+        'first_name',
+        'last_name',
         'accept_terms',
         'send_newsletter',
         'phone',
         'email',
         'password',
         'user_group_id',
+        'email_verified_at',
     ];
 
     /**
@@ -65,7 +64,6 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         'password' => 'hashed',
         'accept_terms' => 'boolean',
         'send_newsletter' => 'boolean',
-        'created_at' => 'date:Y-m-d',
     ];
 
     public function getFilamentAvatarUrl(): ?string
@@ -75,18 +73,13 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return  true;
-//        return auth()->user()->can('admin_login');
+        // return true;
+        return auth()->user()->can('admin_login');
     }
 
     public function getFilamentName(): string
     {
-        return "{$this->firstname} {$this->lastname}";
-    }
-
-    public function getFullnameAttribute($value)
-    {
-        return "{$this->firstname} {$this->lastname}";
+        return $this->full_name;
     }
 
     public function getContributions()
@@ -142,28 +135,6 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new UserResetPasswordNotification($token));
-    }
-
-    public static function createFromArray($data)
-    {
-        $user = new self();
-        $user->firstname = $data['firstname'];
-        $user->lastname = $data['lastname'];
-        $user->email = $data['email'];
-        $user->accept_terms = $data['accept_terms'];
-        $user->send_newsletter = $data['send_newsletter'];
-        $user->password = Hash::make($data['password']);
-        $user->email_confirmed = 0;
-        $user->created_at = Carbon::now()->toDateTimeString();
-
-        $user->save();
-
-        return $user;
-    }
-
-    protected function getNameAttribute(): string
-    {
-        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function issues(): HasMany

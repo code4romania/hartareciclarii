@@ -37,10 +37,10 @@ class UserResource extends Resource
                 Section::make(__('users.label'))
                     ->description(__('users.heading'))
                     ->schema([
-                        TextInput::make('firstname')
+                        TextInput::make('first_name')
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('lastname')
+                        TextInput::make('last_name')
                             ->required()
                             ->maxLength(255),
                         TextInput::make('phone')
@@ -75,8 +75,8 @@ class UserResource extends Resource
 
                 TextColumn::make('name')
                     ->label(__('users.name'))
-                    ->searchable(true, fn (Builder $query, $search) => $query->where('firstname', 'like', "%{$search}%")
-                        ->orWhere('lastname', 'like', "%{$search}%")),
+                    ->searchable(true, fn (Builder $query, $search) => $query->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")),
 
                 TextColumn::make('email')
                     ->label(__('users.email'))
