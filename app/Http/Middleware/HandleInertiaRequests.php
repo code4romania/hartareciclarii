@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -16,7 +17,7 @@ class HandleInertiaRequests extends Middleware
             parent::share($request),
             $this->shareOnce($request),
             [
-                'auth' => UserResource::make($request->user()),
+                'auth' => $this->getCurrentUser($request->user()),
             ]
         );
     }
@@ -31,5 +32,12 @@ class HandleInertiaRequests extends Middleware
             'recaptcha_site_key' => config('recaptcha.api_site_key'),
             'appName' => config('app.name'),
         ];
+    }
+
+    protected function getCurrentUser(?User $user): ?UserResource
+    {
+        return $user instanceof User
+            ? UserResource::make($user)
+            : null;
     }
 }
