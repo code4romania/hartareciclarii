@@ -32,6 +32,14 @@
             <Button type="submit" class="w-full mt-2" primary>
                 {{ $t('auth.login') }}
             </Button>
+
+            <p class="text-sm text-center">
+                {{ $t('auth.register.no_account') }}
+
+                <Link :href="route('auth.register')" class="font-medium text-primary-800 hover:underline">
+                    {{ $t('auth.register.register') }}
+                </Link>
+            </p>
         </form>
     </AuthLayout>
 </template>

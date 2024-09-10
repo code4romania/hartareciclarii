@@ -77,14 +77,12 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/solid';
     import Button from '@/Components/Button.vue';
 
-    const emit = defineEmits(['submit']);
-
-    const isOpen = ref(false);
+    const emit = defineEmits(['submit', 'open', 'close']);
 
     const props = defineProps({
         dismissable: {
@@ -99,14 +97,20 @@
             type: Boolean,
             default: false,
         },
+        open: {
+            type: Boolean,
+            default: false,
+        },
     });
 
+    const isOpen = computed(() => props.open);
+
     const open = () => {
-        isOpen.value = true;
+        emit('open');
     };
 
     const close = () => {
-        isOpen.value = false;
+        emit('close');
     };
 
     const submit = (event) => {

@@ -79,8 +79,7 @@
     "auth.password_confirmation": "Confirăm parola",
     "auth.remember": "Ține-mă minte",
     "auth.recover": "Am uitat parola",
-    "auth.register": "Nu ai cont Harta Reciclării?",
-    "auth.register_link": "Crează-ți unul acum",
+
     "auth.register.title": "Creează cont nou",
     "auth.register.first_name": "Prenume",
     "auth.register.last_name": "Nume",
@@ -91,6 +90,8 @@
     "auth.register.accept_terms": "Am citit și sunt de acord cu Termenii și condițiile",
     "auth.register.terms": "Termenii și condițiile",
     "auth.register.accept_terms_description": "Prin crearea unui cont, ești de acord cu Termenii și condițiile Harta Reciclării.",
+    "auth.register.no_account": "Nu ai cont Harta Reciclării?",
+    "auth.register.register": "Creează-ți unul acum",
     "auth.register.already_have_account": "Ai deja cont Harta Reciclării? ",
     "auth.register.login": "Autentifică-te",
     "auth.register.submit": "Creează cont",

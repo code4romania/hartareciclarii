@@ -1,9 +1,12 @@
 <template>
-    <Modal :dismissable="!isStep('location') && !isStep('thanks')" form @submit="submit">
-        <template #trigger="{ open }">
-            <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" :simple="simple" @click.bubble="open" />
-        </template>
-
+    <Modal
+        :dismissable="!isStep('location') && !isStep('thanks')"
+        form
+        @submit="submit"
+        :open="open"
+        @open="$emit('open')"
+        @close="$emit('close')"
+    >
         <template v-if="!isStep('thanks')" #title>
             <template v-if="isStep('location')">
                 <div class="flex gap-2">
@@ -56,7 +59,12 @@
                 primary
             />
 
-            <Modal v-else>
+            <Modal
+                v-else
+                :open="showConfirmAddressOverrideModal"
+                @open="showConfirmAddressOverrideModal = true"
+                @close="showConfirmAddressOverrideModal = false"
+            >
                 <template #trigger="{ open }">
                     <Button
                         :label="primaryButtonLabel"
@@ -117,10 +125,16 @@
     import ReviewStep from '@/Components/AddPointSteps/Review.vue';
     import ThanksStep from '@/Components/AddPointSteps/Thanks.vue';
 
-    import { ArrowLeftIcon, MapPinIcon } from '@heroicons/vue/20/solid';
+    import { ArrowLeftIcon } from '@heroicons/vue/20/solid';
+
+    const emit = defineEmits(['open', 'close']);
 
     const props = defineProps({
         simple: {
+            type: Boolean,
+            default: false,
+        },
+        open: {
             type: Boolean,
             default: false,
         },
@@ -389,4 +403,6 @@
 
         goToStep('type');
     };
+
+    const showConfirmAddressOverrideModal = ref(false);
 </script>
