@@ -9,10 +9,21 @@
                 <Icon icon="logo" class="w-24 h-8 md:w-32 md:h-10 shrink-0" />
             </Link>
 
-            <AddPoint :open="isAddPointOpen" @open="isAddPointOpen = true" @close="isAddPointOpen = false" />
+            <AddPoint
+                v-if="!dashboard"
+                :open="isAddPointOpen"
+                @open="isAddPointOpen = true"
+                @close="isAddPointOpen = false"
+            />
 
             <div class="hidden lg:flex lg:gap-4 lg:items-center">
-                <Button :label="$t('top_menu.add_point')" :icon="MapPinIcon" @click="openAddPointModal" />
+                <Button
+                    v-if="!dashboard"
+                    :label="$t('top_menu.add_point')"
+                    :icon="MapPinIcon"
+                    @click="openAddPointModal"
+                />
+
                 <Button
                     v-for="(item, index) in navigation"
                     :key="index"
@@ -73,6 +84,7 @@
             <div class="px-2 pt-2 pb-3 sm:px-3" v-click-away="close">
                 <div class="pt-2 pb-3 space-y-1">
                     <DisclosureButton
+                        v-if="!dashboard"
                         :label="$t('top_menu.add_point')"
                         :icon="MapPinIcon"
                         @click="openAddPointModal"
@@ -97,7 +109,7 @@
                 <div v-if="$page.props.auth" class="pt-4 pb-3 border-t border-gray-200">
                     <div class="flex items-center px-4">
                         <div class="flex-shrink-0">
-                            <img class="w-10 h-10 rounded-full" :src="$page.props.auth.imageUrl" alt="" />
+                            <img class="w-10 h-10 rounded-full" :src="$page.props.auth.avatar" alt="" />
                         </div>
                         <div class="ml-3">
                             <div class="text-base font-medium text-gray-800">{{ $page.props.auth.full_name }}</div>
@@ -143,8 +155,15 @@
         MenuItem,
         MenuItems,
     } from '@headlessui/vue';
-    import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-    import { BookOpenIcon, QuestionMarkCircleIcon, UserIcon, MapPinIcon } from '@heroicons/vue/20/solid';
+    import {
+        Bars3Icon,
+        XMarkIcon,
+        BookOpenIcon,
+        QuestionMarkCircleIcon,
+        UserIcon,
+        MapPinIcon,
+        ArrowLongLeftIcon,
+    } from '@heroicons/vue/20/solid';
 
     import Icon from '@/Components/Icon.vue';
     import Button from '@/Components/Button.vue';
@@ -152,24 +171,43 @@
     import { trans } from 'laravel-vue-i18n';
     import route from '@/Helpers/useRoute.js';
 
+    const props = defineProps({
+        dashboard: {
+            type: Boolean,
+            default: false,
+        },
+    });
+
     const isAddPointOpen = ref(false);
 
     const openAddPointModal = () => (isAddPointOpen.value = true);
 
-    const navigation = [
-        {
-            icon: BookOpenIcon,
-            label: trans('top_menu.dictionary'),
-            href: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
-            external: true,
-        },
-        {
-            icon: QuestionMarkCircleIcon,
-            label: trans('top_menu.faq'),
-            href: 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/',
-            external: true,
-        },
-    ];
+    const navigation = computed(() => {
+        if (props.dashboard) {
+            return [
+                {
+                    icon: ArrowLongLeftIcon,
+                    label: trans('top_menu.back'),
+                    href: route('front.map.index'),
+                },
+            ];
+        }
+
+        return [
+            {
+                icon: BookOpenIcon,
+                label: trans('top_menu.dictionary'),
+                href: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
+                external: true,
+            },
+            {
+                icon: QuestionMarkCircleIcon,
+                label: trans('top_menu.faq'),
+                href: 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/',
+                external: true,
+            },
+        ];
+    });
 
     const userNavigation = [
         { label: trans('profile.my_profile'), href: route('front.account.dashboard') },

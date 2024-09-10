@@ -9,6 +9,7 @@ use App\Http\Resources\IssueResource;
 use App\Http\Resources\MapPointResource;
 use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
@@ -18,10 +19,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasName, CanResetPassword
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, HasMedia, CanResetPassword
 {
+    use InteractsWithMedia;
     use MustVerifyEmail;
     use HasFactory;
     use Notifiable;
@@ -66,20 +73,41 @@ class User extends Authenticatable implements FilamentUser, HasName, CanResetPas
         'send_newsletter' => 'boolean',
     ];
 
-    public function getFilamentAvatarUrl(): ?string
+    public function registerMediaCollections(): void
     {
-        return $this->avatar_url;
+        $this->addMediaCollection('avatar')
+            ->useFallbackUrl(
+                \sprintf(
+                    'https://ui-avatars.com/api/?%s',
+                    Arr::query([
+                        'name' => Str::initials($this->full_name),
+                        'color' => 'FFFFFF',
+                        'background' => '075985',
+                    ])
+                )
+            )
+            ->singleFile()
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->fit(Fit::Crop, 96, 96)
+                    ->keepOriginalImageFormat()
+                    ->optimize();
+            });
     }
 
-    public function canAccessPanel(Panel $panel): bool
+    public function getFilamentAvatarUrl(): ?string
     {
-        // return true;
-        return auth()->user()->can('admin_login');
+        return $this->getFirstMediaUrl('avatar', 'thumb');
     }
 
     public function getFilamentName(): string
     {
         return $this->full_name;
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return auth()->user()->can('admin_login');
     }
 
     public function getContributions()

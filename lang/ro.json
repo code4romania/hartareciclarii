@@ -54,6 +54,7 @@
     "profile.current_password": "Parola curentă",
     "profile.new_password": "Parola nouă",
     "profile.new_password_confirm": "Confirmă parola nouă",
+    "profile.contributions_count": "contribuție|contribuții|contribuții",
     "profile.contributions": "Contribuții",
     "profile.logout": "Ieşi din cont",
     "profile.my_profile": "Profilul meu",

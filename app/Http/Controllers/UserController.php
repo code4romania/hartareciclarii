@@ -13,20 +13,19 @@ class UserController extends Controller
 {
     public function dashboard(): Response
     {
-        return Inertia::render(
-            'Account/Dashboard',
-            [
-                'contributions' => [
-                    [
-                        'id' => 1,
-                        'type' => 'Adaugare punct nou',
-                        'point_type' => 'Punct colectare selectivă deșeuri (Container stradal)',
-                        'location' => 'Strada Mihai Eminescu, nr. 1, București',
-                        'date' => '2021-09-01 12:00:00',
-                    ],
+        return Inertia::render('Account/Dashboard', [
+            'contributions_count' => rand(1, 1234),
+
+            'contributions' => [
+                [
+                    'id' => 1,
+                    'type' => 'Adaugare punct nou',
+                    'point_type' => 'Punct colectare selectivă deșeuri (Container stradal)',
+                    'location' => 'Strada Mihai Eminescu, nr. 1, București',
+                    'date' => '2021-09-01 12:00:00',
                 ],
-            ]
-        );
+            ],
+        ]);
     }
 
     public function edit()

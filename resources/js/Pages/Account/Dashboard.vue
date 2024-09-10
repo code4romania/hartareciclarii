@@ -1,7 +1,47 @@
 <template>
     <DashboardLayout>
         <div class="container mx-auto mt-10">
-            <ProfileHeader :contributions_count="contributions_count" />
+            <div class="flex flex-col gap-6 lg:flex-row">
+                <div
+                    class="flex flex-col flex-1 gap-5 p-6 overflow-hidden bg-white rounded-lg drop-shadow sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
+                >
+                    <img class="w-20 h-20 mx-auto rounded-full shrink-0" :src="$page.props.auth.avatar" alt="" />
+
+                    <div class="flex-1 space-y-1 overflow-hidden text-center sm:text-left">
+                        <h1
+                            class="text-xl font-bold text-gray-900 truncate sm:text-2xl"
+                            v-text="$page.props.auth.full_name"
+                        />
+
+                        <p class="text-sm font-medium text-gray-600">
+                            <span class="inline-flex items-center gap-2">
+                                <span v-text="$page.props.auth.email" />
+
+                                <template v-if="$page.props.auth.phone">
+                                    <span class="font-normal opacity-50 select-none" aria-hidden="true">|</span>
+                                    <span v-text="$page.props.auth.phone" />
+                                </template>
+                            </span>
+                        </p>
+
+                        <p class="text-sm font-medium text-gray-600">
+                            <span v-text="$t('profile.register_from')" />
+                            <time v-text="$page.props.auth.created_at" />
+                        </p>
+                    </div>
+
+                    <div class="w-full shrink-0 md:w-auto">
+                        <Link
+                            href="route('profile.edit')"
+                            class="flex items-center justify-center px-3 py-2 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            v-text="$t('profile.settings')"
+                        />
+                    </div>
+                </div>
+
+                <ContributionsCounter class="shrink-0" :contributions="contributions_count" />
+            </div>
+
             <h3 class="mt-10 text-2xl font-bold text-gray-900">Contributions</h3>
             <div class="mx-auto mt-8">
                 <div class="-mx-4 -my-2 overflow-x-auto bg-white sm:-mx-6 lg:-mx-8">
@@ -73,19 +113,19 @@
 
 <script setup>
     import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-    import { usePage } from '@inertiajs/vue3';
+    import { usePage, Link } from '@inertiajs/vue3';
     import { computed } from 'vue';
-    import ProfileHeader from '@/Components/ProfileHeader.vue';
 
-    const user = usePage().props.user;
+    import ContributionsCounter from '@/Components/Dashboard/ContributionsCounter.vue';
 
     const props = defineProps({
         contributions: {
             type: Array,
             required: true,
         },
-    });
-    const contributions_count = computed(() => {
-        return props.contributions.length;
+        contributions_count: {
+            type: Number,
+            required: true,
+        },
     });
 </script>

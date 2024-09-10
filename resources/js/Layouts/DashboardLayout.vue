@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col  bg-gray-50">
-        <DashboardHeader class="shrink-0 " />
+    <div class="flex flex-col min-h-screen bg-gray-50">
+        <Header class="shrink-0" dashboard />
 
         <div class="relative flex-1">
             <slot />
@@ -10,5 +10,4 @@
 
 <script setup>
     import Header from '@/Components/Navigation/Header.vue';
-    import DashboardHeader from "@/Components/Navigation/DashboardHeader.vue";
 </script>
