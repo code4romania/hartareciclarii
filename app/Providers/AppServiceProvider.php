@@ -13,6 +13,7 @@ use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
+            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
+            ->join(''));
+
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
 
         FilamentAsset::register([

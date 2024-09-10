@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\SubmitController;
-use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
@@ -23,10 +23,12 @@ Route::group([
     'prefix' => 'account',
     'as' => 'account.',
     'middleware' => ['auth', 'verified'],
-    'controller' => UserController::class,
+    'controller' => AccountController::class,
 ], function () {
-    Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/settings', [UserController::class, 'edit'])->name('settings');
+    Route::get('/', 'dashboard')->name('dashboard');
+    Route::get('/settings', 'settings')->name('settings');
+    Route::post('/profile', 'profile')->name('profile');
+    Route::post('/password', 'password')->name('password');
 });
 
 Route::group([

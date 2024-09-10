@@ -56,7 +56,7 @@
                 required
             />
 
-            <Button type="submit" class="w-full mt-2" primary>
+            <Button type="submit" class="w-full mt-2" :disabled="form.processing" primary>
                 {{ $t('auth.register.submit') }}
             </Button>
 
@@ -83,6 +83,7 @@
         first_name: null,
         last_name: null,
         email: null,
+        phone: null,
         password: null,
         password_confirmation: null,
     });

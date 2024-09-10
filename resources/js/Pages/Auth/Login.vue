@@ -29,7 +29,7 @@
                 </Link>
             </div>
 
-            <Button type="submit" class="w-full mt-2" primary>
+            <Button type="submit" class="w-full mt-2" :disabled="form.processing" primary>
                 {{ $t('auth.login') }}
             </Button>
 
