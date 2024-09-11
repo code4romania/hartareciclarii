@@ -99,6 +99,8 @@
     "auth.register.subscribe_to_newsletter": "Vreau să primesc newslettere",
     "auth.register.subscribe_to_newsletter_description": "Prin abonarea la newsletter-ul Harta Reciclării, vei primi informații despre noutățile din domeniul reciclării și al protecției mediului.",
 
+    "auth.reset_password": "Resetează parola",
+
     "add_point.title": "Adaugă un punct pe hartă",
     "add_point.yes": "Da",
     "add_point.no": "Nu",

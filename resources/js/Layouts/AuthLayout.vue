@@ -14,6 +14,13 @@
                 />
 
                 <div class="mt-10">
+                    <Alert
+                        v-if="$page.props.status"
+                        :type="$page.props.status.success ? 'success' : 'error'"
+                        :message="$page.props.status.message"
+                        class="mb-6"
+                    />
+
                     <slot />
                 </div>
             </div>
@@ -30,9 +37,10 @@
 </template>
 
 <script setup>
+    import { Link } from '@inertiajs/vue3';
+    import Alert from '@/Components/Alert.vue';
     import Head from '@/Components/Head.vue';
     import Icon from '@/Components/Icon.vue';
-    import { Link } from '@inertiajs/vue3';
 
     defineProps({
         title: {

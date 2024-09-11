@@ -21,6 +21,7 @@
                 :label="$t('auth.email')"
                 v-model="form.email"
                 :errors="[form.errors.email]"
+                required
             />
 
             <Input
@@ -29,6 +30,7 @@
                 :label="$t('auth.password')"
                 v-model="form.password"
                 :errors="[form.errors.password]"
+                required
             />
 
             <div class="flex items-center justify-between">
