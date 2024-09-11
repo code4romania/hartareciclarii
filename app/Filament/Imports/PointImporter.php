@@ -82,6 +82,7 @@ class PointImporter extends Importer
                 ),
 
             ImportColumn::make('address')
+                ->requiredMapping()
                 ->label(__('map_points.fields.address'))
                 ->example('Strada Ștefan cel Mare 1')
                 ->ignoreBlankState(),
