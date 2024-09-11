@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    public static function getDashboardUrl(): string
-    {
-        return route('front.account.dashboard');
-    }
-
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
@@ -49,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    public static function getRedirectUrl(): string
+    public static function getDashboardUrl(): string
     {
         return route('front.account.dashboard');
     }

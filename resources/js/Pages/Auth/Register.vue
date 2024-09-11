@@ -1,5 +1,19 @@
 <template>
     <AuthLayout :title="$t('auth.register.title')">
+        <template #backdrop>
+            <h1>Devino membru Harta Reciclării</h1>
+
+            <ul>
+                <li>Adaugă noi puncte pe hartă</li>
+                <li>Raporteazaă probleme cu punctele existente</li>
+                <li>Contribuie la efortul de a menține informațiile actualizate</li>
+                <li>Urmărește statusul raportărilor tale</li>
+                <li>
+                    Alătură-te unei comunități de oameni care vor să trăiască într-un mediu mai verde și mai sustenabil
+                </li>
+            </ul>
+        </template>
+
         <form class="grid gap-6" @submit.prevent="register">
             <div class="grid gap-6 sm:grid-cols-2">
                 <Input
@@ -76,7 +90,6 @@
     import { useForm, Link } from '@inertiajs/vue3';
     import route from '@/Helpers/useRoute';
     import Button from '@/Components/Button.vue';
-    import Checkbox from '@/Components/Form/Checkbox.vue';
     import Input from '@/Components/Form/Input.vue';
 
     const form = useForm({

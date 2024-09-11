@@ -19,8 +19,12 @@
             </div>
         </div>
 
-        <div class="flex flex-col justify-center flex-1 px-4 py-12 sm:px-6 lg:px-20 xl:px-24 bg-primary-700">
-            <slot name="backdrop" />
+        <div
+            class="flex flex-col items-center justify-center flex-1 px-4 py-12 sm:px-6 lg:px-20 xl:px-24 bg-primary-700"
+        >
+            <div class="prose text-white prose-headings:text-white">
+                <slot name="backdrop" />
+            </div>
         </div>
     </div>
 </template>

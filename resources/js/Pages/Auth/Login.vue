@@ -1,5 +1,19 @@
 <template>
     <AuthLayout :title="$t('auth.login')">
+        <template #backdrop>
+            <h1>Devino membru Harta Reciclării</h1>
+
+            <ul>
+                <li>Adaugă noi puncte pe hartă</li>
+                <li>Raporteazaă probleme cu punctele existente</li>
+                <li>Contribuie la efortul de a menține informațiile actualizate</li>
+                <li>Urmărește statusul raportărilor tale</li>
+                <li>
+                    Alătură-te unei comunități de oameni care vor să trăiască într-un mediu mai verde și mai sustenabil
+                </li>
+            </ul>
+        </template>
+
         <form class="grid gap-6" @submit.prevent="login">
             <Input
                 name="email"
