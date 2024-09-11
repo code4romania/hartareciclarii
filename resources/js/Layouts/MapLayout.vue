@@ -63,11 +63,12 @@
 
             <LMap
                 ref="map"
-                :useGlobalLeaflet="true"
                 :min-zoom="8"
                 :max-zoom="18"
                 :center="mapOptions.center"
                 :zoom="mapOptions.zoom"
+                :max-bounds="maxBounds"
+                :max-bounds-viscosity="1.0"
                 @ready="ready"
                 @movestart="cancelMapVisits"
                 @moveend="moveend"
@@ -121,16 +122,14 @@
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/outline';
 
-    import { LMap, LControl, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
+    import { LMap, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
 
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
 
-    import { ref, computed, watch } from 'vue';
-    import { router } from '@inertiajs/vue3';
+    import { ref, computed, watch, inject } from 'vue';
 
-    import route from '@/Helpers/useRoute.js';
     import { refreshPoints, openPoint, fetchPoint, cancelMapVisits } from '@/Helpers/useMap.js';
     import useLocate from '@/Helpers/useLocate.js';
 
@@ -164,6 +163,8 @@
             type: Number,
         },
     });
+
+    const maxBounds = inject('max_map_bounds');
 
     const map = ref(null);
     const bounds = ref(null);

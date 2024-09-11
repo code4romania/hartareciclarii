@@ -10,6 +10,8 @@
                 ref="map"
                 :zoom="18"
                 :center="[form.location.lat, form.location.lng]"
+                :max-bounds="maxBounds"
+                :max-bounds-viscosity="1.0"
                 @ready="ready"
                 :options="{
                     attributionControl: false,
@@ -36,21 +38,12 @@
 </template>
 
 <script setup>
-    import axios from 'axios';
-    import { computed, ref, watch } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
-    import { useDebounceFn } from '@vueuse/core';
+    import { inject } from 'vue';
     import { LMap, LControlScale, LControlZoom, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
-    import route from '@/Helpers/useRoute.js';
     import useLocate from '@/Helpers/useLocate.js';
     import { reverse } from '@/Helpers/useReverse.js';
 
-    import Button from '@/Components/Button.vue';
-    import Modal from '@/Components/Modal.vue';
     import FormField from '@/Components/Form/Field.vue';
-    import Select from '@/Components/Form/Select.vue';
-
-    const page = usePage();
 
     const props = defineProps({
         form: {
@@ -59,7 +52,9 @@
         },
     });
 
-    const { locateControl, startLocate } = useLocate();
+    const maxBounds = inject('max_map_bounds');
+
+    const { locateControl } = useLocate();
 
     const updatePoint = (lat, lng) => {
         props.form.location.lat = lat;

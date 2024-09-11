@@ -9,6 +9,8 @@
                 ref="map"
                 :zoom="18"
                 :center="[form.location.lat, form.location.lng]"
+                :max-bounds="maxBounds"
+                :max-bounds-viscosity="1.0"
                 @ready="ready"
                 :options="{
                     attributionControl: false,
@@ -55,10 +57,9 @@
 </template>
 
 <script setup>
-    import { ref, watch } from 'vue';
+    import { ref, watch, inject } from 'vue';
     import { LMap, LControl, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import FormField from '@/Components/Form/Field.vue';
-    import Button from '@/Components/Button.vue';
 
     const props = defineProps({
         form: {
@@ -75,6 +76,8 @@
         },
     });
 
+    const maxBounds = inject('max_map_bounds');
+
     const marker = ref(null);
 
     watch(
@@ -85,4 +88,3 @@
         { deep: true }
     );
 </script>
-

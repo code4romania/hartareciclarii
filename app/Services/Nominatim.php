@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\DataTransferObjects\Location;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use NominatimLaravel\Content\Nominatim as NominatimClient;
 
 class Nominatim
@@ -78,5 +79,30 @@ class Nominatim
         abort_if(data_get($result, 'error'), 404);
 
         return new Location($result);
+    }
+
+    public function maxBounds(): array
+    {
+        return Cache::remember('max-map-bounds', now()->addDay(), function () {
+            $request = $this->nominatim->newSearch()
+                ->country('ro')
+                ->format('jsonv2');
+
+            $bounds = collect(rescue(fn () => $this->nominatim->find($request)))
+                ->filter(fn (array $result) => $result['place_rank'] === 4)
+                ->take(1)
+                ->pluck('boundingbox')
+                ->flatten()
+                ->map('floatval');
+
+            if ($bounds->count() !== 4) {
+                return null;
+            }
+
+            return [
+                [$bounds[0], $bounds[2]],
+                [$bounds[1], $bounds[3]],
+            ];
+        });
     }
 }

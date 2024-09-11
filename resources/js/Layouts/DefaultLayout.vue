@@ -1,5 +1,11 @@
 <template>
-    <div class="flex flex-col h-screen overflow-hidden">
+    <div
+        class="flex flex-col overflow-hidden bg-gray-100"
+        :class="{
+            'h-screen': !dashboard,
+            'min-h-screen ': dashboard,
+        }"
+    >
         <EmailVerifiedAlert v-if="$page.props.auth?.is_unverified || $page.props.auth?.show_verified_message" />
 
         <Header class="shrink-0" :dashboard="dashboard" />

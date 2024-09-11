@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\Nominatim;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -32,6 +33,7 @@ class HandleInertiaRequests extends Middleware
 
         return [
             'recaptcha_site_key' => config('recaptcha.api_site_key'),
+            'max_map_bounds' => Nominatim::make()->maxBounds(),
         ];
     }
 

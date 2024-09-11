@@ -22,6 +22,8 @@ createInertiaApp({
     },
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
+            .provide('recaptcha_site_key', props.initialPage.props.recaptcha_site_key)
+            .provide('max_map_bounds', props.initialPage.props.max_map_bounds)
             .use(PrimeVue, {
                 unstyled: true,
                 pt,

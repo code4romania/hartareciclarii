@@ -1,35 +1,24 @@
 <template>
-    <template v-if="isLink">
-        <a
-            v-if="external"
-            :href="href"
-            :class="[buttonBase, buttonSize, buttonShadow, buttonColor]"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
-
-            <slot>{{ label }}</slot>
-        </a>
-
-        <Link v-else :href="href" :class="[buttonBase, buttonSize, buttonShadow, buttonColor]">
-            <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
-
-            <slot>{{ label }}</slot>
-        </Link>
-    </template>
-
-    <button v-else :type="type" :class="[buttonBase, buttonSize, buttonShadow, buttonColor]" :disabled="disabled">
-        <Icon v-if="icon" :icon="icon" :class="[iconBase, iconSize, iconColor]" />
+    <component
+        :is="tag"
+        v-bind="attributes"
+        class="flex items-center font-medium select-none ring-inset whitespace-nowrap disabled:opacity-75 disabled:cursor-default"
+        :class="[buttonBase, buttonSize, buttonShadow, buttonColor]"
+        @click="$emit('click', $event)"
+        @keydown="$emit('keydown', $event)"
+    >
+        <Icon v-if="icon" :icon="icon" class="shrink-0" :class="[iconSize, iconColor]" />
 
         <slot>{{ label }}</slot>
-    </button>
+    </component>
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { Link } from '@inertiajs/vue3';
     import Icon from '@/Components/Icon.vue';
+
+    const emit = defineEmits(['click', 'keydown']);
 
     const props = defineProps({
         href: {
@@ -65,16 +54,53 @@
             type: Boolean,
             default: false,
         },
+        method: {
+            type: String,
+            default: 'get',
+            validator: (value) => ['get', 'post', 'put', 'patch', 'delete'].includes(value),
+        },
         simple: {
             type: Boolean,
             default: false,
         },
     });
 
-    const isLink = computed(() => props.href !== null);
+    const attributes = computed(() => {
+        if (props.href === null) {
+            return {
+                type: props.type,
+                disabled: props.disabled,
+            };
+        }
+
+        if (props.external) {
+            return {
+                href: props.href,
+                target: '_blank',
+                rel: 'noopener noreferrer',
+            };
+        }
+
+        return {
+            href: props.href,
+            method: props.method,
+            as: props.method === 'get' ? 'a' : 'button',
+        };
+    });
+
+    const tag = computed(() => {
+        if (props.href === null) {
+            return 'button';
+        }
+
+        if (props.external) {
+            return 'a';
+        }
+
+        return Link;
+    });
 
     const buttonBase = computed(() => ({
-        'flex items-center ring-inset select-none font-medium whitespace-nowrap disabled:opacity-75 disabled:cursor-default': true,
         'justify-start': props.simple,
         'justify-center rounded-full': !props.simple,
     }));
