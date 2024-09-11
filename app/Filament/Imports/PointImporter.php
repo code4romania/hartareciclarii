@@ -30,14 +30,17 @@ class PointImporter extends Importer
         return [
             ImportColumn::make('latitude')
                 ->label(__('map_points.fields.latitude'))
+                ->example('27.9506')
                 ->requiredMapping(),
 
             ImportColumn::make('longitude')
                 ->label(__('map_points.fields.longitude'))
+                ->example('27.9506')
                 ->requiredMapping(),
 
             ImportColumn::make('pointType')
                 ->label(__('map_points.fields.point_type'))
+                ->example('Punct de colectare')
                 ->requiredMapping()
                 ->relationship('pointType', 'name')
                 ->rules(
@@ -49,6 +52,7 @@ class PointImporter extends Importer
 
             ImportColumn::make('county')
                 ->requiredMapping()
+                ->example('București')
                 ->label(__('map_points.county'))
                 ->relationship(name:'county', resolveUsing: 'name')
                 ->rules(
@@ -60,6 +64,7 @@ class PointImporter extends Importer
 
             ImportColumn::make('city_id')
                 ->label(__('map_points.city'))
+                ->example('Sector 2')
                 ->fillRecordUsing(
                     function (Point $record, string $state) {
                         $cityId = City::search($state)->where('county', $record->county->name)->first()?->id ?? 0;
@@ -78,6 +83,7 @@ class PointImporter extends Importer
 
             ImportColumn::make('address')
                 ->label(__('map_points.fields.address'))
+                ->example('Strada Ștefan cel Mare 1')
                 ->ignoreBlankState(),
 
             ImportColumn::make('notes')
