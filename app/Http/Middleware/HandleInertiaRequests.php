@@ -17,6 +17,7 @@ class HandleInertiaRequests extends Middleware
             parent::share($request),
             $this->shareOnce($request),
             [
+                'appName' => config('app.name'),
                 'auth' => $this->getCurrentUser($request->user()),
             ]
         );
@@ -30,7 +31,6 @@ class HandleInertiaRequests extends Middleware
 
         return [
             'recaptcha_site_key' => config('recaptcha.api_site_key'),
-            'appName' => config('app.name'),
         ];
     }
 
