@@ -41,6 +41,8 @@
                     :errors="[form.errors.phone]"
                 />
             </div>
+
+            <Alert v-if="message" type="success" :message="message" />
         </div>
 
         <template #footer>
@@ -50,8 +52,10 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
     import { useForm, usePage } from '@inertiajs/vue3';
     import route from '@/Helpers/useRoute';
+    import Alert from '@/Components/Alert.vue';
     import Button from '@/Components/Button.vue';
     import Panel from '@/Components/Panel.vue';
     import Input from '@/Components/Form/Input.vue';
@@ -65,7 +69,13 @@
         phone: page.props.auth.phone,
     });
 
+    const message = ref(null);
+
     const submit = () => {
-        form.post(route('front.account.profile'));
+        form.post(route('front.account.profile'), {
+            onSuccess: (page) => {
+                message.value = page.props.flash.message;
+            },
+        });
     };
 </script>

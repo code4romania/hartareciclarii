@@ -1,5 +1,5 @@
 <template>
-    <AuthLayout :title="$t('auth.login')">
+    <AuthLayout :title="$t('auth.reset_password')">
         <template #backdrop>
             <h1>Devino membru Harta Reciclării</h1>
 
@@ -18,42 +18,41 @@
             <Input
                 name="email"
                 type="email"
-                :label="$t('auth.email')"
+                :label="$t('auth.register.email')"
                 v-model="form.email"
                 :errors="[form.errors.email]"
-                required
+                readonly
             />
 
             <Input
                 name="password"
                 type="password"
-                :label="$t('auth.password')"
+                :label="$t('auth.register.password')"
                 v-model="form.password"
                 :errors="[form.errors.password]"
                 required
             />
 
-            <div class="flex items-center justify-between">
-                <Checkbox :label="$t('auth.remember')" v-model="form.remember" />
+            <Input
+                name="password_confirmation"
+                type="password"
+                :label="$t('auth.register.password_confirmation')"
+                v-model="form.password_confirmation"
+                :errors="[form.errors.password_confirmation]"
+                required
+            />
 
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('auth.password.request')"
-                    class="text-sm underline rounded-md text-primary-500 hover:text-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                >
-                    {{ $t('auth.recover') }}
-                </Link>
-            </div>
-
-            <Button type="submit" class="w-full mt-2" :disabled="form.processing" primary>
-                {{ $t('auth.login') }}
+            <Button type="submit" class="w-full" :disabled="form.processing" primary>
+                {{ $t('auth.reset_password') }}
             </Button>
 
-            <p class="text-sm text-center">
-                {{ $t('auth.register.no_account') }}
-
-                <Link :href="route('auth.register')" class="font-medium text-primary-800 hover:underline">
-                    {{ $t('auth.register.register') }}
+            <p class="text-sm">
+                <Link
+                    :href="route('auth.login')"
+                    class="inline-flex items-center gap-1 font-medium text-primary-800 hover:underline"
+                >
+                    <ArrowLongLeftIcon class="inline-block w-4 h-4" />
+                    <span v-text="$t('auth.login')" />
                 </Link>
             </p>
         </form>
@@ -63,28 +62,32 @@
 <script setup>
     import AuthLayout from '@/Layouts/AuthLayout.vue';
     import { useForm, Link } from '@inertiajs/vue3';
+    import { ArrowLongLeftIcon } from '@heroicons/vue/20/solid';
     import route from '@/Helpers/useRoute';
     import Button from '@/Components/Button.vue';
-    import Checkbox from '@/Components/Form/Checkbox.vue';
     import Input from '@/Components/Form/Input.vue';
 
-    defineProps({
-        canResetPassword: {
-            type: Boolean,
-            default: false,
+    const props = defineProps({
+        token: {
+            type: String,
+            default: null,
+        },
+        email: {
+            type: String,
+            default: null,
         },
     });
 
     const form = useForm({
-        email: null,
+        email: props.email,
+        token: props.token,
         password: null,
-        remember: false,
+        password_confirmation: null,
     });
 
     const submit = () => {
-        form.post(route('auth.login'), {
-            onFinish: () => form.reset('password'),
-            replace: true,
+        form.post(route('auth.password.store'), {
+            onSuccess: () => form.reset(),
         });
     };
 </script>

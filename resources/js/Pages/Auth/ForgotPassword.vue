@@ -14,7 +14,7 @@
             </ul>
         </template>
 
-        <form class="grid gap-6" @submit.prevent="reset">
+        <form class="grid gap-6" @submit.prevent="submit">
             <Input
                 name="email"
                 type="email"
@@ -49,18 +49,11 @@
     import Button from '@/Components/Button.vue';
     import Input from '@/Components/Form/Input.vue';
 
-    defineProps({
-        canResetPassword: {
-            type: Boolean,
-            default: false,
-        },
-    });
-
     const form = useForm({
         email: null,
     });
 
-    const reset = () => {
+    const submit = () => {
         form.post(route('auth.password.request'), {
             onSuccess: () => form.reset(),
         });

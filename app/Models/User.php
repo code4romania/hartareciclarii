@@ -7,7 +7,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Http\Resources\IssueResource;
 use App\Http\Resources\MapPointResource;
-use App\Notifications\User\ResetPasswordNotification as UserResetPasswordNotification;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -158,11 +157,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         }
 
         return null;
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new UserResetPasswordNotification($token));
     }
 
     public function issues(): HasMany

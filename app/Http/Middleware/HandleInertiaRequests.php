@@ -19,6 +19,7 @@ class HandleInertiaRequests extends Middleware
             [
                 'appName' => config('app.name'),
                 'auth' => $this->getCurrentUser($request->user()),
+                'flash' => fn () => $this->flash($request),
             ]
         );
     }
@@ -39,5 +40,27 @@ class HandleInertiaRequests extends Middleware
         return $user instanceof User
             ? UserResource::make($user)
             : null;
+    }
+
+    protected function flash(Request $request): ?array
+    {
+        if (! $request->hasSession()) {
+            return null;
+        }
+
+        $type = match (true) {
+            $request->session()->has('error') => 'error',
+            $request->session()->has('success') => 'success',
+            default => null,
+        };
+
+        if ($type === null) {
+            return null;
+        }
+
+        return [
+            'success' => $type === 'success',
+            'message' => $request->session()->get($type),
+        ];
     }
 }

@@ -14,7 +14,7 @@
             </ul>
         </template>
 
-        <form class="grid gap-6" @submit.prevent="register">
+        <form class="grid gap-6" @submit.prevent="submit">
             <div class="grid gap-6 sm:grid-cols-2">
                 <Input
                     name="first_name"
@@ -101,7 +101,7 @@
         password_confirmation: null,
     });
 
-    const register = () => {
+    const submit = () => {
         form.post(route('auth.register'), {
             onFinish: () => form.reset('password', 'password_confirmation'),
             replace: true,

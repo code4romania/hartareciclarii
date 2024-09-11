@@ -12,13 +12,14 @@
                 :placeholder="placeholder"
                 :required="required"
                 :disabled="disabled"
+                :readonly="readonly"
             />
         </template>
     </FormField>
 </template>
 
 <script setup>
-    import { computed, ref } from 'vue';
+    import { computed } from 'vue';
     import { CheckIcon } from '@heroicons/vue/16/solid';
     import InputText from 'primevue/inputtext';
     import FormField from '@/Components/Form/Field.vue';
@@ -37,6 +38,10 @@
             default: false,
         },
         disabled: {
+            type: Boolean,
+            default: false,
+        },
+        readonly: {
             type: Boolean,
             default: false,
         },

@@ -33,6 +33,8 @@
                     required
                 />
             </div>
+
+            <Alert v-if="message" type="success" :message="message" />
         </div>
 
         <template #footer>
@@ -42,13 +44,13 @@
 </template>
 
 <script setup>
-    import { useForm, usePage } from '@inertiajs/vue3';
+    import { ref } from 'vue';
+    import { useForm } from '@inertiajs/vue3';
     import route from '@/Helpers/useRoute';
+    import Alert from '@/Components/Alert.vue';
     import Button from '@/Components/Button.vue';
     import Panel from '@/Components/Panel.vue';
     import Input from '@/Components/Form/Input.vue';
-
-    const page = usePage();
 
     const form = useForm({
         current_password: null,
@@ -56,9 +58,14 @@
         password_confirmation: null,
     });
 
+    const message = ref(null);
+
     const submit = () => {
         form.post(route('front.account.password'), {
-            onSuccess: () => form.reset(),
+            onSuccess: (page) => {
+                form.reset();
+                message.value = page.props.flash.message;
+            },
         });
     };
 </script>

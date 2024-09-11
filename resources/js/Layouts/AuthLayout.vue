@@ -15,9 +15,9 @@
 
                 <div class="mt-10">
                     <Alert
-                        v-if="$page.props.status"
-                        :type="$page.props.status.success ? 'success' : 'error'"
-                        :message="$page.props.status.message"
+                        v-if="$page.props.flash"
+                        :type="$page.props.flash.success ? 'success' : 'error'"
+                        :message="$page.props.flash.message"
                         class="mb-6"
                     />
 
@@ -29,7 +29,7 @@
         <div
             class="flex flex-col items-center justify-center flex-1 px-4 py-12 sm:px-6 lg:px-20 xl:px-24 bg-primary-700"
         >
-            <div class="prose text-white prose-headings:text-white">
+            <div class="prose-sm prose text-white sm:prose-base prose-headings:text-white">
                 <slot name="backdrop" />
             </div>
         </div>
