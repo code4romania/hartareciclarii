@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\Point\Status;
+use App\Filament\Imports\PointImporter;
 use App\Filament\Resources\PointResource\Pages;
 use App\Models\Point;
 use App\Models\PointGroup;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
@@ -137,6 +139,9 @@ class PointResource extends Resource
                                     }),
                             ]),
                     ]),
+                    ImportAction::make()
+                        ->importer(PointImporter::class),
+
                 ]
             )
             ->bulkActions([
