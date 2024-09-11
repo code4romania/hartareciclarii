@@ -11,14 +11,16 @@ use App\Http\Resources\PointImageUploadResource;
 use App\Models\Media;
 use App\Models\Point;
 use App\Models\TemporaryUpload;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\UploadedFile;
-use Inertia\Inertia;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class SubmitController extends Controller
 {
-    public function point(SubmitPointRequest $request)
+    public function point(SubmitPointRequest $request): RedirectResponse
     {
         $attributes = $request->validated();
 
@@ -43,11 +45,9 @@ class SubmitController extends Controller
         }
 
         return redirect()->to($point->url);
-
-        // return Inertia::location($point->url);
     }
 
-    public function image(SubmitImageRequest $request)
+    public function image(SubmitImageRequest $request): ResourceCollection
     {
         $attributes = $request->validated();
 
@@ -63,7 +63,7 @@ class SubmitController extends Controller
         return PointImageUploadResource::collection($temporaryUpload->media);
     }
 
-    public function deleteImage(Request $request, Media $media)
+    public function deleteImage(Request $request, Media $media): JsonResponse
     {
         abort_unless($media->isTemporaryUpload(), 404);
 

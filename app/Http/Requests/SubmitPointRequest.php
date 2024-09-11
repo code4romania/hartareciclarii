@@ -7,9 +7,9 @@ namespace App\Http\Requests;
 use App\Models\City;
 use App\Models\ServiceType;
 use App\Models\TemporaryUpload;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Collection;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 
 class SubmitPointRequest extends FormRequest
 {
