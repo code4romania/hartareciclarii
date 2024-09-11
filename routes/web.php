@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'account',
     'as' => 'account.',
-    'middleware' => ['auth', 'verified'],
+    'middleware' => ['auth'],
     'controller' => AccountController::class,
 ], function () {
     Route::get('/', 'dashboard')->name('dashboard');

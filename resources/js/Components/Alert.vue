@@ -1,9 +1,11 @@
 <template>
     <div class="p-4 rounded-md bg-green-50" :class="color">
-        <div class="flex gap-3">
+        <div class="flex items-center gap-3 text-sm">
             <Component :is="icon" class="w-5 h-5 shrink-0" :class="iconColor" aria-hidden="true" />
 
-            <p class="text-sm font-medium" v-text="message" />
+            <p v-text="message" />
+
+            <slot name="action" />
         </div>
     </div>
 </template>

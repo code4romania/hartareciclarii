@@ -101,6 +101,9 @@
 
     "auth.reset_password": "Resetează parola",
 
+    "auth.verify.unverified_notice": "Contul tău nu a fost încă verificat. Te rugăm să verifici emailul pentru a activa contul.",
+    "auth.verify.resend": "Trimite email de verificare",
+
     "add_point.title": "Adaugă un punct pe hartă",
     "add_point.yes": "Da",
     "add_point.no": "Nu",

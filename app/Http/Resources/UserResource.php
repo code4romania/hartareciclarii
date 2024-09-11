@@ -24,6 +24,8 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'avatar' => $this->getFilamentAvatarUrl(),
             'created_at' => $this->created_at->isoFormat('Do MMMM YYYY'),
+            'is_unverified' => ! $this->hasVerifiedEmail(),
+            'show_verified_message' => $request->boolean('verified'),
         ];
     }
 }

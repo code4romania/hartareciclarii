@@ -2,7 +2,6 @@
     <PointDetails v-if="showPointDetails" :point="point" />
 </template>
 
-
 <script setup>
     import { computed } from 'vue';
     import DefaultLayout from '@/Layouts/DefaultLayout.vue';

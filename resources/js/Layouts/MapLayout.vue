@@ -118,8 +118,6 @@
 <script setup>
     import L from 'leaflet';
 
-    import DefaultLayout from '@/Layouts/DefaultLayout.vue';
-
     import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/outline';
 
