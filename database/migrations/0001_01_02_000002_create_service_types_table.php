@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Imports\ServiceTypesImport;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Maatwebsite\Excel\Facades\Excel;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('service_types', function (Blueprint $table) {
@@ -26,5 +25,7 @@ return new class extends Migration
             $table->boolean('can_collect_materials')->default(false);
             $table->timestamps();
         });
+
+        Excel::import(new ServiceTypesImport, database_path('data/service_types.csv'));
     }
 };

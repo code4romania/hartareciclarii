@@ -5,7 +5,13 @@
         </template>
 
         <template #default>
-            <div class=""></div>
+            <RadioGroup
+                name="problem_type"
+                :label="$t('report.type')"
+                :options="$page.props.problem_types"
+                option-label-key="name"
+                option-value-key="id"
+            />
         </template>
     </Modal>
 </template>
@@ -15,6 +21,7 @@
     import { router, usePage } from '@inertiajs/vue3';
     import { computed } from 'vue';
     import route from '@/Helpers/useRoute.js';
+    import RadioGroup from '@/Components/Form/RadioGroup.vue';
 
     const page = usePage();
 

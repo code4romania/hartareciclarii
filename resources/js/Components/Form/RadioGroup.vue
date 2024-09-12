@@ -1,23 +1,23 @@
 <template>
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled">
         <div class="grid gap-2">
-            <Checkbox
-                v-for="(option, index) in options"
-                :key="index"
-                class="flex gap-x-2"
-                v-model="modelValue"
-                :value="option.value"
-                :label="option.label"
-                :required="required"
-                :disabled="disabled"
-            />
+            <label v-for="(option, index) in options" :key="index" class="flex items-center gap-2">
+                <input
+                    type="radio"
+                    v-model="modelValue"
+                    :name="name"
+                    :value="option.value"
+                    :required="required"
+                    :disabled="disabled"
+                />
+                <span class="text-sm font-medium text-gray-700" v-text="option.label" />
+            </label>
         </div>
     </FormField>
 </template>
 
 <script setup>
     import { computed } from 'vue';
-    import Checkbox from '@/Components/Form/Checkbox.vue';
     import FormField from '@/Components/Form/Field.vue';
 
     const props = defineProps({

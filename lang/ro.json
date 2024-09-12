@@ -196,6 +196,8 @@
     "report.title": "Raportează o problemă",
     "report.footer": "Informații incomplete? Poți raporta o problemă cu informațiile lipsă, pentru a ne ajuta să menținem platforma actualizată.",
 
+    "report.type": "Ce tip de problemă ai identificat?",
+
     "report_problem": {
         "title": "Raportează o problemă",
         "cancel": "Renunță",

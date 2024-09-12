@@ -1,0 +1,7 @@
+name;slug;has_dedicated_issues_tab;can_have_business_name;can_offer_money;can_offer_vouchers;can_offer_transport;can_request_payment;can_collect_materials
+Colectare separată deșeuri;waste_collection;1;0;1;1;1;0;1
+Reparații;repairs;0;1;0;0;0;1;0
+Reutilizare;reuse;0;1;0;0;0;0;0
+Reducere;reduce;0;1;0;0;0;0;0
+Donații;donations;0;1;0;0;1;0;0
+Altele;other;0;1;0;0;0;0;0

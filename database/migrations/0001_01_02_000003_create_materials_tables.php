@@ -11,9 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('material_categories', function (Blueprint $table) {
@@ -26,19 +23,18 @@ return new class extends Migration
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('url')->nullable();
             $table->timestamps();
         });
 
         Schema::create('model_has_materials', function (Blueprint $table) {
-            $table->id();
-
             $table->morphs('model');
 
             $table->foreignIdFor(Material::class)
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->unique(['material_id', 'model_id', 'model_type']);
+            $table->primary(['material_id', 'model_id', 'model_type']);
         });
 
         Excel::import(new MaterialsImport, database_path('data/materials.csv'));

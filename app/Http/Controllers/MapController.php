@@ -9,6 +9,7 @@ use App\Enums\Point\Status;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
+use App\Http\Resources\ProblemTypeResource;
 use App\Http\Resources\ReverseResource;
 use App\Http\Resources\SearchResultResource;
 use App\Http\Resources\ServiceTypeResource;
@@ -16,6 +17,7 @@ use App\Http\Resources\SuggestionResource;
 use App\Models\Material;
 use App\Models\MaterialCategory;
 use App\Models\Point;
+use App\Models\Problem\ProblemType;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,12 +34,31 @@ class MapController extends Controller
         return $this->render($coordinates);
     }
 
-    public function point(Point $point, MapCoordinates $coordinates, Request $request): Response
+    public function point(Point $point, MapCoordinates $coordinates): Response
     {
         return $this->render($coordinates, [
             'context' => 'point',
-            'report' => $request->routeIs('front.map.report'),
+            'report' => false,
             'point' => PointDetailsResource::make($point),
+        ]);
+    }
+
+    public function report(Point $point, MapCoordinates $coordinates): Response
+    {
+        return $this->render($coordinates, [
+            'context' => 'point',
+            'report' => true,
+            'point' => PointDetailsResource::make($point),
+            'problem_types' => ProblemTypeResource::collection(
+                ProblemType::query()
+                    ->whereNull('parent_id')
+                    ->where(
+                        fn (Builder $query) => $query->whereDoesntHave('serviceTypes')
+                            ->orWhereRelation('serviceTypes', 'id', $point->service_type_id)
+                    )
+                    ->with('children')
+                    ->get()
+            ),
         ]);
     }
 
