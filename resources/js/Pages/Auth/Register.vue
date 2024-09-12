@@ -19,7 +19,7 @@
                 <Input
                     name="first_name"
                     type="text"
-                    :label="$t('auth.register.first_name')"
+                    :label="$t('field.first_name')"
                     v-model="form.first_name"
                     :errors="[form.errors.first_name]"
                     required
@@ -28,7 +28,7 @@
                 <Input
                     name="last_name"
                     type="text"
-                    :label="$t('auth.register.last_name')"
+                    :label="$t('field.last_name')"
                     v-model="form.last_name"
                     :errors="[form.errors.last_name]"
                     required
@@ -38,7 +38,7 @@
             <Input
                 name="phone"
                 type="tel"
-                :label="$t('auth.register.phone')"
+                :label="$t('field.phone')"
                 v-model="form.phone"
                 :errors="[form.errors.phone]"
             />
@@ -46,7 +46,7 @@
             <Input
                 name="email"
                 type="email"
-                :label="$t('auth.register.email')"
+                :label="$t('field.email')"
                 v-model="form.email"
                 :errors="[form.errors.email]"
                 required
@@ -55,7 +55,7 @@
             <Input
                 name="password"
                 type="password"
-                :label="$t('auth.register.password')"
+                :label="$t('field.password')"
                 v-model="form.password"
                 :errors="[form.errors.password]"
                 required
@@ -64,7 +64,7 @@
             <Input
                 name="password_confirmation"
                 type="password"
-                :label="$t('auth.register.password_confirmation')"
+                :label="$t('field.password_confirmation')"
                 v-model="form.password_confirmation"
                 :errors="[form.errors.password_confirmation]"
                 required

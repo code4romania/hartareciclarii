@@ -12,7 +12,7 @@
                     <CheckIcon v-if="value" class="w-4 h-4" />
                     <XMarkIcon v-else class="w-4 h-4" />
 
-                    <span v-text="key" />
+                    <span v-text="$t(`point.${key}.${Boolean(value)}`)" />
                 </span>
             </div>
         </div>

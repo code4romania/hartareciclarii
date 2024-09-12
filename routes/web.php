@@ -49,6 +49,7 @@ Route::group([
     Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
     Route::get('/reverse/{coordinates?}', 'reverse')->name('reverse');
 
+    Route::get('/point/{point}/{coordinates?}/report', 'point')->name('report')->middleware('auth');
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
     Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');

@@ -24,7 +24,9 @@
             <Phone v-if="point.phone" :phone="point.phone" class="px-6 py-2" />
         </div>
 
-        <Footer />
+        <Footer :point="point" />
+
+        <ReportModal :point="point" />
     </article>
 </template>
 
@@ -37,11 +39,11 @@
     import Materials from '@/Components/PointDetails/Materials.vue';
     import Observations from '@/Components/PointDetails/Observations.vue';
     import Phone from '@/Components/PointDetails/Phone.vue';
+    import ReportModal from '@/Components/ReportModal.vue';
     import Schedule from '@/Components/PointDetails/Schedule.vue';
     import Subheading from '@/Components/PointDetails/Subheading.vue';
     import Website from '@/Components/PointDetails/Website.vue';
 
-    import { computed } from 'vue';
     import { closePanel } from '@/Helpers/useMap.js';
 
     const props = defineProps({
@@ -50,4 +52,3 @@
         },
     });
 </script>
-

@@ -10,7 +10,11 @@
         </template>
     </Alert>
 
-    <Alert v-else-if="$page.props.auth.show_verified_message" type="success" message="This is an error message." />
+    <Alert
+        v-else-if="$page.props.auth.show_verified_message"
+        type="success"
+        :message="$t('auth.verify.verified_notice')"
+    />
 </template>
 
 <script setup>

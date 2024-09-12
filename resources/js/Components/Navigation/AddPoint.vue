@@ -1,6 +1,7 @@
 <template>
     <Modal
         :dismissable="!isStep('location') && !isStep('thanks')"
+        :overlay-dismissable="false"
         form
         @submit="submit"
         :open="open"

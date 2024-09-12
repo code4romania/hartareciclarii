@@ -32,10 +32,11 @@ class MapController extends Controller
         return $this->render($coordinates);
     }
 
-    public function point(Point $point, MapCoordinates $coordinates): Response
+    public function point(Point $point, MapCoordinates $coordinates, Request $request): Response
     {
         return $this->render($coordinates, [
             'context' => 'point',
+            'report' => $request->routeIs('front.map.report'),
             'point' => PointDetailsResource::make($point),
         ]);
     }
@@ -136,11 +137,6 @@ class MapController extends Controller
                 Point::findOrFail($request->header('Map-Point'))
             )),
         ]);
-    }
-
-    public function report($request)
-    {
-        //
     }
 
     protected function render(MapCoordinates $coordinates, array $props = []): Response

@@ -12,18 +12,23 @@
                 <ArrowTurnUpRightIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900">Mergi la locatie</div>
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.goto')" />
         </a>
 
-        <a href="#" class="gap-2 text-center group focus:outline-none">
+        <Link
+            :href="route('front.map.report', { point, coordinates })"
+            class="gap-2 text-center group focus:outline-none"
+            :only="['report']"
+        >
             <div
                 class="inline-flex items-center justify-center w-12 h-12 p-3 bg-gray-100 rounded-full text-blue-950 group-hover:bg-blue-800 group-hover:text-white group-focus:bg-blue-800 group-focus:text-white group-focus:ring-2 group-focus:ring-blue-800 ring-offset-2"
             >
                 <FlagIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900">Raportează o problemă</div>
-        </a>
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.report')" />
+        </Link>
+
         <button type="button" class="gap-2 text-center group focus:outline-none" @click="shareOrCopy">
             <div
                 class="inline-flex items-center justify-center w-12 h-12 p-3 bg-gray-100 rounded-full text-blue-950 group-hover:bg-blue-800 group-hover:text-white group-focus:bg-blue-800 group-focus:text-white group-focus:ring-2 group-focus:ring-blue-800 ring-offset-2"
@@ -32,7 +37,7 @@
                 <LinkIcon v-else class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900">Distribuie</div>
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.share')" />
         </button>
     </div>
 </template>
@@ -41,6 +46,7 @@
     import { computed } from 'vue';
     import { useShare, useClipboard } from '@vueuse/core';
     import { ArrowTurnUpRightIcon, FlagIcon, ShareIcon, LinkIcon } from '@heroicons/vue/16/solid';
+    import { Link } from '@inertiajs/vue3';
     import route from '@/Helpers/useRoute.js';
 
     const props = defineProps({
@@ -69,4 +75,3 @@
         }
     };
 </script>
-

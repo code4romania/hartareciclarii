@@ -18,7 +18,7 @@
             <Input
                 name="email"
                 type="email"
-                :label="$t('auth.email')"
+                :label="$t('field.email')"
                 v-model="form.email"
                 :errors="[form.errors.email]"
                 required
@@ -27,14 +27,14 @@
             <Input
                 name="password"
                 type="password"
-                :label="$t('auth.password')"
+                :label="$t('field.password')"
                 v-model="form.password"
                 :errors="[form.errors.password]"
                 required
             />
 
             <div class="flex items-center justify-between">
-                <Checkbox :label="$t('auth.remember')" v-model="form.remember" />
+                <Checkbox :label="$t('field.remember')" v-model="form.remember" />
 
                 <Link
                     v-if="canResetPassword"

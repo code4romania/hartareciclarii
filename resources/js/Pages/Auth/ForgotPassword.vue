@@ -18,7 +18,7 @@
             <Input
                 name="email"
                 type="email"
-                :label="$t('auth.email')"
+                :label="$t('field.email')"
                 v-model="form.email"
                 :errors="[form.errors.email]"
                 required

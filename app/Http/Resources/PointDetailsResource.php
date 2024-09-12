@@ -54,7 +54,6 @@ class PointDetailsResource extends JsonResource
                 'offers_transport' => $this->offers_transport,
                 'free_of_charge' => $this->free_of_charge,
             ])->reject(fn (bool | null $value) => \is_null($value)),
-
         ];
     }
 

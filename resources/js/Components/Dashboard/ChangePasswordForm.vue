@@ -5,7 +5,7 @@
                 <Input
                     name="current_password"
                     type="password"
-                    :label="$t('auth.register.current_password')"
+                    :label="$t('field.current_password')"
                     v-model="form.current_password"
                     :errors="[form.errors.current_password]"
                     required
@@ -16,7 +16,7 @@
                 <Input
                     name="password"
                     type="password"
-                    :label="$t('auth.register.password')"
+                    :label="$t('field.password')"
                     v-model="form.password"
                     :errors="[form.errors.password]"
                     required
@@ -27,7 +27,7 @@
                 <Input
                     name="password_confirmation"
                     type="password"
-                    :label="$t('auth.register.password_confirmation')"
+                    :label="$t('field.password_confirmation')"
                     v-model="form.password_confirmation"
                     :errors="[form.errors.password_confirmation]"
                     required

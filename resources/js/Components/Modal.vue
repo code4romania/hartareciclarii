@@ -34,30 +34,31 @@
                             <div
                                 class="relative flex flex-col w-full max-h-full overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl"
                             >
-                                <div v-if="$slots.title || dismissable" class="sticky top-0 px-4 py-5 sm:px-6">
-                                    <button
-                                        v-if="dismissable"
-                                        type="button"
-                                        class="absolute text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
-                                        @click="close"
-                                    >
-                                        <span class="sr-only">Close</span>
-                                        <XMarkIcon class="w-6 h-6" aria-hidden="true" />
-                                    </button>
+                                <DialogTitle
+                                    v-if="$slots.title"
+                                    as="h3"
+                                    class="sticky top-0 px-4 py-5 text-base font-semibold text-gray-900 sm:px-6 sm:text-lg"
+                                    :class="{
+                                        '!pr-10': dismissable,
+                                    }"
+                                >
+                                    <slot name="title" />
+                                </DialogTitle>
 
-                                    <DialogTitle
-                                        v-if="$slots.title"
-                                        as="h3"
-                                        class="text-base font-semibold text-gray-900 sm:text-lg"
-                                        :class="{
-                                            'pr-6': dismissable,
-                                        }"
-                                    >
-                                        <slot name="title" />
-                                    </DialogTitle>
-                                </div>
+                                <button
+                                    v-if="dismissable"
+                                    type="button"
+                                    class="absolute text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
+                                    @click="close"
+                                >
+                                    <span class="sr-only">Close</span>
+                                    <XMarkIcon class="w-6 h-6" aria-hidden="true" />
+                                </button>
 
-                                <div class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6">
+                                <div
+                                    class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6"
+                                    :class="{ 'pb-5': !$slots.footer }"
+                                >
                                     <slot :close="close" />
                                 </div>
 
@@ -80,18 +81,17 @@
     import { computed, ref } from 'vue';
     import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/solid';
-    import Button from '@/Components/Button.vue';
 
     const emit = defineEmits(['submit', 'open', 'close']);
 
     const props = defineProps({
         dismissable: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         overlayDismissable: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         form: {
             type: Boolean,
