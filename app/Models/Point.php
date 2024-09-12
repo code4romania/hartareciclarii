@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
@@ -76,9 +76,9 @@ class Point extends Model implements HasMedia
             });
     }
 
-    public function materials(): BelongsToMany
+    public function materials(): MorphToMany
     {
-        return $this->belongsToMany(Material::class);
+        return $this->morphToMany(Material::class, 'model', 'model_has_materials');
     }
 
     public function issues(): HasMany

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Scout\Searchable;
 
@@ -26,9 +25,9 @@ class Material extends Model
         return $this->morphedByMany(MaterialCategory::class, 'model', 'model_has_materials');
     }
 
-    public function points(): BelongsToMany
+    public function points(): MorphToMany
     {
-        return $this->belongsToMany(Point::class);
+        return $this->morphedByMany(Point::class, 'model', 'model_has_materials');
     }
 
     public function icon(): Attribute
