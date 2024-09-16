@@ -321,7 +321,7 @@
         form.transform(transform).submit({
             preserveState: true,
             preserveScroll: true,
-            onSuccess: nextStep,
+            onSuccess: () => goToStep('thanks'),
             onError: (error) => {
                 console.log(error);
             },

@@ -8,7 +8,6 @@
                 v-model="modelValue"
                 :value="option.value"
                 :label="option.label"
-                :required="required"
                 :disabled="disabled"
             />
         </div>

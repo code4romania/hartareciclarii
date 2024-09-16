@@ -32,10 +32,29 @@
 
                 <ChangePinLocationStep v-if="isStep('changePinLocation')" :problem-type="problemType" :form="form" />
 
+                <MaterialsTypeStep v-if="isStep('materials')" :problem-type="problemType" :form="form" />
+                <MaterialsAddStep
+                    v-if="isStep('materials_add')"
+                    :problem-type="problemType.children.find((type) => type.slug === 'materials_add')"
+                    :form="form"
+                />
+                <MaterialsRemoveStep
+                    v-if="isStep('materials_remove')"
+                    :problem-type="problemType.children.find((type) => type.slug === 'materials_remove')"
+                    :form="form"
+                />
+                <MaterialsOtherStep
+                    v-if="isStep('materials_other')"
+                    :problem-type="problemType.children.find((type) => type.slug === 'materials_other')"
+                    :form="form"
+                />
+
                 <RejectedWasteStep v-if="isStep('rejected_waste')" :problem-type="problemType" :form="form" />
                 <ContainerStep v-if="isStep('container')" :problem-type="problemType" :form="form" />
                 <ScheduleStep v-if="isStep('schedule')" :problem-type="problemType" :form="form" />
                 <OtherStep v-if="isStep('other')" :problem-type="problemType" :form="form" />
+
+                <ThanksStep v-if="isStep('thanks')" :close="close" />
 
                 <div v-if="form.errors.unchanged" class="text-sm text-red-600" role="alert">
                     <p v-text="form.errors.unchanged" />
@@ -43,7 +62,7 @@
             </div>
         </template>
 
-        <template #footer="{ close }">
+        <template v-if="!isStep('thanks')" #footer="{ close }">
             <Button
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
@@ -127,6 +146,11 @@
     import RejectedWasteStep from '@/Components/ReportPointSteps/RejectedWaste.vue';
     import ScheduleStep from '@/Components/ReportPointSteps/Schedule.vue';
     import OtherStep from '@/Components/ReportPointSteps/Other.vue';
+    import MaterialsTypeStep from '@/Components/ReportPointSteps/MaterialsType.vue';
+    import MaterialsAddStep from '@/Components/ReportPointSteps/MaterialsAdd.vue';
+    import MaterialsRemoveStep from '@/Components/ReportPointSteps/MaterialsRemove.vue';
+    import MaterialsOtherStep from '@/Components/ReportPointSteps/MaterialsOther.vue';
+    import ThanksStep from '@/Components/ReportPointSteps/Thanks.vue';
 
     const page = usePage();
 
@@ -175,6 +199,7 @@
         description: null,
         images: [],
         sub_types: [],
+        materials_type: [],
     });
 
     const problemType = computed(() => page.props.problem_types.find((type) => type.id === form.type_id));
@@ -208,7 +233,10 @@
             type: ['type_id'],
             address: ['address', 'city', 'county', 'location.lat', 'location.lng'],
             location: ['address', 'city', 'county', 'location.lat', 'location.lng'],
-            // materials: ['materials'],
+            materials: ['materials_type'],
+            materials_remove: ['materials_remove'],
+            materials_add: ['materials_add'],
+            materials_other: ['description'],
             rejected_waste: ['description', 'sub_types'],
             container: ['description', 'images'],
             schedule: ['description'],
@@ -250,11 +278,29 @@
         form.transform(transform).submit({
             preserveState: true,
             preserveScroll: true,
-            onSuccess: nextStep,
+            onSuccess: () => goToStep('thanks'),
             onError: (error) => {
                 console.log(error);
             },
         });
+    };
+
+    const sortedMaterialTypes = computed(() => form.materials_type.sort());
+
+    const getMaterialsTypeStep = (id) => {
+        if (problemType.value.slug !== 'materials' || !id) {
+            return null;
+        }
+
+        return problemType.value.children.find((type) => type.id === id)?.slug;
+    };
+
+    const getMaterialsTypeId = (slug) => {
+        if (problemType.value.slug !== 'materials' || !slug) {
+            return null;
+        }
+
+        return problemType.value.children.find((type) => type.slug === slug)?.id;
     };
 
     const isLastStep = computed(() => {
@@ -262,11 +308,13 @@
             return false;
         }
 
-        console.log(problemType.value);
+        if (problemType.value.slug === 'materials') {
+            let [lastMaterialStep] = sortedMaterialTypes.value.slice(-1);
 
-        if (!problemType.value.children || !problemType.value.children.length) {
-            return problemType.value.slug === form.step;
+            return form.step === getMaterialsTypeStep(lastMaterialStep);
         }
+
+        return problemType.value.slug === form.step;
     });
 
     const isStep = (step) => form.step === step;
@@ -318,6 +366,28 @@
 
         if (isStep('changePinLocation')) {
             return goToStep(problemType.value.slug);
+        }
+
+        if (problemType.value.slug === 'materials') {
+            if (form.step === 'materials') {
+                return goToStep(getMaterialsTypeStep(sortedMaterialTypes.value[0]));
+            }
+
+            const currentIndex = sortedMaterialTypes.value.indexOf(getMaterialsTypeId(form.step));
+
+            if (currentIndex <= sortedMaterialTypes.value.length) {
+                return goToStep(getMaterialsTypeStep(sortedMaterialTypes.value[currentIndex + 1]));
+            }
+
+            // let [nextMaterialStep] = sortedMaterialTypes.value.slice(
+            //     sortedMaterialTypes.value.indexOf(form.step) + 1
+            // );
+
+            // if (!nextMaterialStep) {
+            //     return goToStep('review');
+            // }
+
+            // return goToStep(nextMaterialStep);
         }
 
         // if (isStep('details')) {

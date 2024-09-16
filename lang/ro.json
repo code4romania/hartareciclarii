@@ -202,6 +202,9 @@
 
     "report.address.exact_address": "Adresa exactă",
 
+    "report.materials.add": "Marchează care dintre următoarele materiale se colectează:",
+    "report.materials.remove": "Mai jos sunt listate materialele pe care acest punct le colectează (la ultima actualizare). Marchează care dintre următoarele materiale ați identificat că NU se colectează în realitate:",
+
     "report.other.legend": "Altă problemă",
 
     "report.other.images": "Adaugă poze",
