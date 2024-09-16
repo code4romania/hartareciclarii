@@ -1,5 +1,5 @@
 <template>
-    <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled">
+    <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
         <div class="grid gap-2">
             <Checkbox
                 v-for="(option, index) in options"
@@ -56,6 +56,10 @@
         modelValue: {
             type: Array,
             default: [],
+        },
+        errors: {
+            type: Array,
+            default: () => [],
         },
     });
 

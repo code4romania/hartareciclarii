@@ -130,7 +130,7 @@ export default {
     },
     checkbox: {
         root: {
-            class: ['relative', 'inline-flex', 'align-bottom', 'w-5', 'h-5', 'select-none'],
+            class: ['relative', 'inline-flex', 'align-bottom', 'w-5', 'h-5', 'shrink-0', 'select-none'],
         },
         box: ({ props, context }) => ({
             class: [

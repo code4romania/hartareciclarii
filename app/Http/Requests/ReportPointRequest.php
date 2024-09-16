@@ -21,6 +21,8 @@ class ReportPointRequest extends FormRequest
 
     public Collection $problemTypes;
 
+    public ProblemType $problemType;
+
     public function rules(): array
     {
         $this->problemTypes = ProblemType::query()
@@ -28,6 +30,8 @@ class ReportPointRequest extends FormRequest
             ->whereValidForServiceTypeId($this->point->service_type_id)
             ->with('children')
             ->get();
+
+        $this->problemType = $this->problemTypes->firstWhere('id', $this->type_id);
 
         return [
             'step' => ['required', 'string'/* 'in:type,materials,review' */],
@@ -74,11 +78,10 @@ class ReportPointRequest extends FormRequest
 
     protected function getRulesForProblemType(): array
     {
-        $problemType = $this->problemTypes->firstWhere('id', $this->type_id);
-
-        return match ($problemType?->slug) {
+        return match ($this->problemType?->slug) {
             'address' => $this->getRulesForAddress(),
             'location' => $this->getRulesForLocation(),
+            'rejected_waste' => $this->getRulesForRejectedWaste(),
             'schedule', 'container', 'other' => $this->getRulesForNarrative(),
             default => [],
         };
@@ -108,11 +111,18 @@ class ReportPointRequest extends FormRequest
         ];
     }
 
-    protected function getRulesForSchedule(): array
+    protected function getRulesForRejectedWaste(): array
     {
-        return [
+        $rules = [
             'description' => ['required', 'string', 'max:1000'],
         ];
+
+        if ($this->problemType->children->isNotEmpty()) {
+            $rules['sub_types'] = ['nullable', 'array'];
+            $rules['sub_types.*'] = ['required', Rule::in($this->problemType->children->pluck('id'))];
+        }
+
+        return $rules;
     }
 
     protected function getRulesForNarrative(): array

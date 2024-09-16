@@ -20,18 +20,19 @@
                     v-if="isStep('address')"
                     :form="form"
                     :problem-type="problemType"
-                    @changePinLocation="changePinLocation('address')"
+                    @changePinLocation="changePinLocation"
                 />
 
                 <LocationStep
                     v-if="isStep('location')"
                     :form="form"
                     :problem-type="problemType"
-                    @changePinLocation="changePinLocation('address')"
+                    @changePinLocation="changePinLocation"
                 />
 
                 <ChangePinLocationStep v-if="isStep('changePinLocation')" :problem-type="problemType" :form="form" />
 
+                <RejectedWasteStep v-if="isStep('rejected_waste')" :problem-type="problemType" :form="form" />
                 <ContainerStep v-if="isStep('container')" :problem-type="problemType" :form="form" />
                 <ScheduleStep v-if="isStep('schedule')" :problem-type="problemType" :form="form" />
                 <OtherStep v-if="isStep('other')" :problem-type="problemType" :form="form" />
@@ -123,6 +124,7 @@
     import LocationStep from '@/Components/ReportPointSteps/Location.vue';
     import ChangePinLocationStep from '@/Components/ReportPointSteps/ChangePinLocation.vue';
     import ContainerStep from '@/Components/ReportPointSteps/Container.vue';
+    import RejectedWasteStep from '@/Components/ReportPointSteps/RejectedWaste.vue';
     import ScheduleStep from '@/Components/ReportPointSteps/Schedule.vue';
     import OtherStep from '@/Components/ReportPointSteps/Other.vue';
 
@@ -170,10 +172,9 @@
         city: null,
         county: null,
 
-        // step 3: Details
         description: null,
-        //
         images: [],
+        sub_types: [],
     });
 
     const problemType = computed(() => page.props.problem_types.find((type) => type.id === form.type_id));
@@ -208,6 +209,7 @@
             address: ['address', 'city', 'county', 'location.lat', 'location.lng'],
             location: ['address', 'city', 'county', 'location.lat', 'location.lng'],
             // materials: ['materials'],
+            rejected_waste: ['description', 'sub_types'],
             container: ['description', 'images'],
             schedule: ['description'],
             other: ['description', 'images'],
