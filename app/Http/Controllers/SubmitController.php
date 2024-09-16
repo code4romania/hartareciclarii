@@ -56,7 +56,46 @@ class SubmitController extends Controller
             $attributes['reported_by'] = auth()->id();
         }
 
-        $point->problems()->create($attributes);
+        tap(
+            data_get($attributes, 'location'),
+            function (?array $location) use ($attributes) {
+                if (\is_null($location)) {
+                    return;
+                }
+
+                $attributes['location'] = new SpatialPoint(
+                    (float) $location['lat'],
+                    (float) $location['lng']
+                );
+            }
+        );
+
+        $problem = $point->problems()->create($attributes);
+
+        tap(
+            data_get($attributes, 'materials'),
+            function (?array $materials) use ($problem) {
+                if (filled($materials)) {
+                    $problem->materials()->attach($materials);
+                }
+            }
+        );
+
+        tap(
+            data_get($attributes, 'images'),
+            function (?array $images) use ($problem) {
+                if (blank($images)) {
+                    return;
+                }
+
+                Media::query()
+                    ->whereIn('uuid', $images)
+                    ->update([
+                        'model_id' => $problem->getKey(),
+                        'model_type' => $problem->getMorphClass(),
+                    ]);
+            }
+        );
 
         return redirect()->back();
     }

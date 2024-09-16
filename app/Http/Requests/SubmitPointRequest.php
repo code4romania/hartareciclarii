@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Models\City;
+use App\Concerns\CanFindCityAndCounty;
 use App\Models\ServiceType;
 use App\Models\TemporaryUpload;
 use Illuminate\Foundation\Http\FormRequest;
@@ -13,6 +13,10 @@ use Illuminate\Validation\Rule;
 
 class SubmitPointRequest extends FormRequest
 {
+    use CanFindCityAndCounty;
+
+    protected $stopOnFirstFailure = true;
+
     public function rules(): array
     {
         $serviceTypes = ServiceType::all();
@@ -86,25 +90,5 @@ class SubmitPointRequest extends FormRequest
             'materials' => ['required', 'array', 'min:1'],
             'materials.*' => ['required', 'exists:materials,id'],
         ];
-    }
-
-    private function findCityAndCounty(): void
-    {
-        if (blank($this->city) || blank($this->county)) {
-            return;
-        }
-
-        $city = City::search((string) $this->city)
-            ->where('county', (string) $this->county)
-            ->first();
-
-        if (blank($city)) {
-            return;
-        }
-
-        $this->merge([
-            'city_id' => $city->id,
-            'county_id' => $city->county_id,
-        ]);
     }
 }

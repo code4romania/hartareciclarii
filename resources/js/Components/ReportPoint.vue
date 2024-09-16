@@ -1,14 +1,44 @@
 <template>
     <Modal @submit="submit" :open="open" @close="close" form>
         <template #title>
-            {{ $t('report.title') }}
+            <div v-if="isStep('changePinLocation')" class="flex gap-2">
+                <button type="button" @click="previousStep">
+                    <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
+                </button>
+
+                <span v-text="$t('add_point.type.change_pin_location')" />
+            </div>
+
+            <span v-else v-text="$t('report.title')" />
         </template>
 
         <template #default>
             <div class="grid gap-4">
                 <ProblemTypeStep v-if="isStep('type')" :form="form" />
 
-                <LocationStep v-if="isStep('location')" :form="form" />
+                <AddressStep
+                    v-if="isStep('address')"
+                    :form="form"
+                    :problem-type="problemType"
+                    @changePinLocation="changePinLocation('address')"
+                />
+
+                <LocationStep
+                    v-if="isStep('location')"
+                    :form="form"
+                    :problem-type="problemType"
+                    @changePinLocation="changePinLocation('address')"
+                />
+
+                <ChangePinLocationStep v-if="isStep('changePinLocation')" :problem-type="problemType" :form="form" />
+
+                <ContainerStep v-if="isStep('container')" :problem-type="problemType" :form="form" />
+                <ScheduleStep v-if="isStep('schedule')" :problem-type="problemType" :form="form" />
+                <OtherStep v-if="isStep('other')" :problem-type="problemType" :form="form" />
+
+                <div v-if="form.errors.unchanged" class="text-sm text-red-600" role="alert">
+                    <p v-text="form.errors.unchanged" />
+                </div>
             </div>
         </template>
 
@@ -21,29 +51,87 @@
             />
 
             <Button
-                v-if="!isStep('location') || form.address_override === null"
+                v-if="!isStep('changePinLocation') || form.address_override === null"
                 type="submit"
                 :label="primaryButtonLabel"
                 :disabled="form.validating || form.processing"
                 size="sm"
                 primary
             />
+
+            <Modal
+                v-else
+                :open="showConfirmAddressOverrideModal"
+                @open="showConfirmAddressOverrideModal = true"
+                @close="showConfirmAddressOverrideModal = false"
+            >
+                <template #trigger="{ open }">
+                    <Button
+                        :label="primaryButtonLabel"
+                        @click="open"
+                        :disabled="form.validating || form.processing"
+                        size="sm"
+                        primary
+                    />
+                </template>
+
+                <template #title>
+                    <span v-text="$t('add_point.location.alert.title')" />
+                </template>
+
+                <p
+                    class="py-3 text-sm"
+                    v-html="
+                        $t('add_point.location.alert.body', {
+                            old: form.address || '',
+                            new: form.address_override,
+                        })
+                    "
+                />
+
+                <template #footer="{ close }">
+                    <Button
+                        :label="$t('add_point.location.alert.keep_old')"
+                        @click="cancelAddressOverride(close)"
+                        size="sm"
+                    />
+
+                    <Button
+                        :label="$t('add_point.location.alert.update_address')"
+                        @click="confirmAddressOverride(close)"
+                        size="sm"
+                        primary
+                    />
+                </template>
+            </Modal>
         </template>
     </Modal>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { computed, ref } from 'vue';
     import { router, usePage } from '@inertiajs/vue3';
     import { useForm } from 'laravel-precognition-vue-inertia';
     import { trans } from 'laravel-vue-i18n';
+    import { ArrowLeftIcon } from '@heroicons/vue/20/solid';
     import route from '@/Helpers/useRoute.js';
     import Button from '@/Components/Button.vue';
     import Modal from '@/Components/Modal.vue';
+
     import ProblemTypeStep from '@/Components/ReportPointSteps/ProblemType.vue';
+    import AddressStep from '@/Components/ReportPointSteps/Address.vue';
     import LocationStep from '@/Components/ReportPointSteps/Location.vue';
+    import ChangePinLocationStep from '@/Components/ReportPointSteps/ChangePinLocation.vue';
+    import ContainerStep from '@/Components/ReportPointSteps/Container.vue';
+    import ScheduleStep from '@/Components/ReportPointSteps/Schedule.vue';
+    import OtherStep from '@/Components/ReportPointSteps/Other.vue';
 
     const page = usePage();
+
+    const originalLocation = ref({
+        lat: null,
+        lng: null,
+    });
 
     const props = defineProps({
         point: {
@@ -70,48 +158,91 @@
         step: 'type',
 
         // step 1: Type
-        problem_type_id: null,
+        type_id: null,
 
         // step 1 & 2: Location
-        address: null,
+        address: props.point.address,
         address_override: null,
         location: {
-            lat: null,
-            lng: null,
+            lat: props.point.latlng[0],
+            lng: props.point.latlng[1],
         },
         city: null,
         county: null,
+
+        // step 3: Details
+        description: null,
+        //
+        images: [],
     });
 
-    const primaryButtonLabel = computed(
-        () =>
-            ({
-                type: trans('report.action.next_step'),
-                location: trans('report.action.save'),
-                details: trans('report.action.next_step'),
-                materials: trans('report.action.next_step'),
-                review: trans('report.action.finish_steps'),
-            })[form.step]
-    );
+    const problemType = computed(() => page.props.problem_types.find((type) => type.id === form.type_id));
 
-    const secondaryButtonLabel = computed(
-        () =>
-            ({
-                type: trans('report.action.cancel'),
-                location: trans('report.action.reset'),
-                details: trans('report.action.back'),
-                materials: trans('report.action.back'),
-                review: trans('report.action.back'),
-            })[form.step]
-    );
+    const primaryButtonLabel = computed(() => {
+        if (isLastStep.value) {
+            return trans('report.action.submit');
+        }
+
+        if (isStep('location')) {
+            return trans('report.action.save');
+        }
+
+        return trans('report.action.next_step');
+    });
+
+    const secondaryButtonLabel = computed(() => {
+        if (isStep('type')) {
+            return trans('report.action.cancel');
+        }
+
+        if (isStep('changePinLocation')) {
+            return trans('report.action.reset');
+        }
+
+        return trans('report.action.back');
+    });
+
+    const getFieldsByStep = () =>
+        ({
+            type: ['type_id'],
+            address: ['address', 'city', 'county', 'location.lat', 'location.lng'],
+            location: ['address', 'city', 'county', 'location.lat', 'location.lng'],
+            // materials: ['materials'],
+            container: ['description', 'images'],
+            schedule: ['description'],
+            other: ['description', 'images'],
+        })[form.step];
+
+    const changePinLocation = () => {
+        originalLocation.value.lat = form.location.lat;
+        originalLocation.value.lng = form.location.lng;
+
+        goToStep('changePinLocation');
+    };
+
+    const resetLocation = () => {
+        form.location.lat = originalLocation.value.lat;
+        form.location.lng = originalLocation.value.lng;
+
+        originalLocation.value.lat = null;
+        originalLocation.value.lng = null;
+    };
 
     const transform = (data) => {
+        data.images = data.images.map((image) => image.uuid);
+
         return data;
     };
 
     const submit = () => {
         if (isStep('location')) {
             return nextStep();
+        }
+
+        if (!isLastStep.value) {
+            return form.transform(transform).touch(getFieldsByStep()).validate({
+                onSuccess: nextStep,
+            });
         }
 
         form.transform(transform).submit({
@@ -124,6 +255,18 @@
         });
     };
 
+    const isLastStep = computed(() => {
+        if (!problemType.value) {
+            return false;
+        }
+
+        console.log(problemType.value);
+
+        if (!problemType.value.children || !problemType.value.children.length) {
+            return problemType.value.slug === form.step;
+        }
+    });
+
     const isStep = (step) => form.step === step;
 
     const goToStep = (step) => (form.step = step);
@@ -132,13 +275,14 @@
         if (isStep('type')) {
             close();
             form.reset();
+            form.clearErrors();
             return;
         }
 
-        // if (isStep('location')) {
-        //     resetLocation();
-        //     return goToStep('type');
-        // }
+        if (isStep('changePinLocation')) {
+            resetLocation();
+            return goToStep(problemType.value.slug);
+        }
 
         // if (isStep('details')) {
         //     return goToStep('type');
@@ -155,17 +299,24 @@
 
         //     return goToStep('materials');
         // }
+
+        if (page.props.problem_types.some((type) => type.slug === form.step)) {
+            form.reset();
+            form.clearErrors();
+            return;
+        }
     };
 
-    const nextStep = (event) => {
-        console.log(event);
-        // if (isStep('type')) {
-        //     return goToStep('details');
-        // }
+    const nextStep = () => {
+        if (isStep('type')) {
+            if (problemType.value.slug) {
+                return goToStep(problemType.value.slug);
+            }
+        }
 
-        // if (isStep('location')) {
-        //     return goToStep('type');
-        // }
+        if (isStep('changePinLocation')) {
+            return goToStep(problemType.value.slug);
+        }
 
         // if (isStep('details')) {
         //     if (!serviceType.value.can.collect_materials) {
@@ -183,4 +334,22 @@
         //     return goToStep('thanks');
         // }
     };
+
+    const cancelAddressOverride = (close) => {
+        close();
+
+        form.address_override = null;
+
+        goToStep(problemType.value.slug);
+    };
+
+    const confirmAddressOverride = (close) => {
+        close();
+        form.address = form.address_override;
+        form.address_override = null;
+        console.log(problemType.value);
+        goToStep(problemType.value.slug);
+    };
+
+    const showConfirmAddressOverrideModal = ref(false);
 </script>

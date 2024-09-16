@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class Problem extends Model
 {
@@ -24,12 +25,17 @@ class Problem extends Model
         'point_id',
         'reported_by',
         'type_id',
+        'county_id',
+        'city_id',
+        'address',
+        'location',
         'description',
         'started_at',
         'closed_at',
     ];
 
     protected $casts = [
+        'location' => SpatialPoint::class,
         'started_at' => 'datetime',
         'closed_at' => 'datetime',
     ];
@@ -57,7 +63,8 @@ class Problem extends Model
     public function materials(): MorphToMany
     {
         return $this->morphToMany(Material::class, 'model', 'model_has_materials')
-            ->withPivot([]);
+            ->withPivot(['flag'])
+            ->withCasts(['flag' => 'boolean']);
     }
 
     public function scopeWhereNew(Builder $query): Builder

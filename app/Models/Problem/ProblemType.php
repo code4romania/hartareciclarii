@@ -33,11 +33,7 @@ class ProblemType extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function scopeWhereValidForPoint(Builder $query, Point $point): Builder
-    {
-        return $query->whereDoesntHave('serviceTypes')
-            ->orWhereRelation('serviceTypes', 'id', $point->service_type_id);
-    }
+
 
     public function scopeWhereValidForServiceTypeId(Builder $query, int $id): Builder
     {

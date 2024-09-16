@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Imports\ProblemTypesImport;
+use App\Models\City;
+use App\Models\County;
 use App\Models\Point;
 use App\Models\Problem\Problem;
 use App\Models\Problem\ProblemType;
@@ -49,8 +51,8 @@ return new class extends Migration
         Schema::create('problems', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(Point::class)
-                ->constrained()
+            $table->foreignIdFor(ProblemType::class, 'type_id')
+                ->constrained('problem_types')
                 ->cascadeOnDelete();
 
             $table->foreignIdFor(User::class, 'reported_by')
@@ -58,10 +60,22 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
 
-            $table->foreignIdFor(ProblemType::class, 'type_id')
-                ->constrained('problem_types')
+            $table->foreignIdFor(Point::class)
+                ->constrained()
                 ->cascadeOnDelete();
 
+            $table->foreignIdFor(County::class)
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
+            $table->foreignIdFor(City::class)
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
+            $table->string('address')->nullable();
+            $table->geometry('location', 'point')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->timestamp('started_at')->nullable();

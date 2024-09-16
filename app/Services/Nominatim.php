@@ -85,7 +85,7 @@ class Nominatim
         return new Location($result);
     }
 
-    public function maxBounds(): array
+    public function maxBounds(): ?array
     {
         return Cache::remember('max-map-bounds', now()->addDay(), function () {
             $request = $this->nominatim->newSearch()

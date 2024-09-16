@@ -198,6 +198,10 @@
 
     "report.type": "Ce tip de problemă ai identificat?",
 
+    "report.address.wrong_help": "Verifică dacă poziția exactă a punctului pe hartă este corectă. În caz contrar, indică poziția exactă a acestuia apăsând pe butonul “Modifică poziția pe hartă”.",
+
+    "report.address.exact_address": "Adresa exactă",
+
     "report.other.legend": "Altă problemă",
 
     "report.other.images": "Adaugă poze",
