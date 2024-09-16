@@ -30,8 +30,6 @@ return new class extends Migration
         });
 
         Schema::create('model_has_materials', function (Blueprint $table) {
-            $table->id();
-
             $table->morphs('model');
 
             $table->foreignIdFor(Material::class)
