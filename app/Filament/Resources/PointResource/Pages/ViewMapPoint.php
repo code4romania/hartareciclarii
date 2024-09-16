@@ -131,10 +131,6 @@ class ViewMapPoint extends ViewRecord
                             TextEntry::make('notes')
                                 ->icon('heroicon-s-pencil-square')
                                 ->label(__('map_points.fields.notes')),
-
-                            TextEntry::make('observations')
-                                ->icon('heroicon-s-pencil-square')
-                                ->label(__('map_points.fields.observations')),
                         ]
                     )
                     ->headerActions(
@@ -149,8 +145,6 @@ class ViewMapPoint extends ViewRecord
                                             ->hiddenLabel(),
                                         Textarea::make('notes')
                                             ->label(__('map_points.fields.notes')),
-                                        Textarea::make('observations')
-                                            ->label(__('map_points.fields.observations')),
 
                                     ]
                                 )->action(function (array $data, $livewire) {
@@ -177,7 +171,6 @@ class ViewMapPoint extends ViewRecord
                                     'location' => ['lat' => $this->record->location->latitude, 'lng' => $this->record->location->longitude],
                                     'nominatim_autocomplete' => $this->record->address,
                                     'notes' => $this->record->notes,
-                                    'observations' => $this->record->observations,
                                 ]),
                         ]
                     )->columnSpan(3),
