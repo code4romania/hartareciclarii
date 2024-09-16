@@ -131,6 +131,10 @@ class ViewMapPoint extends ViewRecord
                             TextEntry::make('notes')
                                 ->icon('heroicon-s-pencil-square')
                                 ->label(__('map_points.fields.notes')),
+
+                            TextEntry::make('observations')
+                                ->icon('heroicon-s-pencil-square')
+                                ->label(__('map_points.fields.observations')),
                         ]
                     )
                     ->headerActions(
@@ -145,6 +149,8 @@ class ViewMapPoint extends ViewRecord
                                             ->hiddenLabel(),
                                         Textarea::make('notes')
                                             ->label(__('map_points.fields.notes')),
+                                        Textarea::make('observations')
+                                            ->label(__('map_points.fields.observations')),
 
                                     ]
                                 )->action(function (array $data, $livewire) {
@@ -167,7 +173,12 @@ class ViewMapPoint extends ViewRecord
                                     $this->refreshFormData([
                                         'address', 'notes', 'location',
                                     ]);
-                                }),
+                                })->fillForm([
+                                    'location' => ['lat' => $this->record->location->latitude, 'lng' => $this->record->location->longitude],
+                                    'nominatim_autocomplete' => $this->record->address,
+                                    'notes' => $this->record->notes,
+                                    'observations' => $this->record->observations,
+                                ]),
                         ]
                     )->columnSpan(3),
 
@@ -176,6 +187,7 @@ class ViewMapPoint extends ViewRecord
                     ->state(fn ($record) => ['lat' => $record?->location->latitude, 'lng' => $record?->location->longitude])
                     ->draggable(false)
                     ->zoom(18)
+                    ->extraAttributes(['class'=>'h-full'])
                     ->columnSpan(9),
 
                 Section::make(__('map_points.sections.details'))
