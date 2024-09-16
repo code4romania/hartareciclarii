@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DataTransferObjects\Location;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use NominatimLaravel\Content\Nominatim as NominatimClient;
@@ -74,9 +75,12 @@ class Nominatim
             ->zoom(18)
             ->latlon($latitude, $longitude);
 
-        $result = $this->nominatim->find($request);
+        $result = rescue(
+            fn () => $this->nominatim->find($request),
+            fn () => abort(Response::HTTP_SERVICE_UNAVAILABLE)
+        );
 
-        abort_if(data_get($result, 'error'), 404);
+        abort_if(data_get($result, 'error'), Response::HTTP_NOT_FOUND);
 
         return new Location($result);
     }

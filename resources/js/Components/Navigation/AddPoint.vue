@@ -9,15 +9,13 @@
         @close="$emit('close')"
     >
         <template v-if="!isStep('thanks')" #title>
-            <template v-if="isStep('location')">
-                <div class="flex gap-2">
-                    <button type="button" @click="() => goToStep('type')">
-                        <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
-                    </button>
+            <div v-if="isStep('location')" class="flex gap-2">
+                <button type="button" @click="() => goToStep('type')">
+                    <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
+                </button>
 
-                    <span v-text="$t('add_point.type.change_pin_location')" />
-                </div>
-            </template>
+                <span v-text="$t('add_point.type.change_pin_location')" />
+            </div>
 
             <span v-else v-text="$t('add_point.title')" />
         </template>
@@ -211,7 +209,7 @@
             })[form.step]
     );
 
-    const getFieldsByStep = (step) =>
+    const getFieldsByStep = () =>
         ({
             type: [
                 //
@@ -246,7 +244,7 @@
                 'images',
             ],
             materials: ['materials'],
-        })[step];
+        })[form.step];
 
     const serviceTypes = computed(() =>
         page.props.service_types.map((service) => ({
@@ -315,7 +313,7 @@
                 form.validateFiles();
             }
 
-            return form.transform(transform).touch(getFieldsByStep(form.step)).validate({
+            return form.transform(transform).touch(getFieldsByStep()).validate({
                 onSuccess: nextStep,
             });
         }
@@ -393,6 +391,8 @@
         close();
 
         form.address_override = null;
+
+        form.reset('city', 'county');
 
         goToStep('type');
     };

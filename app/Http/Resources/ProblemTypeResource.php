@@ -19,6 +19,7 @@ class ProblemTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'children' => $this->relationLoaded('children')
                 ? self::collection($this->children)
                 : null,

@@ -26,7 +26,7 @@
 
         <Footer :point="point" />
 
-        <ReportModal :point="point" />
+        <ReportPoint :point="point" />
     </article>
 </template>
 
@@ -39,7 +39,7 @@
     import Materials from '@/Components/PointDetails/Materials.vue';
     import Observations from '@/Components/PointDetails/Observations.vue';
     import Phone from '@/Components/PointDetails/Phone.vue';
-    import ReportModal from '@/Components/ReportModal.vue';
+    import ReportPoint from '@/Components/ReportPoint.vue';
     import Schedule from '@/Components/PointDetails/Schedule.vue';
     import Subheading from '@/Components/PointDetails/Subheading.vue';
     import Website from '@/Components/PointDetails/Website.vue';

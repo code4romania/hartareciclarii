@@ -198,6 +198,21 @@
 
     "report.type": "Ce tip de problemă ai identificat?",
 
+    "report.other.legend": "Altă problemă",
+
+    "report.other.images": "Adaugă poze",
+    "report.other.images_help": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei.",
+    "report.other.images_add": "Adaugă poze",
+
+    "report.narrative.help": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+
+    "report.action.back": "Înapoi",
+    "report.action.cancel": "Renunță",
+    "report.action.submit": "Trimite",
+    "report.action.next_step": "Următorul pas",
+    "report.action.reset": "Resetează",
+    "report.action.save": "Salvează",
+
     "report_problem": {
         "title": "Raportează o problemă",
         "cancel": "Renunță",

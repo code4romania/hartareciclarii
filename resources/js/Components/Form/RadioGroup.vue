@@ -54,8 +54,8 @@
             default: 'label',
         },
         modelValue: {
-            type: Array,
-            default: [],
+            type: [Number, String, Boolean],
+            default: null,
         },
     });
 

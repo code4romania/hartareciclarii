@@ -23,6 +23,7 @@ class ProblemTypesImport implements ToCollection, WithHeadingRow
                 $problemType = ProblemType::forceCreate([
                     'code' => Str::after($row->get('id'), 'PRB_'),
                     'name' => $row->get('name'),
+                    'slug' => $row->get('slug'),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

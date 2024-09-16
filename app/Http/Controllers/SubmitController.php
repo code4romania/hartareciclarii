@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\Point\Status;
+use App\Http\Requests\ReportPointRequest;
 use App\Http\Requests\SubmitImageRequest;
 use App\Http\Requests\SubmitPointRequest;
-use App\Http\Resources\PointImageUploadResource;
+use App\Http\Resources\TemporaryUploadResource;
 use App\Models\Media;
 use App\Models\Point;
 use App\Models\TemporaryUpload;
@@ -47,6 +48,19 @@ class SubmitController extends Controller
         return redirect()->to($point->url);
     }
 
+    public function report(ReportPointRequest $request, Point $point): RedirectResponse
+    {
+        $attributes = $request->validated();
+
+        if (auth()->check()) {
+            $attributes['reported_by'] = auth()->id();
+        }
+
+        $point->problems()->create($attributes);
+
+        return redirect()->back();
+    }
+
     public function image(SubmitImageRequest $request): ResourceCollection
     {
         $attributes = $request->validated();
@@ -60,7 +74,7 @@ class SubmitController extends Controller
                     ->toMediaCollection()
             );
 
-        return PointImageUploadResource::collection($temporaryUpload->media);
+        return TemporaryUploadResource::collection($temporaryUpload->media);
     }
 
     public function deleteImage(Request $request, Media $media): JsonResponse

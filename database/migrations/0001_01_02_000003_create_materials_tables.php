@@ -34,6 +34,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->boolean('flag')->nullable();
+
             $table->primary(['material_id', 'model_id', 'model_type']);
         });
 

@@ -56,20 +56,24 @@
 
     const { locateControl } = useLocate();
 
-    const updatePoint = (lat, lng) => {
+    const updatePoint = ({ lat, lng }) => {
         props.form.location.lat = lat;
         props.form.location.lng = lng;
     };
 
     const ready = (leafletObject) => {
-        updatePoint(leafletObject.getCenter().lat, leafletObject.getCenter().lng);
+        updatePoint(leafletObject.getCenter());
 
         locateControl().addTo(leafletObject);
     };
 
     const droppedMarker = async (event) => {
-        updatePoint(event.target.getLatLng().lat, event.target.getLatLng().lng);
+        updatePoint(event.target.getLatLng());
 
-        props.form.address_override = await reverse(event.target.getLatLng());
+        const response = await reverse(event.target.getLatLng());
+
+        props.form.address_override = response.name;
+        props.form.city = response.city;
+        props.form.county = response.county;
     };
 </script>

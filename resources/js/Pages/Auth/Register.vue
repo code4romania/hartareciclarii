@@ -5,7 +5,7 @@
 
             <ul>
                 <li>Adaugă noi puncte pe hartă</li>
-                <li>Raporteazaă probleme cu punctele existente</li>
+                <li>Raportează probleme cu punctele existente</li>
                 <li>Contribuie la efortul de a menține informațiile actualizate</li>
                 <li>Urmărește statusul raportărilor tale</li>
                 <li>

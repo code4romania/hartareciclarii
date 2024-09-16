@@ -52,10 +52,7 @@ class MapController extends Controller
             'problem_types' => ProblemTypeResource::collection(
                 ProblemType::query()
                     ->whereNull('parent_id')
-                    ->where(
-                        fn (Builder $query) => $query->whereDoesntHave('serviceTypes')
-                            ->orWhereRelation('serviceTypes', 'id', $point->service_type_id)
-                    )
+                    ->whereValidForServiceTypeId($point->service_type_id)
                     ->with('children')
                     ->get()
             ),

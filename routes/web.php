@@ -36,7 +36,11 @@ Route::group([
     'as' => 'submit.',
     'controller' => SubmitController::class,
 ], function () {
-    Route::post('/point', 'point')->name('point')->middleware(HandlePrecognitiveRequests::class);
+    Route::middleware(HandlePrecognitiveRequests::class)->group(function () {
+        Route::post('/point', 'point')->name('point');
+        Route::post('/report/{point}', 'report')->name('report');
+    });
+
     Route::post('/image', 'image')->name('image');
     Route::delete('/image/{media:uuid}', 'deleteImage')->name('deleteImage');
 });

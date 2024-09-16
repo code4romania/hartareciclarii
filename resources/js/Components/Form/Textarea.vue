@@ -1,5 +1,13 @@
 <template>
-    <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
+    <FormField
+        :name="name"
+        :label="label"
+        :help="help"
+        :help-position="helpPosition"
+        :required="required"
+        :disabled="disabled"
+        :errors="errors"
+    >
         <template #default="{ invalid }">
             <Textarea
                 :rows="rows"
@@ -18,8 +26,7 @@
 </template>
 
 <script setup>
-    import { computed, ref } from 'vue';
-    import { CheckIcon } from '@heroicons/vue/16/solid';
+    import { computed } from 'vue';
     import Textarea from 'primevue/textarea';
     import FormField from '@/Components/Form/Field.vue';
 
@@ -51,6 +58,10 @@
         help: {
             type: String,
             default: null,
+        },
+        helpPosition: {
+            type: String,
+            default: 'bottom',
         },
         options: {
             type: Array,

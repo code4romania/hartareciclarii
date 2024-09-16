@@ -57,7 +57,10 @@
 
                                 <div
                                     class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6"
-                                    :class="{ 'pb-5': !$slots.footer }"
+                                    :class="{
+                                        'pb-5': !$slots.footer,
+                                        'pb-1': $slots.footer,
+                                    }"
                                 >
                                     <slot :close="close" />
                                 </div>

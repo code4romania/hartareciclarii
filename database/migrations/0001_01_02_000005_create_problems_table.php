@@ -30,6 +30,7 @@ return new class extends Migration
 
             $table->string('code')->unique();
             $table->string('name');
+            $table->string('slug')->unique()->nullable();
             $table->timestamps();
         });
 

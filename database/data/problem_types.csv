@@ -1,13 +1,13 @@
-id;parent_id;service_types;name
-PRB_Tip_01;;;Adresa nu este corectă
-PRB_Tip_02;;;Locația punctului pe hartă nu este corectă
-PRB_Tip_03A;;waste_collection;Materialele colectate nu sunt corecte
-PRB_Tip_03B;;repairs;Produsele reparate nu sunt corect listate in descrierea punctului
-PRB_Tip_04;;waste_collection,repairs;Programul nu este corect
-PRB_Tip_05;;waste_collection;Containerul nu funcționează sau nu este bine întreținut
-PRB_Tip_06A;;waste_collection;Mi s-a refuzat preluarea deșeului
-PRB_Tip_06B;;repairs;Mi s-a refuzat repararea produsului
-PRB_Tip_99;;;Altă problemă
+id;parent_id;service_types;name;slug
+PRB_Tip_01;;;Adresa nu este corectă;address
+PRB_Tip_02;;;Locația punctului pe hartă nu este corectă;location
+PRB_Tip_03A;;waste_collection;Materialele colectate nu sunt corecte;materials
+PRB_Tip_03B;;repairs;Produsele reparate nu sunt corect listate in descrierea punctului;repairs
+PRB_Tip_04;;waste_collection,repairs;Programul nu este corect;hours
+PRB_Tip_05;;waste_collection;Containerul nu funcționează sau nu este bine întreținut;container
+PRB_Tip_06A;;waste_collection;Mi s-a refuzat preluarea deșeului;rejected_waste
+PRB_Tip_06B;;repairs;Mi s-a refuzat repararea produsului;rejected_repair
+PRB_Tip_99;;;Altă problemă;other
 PRB_MAT_01;PRB_Tip_03A;;Unele materiale listate în descriere nu se colectează în realitate
 PRB_MAT_02;PRB_Tip_03A;;Lipsesc materiale colectate din descriere
 PRB_MAT_99;PRB_Tip_03A;;Altă problemă

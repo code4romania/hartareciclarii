@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
+use App\Models\Problem\Problem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -79,6 +80,11 @@ class Point extends Model implements HasMedia
     public function materials(): MorphToMany
     {
         return $this->morphToMany(Material::class, 'model', 'model_has_materials');
+    }
+
+    public function problems(): HasMany
+    {
+        return $this->hasMany(Problem::class);
     }
 
     public function issues(): HasMany
