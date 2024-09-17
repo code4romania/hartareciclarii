@@ -180,7 +180,7 @@ class ViewMapPoint extends ViewRecord
                     ->state(fn ($record) => ['lat' => $record?->location->latitude, 'lng' => $record?->location->longitude])
                     ->draggable(false)
                     ->zoom(18)
-                    ->extraAttributes(['class'=>'h-full'])
+                    ->extraAttributes(['class' => 'h-full'])
                     ->columnSpan(9),
 
                 Section::make(__('map_points.sections.details'))

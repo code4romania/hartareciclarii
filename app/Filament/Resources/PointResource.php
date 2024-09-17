@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\Point\Status;
-use App\Filament\Imports\PointImporter;
 use App\Filament\Resources\PointResource\Pages;
 use App\Models\Point;
 use App\Models\PointGroup;
@@ -15,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
@@ -40,56 +38,7 @@ class PointResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('id')
-                    ->label(__('map_points.id'))
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('serviceType.name')
-                    ->label(__('map_points.point_type')),
-
-                TextColumn::make('administered_by')
-                    ->label(__('map_points.managed_by'))
-                    ->wrap(),
-
-                TextColumn::make('materials.name')
-                    ->label(__('map_points.materials'))
-                    ->searchable()
-                    ->limitList(2)
-                    ->sortable(),
-
-                TextColumn::make('county.name')
-                    ->label(__('map_points.county'))
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('city.name')
-                    ->label(__('map_points.city'))
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('address')
-                    ->label(__('map_points.address'))
-                    ->searchable()
-                    ->wrap(),
-
-                TextColumn::make('pointGroup.name')
-                    ->label(__('map_points.group'))
-                    ->sortable()
-                    ->wrap(),
-
-                TextColumn::make('status')
-                    ->sortable()
-                    ->badge()
-                    ->color(fn (Status $state) => $state->getColor())
-                    ->formatStateUsing(function (Status $state, $record) {
-                        if ($record->issues->count() > 0) {
-                            return Status::WITH_PROBLEMS->getLabel();
-                        }
-
-                        return $state->getLabel();
-                    }),
-            ])
+            ->columns(self::getColumns())
             ->filters([
                 SelectFilter::make('status')
                     ->label(__('map_points.fields.status'))
@@ -139,9 +88,6 @@ class PointResource extends Resource
                                     }),
                             ]),
                     ]),
-                    ImportAction::make()
-                        ->importer(PointImporter::class),
-
                 ]
             )
             ->bulkActions([
@@ -208,7 +154,9 @@ class PointResource extends Resource
                         ->color('info')
                         ->requiresConfirmation(),
 
-                    DeleteBulkAction::make()->requiresConfirmation()->label(__('map_points.buttons.delete')),
+                    DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->label(__('map_points.buttons.delete')),
 
                 ]),
             ])
@@ -231,11 +179,6 @@ class PointResource extends Resource
         ];
     }
 
-    public static function getNavigationLabel(): string
-    {
-        return __('nav.map_points');
-    }
-
     public static function getLabel(): ?string
     {
         return __('map_points.title');
@@ -248,7 +191,7 @@ class PointResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('issues', 'materials');
+        return parent::getEloquentQuery()->with('materials')->withCount('issues');
     }
 
     public static function getNavigationBadge(): ?string
@@ -259,5 +202,59 @@ class PointResource extends Resource
     public static function getNavigationGroup(): string
     {
         return __('nav.harta');
+    }
+
+    public static function getColumns()
+    {
+        return [
+            TextColumn::make('id')
+                ->label(__('map_points.id'))
+                ->sortable()
+                ->searchable(),
+            TextColumn::make('serviceType.name')
+                ->label(__('map_points.point_type')),
+
+            TextColumn::make('administered_by')
+                ->label(__('map_points.managed_by'))
+                ->wrap(),
+
+            TextColumn::make('materials.name')
+                ->label(__('map_points.materials'))
+                ->searchable()
+                ->limitList(2)
+                ->sortable(),
+
+            TextColumn::make('county.name')
+                ->label(__('map_points.county'))
+                ->searchable()
+                ->sortable(),
+
+            TextColumn::make('city.name')
+                ->label(__('map_points.city'))
+                ->sortable()
+                ->searchable(),
+
+            TextColumn::make('address')
+                ->label(__('map_points.address'))
+                ->searchable()
+                ->wrap(),
+
+            TextColumn::make('pointGroup.name')
+                ->label(__('map_points.group'))
+                ->sortable()
+                ->wrap(),
+
+            TextColumn::make('status')
+                ->sortable()
+                ->badge()
+                ->color(fn (Status $state) => $state->getColor())
+                ->formatStateUsing(function (Status $state, $record) {
+                    if ($record->issues_count > 0) {
+                        return Status::WITH_PROBLEMS->getLabel();
+                    }
+
+                    return $state->getLabel();
+                }),
+        ];
     }
 }

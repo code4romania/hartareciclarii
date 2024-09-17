@@ -61,7 +61,7 @@ class PointDetailsResource extends JsonResource
     {
         $materials = $this->materials()
             ->with('categories')
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'url']);
 
         $categories = $materials
             ->pluck('categories')
@@ -77,6 +77,7 @@ class PointDetailsResource extends JsonResource
                     ->map(fn (Material $material) => [
                         'id' => $material->id,
                         'name' => $material->name,
+                        'url' => filled($material->url) ? $material->url : null,
                     ])
                     ->values(),
             ])

@@ -52,6 +52,7 @@ class Point extends Model implements HasMedia
         'free_of_charge',
         'service_type_id',
         'point_type_id',
+        'import_id',
     ];
 
     protected $casts = [
@@ -114,6 +115,11 @@ class Point extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function import(): BelongsTo
+    {
+        return $this->belongsTo(Import::class);
     }
 
     public function scopeWhereMatchesCoordinates(Builder $query, MapCoordinates $mapCoordinates): Builder
