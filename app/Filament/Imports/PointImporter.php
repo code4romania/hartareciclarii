@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
+use Illuminate\Support\Facades\Validator;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
 
 class PointImporter extends Importer
@@ -31,28 +32,21 @@ class PointImporter extends Importer
             ImportColumn::make('latitude')
                 ->label(__('map_points.fields.latitude'))
                 ->example('27.9506')
-                ->rules(
-                    [
-                        'required',
-                        'string',
-                    ]
-                )
+                ->guess(['latitude', 'lat','latitudine'])
+                ->validationAttribute('latitude')
                 ->requiredMapping(),
 
             ImportColumn::make('longitude')
                 ->label(__('map_points.fields.longitude'))
                 ->example('27.9506')
-                ->rules(
-                    [
-                        'required',
-                        'string',
-                    ]
-                )
+                ->guess(['longitude', 'long', 'longitudine'])
+                ->validationAttribute('longitude')
                 ->requiredMapping(),
 
             ImportColumn::make('pointType')
                 ->label(__('map_points.fields.point_type'))
                 ->example('Punct de colectare')
+                ->validationAttribute('pointType')
                 ->requiredMapping()
                 ->relationship('pointType', 'name')
                 ->rules(
@@ -66,6 +60,7 @@ class PointImporter extends Importer
                 ->requiredMapping()
                 ->example('București')
                 ->label(__('map_points.county'))
+                ->validationAttribute('county')
                 ->relationship(name:'county', resolveUsing: 'name')
                 ->rules(
                     [
@@ -77,6 +72,7 @@ class PointImporter extends Importer
             ImportColumn::make('city_id')
                 ->label(__('map_points.city'))
                 ->example('Sector 2')
+                ->validationAttribute('city')
                 ->fillRecordUsing(function (Point $record, string $state) {
                     $cityId = City::search($state)->where('county', $record->county->name)->first()?->id ?? 0;
                     if ($cityId !== 0) {
@@ -84,13 +80,16 @@ class PointImporter extends Importer
                     }
                 })
                 ->requiredMapping()
-                ->rules([
-                    'required',
-                    'string',
-                ]),
+                ->rules(
+                    [
+                        'required',
+                        'string',
+                    ]
+                ),
 
             ImportColumn::make('address')
                 ->requiredMapping()
+                ->validationAttribute('address')
                 ->label(__('map_points.fields.address'))
                 ->example('Strada Ștefan cel Mare 1')
                 ->rules(
