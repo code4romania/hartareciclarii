@@ -50,6 +50,7 @@ class Material extends Model
         return [
             'id' => (string) $this->id,
             'name' => $this->name,
+            'url' => (string) $this->url,
             'categories' => $this->categories->pluck('name'),
             'created_at' => $this->created_at->timestamp,
         ];
@@ -66,6 +67,10 @@ class Material extends Model
                     ],
                     [
                         'name' => 'name',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'url',
                         'type' => 'string',
                     ],
                     [
