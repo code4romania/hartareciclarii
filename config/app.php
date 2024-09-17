@@ -189,4 +189,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'seed_points' => env('SEED_POINTS', true),
+
 ];

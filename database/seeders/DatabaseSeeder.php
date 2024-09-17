@@ -82,31 +82,36 @@ class DatabaseSeeder extends Seeder
 
         $materials = Material::all();
 
-        foreach ($serviceTypes as $serviceType) {
-            $points = collect();
+        if (config('app.seed_points'))
+        {
+            foreach ($serviceTypes as $serviceType) {
+                $points = collect();
 
-            foreach ($serviceType->pointTypes as $pointType) {
-                $points->push(
-                    ...Point::factory(500)
+                foreach ($serviceType->pointTypes as $pointType) {
+                    $points->push(
+                        ...Point::factory(500)
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
                         ->withType($serviceType, $pointType)
                         ->create()
-                );
-            }
+                    );
+                }
 
-            foreach ($serviceType->issueTypes as $issueType) {
-                $point = $points->random();
+                foreach ($serviceType->issueTypes as $issueType) {
+                    $point = $points->random();
 
-                $issue = Issue::factory()
-                    ->create([
-                        'service_type_id' => $point->service_type_id,
-                        'point_id' => $point->id,
-                    ]);
+                    $issue = Issue::factory()
+                        ->create([
+                            'service_type_id' => $point->service_type_id,
+                            'point_id' => $point->id,
+                        ]);
 
-                $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
+                    $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
+                }
             }
         }
+
+
 
         Artisan::call('scout:rebuild');
     }
