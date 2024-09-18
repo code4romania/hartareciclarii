@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use Filament\Actions\Imports\Events\ImportStarted;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
 
 class SetImporterServiceType
 {
@@ -14,6 +13,8 @@ class SetImporterServiceType
      */
     public function handle(ImportStarted $event): void
     {
-        Log::info($event);
+        $event->getImport()->update([
+            'service_type_id' => data_get($event->getOptions(), 'service_type_id'),
+        ]);
     }
 }
