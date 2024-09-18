@@ -2,59 +2,26 @@
     <fieldset class="contents">
         <legend class="text-base font-medium text-gray-900 sm:text-lg" v-text="problemType.name" />
 
-        <FormField name="materials" :label="$t('report.materials.add')" :errors="[form.errors.materials]" required>
-            <template #default="{ invalid }">
-                <Tree
-                    v-model:selectionKeys="form.materials"
-                    :value="materials"
-                    selectionMode="checkbox"
-                    :invalid="invalid"
-                    filter
-                    filterMode="lenient"
-                    required
-                    fluid
-                    :expandedKeys="expandedKeys"
-                    :pt="{
-                        nodeContent: ({ global, context }) => ({
-                            class: [
-                                ...global.class,
-                                {
-                                    'bg-gray-50': !context.leaf,
-                                    'pl-12': context.leaf,
-                                },
-                            ],
-                        }),
-                        nodeChildren: ({ global }) => ({
-                            class: [...global.class, 'divide-y divide-gray-200'],
-                        }),
-                    }"
-                >
-                    <template #filtericon>
-                        <span />
-                    </template>
-
-                    <template #category="slotProps">
-                        <div class="flex items-center justify-start w-full gap-2 px-2 py-3 text-left bg-gray-50">
-                            <div class="flex items-center justify-center w-8 h-8 shrink-0">
-                                <img v-if="slotProps.node.icon" :src="slotProps.node.icon" alt="" />
-                            </div>
-
-                            <div class="flex-1 text-sm font-medium text-gray-900">
-                                {{ slotProps.node.label }}
-                            </div>
-                        </div>
-                    </template>
-                </Tree>
+        <MaterialsChecklist
+            name="materials"
+            v-model="form.materials_add"
+            :label="$t('report.materials.add')"
+            :errors="[form.errors.materials]"
+            :materials="materials"
+            type="add"
+            required
+        >
+            <template #help="{ disabled }">
+                <span v-if="disabled" class="text-sm text-gray-500" v-text="$t('report.materials.help_add')" />
             </template>
-        </FormField>
+        </MaterialsChecklist>
     </fieldset>
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { usePage } from '@inertiajs/vue3';
-    import Tree from 'primevue/tree';
-    import FormField from '@/Components/Form/Field.vue';
+    import MaterialsChecklist from '@/Components/Form/MaterialsChecklist.vue';
 
     const props = defineProps({
         form: {
@@ -65,28 +32,30 @@
             type: Object,
             required: true,
         },
+        preselectedMaterials: {
+            type: Array,
+            required: true,
+        },
     });
 
     const page = usePage();
 
     const materials = computed(() =>
         (page.props.materials || []).map((category) => {
-            console.log(category);
+            category = { ...category };
 
-            return {
-                ...category,
-                selectable: false,
-            };
+            category.children = category.children.map((material) => {
+                material = { ...material };
+
+                if (props.preselectedMaterials.includes(material.key)) {
+                    material.checked = true;
+                    material.disabled = true;
+                }
+
+                return material;
+            });
+
+            return category;
         })
     );
-
-    const expandedKeys = computed(() => {
-        const keys = {};
-
-        materials.value.forEach((category) => {
-            keys[category.key] = true;
-        });
-
-        return keys;
-    });
 </script>

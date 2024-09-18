@@ -36,11 +36,13 @@
                 <MaterialsAddStep
                     v-if="isStep('materials_add')"
                     :problem-type="problemType.children.find((type) => type.slug === 'materials_add')"
+                    :preselected-materials="point.material_ids"
                     :form="form"
                 />
                 <MaterialsRemoveStep
                     v-if="isStep('materials_remove')"
                     :problem-type="problemType.children.find((type) => type.slug === 'materials_remove')"
+                    :preselected-materials="point.material_ids"
                     :form="form"
                 />
                 <MaterialsOtherStep
@@ -180,6 +182,19 @@
         );
     };
 
+    const compileMaterials = () => {
+        const compiled = {};
+
+        props.point.material_ids.forEach((id) => {
+            compiled[id] = {
+                disabled: true,
+                checked: true,
+            };
+        });
+
+        return compiled;
+    };
+
     const form = useForm('post', route('front.submit.report', { point: props.point }), {
         step: 'type',
 
@@ -200,6 +215,8 @@
         images: [],
         sub_types: [],
         materials_type: [],
+        materials_add: [],
+        materials_remove: [],
     });
 
     const problemType = computed(() => page.props.problem_types.find((type) => type.id === form.type_id));
@@ -288,7 +305,7 @@
     const sortedMaterialTypes = computed(() => form.materials_type.sort());
 
     const getMaterialsTypeStep = (id) => {
-        if (problemType.value.slug !== 'materials' || !id) {
+        if (problemType.value.slug !== 'materials' || typeof id === 'undefined') {
             return null;
         }
 
@@ -334,21 +351,19 @@
             return goToStep(problemType.value.slug);
         }
 
-        // if (isStep('details')) {
-        //     return goToStep('type');
-        // }
+        if (problemType.value.slug === 'materials') {
+            if (form.step === 'materials') {
+                return goToStep('type');
+            }
 
-        // if (isStep('materials')) {
-        //     return goToStep('details');
-        // }
+            const currentIndex = sortedMaterialTypes.value.indexOf(getMaterialsTypeId(form.step));
 
-        // if (isStep('review')) {
-        //     if (!serviceType.value.can.collect_materials) {
-        //         return goToStep('details');
-        //     }
+            if (currentIndex > 0) {
+                return goToStep(getMaterialsTypeStep(sortedMaterialTypes.value[currentIndex - 1]));
+            }
 
-        //     return goToStep('materials');
-        // }
+            return goToStep(problemType.value.slug);
+        }
 
         if (page.props.problem_types.some((type) => type.slug === form.step)) {
             form.reset();
@@ -375,36 +390,10 @@
 
             const currentIndex = sortedMaterialTypes.value.indexOf(getMaterialsTypeId(form.step));
 
-            if (currentIndex <= sortedMaterialTypes.value.length) {
+            if (currentIndex < sortedMaterialTypes.value.length) {
                 return goToStep(getMaterialsTypeStep(sortedMaterialTypes.value[currentIndex + 1]));
             }
-
-            // let [nextMaterialStep] = sortedMaterialTypes.value.slice(
-            //     sortedMaterialTypes.value.indexOf(form.step) + 1
-            // );
-
-            // if (!nextMaterialStep) {
-            //     return goToStep('review');
-            // }
-
-            // return goToStep(nextMaterialStep);
         }
-
-        // if (isStep('details')) {
-        //     if (!serviceType.value.can.collect_materials) {
-        //         return goToStep('review');
-        //     }
-
-        //     return goToStep('materials');
-        // }
-
-        // if (isStep('materials')) {
-        //     return goToStep('review');
-        // }
-
-        // if (isStep('review')) {
-        //     return goToStep('thanks');
-        // }
     };
 
     const cancelAddressOverride = (close) => {
@@ -419,7 +408,6 @@
         close();
         form.address = form.address_override;
         form.address_override = null;
-        console.log(problemType.value);
         goToStep(problemType.value.slug);
     };
 

@@ -20,13 +20,7 @@ class ProblemTypesImport implements ToCollection, WithHeadingRow
         $collection
             ->reject(fn (Collection $row) => $row->get('parent_id'))
             ->each(function (Collection $row) use ($serviceTypes) {
-                $problemType = ProblemType::forceCreate([
-                    'code' => Str::after($row->get('id'), 'PRB_'),
-                    'name' => $row->get('name'),
-                    'slug' => $row->get('slug'),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                $problemType = $this->createProblemType($row);
 
                 $ids = $serviceTypes
                     ->whereIn('slug', explode(',', (string) $row->get('service_types')))
@@ -40,16 +34,20 @@ class ProblemTypesImport implements ToCollection, WithHeadingRow
 
         $collection
             ->filter(fn (Collection $row) => $row->get('parent_id'))
-            ->each(function (Collection $row) use ($mainProblemTypes) {
-                ProblemType::forceCreate([
-                    'code' => Str::after($row->get('id'), 'PRB_'),
-                    'parent_id' => $mainProblemTypes
-                        ->firstWhere('code', Str::after($row->get('parent_id'), 'PRB_'))
-                        ->id,
-                    'name' => $row->get('name'),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            });
+            ->each(fn (Collection $row) => $this->createProblemType($row, $mainProblemTypes));
+    }
+
+    protected function createProblemType(Collection $row, ?Collection $parents = null): ProblemType
+    {
+        return ProblemType::forceCreate([
+            'code' => Str::after($row->get('id'), 'PRB_'),
+            'name' => $row->get('name'),
+            'slug' => $row->get('slug'),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'parent_id' => $parents
+                ?->firstWhere('code', Str::after($row->get('parent_id'), 'PRB_'))
+                ?->id,
+        ]);
     }
 }

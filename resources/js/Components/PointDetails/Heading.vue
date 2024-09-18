@@ -7,7 +7,7 @@
             v-text="name"
         />
 
-        <button type="button" class="text-gray-400 hover:text-gray-500 shrink-0" @click="$emit('close')">
+        <button type="button" class="-mr-2 text-gray-400 hover:text-gray-500 shrink-0" @click="$emit('close')">
             <XMarkIcon class="w-6 h-6" aria-hidden="true" />
         </button>
     </header>
