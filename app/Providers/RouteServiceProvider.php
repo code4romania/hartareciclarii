@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\DataTransferObjects\MapCoordinates;
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -23,11 +24,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('coordinates', fn (string $coordinates) => new MapCoordinates($coordinates));
 
         $this->routes(function () {
-            Route::middleware('web')
+            Route::middleware(['web', HandleInertiaRequests::class])
                 ->name('auth.')
                 ->group(base_path('routes/auth.php'));
 
-            Route::middleware('web')
+            Route::middleware(['web', HandleInertiaRequests::class])
                 ->name('front.')
                 ->group(base_path('routes/web.php'));
         });
