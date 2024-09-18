@@ -37,6 +37,7 @@ return [
         'title' => 'Puncte abandonate',
         'description' => 'Următoarele puncte nu au fost adăugate la baza de date de puncte de pe hartă pentru că au probleme legate de formatul coordonatelor sau au fost identificate cu risc crescut de duplicat. Vă rugăm verificați-le și reîncercați să le adăugați individual sau prin reluarea unui proces de import.',
         'no_failed' => 'Nu există puncte abandonate.',
+        'download' => 'Descărcați lista cu puncte abandonate',
     ],
     'view_heading' => 'Importul #:id',
 

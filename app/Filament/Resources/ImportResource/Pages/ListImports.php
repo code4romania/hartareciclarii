@@ -18,6 +18,7 @@ class ListImports extends ListRecords
         return [
             Actions\ImportAction::make()
                 ->importer(PointImporter::class)
+                ->color('primary')
                 ->label(__('map_points.buttons.import')),
         ];
     }
