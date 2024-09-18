@@ -26,7 +26,7 @@ class PointsRelationManager extends RelationManager
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('import.imported_points.title', ['number' => $ownerRecord->successful_rows]);
+        return __('import.imported_points.title', ['number' => $ownerRecord->withCount('points')->points_count]);
     }
 
     public function table(Table $table): Table

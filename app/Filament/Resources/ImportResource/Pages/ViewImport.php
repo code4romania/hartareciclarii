@@ -25,12 +25,6 @@ class ViewImport extends ViewRecord
             PointsRelationManager::class,
         ];
     }
-
-    public function hasCombinedRelationManagerTabsWithContent(): bool
-    {
-        return true;
-    }
-
     public function getHeading(): string
     {
         return __('import.view_heading', ['id' => $this->record->id]);
@@ -82,6 +76,12 @@ class ViewImport extends ViewRecord
                                     ->url(route('filament.imports.failed-rows.download', ['import' => $this->record], absolute: false), shouldOpenInNewTab: true)
                                     ->label(__('import.failed.download')),
                             ])->hidden($this->record->error_rows === 0),
+                            TextEntry::make('error_rows')
+                                ->label(__('import.columns.failed'))
+                                ->hiddenLabel()
+                                ->formatStateUsing(fn()=>__('import.failed.no_failed_description'))
+                                ->columnSpanFull()
+                                ->hidden($this->record->error_rows >0),
 
                         ]
                     )->columnSpan(1)
