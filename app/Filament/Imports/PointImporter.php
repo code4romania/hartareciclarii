@@ -252,12 +252,4 @@ class PointImporter extends Importer
         $this->record->status = Status::VERIFIED;
         $this->record->import_id = $this->import->id;
     }
-
-    public function afterValidate(): void
-    {
-        if (blank($this->import->service_type_id)) {
-            $this->import->service_type_id = $this->options['service_type_id'];
-            $this->import->save();
-        }
-    }
 }
