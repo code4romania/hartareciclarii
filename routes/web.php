@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MapController;
-use App\Http\Controllers\SubmitController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\ReportPointController;
+use App\Http\Controllers\SubmitPointController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
@@ -34,15 +36,19 @@ Route::group([
 Route::group([
     'prefix' => 'submit',
     'as' => 'submit.',
-    'controller' => SubmitController::class,
+    'middleware' => HandlePrecognitiveRequests::class,
 ], function () {
-    Route::middleware(HandlePrecognitiveRequests::class)->group(function () {
-        Route::post('/point', 'point')->name('point');
-        Route::post('/report/{point}', 'report')->name('report');
-    });
+    Route::post('/point', SubmitPointController::class)->name('point');
+    Route::post('/report/{point}', ReportPointController::class)->name('report');
+});
 
-    Route::post('/image', 'image')->name('image');
-    Route::delete('/image/{media:uuid}', 'deleteImage')->name('deleteImage');
+Route::group([
+    'prefix' => 'media',
+    'as' => 'media.',
+    'controller' => MediaController::class,
+], function () {
+    Route::post('/', 'upload')->name('upload');
+    Route::delete('/{media:uuid}', 'delete')->name('delete');
 });
 
 Route::group([

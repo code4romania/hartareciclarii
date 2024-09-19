@@ -1,51 +1,54 @@
 <template>
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
-        <ul class="grid gap-0.5 w-full">
-            <Accordion v-for="(category, index) in materials" :key="`category-${index}`" as="ul">
-                <template #icon>
-                    <img :src="category.icon" alt="" />
-                </template>
+        <template #default="{ invalid }">
+            <ul class="grid gap-0.5 w-full">
+                <Accordion v-for="(category, index) in materials" :key="`category-${index}`" as="ul">
+                    <template #icon>
+                        <img :src="category.icon" alt="" />
+                    </template>
 
-                <template #title>
-                    {{ category.label }}
-                </template>
+                    <template #title>
+                        {{ category.label }}
+                    </template>
 
-                <ul class="divide-y divide-gray-200">
-                    <li v-for="(material, index) in category.children" :key="`material-${index}`" class="pl-12">
-                        <label class="relative flex py-1 gap-x-2">
-                            <input
-                                type="checkbox"
-                                class="absolute top-0 left-0 z-10 w-full h-full p-0 m-0 border border-gray-300 rounded outline-none opacity-0 appearance-none cursor-pointer peer disabled:cursor-default"
-                                v-model="modelValue"
-                                :value="material.key"
-                                :name="name"
-                                :disabled="material?.disabled"
-                            />
+                    <ul class="divide-y divide-gray-200">
+                        <li v-for="(material, index) in category.children" :key="`material-${index}`" class="pl-12">
+                            <label class="relative flex py-1 gap-x-2">
+                                <input
+                                    type="checkbox"
+                                    class="absolute top-0 left-0 z-10 w-full h-full p-0 m-0 border border-gray-300 rounded outline-none opacity-0 appearance-none cursor-pointer peer disabled:cursor-default"
+                                    v-model="modelValue"
+                                    :value="material.key"
+                                    :name="name"
+                                    :disabled="material?.disabled"
+                                />
 
-                            <div
-                                class="flex items-center justify-center w-4 h-4 my-0.5 border border-gray-300 bg-white text-white rounded peer-checked:border-transparent peer-disabled:bg-gray-400 peer-disabled:select-none peer-disabled:pointer-events-none peer-disabled:cursor-default peer-focus-visible:z-10 peer-focus-visible:outline-none peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary-500"
-                                :class="{
-                                    'peer-checked:ring-red-700 peer-checked:bg-red-700 peer-focus-visible:ring-red-500':
-                                        type === 'remove',
-                                    'peer-checked:ring-primary-700 peer-checked:bg-primary-700 peer-focus-visible:ring-primary-500':
-                                        type === 'add',
-                                }"
-                            >
-                                <component v-if="checked(material)" :is="type === 'add' ? CheckIcon : XMarkIcon" />
-                            </div>
+                                <div
+                                    class="flex items-center justify-center w-4 h-4 my-0.5 border border-gray-300 bg-white text-white rounded peer-checked:border-transparent peer-disabled:bg-gray-400 peer-disabled:select-none peer-disabled:pointer-events-none peer-disabled:cursor-default peer-focus-visible:z-10 peer-focus-visible:outline-none peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary-500"
+                                    :class="{
+                                        'peer-checked:ring-red-700 peer-checked:bg-red-700 peer-focus-visible:ring-red-500':
+                                            type === 'remove',
+                                        'peer-checked:ring-primary-700 peer-checked:bg-primary-700 peer-focus-visible:ring-primary-500':
+                                            type === 'add',
+                                        'border-red-500': invalid,
+                                    }"
+                                >
+                                    <component v-if="checked(material)" :is="type === 'add' ? CheckIcon : XMarkIcon" />
+                                </div>
 
-                            <span
-                                class="flex-1 text-sm font-medium text-gray-700"
-                                :class="{ 'line-through': checked(material) && type === 'remove' }"
-                                v-text="material.label"
-                            />
+                                <span
+                                    class="flex-1 text-sm font-medium text-gray-700"
+                                    :class="{ 'line-through': checked(material) && type === 'remove' }"
+                                    v-text="material.label"
+                                />
 
-                            <slot name="help" :checked="checked(material)" :disabled="material?.disabled" />
-                        </label>
-                    </li>
-                </ul>
-            </Accordion>
-        </ul>
+                                <slot name="help" :checked="checked(material)" :disabled="material?.disabled" />
+                            </label>
+                        </li>
+                    </ul>
+                </Accordion>
+            </ul>
+        </template>
     </FormField>
 </template>
 

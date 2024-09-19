@@ -13,7 +13,9 @@
         </template>
 
         <template #default>
-            <div class="grid gap-4">
+            <ThanksStep v-if="form.wasSuccessful" :close="close" />
+
+            <div v-else class="grid gap-4">
                 <ProblemTypeStep v-if="isStep('type')" :form="form" />
 
                 <AddressStep
@@ -51,12 +53,14 @@
                     :form="form"
                 />
 
-                <RejectedWasteStep v-if="isStep('rejected_waste')" :problem-type="problemType" :form="form" />
+                <RejectedStep
+                    v-if="isStep('rejected_waste') || isStep('rejected_repair')"
+                    :problem-type="problemType"
+                    :form="form"
+                />
                 <ContainerStep v-if="isStep('container')" :problem-type="problemType" :form="form" />
                 <ScheduleStep v-if="isStep('schedule')" :problem-type="problemType" :form="form" />
                 <OtherStep v-if="isStep('other')" :problem-type="problemType" :form="form" />
-
-                <ThanksStep v-if="isStep('thanks')" :close="close" />
 
                 <div v-if="form.errors.unchanged" class="text-sm text-red-600" role="alert">
                     <p v-text="form.errors.unchanged" />
@@ -64,7 +68,7 @@
             </div>
         </template>
 
-        <template v-if="!isStep('thanks')" #footer="{ close }">
+        <template v-if="!form.wasSuccessful" #footer="{ close }">
             <Button
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
@@ -145,7 +149,7 @@
     import LocationStep from '@/Components/ReportPointSteps/Location.vue';
     import ChangePinLocationStep from '@/Components/ReportPointSteps/ChangePinLocation.vue';
     import ContainerStep from '@/Components/ReportPointSteps/Container.vue';
-    import RejectedWasteStep from '@/Components/ReportPointSteps/RejectedWaste.vue';
+    import RejectedStep from '@/Components/ReportPointSteps/Rejected.vue';
     import ScheduleStep from '@/Components/ReportPointSteps/Schedule.vue';
     import OtherStep from '@/Components/ReportPointSteps/Other.vue';
     import MaterialsTypeStep from '@/Components/ReportPointSteps/MaterialsType.vue';
@@ -182,19 +186,6 @@
         );
     };
 
-    const compileMaterials = () => {
-        const compiled = {};
-
-        props.point.material_ids.forEach((id) => {
-            compiled[id] = {
-                disabled: true,
-                checked: true,
-            };
-        });
-
-        return compiled;
-    };
-
     const form = useForm('post', route('front.submit.report', { point: props.point }), {
         step: 'type',
 
@@ -214,7 +205,6 @@
         description: null,
         images: [],
         sub_types: [],
-        materials_type: [],
         materials_add: [],
         materials_remove: [],
     });
@@ -226,7 +216,7 @@
             return trans('report.action.submit');
         }
 
-        if (isStep('location')) {
+        if (isStep('changePinLocation')) {
             return trans('report.action.save');
         }
 
@@ -250,7 +240,7 @@
             type: ['type_id'],
             address: ['address', 'city', 'county', 'location.lat', 'location.lng'],
             location: ['address', 'city', 'county', 'location.lat', 'location.lng'],
-            materials: ['materials_type'],
+            materials: ['sub_types'],
             materials_remove: ['materials_remove'],
             materials_add: ['materials_add'],
             materials_other: ['description'],
@@ -282,7 +272,7 @@
     };
 
     const submit = () => {
-        if (isStep('location')) {
+        if (isStep('changePinLocation')) {
             return nextStep();
         }
 
@@ -293,16 +283,13 @@
         }
 
         form.transform(transform).submit({
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => goToStep('thanks'),
             onError: (error) => {
                 console.log(error);
             },
         });
     };
 
-    const sortedMaterialTypes = computed(() => form.materials_type.sort());
+    const sortedMaterialTypes = computed(() => form.sub_types.sort());
 
     const getMaterialsTypeStep = (id) => {
         if (problemType.value.slug !== 'materials' || typeof id === 'undefined') {

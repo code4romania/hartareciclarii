@@ -3,7 +3,7 @@
         <template #header>
             <CheckboxList
                 name="sub_types"
-                :label="$t('report.rejected_waste.sub_types')"
+                :label="$t('report.rejected.reason')"
                 :options="problemType.children"
                 v-model="form.sub_types"
                 :errors="[form.errors.sub_types]"

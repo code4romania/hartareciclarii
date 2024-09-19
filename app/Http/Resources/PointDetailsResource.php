@@ -28,6 +28,10 @@ class PointDetailsResource extends JsonResource
             ? collect()
             : collect();
 
+        $materials = $this->materials()
+            ->with('categories')
+            ->get(['id', 'name']);
+
         return [
             'id' => $this->id,
             'name' => $this->pointType->name,
@@ -46,7 +50,8 @@ class PointDetailsResource extends JsonResource
             'website' => $this->website,
             'observations' => $this->observations,
             'schedule' => $this->schedule,
-            'materials' => $this->getMaterialsByCategory(),
+            'materials' => $this->getMaterialsByCategory($materials),
+            'material_ids' => $materials->pluck('id'),
             'service' => $this->serviceType->slug,
             'info' => collect([
                 'offers_money' => $this->offers_money,
@@ -57,18 +62,12 @@ class PointDetailsResource extends JsonResource
         ];
     }
 
-    protected function getMaterialsByCategory(): Collection
+    protected function getMaterialsByCategory(Collection $materials): Collection
     {
-        $materials = $this->materials()
-            ->with('categories')
-            ->get(['id', 'name']);
-
-        $categories = $materials
+        return $materials
             ->pluck('categories')
             ->flatten()
-            ->unique('id');
-
-        return $categories
+            ->unique('id')
             ->map(fn (MaterialCategory $category) => [
                 'name' => $category->name,
                 'icon' => $category->getFirstMediaUrl() ?: null,

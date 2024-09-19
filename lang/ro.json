@@ -202,8 +202,11 @@
 
     "report.address.exact_address": "Adresa exactă",
 
+    "report.materials.type": "Care este problema sesizată legată de materiale?",
     "report.materials.add": "Marchează care dintre următoarele materiale se colectează:",
     "report.materials.remove": "Mai jos sunt listate materialele pe care acest punct le colectează (la ultima actualizare). Marchează care dintre următoarele materiale ați identificat că NU se colectează în realitate:",
+    "report.materials.help_add": "(se colectează)",
+    "report.materials.help_remove": "(nu se colectează)",
 
     "report.other.legend": "Altă problemă",
 
@@ -211,6 +214,7 @@
     "report.other.images_help": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei.",
     "report.other.images_add": "Adaugă poze",
 
+    "report.rejected.reason": "Care a fost motivul refuzului?",
     "report.narrative.help": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
 
     "report.action.back": "Înapoi",

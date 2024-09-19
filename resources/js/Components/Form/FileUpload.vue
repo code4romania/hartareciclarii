@@ -143,7 +143,7 @@
         }
 
         axios
-            .post(route('front.submit.image'), payload, {
+            .post(route('front.media.upload'), payload, {
                 onUploadProgress: (progress) => {},
             })
             .then((response) => {
@@ -159,7 +159,7 @@
     });
 
     const deleteImage = (uuid) => {
-        axios.delete(route('front.submit.deleteImage', { media: uuid })).then(() => {
+        axios.delete(route('front.media.delete', { media: uuid })).then(() => {
             modelValue.value = modelValue.value.filter((image) => image.uuid !== uuid);
         });
     };

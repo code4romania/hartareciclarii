@@ -9,6 +9,7 @@
                     :value="option.value"
                     :required="required"
                     :disabled="disabled"
+                    class="border-gray-300 text-primary-600 focus:ring-primary-600"
                 />
                 <span class="text-sm font-medium text-gray-700" v-text="option.label" />
             </label>

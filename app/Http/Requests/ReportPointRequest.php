@@ -7,6 +7,8 @@ namespace App\Http\Requests;
 use App\Concerns\CanFindCityAndCounty;
 use App\Models\Problem\ProblemType;
 use App\Models\TemporaryUpload;
+use App\Rules\MaterialsAssociatedWithPoint;
+use App\Rules\MaterialsMissingFromPoint;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
@@ -33,15 +35,19 @@ class ReportPointRequest extends FormRequest
 
         $this->problemType = $this->problemTypes->firstWhere('id', $this->type_id);
 
-        return [
-            'step' => ['required', 'string'/* 'in:type,materials,review' */],
-
+        $rules = [
             // Type
             'type_id' => ['required', Rule::in($this->problemTypes->pluck('id'))],
-
-            ...$this->getRulesForProblemType(),
-
         ];
+
+        return array_merge($rules, match ($this->problemType?->slug) {
+            'address' => $this->getRulesForAddress(),
+            'location' => $this->getRulesForLocation(),
+            'materials' => $this->getRulesForMaterials(),
+            'rejected_waste', 'rejected_repair' => $this->getRulesForRejected(),
+            'schedule', 'container', 'other' => $this->getRulesForNarrative(),
+            default => [],
+        });
     }
 
     protected function prepareForValidation(): void
@@ -76,17 +82,6 @@ class ReportPointRequest extends FormRequest
     //     };
     // }
 
-    protected function getRulesForProblemType(): array
-    {
-        return match ($this->problemType?->slug) {
-            'address' => $this->getRulesForAddress(),
-            'location' => $this->getRulesForLocation(),
-            'rejected_waste' => $this->getRulesForRejectedWaste(),
-            'schedule', 'container', 'other' => $this->getRulesForNarrative(),
-            default => [],
-        };
-    }
-
     protected function getRulesForAddress(): array
     {
         return [
@@ -111,25 +106,63 @@ class ReportPointRequest extends FormRequest
         ];
     }
 
-    protected function getRulesForRejectedWaste(): array
+    protected function getRulesForMaterials(): array
     {
-        $rules = [
-            'description' => ['required', 'string', 'max:1000'],
+        $pointMaterialIds = $this->point
+            ->materials
+            ->pluck('id');
+
+        $selectedSubTypes = $this->problemType
+            ->children
+            ->filter(fn (ProblemType $subType) => \in_array($subType->id, $this->sub_types))
+            ->pluck('slug');
+
+        return [
+            'materials_add' => [
+                'bail',
+                'array',
+                Rule::requiredIf(fn () => $selectedSubTypes->contains('materials_add')),
+                Rule::prohibitedIf(fn () => ! $selectedSubTypes->contains('materials_add')),
+                new MaterialsMissingFromPoint($pointMaterialIds),
+            ],
+            'materials_remove' => [
+                'bail',
+                'array',
+                Rule::requiredIf(fn () => $selectedSubTypes->contains('materials_remove')),
+                Rule::prohibitedIf(fn () => ! $selectedSubTypes->contains('materials_remove')),
+                new MaterialsAssociatedWithPoint($pointMaterialIds),
+            ],
+            'description' => [
+                Rule::requiredIf(fn () => $selectedSubTypes->contains('materials_other')),
+                Rule::prohibitedIf(fn () => ! $selectedSubTypes->contains('materials_other')),
+                'max:1000',
+            ],
+
+            ...$this->getRulesForSubTypes(),
+            ...$this->getRulesForImages(),
         ];
+    }
 
-        if ($this->problemType->children->isNotEmpty()) {
-            $rules['sub_types'] = ['nullable', 'array'];
-            $rules['sub_types.*'] = ['required', Rule::in($this->problemType->children->pluck('id'))];
-        }
-
-        return $rules;
+    protected function getRulesForRejected(): array
+    {
+        return [
+            ...$this->getRulesForDescription(),
+            ...$this->getRulesForSubTypes(),
+        ];
     }
 
     protected function getRulesForNarrative(): array
     {
         return [
-            'description' => ['required', 'string', 'max:1000'],
+            ...$this->getRulesForDescription(),
             ...$this->getRulesForImages(),
+        ];
+    }
+
+    private function getRulesForDescription(): array
+    {
+        return [
+            'description' => ['required', 'string', 'max:1000'],
         ];
     }
 
@@ -138,6 +171,18 @@ class ReportPointRequest extends FormRequest
         return [
             'images' => ['nullable', 'array', 'max:5'],
             'images.*' => ['required', Rule::exists('media', 'uuid')->where('model_type', app(TemporaryUpload::class)->getMorphClass())],
+        ];
+    }
+
+    private function getRulesForSubTypes(): array
+    {
+        if ($this->problemType->children->isEmpty()) {
+            return [];
+        }
+
+        return [
+            'sub_types' => ['required', 'array', 'min:1'],
+            'sub_types.*' => ['required', Rule::in($this->problemType->children->pluck('id'))],
         ];
     }
 }

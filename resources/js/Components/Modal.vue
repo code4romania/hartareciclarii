@@ -27,7 +27,7 @@
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
                         <DialogPanel
-                            class="w-full h-screen sm:py-8 sm:max-w-lg"
+                            class="w-full h-screen sm:py-4 md:py-8 sm:max-w-lg"
                             :as="form ? 'form' : 'div'"
                             @submit.prevent="submit"
                         >

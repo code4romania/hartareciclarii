@@ -57,7 +57,7 @@ class Problem extends Model
 
     public function subTypes(): BelongsToMany
     {
-        return $this->belongsToMany(ProblemType::class, 'problem_has_subtype');
+        return $this->belongsToMany(ProblemType::class, 'problem_has_subtype', 'problem_id', 'subtype_id');
     }
 
     public function materials(): MorphToMany

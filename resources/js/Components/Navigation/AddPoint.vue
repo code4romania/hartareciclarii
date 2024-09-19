@@ -1,14 +1,14 @@
 <template>
     <Modal
-        :dismissable="!isStep('location') && !isStep('thanks')"
+        :dismissable="!isStep('location') && !form.wasSuccessful"
         :overlay-dismissable="false"
         form
         @submit="submit"
         :open="open"
         @open="$emit('open')"
-        @close="$emit('close')"
+        @close="closeModal"
     >
-        <template v-if="!isStep('thanks')" #title>
+        <template v-if="!form.wasSuccessful" #title>
             <div v-if="isStep('location')" class="flex gap-2">
                 <button type="button" @click="() => goToStep('type')">
                     <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
@@ -21,7 +21,9 @@
         </template>
 
         <template #default="{ close }">
-            <div class="grid gap-4">
+            <ThanksStep v-if="form.wasSuccessful" :form="form" :close="close" />
+
+            <div v-else class="grid gap-4">
                 <TypeStep
                     v-if="isStep('type')"
                     :form="form"
@@ -36,12 +38,10 @@
                 <MaterialsStep v-if="isStep('materials')" :form="form" />
 
                 <ReviewStep v-if="isStep('review')" :form="form" :serviceType="serviceType" :pointType="pointType" />
-
-                <ThanksStep v-if="isStep('thanks')" :close="close" />
             </div>
         </template>
 
-        <template v-if="!isStep('thanks')" #footer="{ close }">
+        <template v-if="!form.wasSuccessful" #footer="{ close }">
             <Button
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
@@ -141,9 +141,14 @@
 
     const page = usePage();
 
-    const errors = computed(() => page.props.errors || {});
+    const closeModal = () => {
+        emit('close');
 
-    // const steps = ['type', 'location', 'details', 'materials', 'review'];
+        setTimeout(() => {
+            form.reset();
+            form.wasSuccessful = false;
+        }, 500);
+    };
 
     const originalLocation = ref({
         lat: null,
@@ -220,12 +225,6 @@
                 'location.lat',
                 'location.lng',
             ],
-            // location: [
-            //     //
-            //     'address',
-            //     'location.lat',
-            //     'location.lng',
-            // ],
             details: [
                 'point_type_id',
                 'business_name',
@@ -319,9 +318,6 @@
         }
 
         form.transform(transform).submit({
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => goToStep('thanks'),
             onError: (error) => {
                 console.log(error);
             },
@@ -334,9 +330,7 @@
 
     const previousStep = (close) => {
         if (isStep('type')) {
-            close();
-            form.reset();
-            return;
+            return close();
         }
 
         if (isStep('location')) {
@@ -380,10 +374,6 @@
 
         if (isStep('materials')) {
             return goToStep('review');
-        }
-
-        if (isStep('review')) {
-            return goToStep('thanks');
         }
     };
 

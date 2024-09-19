@@ -8,6 +8,7 @@
             v-model="form.type_id"
             option-label-key="name"
             option-value-key="id"
+            required
         />
     </fieldset>
 </template>

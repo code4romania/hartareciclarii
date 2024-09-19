@@ -6,7 +6,7 @@
             name="materials"
             v-model="form.materials_remove"
             :label="$t('report.materials.remove')"
-            :errors="[form.errors.materials]"
+            :errors="[form.errors.materials_remove]"
             :materials="materials"
             type="remove"
             required
