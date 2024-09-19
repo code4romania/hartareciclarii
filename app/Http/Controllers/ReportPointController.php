@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Concerns\CanAssignContributor;
+use App\Concerns\CanAttachMedia;
 use App\Http\Requests\ReportPointRequest;
-use App\Models\Media;
 use App\Models\Point;
 use App\Models\Problem\Problem;
 use Illuminate\Http\RedirectResponse;
@@ -13,23 +14,25 @@ use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class ReportPointController extends Controller
 {
+    use CanAttachMedia;
+    use CanAssignContributor;
+
     public function __invoke(ReportPointRequest $request, Point $point): RedirectResponse
     {
         $attributes = $request->validated();
 
-        if (auth()->check()) {
-            $attributes['reported_by'] = auth()->id();
-        }
-
         $attributes['location'] = $this->getLocation(data_get($attributes, 'location'));
 
+        /** @var Problem */
         $problem = $point->problems()->create($attributes);
+
+        $this->assignContributor($problem);
 
         $this->attachMaterials($problem, data_get($attributes, 'materials_add'), data_get($attributes, 'materials_remove'));
 
         $this->attachSubTypes($problem, data_get($attributes, 'sub_types'));
 
-        $this->attachImages($problem, data_get($attributes, 'images'));
+        $this->attachMedia($problem, data_get($attributes, 'images'));
 
         return redirect()->back();
     }
@@ -64,19 +67,5 @@ class ReportPointController extends Controller
         }
 
         $problem->subTypes()->attach($subTypes);
-    }
-
-    protected function attachImages(Problem $problem, ?array $images): void
-    {
-        if (blank($images)) {
-            return;
-        }
-
-        Media::query()
-            ->whereIn('uuid', $images)
-            ->update([
-                'model_id' => $problem->getKey(),
-                'model_type' => $problem->getMorphClass(),
-            ]);
     }
 }

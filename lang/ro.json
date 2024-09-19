@@ -24,6 +24,9 @@
     "sidebar.no_results_found": "Nu am găsit niciun rezultat pentru \":query\". în zona de căutare. Folosiți un alt termen de căutare sau extindeți zona prin zoom out pe hartă.",
     "sidebar.see_all_points": "Vezi toate punctele",
 
+    "pagination.next": "Înainte",
+    "pagination.previous": "Înapoi",
+
     "point_types.street_container": "Container stradal",
     "point_types.shop": "Magazin",
     "point_types.waste_recovery": "Recuperare deșeuri",

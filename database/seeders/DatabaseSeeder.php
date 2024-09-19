@@ -91,6 +91,7 @@ class DatabaseSeeder extends Seeder
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
                         ->withType($serviceType, $pointType)
+                        // ->createdByUser($admin)
                         ->create()
                 );
             }

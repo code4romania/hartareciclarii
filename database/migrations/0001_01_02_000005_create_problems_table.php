@@ -9,7 +9,6 @@ use App\Models\Point;
 use App\Models\Problem\Problem;
 use App\Models\Problem\ProblemType;
 use App\Models\ServiceType;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -54,11 +53,6 @@ return new class extends Migration
             $table->foreignIdFor(ProblemType::class, 'type_id')
                 ->constrained('problem_types')
                 ->cascadeOnDelete();
-
-            $table->foreignIdFor(User::class, 'reported_by')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
 
             $table->foreignIdFor(Point::class)
                 ->constrained()

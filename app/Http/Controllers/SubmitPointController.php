@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Concerns\CanAssignContributor;
+use App\Concerns\CanAttachMedia;
 use App\Enums\Point\Status;
 use App\Http\Requests\SubmitPointRequest;
-use App\Models\Media;
 use App\Models\Point;
 use Illuminate\Http\RedirectResponse;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 class SubmitPointController extends Controller
 {
+    use CanAttachMedia;
+    use CanAssignContributor;
+
     public function __invoke(SubmitPointRequest $request): RedirectResponse
     {
         $attributes = $request->validated();
@@ -26,17 +30,21 @@ class SubmitPointController extends Controller
 
         $point = Point::create($attributes);
 
-        $point->materials()->attach(data_get($attributes, 'materials', []));
+        $this->assignContributor($point);
 
-        if (filled($attributes['images'])) {
-            Media::query()
-                ->whereIn('uuid', data_get($attributes, 'images'))
-                ->update([
-                    'model_id' => $point->getKey(),
-                    'model_type' => $point->getMorphClass(),
-                ]);
-        }
+        $this->attachMaterials($point, data_get($attributes, 'materials'));
+
+        $this->attachMedia($point, data_get($attributes, 'images'));
 
         return redirect()->to($point->url);
+    }
+
+    protected function attachMaterials(Point $point, ?array $materials): void
+    {
+        if (blank($materials)) {
+            return;
+        }
+
+        $point->materials()->attach($materials);
     }
 }

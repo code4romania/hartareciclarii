@@ -160,7 +160,7 @@
         QuestionMarkCircleIcon,
         UserIcon,
         MapPinIcon,
-        ArrowLongLeftIcon,
+        MapIcon,
     } from '@heroicons/vue/20/solid';
 
     import Icon from '@/Components/Icon.vue';
@@ -185,9 +185,21 @@
         if (props.dashboard) {
             return [
                 {
-                    icon: ArrowLongLeftIcon,
+                    icon: MapIcon,
                     label: trans('top_menu.back'),
                     href: route('front.map.index'),
+                },
+                {
+                    icon: BookOpenIcon,
+                    label: trans('top_menu.dictionary'),
+                    href: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
+                    external: true,
+                },
+                {
+                    icon: QuestionMarkCircleIcon,
+                    label: trans('top_menu.faq'),
+                    href: 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/',
+                    external: true,
                 },
             ];
         }

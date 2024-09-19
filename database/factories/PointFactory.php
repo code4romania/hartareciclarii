@@ -90,11 +90,13 @@ class PointFactory extends Factory
         ]);
     }
 
-    public function createdByUser(): static
+    public function createdByUser(?User $user = null): static
     {
-        return $this->state(fn (array $attributes) => [
-            'created_by' => User::factory(),
-        ]);
+        return $this->afterCreating(function (Point $point) use ($user) {
+            $point->contribution()->create([
+                'user_id' => $user?->id || User::factory(),
+            ]);
+        });
     }
 
     public function inGroup(): static

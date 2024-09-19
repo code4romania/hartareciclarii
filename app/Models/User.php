@@ -16,6 +16,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
@@ -166,6 +168,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     public function points(): HasMany
     {
         return $this->hasMany(Point::class, 'created_by');
+    }
+
+    public function contributions(): HasMany
+    {
+        return $this->hasMany(Contribution::class);
     }
 
     public function userGroup(): BelongsTo

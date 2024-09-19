@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Resources\ContributionResource;
+use App\Models\Contribution;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,18 +16,45 @@ class AccountController extends Controller
 {
     public function dashboard(): Response
     {
-        return Inertia::render('Account/Dashboard', [
-            'contributions_count' => rand(1, 1234),
+        $query = Contribution::query()
+            ->where('user_id', auth()->id());
 
-            'contributions' => [
-                [
-                    'id' => 1,
-                    'type' => 'Adaugare punct nou',
-                    'point_type' => 'Punct colectare selectivă deșeuri (Container stradal)',
-                    'location' => 'Strada Mihai Eminescu, nr. 1, București',
-                    'date' => '2021-09-01 12:00:00',
+        return Inertia::render('Account/Dashboard', [
+            'contributions_count' => $query->count(),
+
+            'contributions' => ContributionResource::collection(
+                $query
+                    ->withPointData()
+                    ->orderByDesc('created_at')
+                    ->paginate()
+            )->additional([
+                'columns' => [
+                    [
+                        'key' => 'id',
+                        'label' => 'ID',
+                    ],
+                    [
+                        'key' => 'point_type',
+                        'label' => 'Tip punct',
+                        'highlight' => true,
+                    ],
+                    [
+                        'key' => 'address',
+                        'label' => 'Locație',
+                    ],
+                    [
+                        'key' => 'contribution_type',
+                        'label' => 'Tip contribuție',
+                    ],
+                    [
+                        'key' => 'created_at',
+                        'label' => 'Data și ora',
+                    ],
+                    [
+                        'key' => 'actions',
+                    ],
                 ],
-            ],
+            ]),
         ]);
     }
 
