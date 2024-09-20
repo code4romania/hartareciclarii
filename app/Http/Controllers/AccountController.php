@@ -31,24 +31,24 @@ class AccountController extends Controller
                 'columns' => [
                     [
                         'key' => 'id',
-                        'label' => 'ID',
+                        'label' => __('contributions.column.id'),
                     ],
                     [
                         'key' => 'point_type',
-                        'label' => 'Tip punct',
+                        'label' => __('contributions.column.point_type'),
                         'highlight' => true,
                     ],
                     [
                         'key' => 'address',
-                        'label' => 'Locație',
+                        'label' => __('contributions.column.address'),
                     ],
                     [
                         'key' => 'contribution_type',
-                        'label' => 'Tip contribuție',
+                        'label' => __('contributions.column.contribution_type'),
                     ],
                     [
                         'key' => 'created_at',
-                        'label' => 'Data și ora',
+                        'label' => __('contributions.column.created_at'),
                     ],
                     [
                         'key' => 'actions',

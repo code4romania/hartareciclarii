@@ -42,19 +42,26 @@
         </div>
 
         <Table :collection="contributions">
-            <template #title>Contributions</template>
+            <template #title>
+                {{ $t('contributions.title') }}
+            </template>
 
             <template #contribution_type="{ contribution_type, row }">
-                <span v-if="contribution_type === 'place'"> Adăugare punct nou </span>
-                <span v-if="contribution_type === 'problem'">
-                    <span class="block font-medium text-gray-900"> Raportare problemă </span>
-                    <span class="block" v-text="row.problem_type" />
-                </span>
+                <div
+                    v-if="contribution_type === 'place'"
+                    class="font-medium text-gray-900"
+                    v-text="$t('contributions.type.place')"
+                />
+
+                <div v-if="contribution_type === 'problem'">
+                    <div class="font-medium text-gray-900" v-text="$t('contributions.type.problem')" />
+                    <div v-text="row.problem_type" />
+                </div>
             </template>
 
             <template #actions="{ row }">
                 <Link v-if="row?.url" :href="row.url" class="text-sm font-medium text-blue-600 hover:underline">
-                    {{ $t('profile.table_content.view_on_map') }}
+                    {{ $t('contributions.view_on_map') }}
                 </Link>
             </template>
 
@@ -62,17 +69,7 @@
                 <div class="flex items-start gap-6">
                     <Icon icon="thanks" class="w-28 h-28" />
                     <div class="flex-1 prose prose-lg max-w-none">
-                        <p>Bine ai venit! Momentan, nu ai contribuții pe Harta Reciclării atribuite acestui cont.</p>
-
-                        <p>
-                            Contribuie la efortul de a menține informațiile actualizate, adăugând puncte care lipsesc de
-                            pe hartă, sau raportează dacă ai întâmpinat o problemă la unul din punctele exitente.
-                        </p>
-
-                        <p>
-                            Asigură-te că ești autentificat de fiecare dată când realizezi o contribuție pe Harta
-                            Reciclării.
-                        </p>
+                        <p v-for="(line, index) in $t('contributions.empty.lines')" :key="index" v-text="line" />
                     </div>
                 </div>
             </template>

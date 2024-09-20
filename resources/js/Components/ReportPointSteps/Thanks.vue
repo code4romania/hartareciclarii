@@ -11,7 +11,7 @@
 
             <p v-else>
                 {{ $t('add_point.thanks.view_contributions') }}
-                <Link href="{{ route('dashboard') }}" class="inline-block underline">
+                <Link :href="route('front.account.dashboard')" class="inline-block underline">
                     {{ $t('add_point.thanks.profile') }}
                 </Link>
             </p>
