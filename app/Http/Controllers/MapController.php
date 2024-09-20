@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
 use App\Http\Resources\MaterialCategoryResource;
+use App\Http\Resources\MaterialResource;
 use App\Http\Resources\PointDetailsResource;
 use App\Http\Resources\PointResource;
 use App\Http\Resources\ProblemTypeResource;
@@ -185,11 +186,24 @@ class MapController extends Controller
                     ]),
             ],
 
-            'materials' => fn () => MaterialCategoryResource::collection(
-                MaterialCategory::query()
-                    ->with('media', 'materials')
-                    ->get()
-            ),
+            'materials' => fn () => [
+                'categories' => MaterialCategoryResource::collection(
+                    MaterialCategory::query()
+                        ->with('media')
+                        ->get()
+                ),
+                'items' => MaterialResource::collection(
+                    Material::query()
+                        ->with('categories')
+                        ->get()
+                ),
+            ],
+
+            // 'materials' => fn () => MaterialCategoryResource::collection(
+            //     MaterialCategory::query()
+            //         ->with('media', 'materials')
+            //         ->get()
+            // ),
 
             'statuses' => collect(Status::options())
                 ->reject(fn ($value, $key) => Status::WITH_PROBLEMS->is($key))

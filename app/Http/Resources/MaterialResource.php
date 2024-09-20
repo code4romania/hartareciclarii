@@ -12,9 +12,10 @@ class MaterialResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'key' => $this->id,
-            'label' => $this->name,
+            'id' => $this->id,
+            'name' => $this->name,
             'url' => $this->url,
+            'categories' => $this->categories->map->only('name', 'id'),
         ];
     }
 }

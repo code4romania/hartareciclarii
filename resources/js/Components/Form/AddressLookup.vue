@@ -85,7 +85,6 @@
     const modelValue = computed({
         get: () => props.modelValue,
         set: (address) => {
-            console.log(address);
             if (typeof address === 'string') {
                 return emit('update:modelValue', address);
             }

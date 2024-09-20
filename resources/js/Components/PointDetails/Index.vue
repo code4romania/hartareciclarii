@@ -10,7 +10,7 @@
 
         <Address :address="point.address" />
 
-        <Materials v-if="point.materials" :materials="point.materials" />
+        <Materials v-if="point.materials" :materials="point.materials" class="px-6 py-4 ring-1 ring-gray-200" />
 
         <Schedule v-if="point.schedule" :schedule="point.schedule" class="px-6 py-4" />
 

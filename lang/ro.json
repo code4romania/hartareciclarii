@@ -90,6 +90,9 @@
     "field.last_name": "Nume",
     "field.phone": "Telefon",
     "field.remember": "Ține-mă minte",
+    "field.material.collected" : "Materiale colectate",
+    "field.material.search_placeholder": "Caută un material",
+    "field.material.search_empty": "Nu am găsit niciun material acest termen de căutare.",
 
     "auth.login": "Autentifică-te",
     "auth.recover": "Am uitat parola",

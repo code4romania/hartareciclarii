@@ -189,7 +189,7 @@
         images: [],
 
         // step 4: Materials
-        materials: {},
+        materials: [],
     });
 
     const primaryButtonLabel = computed(
@@ -296,8 +296,6 @@
         });
 
         data.images = data.images.map((image) => image.uuid);
-
-        data.materials = Object.keys(data.materials).filter((key) => !key.startsWith('cat-'));
 
         return data;
     };
