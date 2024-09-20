@@ -1,6 +1,6 @@
 <template>
     <Modal @submit="submit" :open="open" @close="close" form>
-        <template #title>
+        <template v-if="!form.wasSuccessful" #title>
             <div v-if="isStep('changePinLocation')" class="flex gap-2">
                 <button type="button" @click="previousStep">
                     <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
@@ -13,7 +13,7 @@
         </template>
 
         <template #default>
-            <ThanksStep v-if="form.wasSuccessful" :close="close" />
+            <ThanksStep v-if="form.wasSuccessful" :problem-type="problemType" :point="point" :close="close" />
 
             <div v-else class="grid gap-4">
                 <ProblemTypeStep v-if="isStep('type')" :form="form" />

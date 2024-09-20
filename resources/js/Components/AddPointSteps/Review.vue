@@ -9,7 +9,7 @@
             <p
                 v-else
                 v-text="
-                    $t('add_point.review.service_administered', {
+                    $t('point.service_administered', {
                         service: serviceType.name,
                         administrator: form.administered_by,
                     })

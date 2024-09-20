@@ -144,6 +144,8 @@
     "add_point.details.subtitle": "Pasul 2: Detalii punct",
     "add_point.details.point_type": "Tip punct",
     "add_point.details.point_type_placeholder": "Selectează un tip de punct",
+    "add_point.details.business_name": "Nume business",
+    "add_point.details.business_name_placeholder": "Numele afacerii sau al punctului de lucru",
     "add_point.details.administered_by": "Administrat de",
     "add_point.details.administered_by_placeholder": "Instituția care administrează punctul",
     "add_point.details.schedule": "Orar",
@@ -154,7 +156,7 @@
     "add_point.details.email_placeholder": "Adresa de email a administratorului",
     "add_point.details.phone": "Telefon",
     "add_point.details.phone_placeholder": "Numărul de telefon al administratorului",
-
+    "add_point.details.free_of_charge": "Servicii gratuite",
     "add_point.details.collected_materials": "Materiale colectate",
     "add_point.details.closed": "Închis",
     "add_point.details.days": "Zile",
@@ -174,7 +176,6 @@
     "add_point.materials.label": "Marchează care dintre următoarele materiale se colectează la acest punct",
 
     "add_point.review.subtitle": "Pasul 4: Confirmă informațiile",
-    "add_point.review.service_administered": ":service administrat de :administrator",
 
     "add_point.review.address": "Adresa",
     "add_point.review.program": "Program",
@@ -193,6 +194,8 @@
     "add_point.thanks.profile": "profilul de utilizator",
     "add_point.thanks.create_account": "Creează-ți cont",
     "add_point.thanks.close": "Închide",
+
+    "point.service_administered": ":service administrat de :administrator",
 
     "point.action.goto": "Mergi la locație",
     "point.action.report": "Raportează o problemă",
@@ -236,5 +239,16 @@
     "report.action.submit": "Trimite",
     "report.action.next_step": "Următorul pas",
     "report.action.reset": "Resetează",
-    "report.action.save": "Salvează"
+    "report.action.save": "Salvează",
+
+    "report.thanks.subtitle": "Mulțumim pentru contribuție!",
+    "report.thanks.intro": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp informația despre punctul raportat.",
+    "report.thanks.become_member": "Vrei să contribui mai constant la acest efort? Devino un membru activ al hărții reciclării, pentru un mediu mai verde.",
+    "report.thanks.view_contributions": "Vezi toate contribuțiile tale în",
+    "report.thanks.profile": "profilul de utilizator",
+    "report.thanks.create_account": "Creează-ți cont",
+    "report.thanks.guide": "Ghid Reciclare",
+    "report.thanks.close": "Închide",
+
+    "report.thanks.contact_administrator": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată."
 }

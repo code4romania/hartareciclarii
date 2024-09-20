@@ -6,7 +6,7 @@
             :href="website"
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:underline focus:underline"
+            class="truncate text-ellipsis hover:underline focus:underline"
             v-text="website"
         />
     </div>

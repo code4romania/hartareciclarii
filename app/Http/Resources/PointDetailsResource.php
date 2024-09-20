@@ -43,7 +43,10 @@ class PointDetailsResource extends JsonResource
                 'issues' => $issues,
             ],
             'latlng' => [$this->location->latitude, $this->location->longitude],
-            'subheading' => $this->pointType->name . ' administrat de ' . $this->administered_by,
+            'subheading' => __('point.service_administered', [
+                'service' => $this->serviceType->name,
+                'administrator' => $this->administered_by,
+            ]),
             'address' => $this->address,
             'phone' => $this->phone,
             'email' => $this->email,
