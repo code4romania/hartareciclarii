@@ -200,11 +200,6 @@
         input.value.blur();
     };
 
-    const fitBounds = (result) => {
-        console.log(result);
-        emit('fitBounds', result.bounds);
-    };
-
     const closeSearch = () => {
         clear();
         closePanel();

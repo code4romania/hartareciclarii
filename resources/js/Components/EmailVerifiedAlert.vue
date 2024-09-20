@@ -30,7 +30,6 @@
         axios
             .post(route('auth.verification.send'))
             .then((response) => {
-                console.log(response);
                 success.value = true;
                 message.value = response.data.message;
             })

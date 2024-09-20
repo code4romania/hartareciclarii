@@ -11,7 +11,13 @@
                 @keydown.enter.prevent
             />
 
-            <ul v-if="results.length" class="grid gap-0.5 w-full">
+            <ul
+                v-if="results.length"
+                class="grid gap-0.5 w-full"
+                :class="{
+                    'mt-4': !searchable,
+                }"
+            >
                 <Accordion v-for="category in results" :key="`category-${category.id}`" as="ul">
                     <template #icon>
                         <img :src="category.icon" alt="" />
@@ -88,7 +94,7 @@
         },
         searchable: {
             type: Boolean,
-            default: true,
+            default: false,
         },
         label: {
             type: String,

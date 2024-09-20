@@ -284,7 +284,7 @@
 
         form.transform(transform).submit({
             onError: (error) => {
-                console.log(error);
+                console.error(error);
             },
         });
     };

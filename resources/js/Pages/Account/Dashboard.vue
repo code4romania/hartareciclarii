@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <ContributionsCounter class="shrink-0" :contributions="contributions_count" />
+            <ContributionsCounter class="shrink-0" :contributions="contributions.meta.total" />
         </div>
 
         <Table :collection="contributions">
@@ -87,10 +87,6 @@
     const props = defineProps({
         contributions: {
             type: Object,
-            required: true,
-        },
-        contributions_count: {
-            type: Number,
             required: true,
         },
     });

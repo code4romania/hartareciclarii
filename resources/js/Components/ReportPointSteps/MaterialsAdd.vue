@@ -8,7 +8,7 @@
             :label="$t('report.materials.add')"
             :errors="[form.errors.materials_add]"
             :materials="materials"
-            type="add"
+            searchable
             required
         >
             <template #help="{ disabled }">
@@ -21,6 +21,7 @@
 <script setup>
     import { computed } from 'vue';
     import { usePage } from '@inertiajs/vue3';
+    import { groupMaterialsByCategory } from '@/Helpers/useMaterials.js';
     import MaterialsChecklist from '@/Components/Form/MaterialsChecklist.vue';
 
     const props = defineProps({
@@ -41,21 +42,13 @@
     const page = usePage();
 
     const materials = computed(() =>
-        (page.props.materials || []).map((category) => {
-            category = { ...category };
-
-            category.children = category.children.map((material) => {
-                material = { ...material };
-
-                if (props.preselectedMaterials.includes(material.key)) {
-                    material.checked = true;
-                    material.disabled = true;
-                }
-
-                return material;
-            });
-
-            return category;
+        page.props.materials.items.map((material) => {
+            material = { ...material };
+            if (props.preselectedMaterials.includes(material.id)) {
+                material.checked = true;
+                material.disabled = true;
+            }
+            return material;
         })
     );
 </script>

@@ -48,7 +48,7 @@
                                 <button
                                     v-if="dismissable"
                                     type="button"
-                                    class="absolute text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
+                                    class="absolute z-10 text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
                                     @click="close"
                                 >
                                     <span class="sr-only">Close</span>

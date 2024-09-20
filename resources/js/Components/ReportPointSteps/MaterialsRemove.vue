@@ -8,7 +8,7 @@
             :label="$t('report.materials.remove')"
             :errors="[form.errors.materials_remove]"
             :materials="materials"
-            type="remove"
+            remove
             required
         >
             <template #help="{ checked }">
@@ -41,16 +41,6 @@
     const page = usePage();
 
     const materials = computed(() =>
-        (page.props.materials || [])
-            .map((category) => {
-                category = { ...category };
-
-                category.children = category.children.filter((material) =>
-                    props.preselectedMaterials.includes(material.key)
-                );
-
-                return category;
-            })
-            .filter((rahat) => rahat.children.length > 0)
+        page.props.materials.items.filter((material) => props.preselectedMaterials.includes(material.id))
     );
 </script>

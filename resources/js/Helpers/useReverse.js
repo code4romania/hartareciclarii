@@ -10,7 +10,7 @@ export const reverse = async ({ lat, lng, zoom = 18 }) => {
 
         return response.data;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
     }
 };

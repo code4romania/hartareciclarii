@@ -179,7 +179,6 @@
     );
 
     const locate = (value) => {
-        console.log(value);
         center.value = value.center;
         bounds.value = value.bounds;
     };

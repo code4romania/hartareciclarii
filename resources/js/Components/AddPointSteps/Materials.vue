@@ -7,6 +7,7 @@
             v-model="form.materials"
             :label="$t('add_point.materials.label')"
             :errors="[form.errors.materials]"
+            searchable
             required
         />
     </fieldset>

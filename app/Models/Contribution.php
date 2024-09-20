@@ -16,6 +16,13 @@ class Contribution extends Pivot
 
     public const UPDATED_AT = null;
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('latest', function (Builder $query) {
+            $query->orderByDesc('created_at');
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

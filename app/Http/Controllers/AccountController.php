@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\ContributionResource;
-use App\Models\Contribution;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,45 +15,41 @@ class AccountController extends Controller
 {
     public function dashboard(): Response
     {
-        $query = Contribution::query()
-            ->where('user_id', auth()->id());
+        $query = auth()->user()
+            ->contributions()
+            ->withPointData()
+            ->paginate();
 
         return Inertia::render('Account/Dashboard', [
-            'contributions_count' => $query->count(),
-
-            'contributions' => ContributionResource::collection(
-                $query
-                    ->withPointData()
-                    ->orderByDesc('created_at')
-                    ->paginate()
-            )->additional([
-                'columns' => [
-                    [
-                        'key' => 'id',
-                        'label' => __('contributions.column.id'),
+            'contributions' => ContributionResource::collection($query)
+                ->additional([
+                    'columns' => [
+                        [
+                            'key' => 'id',
+                            'label' => __('contributions.column.id'),
+                        ],
+                        [
+                            'key' => 'point_type',
+                            'label' => __('contributions.column.point_type'),
+                            'highlight' => true,
+                        ],
+                        [
+                            'key' => 'address',
+                            'label' => __('contributions.column.address'),
+                        ],
+                        [
+                            'key' => 'contribution_type',
+                            'label' => __('contributions.column.contribution_type'),
+                        ],
+                        [
+                            'key' => 'created_at',
+                            'label' => __('contributions.column.created_at'),
+                        ],
+                        [
+                            'key' => 'actions',
+                        ],
                     ],
-                    [
-                        'key' => 'point_type',
-                        'label' => __('contributions.column.point_type'),
-                        'highlight' => true,
-                    ],
-                    [
-                        'key' => 'address',
-                        'label' => __('contributions.column.address'),
-                    ],
-                    [
-                        'key' => 'contribution_type',
-                        'label' => __('contributions.column.contribution_type'),
-                    ],
-                    [
-                        'key' => 'created_at',
-                        'label' => __('contributions.column.created_at'),
-                    ],
-                    [
-                        'key' => 'actions',
-                    ],
-                ],
-            ]),
+                ]),
         ]);
     }
 
