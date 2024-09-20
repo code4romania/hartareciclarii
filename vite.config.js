@@ -14,7 +14,7 @@ export default defineConfig({
             refresh: true,
         }),
         DefineOptions(),
-        // manifestSRI(),
+        manifestSRI(),
         vue({
             template: {
                 transformAssetUrls: {
