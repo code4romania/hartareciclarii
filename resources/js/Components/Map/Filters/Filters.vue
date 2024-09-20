@@ -5,7 +5,7 @@
         <div class="font-semibold text-gray-900">Filtre</div>
     </div>
 
-    <div class="flex flex-col items-start flex-1 gap-4 px-4 overflow-y-scroll">
+    <div class="flex flex-col items-stretch flex-1 px-4 overflow-y-scroll divide-y divide-gray-300">
         <CheckboxList
             name="service_types"
             label="Tip serviciu"
@@ -13,6 +13,7 @@
             :options="serviceTypes"
             option-value-key="id"
             option-label-key="name"
+            class="py-6"
         />
 
         <template v-for="type in serviceTypes" :key="type.slug">
@@ -24,11 +25,11 @@
             />
         </template>
 
-        <CheckboxList name="status" label="Status punct" v-model="filter.status" :options="statuses" disabled />
+        <CheckboxList name="status" label="Caracteristici" v-model="filter.ceva" :options="statuses" class="py-6" />
+        <CheckboxList name="status" label="Status punct" v-model="filter.status" :options="statuses" class="py-6" />
     </div>
 
     <button
-        v-if="false"
         type="button"
         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-red-700 border-t hover:bg-red-700 hover:text-white"
         @click="clearFilters"
@@ -40,13 +41,12 @@
 </template>
 
 <script setup>
-    import { computed, ref, watch, defineAsyncComponent } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import { FunnelIcon, XMarkIcon } from '@heroicons/vue/24/outline';
     import { usePage } from '@inertiajs/vue3';
     import CheckboxList from '@/Components/Form/CheckboxList.vue';
     import useFilters from '@/Helpers/useFilters';
-    import Donations from '@/Components/Map/Filters/Donations.vue';
-    import Other from '@/Components/Map/Filters/Other.vue';
+
     import Reduce from '@/Components/Map/Filters/Reduce.vue';
     import Reuse from '@/Components/Map/Filters/Reuse.vue';
     import Repairs from '@/Components/Map/Filters/Repairs.vue';
@@ -66,13 +66,11 @@
 
     const getFilterComponent = (name) =>
         ({
-            donations: Donations,
-            other: Other,
             reduce: Reduce,
             reuse: Reuse,
             repairs: Repairs,
             waste_collection: WasteCollection,
-        }[name]);
+        })[name] || null;
 
     const filter = ref({
         st: page.props.filter?.service_types || [],
@@ -94,5 +92,5 @@
 
     const { applyFilters, clearFilters } = useFilters(filter, url);
 
-    watch(filter, applyFilters, { deep: true });
+    // watch(filter, applyFilters, { deep: true });
 </script>

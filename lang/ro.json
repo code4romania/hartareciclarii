@@ -9,11 +9,24 @@
     "top_menu.my_profile": "Profilul meu",
     "top_menu.back": "Înapoi la hartă",
 
+    "action.back": "Înapoi",
+    "action.cancel": "Renunță",
+    "action.close": "Închide",
+    "action.clear": "Șterge",
+    "action.finish_steps": "Adaugă punct",
+    "action.goto": "Mergi la locație",
+    "action.next_step": "Următorul pas",
+    "action.report": "Raportează o problemă",
+    "action.reset": "Resetează",
+    "action.save": "Salvează",
+    "action.share": "Distribuie",
+    "action.submit": "Trimite",
+
     "sidebar.search_point_label": "Caută un punct",
     "sidebar.search_material_label": "Caută material",
     "sidebar.search_point_placeholder": "Exemplu căutare",
     "sidebar.service_type_label": "Tip serviciu",
-    "sidebar.material_type_label": "Material colectat selectiv",
+    "sidebar.materials": "Material colectat",
     "sidebar.collection_point_type_label": "Tip punct de colectare",
     "sidebar.clear_filters_label": "Șterge filtre",
     "sidebar.search": "Caută",
@@ -90,7 +103,7 @@
     "field.last_name": "Nume",
     "field.phone": "Telefon",
     "field.remember": "Ține-mă minte",
-    "field.material.collected" : "Materiale colectate",
+    "field.material.collected": "Materiale colectate",
     "field.material.search_placeholder": "Caută un material",
     "field.material.search_empty": "Nu am găsit niciun material acest termen de căutare.",
 
@@ -115,13 +128,6 @@
     "add_point.yes": "Da",
     "add_point.no": "Nu",
     "add_point.unknown": "Nu știu",
-
-    "add_point.action.back": "Înapoi",
-    "add_point.action.cancel": "Renunță",
-    "add_point.action.finish_steps": "Adaugă punct",
-    "add_point.action.next_step": "Următorul pas",
-    "add_point.action.reset": "Resetează",
-    "add_point.action.save": "Salvează",
 
     "add_point.placeholder.select": "Selectează",
 
@@ -196,13 +202,8 @@
     "add_point.thanks.view_contributions": "Vezi toate contribuțiile tale în",
     "add_point.thanks.profile": "profilul de utilizator",
     "add_point.thanks.create_account": "Creează-ți cont",
-    "add_point.thanks.close": "Închide",
 
     "point.service_administered": ":service administrat de :administrator",
-
-    "point.action.goto": "Mergi la locație",
-    "point.action.report": "Raportează o problemă",
-    "point.action.share": "Distribuie",
 
     "point.offers_transport.false": "Nu oferă transport",
     "point.offers_transport.true": "Oferă transport",
@@ -237,13 +238,6 @@
     "report.rejected.reason": "Care a fost motivul refuzului?",
     "report.narrative.help": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
 
-    "report.action.back": "Înapoi",
-    "report.action.cancel": "Renunță",
-    "report.action.submit": "Trimite",
-    "report.action.next_step": "Următorul pas",
-    "report.action.reset": "Resetează",
-    "report.action.save": "Salvează",
-
     "report.thanks.subtitle": "Mulțumim pentru contribuție!",
     "report.thanks.intro": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp informația despre punctul raportat.",
     "report.thanks.become_member": "Vrei să contribui mai constant la acest efort? Devino un membru activ al hărții reciclării, pentru un mediu mai verde.",
@@ -251,7 +245,6 @@
     "report.thanks.profile": "profilul de utilizator",
     "report.thanks.create_account": "Creează-ți cont",
     "report.thanks.guide": "Ghid Reciclare",
-    "report.thanks.close": "Închide",
 
     "report.thanks.contact_administrator": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată."
 }

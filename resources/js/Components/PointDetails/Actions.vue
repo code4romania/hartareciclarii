@@ -12,7 +12,7 @@
                 <ArrowTurnUpRightIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.goto')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.goto')" />
         </a>
 
         <Link
@@ -26,7 +26,7 @@
                 <FlagIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.report')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.report')" />
         </Link>
 
         <button type="button" class="gap-2 text-center group focus:outline-none" @click="shareOrCopy">
@@ -37,7 +37,7 @@
                 <LinkIcon v-else class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.share')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.share')" />
         </button>
     </div>
 </template>

@@ -26,7 +26,7 @@
                 primary
             />
 
-            <Button :label="$t('add_point.thanks.close')" @click="close" class="w-full" />
+            <Button :label="$t('action.close')" @click="close" class="w-full" />
         </div>
     </div>
 </template>

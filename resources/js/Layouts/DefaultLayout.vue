@@ -10,9 +10,7 @@
 
         <Header class="shrink-0" :dashboard="dashboard" />
 
-        <div class="relative flex-1">
-            <slot />
-        </div>
+        <slot />
     </div>
 </template>
 

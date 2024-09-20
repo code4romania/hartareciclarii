@@ -213,26 +213,26 @@
 
     const primaryButtonLabel = computed(() => {
         if (isLastStep.value) {
-            return trans('report.action.submit');
+            return trans('action.submit');
         }
 
         if (isStep('changePinLocation')) {
-            return trans('report.action.save');
+            return trans('action.save');
         }
 
-        return trans('report.action.next_step');
+        return trans('action.next_step');
     });
 
     const secondaryButtonLabel = computed(() => {
         if (isStep('type')) {
-            return trans('report.action.cancel');
+            return trans('action.cancel');
         }
 
         if (isStep('changePinLocation')) {
-            return trans('report.action.reset');
+            return trans('action.reset');
         }
 
-        return trans('report.action.back');
+        return trans('action.back');
     });
 
     const getFieldsByStep = () =>

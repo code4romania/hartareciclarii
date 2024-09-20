@@ -195,22 +195,22 @@
     const primaryButtonLabel = computed(
         () =>
             ({
-                type: trans('add_point.action.next_step'),
-                location: trans('add_point.action.save'),
-                details: trans('add_point.action.next_step'),
-                materials: trans('add_point.action.next_step'),
-                review: trans('add_point.action.finish_steps'),
+                type: trans('action.next_step'),
+                location: trans('action.save'),
+                details: trans('action.next_step'),
+                materials: trans('action.next_step'),
+                review: trans('action.finish_steps'),
             })[form.step]
     );
 
     const secondaryButtonLabel = computed(
         () =>
             ({
-                type: trans('add_point.action.cancel'),
-                location: trans('add_point.action.reset'),
-                details: trans('add_point.action.back'),
-                materials: trans('add_point.action.back'),
-                review: trans('add_point.action.back'),
+                type: trans('action.cancel'),
+                location: trans('action.reset'),
+                details: trans('action.back'),
+                materials: trans('action.back'),
+                review: trans('action.back'),
             })[form.step]
     );
 

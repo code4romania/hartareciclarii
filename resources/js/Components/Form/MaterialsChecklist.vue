@@ -1,5 +1,9 @@
 <template>
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
+        <template v-if="clearable && modelValue?.length" #action>
+            <button @click="modelValue = []" type="button" class="text-red-600" v-text="$t('action.clear')" />
+        </template>
+
         <template #default="{ invalid }">
             <InputText
                 v-if="searchable"
@@ -11,13 +15,7 @@
                 @keydown.enter.prevent
             />
 
-            <ul
-                v-if="results.length"
-                class="grid gap-0.5 w-full"
-                :class="{
-                    'mt-4': !searchable,
-                }"
-            >
+            <ul v-if="results.length" class="grid gap-0.5 w-full" :class="{ 'mt-4': !searchable }">
                 <Accordion v-for="category in results" :key="`category-${category.id}`" as="ul">
                     <template #icon>
                         <img :src="category.icon" alt="" />
@@ -93,6 +91,10 @@
             default: false,
         },
         searchable: {
+            type: Boolean,
+            default: false,
+        },
+        clearable: {
             type: Boolean,
             default: false,
         },

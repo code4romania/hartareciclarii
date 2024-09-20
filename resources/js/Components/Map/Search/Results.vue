@@ -5,7 +5,7 @@
         <div class="font-semibold text-gray-900">{{ results.length }} rezultate</div>
     </div>
 
-    <div v-if="results.length" class="flex flex-col items-start flex-1 overflow-y-scroll divide-y divide-gray-300">
+    <div v-if="results.length" class="flex flex-col items-stretch flex-1 overflow-y-scroll divide-y divide-gray-300">
         <Result v-for="point in results" :key="point.id" :point="point" @click="$emit('selectPoint', point.id)" />
     </div>
 
@@ -25,4 +25,3 @@
 
     const results = computed(() => page.props.points || []);
 </script>
-

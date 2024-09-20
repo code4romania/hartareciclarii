@@ -3,7 +3,7 @@
         <p class="mb-5 text-gray-500" v-text="$t('report.footer')" />
 
         <Link :href="route('front.map.report', { point, coordinates })" :only="['report', 'problem_types']">
-            <span v-text="$t('point.action.report')" />
+            <span v-text="$t('action.report')" />
         </Link>
     </div>
 </template>

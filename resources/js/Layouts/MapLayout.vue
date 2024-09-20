@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full">
+    <div class="relative flex flex-1 overflow-hidden">
         <!-- Static sidebar for desktop -->
         <Sidebar class="hidden border-r border-gray-200 lg:flex w-80" @select-point="selectPoint" />
 
@@ -87,7 +87,6 @@
 <script setup>
     import L from 'leaflet';
 
-    import { Dialog, DialogPanel } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/outline';
 
     import { LMap, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
