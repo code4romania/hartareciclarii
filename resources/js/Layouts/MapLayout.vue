@@ -7,7 +7,9 @@
             <div
                 class="absolute inset-0 z-10 flex flex-col gap-4 overflow-hidden pointer-events-none lg:inset-3 lg:left-6 lg:top-4 lg:right-auto lg:w-96"
             >
-                <div class="relative flex gap-4 px-4 py-3 bg-white shadow pointer-events-auto lg:bg-transparent lg:p-0">
+                <div
+                    class="relative flex gap-4 px-4 py-3 bg-white shadow pointer-events-auto lg:bg-transparent lg:p-0 lg:shadow-none"
+                >
                     <Search class="relative flex-1" :map="map" @locate="locate" />
 
                     <button
