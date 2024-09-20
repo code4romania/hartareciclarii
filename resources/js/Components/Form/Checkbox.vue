@@ -1,5 +1,11 @@
 <template>
-    <label class="flex gap-x-2">
+    <label
+        class="flex gap-x-2"
+        :class="{
+            'cursor-default': props.disabled,
+            'cursor-pointer': !props.disabled,
+        }"
+    >
         <Checkbox
             v-model="modelValue"
             :value="value"

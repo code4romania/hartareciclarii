@@ -1,5 +1,5 @@
 <template>
-    <form class="relative z-20" @submit.prevent="search" v-click-away="close">
+    <form @submit.prevent="search" v-click-away="close">
         <div class="relative z-20">
             <MagnifyingGlassIcon
                 class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4"
@@ -41,7 +41,7 @@
         >
             <div
                 v-if="suggesting"
-                class="absolute z-10 w-full pt-10 -mt-10 overflow-hidden text-sm bg-white border border-gray-300 shadow-lg rounded-2xl empty:hidden"
+                class="absolute w-full pt-10 -mt-10 overflow-hidden text-sm bg-white border border-gray-300 shadow-lg rounded-2xl empty:hidden"
             >
                 <div v-if="!queryIsValid" class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52">
                     Caută o adresă, un punct, sau un material

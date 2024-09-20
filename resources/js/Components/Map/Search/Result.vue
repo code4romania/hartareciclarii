@@ -2,7 +2,7 @@
     <button
         ref="result"
         type="button"
-        class="flex flex-col gap-3 px-4 py-4 text-left"
+        class="flex flex-col w-full gap-3 px-4 py-4 text-left"
         :class="{
             'bg-gray-100': isSelected,
             'hover:bg-gray-100 focus:bg-gray-100': !isSelected,
@@ -89,4 +89,3 @@
         }
     });
 </script>
-

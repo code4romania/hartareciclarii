@@ -12,7 +12,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 transition-opacity bg-black/30" />
+                <div class="fixed inset-0 transition-opacity bg-black/50" />
             </TransitionChild>
 
             <div class="fixed inset-0">
