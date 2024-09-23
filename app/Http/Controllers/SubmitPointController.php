@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Concerns\CanAssignContributor;
 use App\Concerns\CanAttachMedia;
-use App\Enums\Point\Status;
 use App\Http\Requests\SubmitPointRequest;
 use App\Models\Point;
 use Illuminate\Http\RedirectResponse;
@@ -25,8 +24,6 @@ class SubmitPointController extends Controller
             (float) $attributes['location']['lat'],
             (float) $attributes['location']['lng']
         );
-
-        $attributes['status'] = Status::NEEDS_VERIFICATION;
 
         $point = Point::create($attributes);
 

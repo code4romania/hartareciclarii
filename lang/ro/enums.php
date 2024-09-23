@@ -19,8 +19,9 @@ return [
 
     'point_status' => [
         'verified' => 'Verificat',
-        'needs_verification' => 'Necesita verificare',
-        'with_problems' => 'Cu probleme',
+        'unverified' => 'Necesita verificare',
+        'problems' => 'Probleme raportate',
+        'problems_count' => '{1} 1 problemă raportată|[2,19] :count probleme raportate|[20,*] :count de probleme raportate',
     ],
     'days' => [
         'monday' => 'Luni',

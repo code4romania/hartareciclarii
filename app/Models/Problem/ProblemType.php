@@ -33,8 +33,6 @@ class ProblemType extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
-
-
     public function scopeWhereValidForServiceTypeId(Builder $query, int $id): Builder
     {
         return $query->whereDoesntHave('serviceTypes')

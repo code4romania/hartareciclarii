@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\City;
-use App\Models\Issue;
 use App\Models\Material;
 use App\Models\Permission;
 use App\Models\Point;
+use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -69,13 +69,18 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory(['email' => 'admin@example.com'])
             ->create();
 
+        $users = User::factory()
+            ->count(50)
+            ->create();
+
         $admin->givePermissionTo($this->permissions);
 
         $serviceTypes = ServiceType::query()
-            ->with(['issueTypes', 'pointTypes'])
+            ->with(['problemTypes', 'pointTypes'])
             ->get();
 
         $cities = City::query()
+            ->with('county')
             ->inRandomOrder()
             ->limit(100)
             ->get();
@@ -87,25 +92,28 @@ class DatabaseSeeder extends Seeder
 
             foreach ($serviceType->pointTypes as $pointType) {
                 $points->push(
-                    ...Point::factory(500)
+                    ...Point::factory(100)
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
                         ->withType($serviceType, $pointType)
-                        // ->createdByUser($admin)
+                        ->create(),
+
+                    ...Point::factory(100)
+                        ->inCity($cities->random())
+                        ->withMaterials($materials->random(3))
+                        ->withType($serviceType, $pointType)
+                        ->unverified()
+                        ->createdByUser($users->random())
                         ->create()
                 );
             }
 
-            foreach ($serviceType->issueTypes as $issueType) {
-                $point = $points->random();
-
-                $issue = Issue::factory()
-                    ->create([
-                        'service_type_id' => $point->service_type_id,
-                        'point_id' => $point->id,
-                    ]);
-
-                $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
+            foreach ($serviceType->problemTypes as $problemType) {
+                Problem::factory(['type_id' => $problemType->id])
+                    ->count(100)
+                    ->for($points->random())
+                    ->createdByUser($users->random())
+                    ->create();
             }
         }
 

@@ -16,14 +16,14 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     use Comparable;
 
     case VERIFIED = 'verified';
-    case NEEDS_VERIFICATION = 'needs_verification';
+    case UNVERIFIED = 'unverified';
     case WITH_PROBLEMS = 'with_problems';
 
     public function getLabel(): ?string
     {
         return match ($this) {
             self::VERIFIED => __('enums.point_status.verified'),
-            self::NEEDS_VERIFICATION => __('enums.point_status.needs_verification'),
+            self::UNVERIFIED => __('enums.point_status.unverified'),
             self::WITH_PROBLEMS => __('enums.point_status.with_problems'),
         };
     }
@@ -32,7 +32,7 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::VERIFIED => 'success',
-            self::NEEDS_VERIFICATION => 'warning',
+            self::UNVERIFIED => 'warning',
             self::WITH_PROBLEMS => 'danger',
         };
     }
@@ -41,7 +41,7 @@ enum Status: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::VERIFIED => 'heroicon-m-check-circle',
-            self::NEEDS_VERIFICATION => 'heroicon-m-question-mark-circle',
+            self::UNVERIFIED => 'heroicon-m-question-mark-circle',
             self::WITH_PROBLEMS => 'heroicon-m-exclamation-triangle',
         };
     }

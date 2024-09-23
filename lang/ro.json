@@ -246,5 +246,7 @@
     "report.thanks.create_account": "Creează-ți cont",
     "report.thanks.guide": "Ghid Reciclare",
 
+    "report.count": "Există probleme raportate la acest punct (:problems). Echipa Harta Reciclării lucrează la actualizarea informațiilor pe hartă.",
+
     "report.thanks.contact_administrator": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată."
 }

@@ -54,6 +54,7 @@ class Point extends Model implements HasMedia
         'free_of_charge',
         'service_type_id',
         'point_type_id',
+        'verified_at',
     ];
 
     protected $casts = [
@@ -64,6 +65,7 @@ class Point extends Model implements HasMedia
         'offers_vouchers' => 'boolean',
         'offers_transport' => 'boolean',
         'free_of_charge' => 'boolean',
+        'verified_at' => 'datetime',
     ];
 
     public function registerMediaCollections(): void
@@ -142,11 +144,6 @@ class Point extends Model implements HasMedia
                 'coordinates' => "@{$this->location->latitude},{$this->location->longitude},18z",
             ])
         );
-    }
-
-    public function changeStatus(Status $status): void
-    {
-        $this->update(['status' => $status]);
     }
 
     public function changeGroup(int $groupId): void
@@ -284,5 +281,20 @@ class Point extends Model implements HasMedia
                 'query_by' => 'point_id, service_type, point_type, business_name, administered_by, address, materials, material_categories, city, county, email, phone, observations',
             ],
         ];
+    }
+
+    public function status(): Attribute
+    {
+        return Attribute::make(function () {
+            if (! $this->verified_at) {
+                return Status::UNVERIFIED;
+            }
+
+            if ($this->problems()->whereOpen()->exists()) {
+                return Status::WITH_PROBLEMS;
+            }
+
+            return Status::VERIFIED;
+        });
     }
 }

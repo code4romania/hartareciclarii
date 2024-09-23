@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\Point\Source;
-use App\Enums\Point\Status;
 use App\Models\City;
 use App\Models\Point;
 use App\Models\PointGroup;
 use App\Models\PointType;
 use App\Models\ServiceType;
 use App\Models\User;
+use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
@@ -35,7 +35,7 @@ class PointFactory extends Factory
                 fake()->latitude(min: 43.66, max: 48.21),
                 fake()->longitude(min: 20.29, max: 29.61)
             ),
-            'address' => fake()->address(),
+            'address' => fake()->streetAddress(),
             'business_name' => null,
             'phone' => fake()->phoneNumber(),
             'email' => fake()->email(),
@@ -47,10 +47,17 @@ class PointFactory extends Factory
             'offers_vouchers' => fake()->boolean(),
             'offers_transport' => fake()->boolean(),
             'free_of_charge' => fake()->boolean(),
-            'status' => fake()->randomElement(Status::values()),
             'source' => fake()->randomElement(Source::values()),
             'administered_by' => fake()->company(),
+            'verified_at' => now(),
         ];
+    }
+
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'verified_at' => null,
+        ]);
     }
 
     public function withType(ServiceType $serviceType, PointType $pointType): static
@@ -71,21 +78,22 @@ class PointFactory extends Factory
 
     public function inCity(City $city): static
     {
+        $location = Nominatim::make()->locate($city->name, $city->county->name);
+
+        if (blank($location)) {
+            return $this->state(fn (array $attributes) => [
+                'county_id' => $city->county_id,
+                'city_id' => $city->id,
+
+            ]);
+        }
+
         return $this->state(fn (array $attributes) => [
             'county_id' => $city->county_id,
             'city_id' => $city->id,
-        ]);
-    }
-
-    public function inLisbon(): static
-    {
-        $latitudeRange = [38.7363163, 38.7408642];
-        $longitudeRange = [-9.1353215, -9.1325596];
-
-        return $this->state(fn (array $attributes) => [
             'location' => new SpatialPoint(
-                fake()->latitude(min: 38.80, max: 38.70),
-                fake()->longitude(min: -9.18, max: -9.10)
+                fake()->latitude(min: $location->bounds[0], max: $location->bounds[1]),
+                fake()->longitude(min: $location->bounds[2], max: $location->bounds[3])
             ),
         ]);
     }

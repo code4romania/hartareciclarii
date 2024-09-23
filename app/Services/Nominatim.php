@@ -66,6 +66,22 @@ class Nominatim
             ->map(fn (array $result) => new Location($result));
     }
 
+    public function locate(string $city, string $county): ?Location
+    {
+        $request = $this->nominatim->newSearch()
+            ->language(app()->getLocale())
+            ->addressDetails()
+            ->countryCode('ro')
+            ->format('jsonv2')
+            ->county($county)
+            ->city($city);
+
+        return collect(rescue(fn () => $this->nominatim->find($request)))
+            ->take(1)
+            ->map(fn (array $result) => new Location($result))
+            ->first();
+    }
+
     public function reverse(float $latitude, float $longitude): Location
     {
         $request = $this->nominatim->newReverse()

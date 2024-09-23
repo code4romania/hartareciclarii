@@ -17,15 +17,11 @@ class PointDetailsResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $issues = $this->status->is(Status::WITH_PROBLEMS)
-         /*
-          * @todo: Implement the following method:
-          *
-          * $this->issues()
-          * ->pending()
-          * ->get()
-          */
-            ? collect()
+        $problems = $this->status->is(Status::WITH_PROBLEMS)
+            ? $this->problems()
+                ->with('type')
+                ->whereOpen()
+                ->get(['id', 'type_id'])
             : collect();
 
         $materials = $this->materials()
@@ -37,10 +33,14 @@ class PointDetailsResource extends JsonResource
             'name' => $this->pointType->name,
             'status' => [
                 'color' => $this->status->getColor(),
-                'label' => $this->status->getLabel(),
+                'label' => $this->status->is(Status::WITH_PROBLEMS)
+                    ? trans_choice('enums.point_status.problems_count', $problems->count())
+                    : $this->status->getLabel(),
                 'icon' => $this->status->getIcon(),
-                'issues_count' => $issues->count(),
-                'issues' => $issues,
+                'problems' => $problems
+                    ->pluck('type.name')
+                    ->unique()
+                    ->values(),
             ],
             'latlng' => [$this->location->latitude, $this->location->longitude],
             'subheading' => __('point.service_administered', [
