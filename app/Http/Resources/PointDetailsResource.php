@@ -25,7 +25,7 @@ class PointDetailsResource extends JsonResource
             : collect();
 
         $materials = $this->materials()
-            ->with('categories')
+            ->with('categories.media')
             ->get(['id', 'name']);
 
         return [
