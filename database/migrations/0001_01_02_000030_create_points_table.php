@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Imports\PointTypesImport;
 use App\Models\City;
 use App\Models\County;
+use App\Models\Import;
 use App\Models\PointGroup;
 use App\Models\PointType;
 use App\Models\ServiceType;
@@ -67,6 +68,11 @@ return new class extends Migration
             $table->foreignIdFor(PointType::class)
                 ->constrained()
                 ->cascadeOnDelete();
+
+            $table->foreignIdFor(Import::class)
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
 
             $table->string('source');
 

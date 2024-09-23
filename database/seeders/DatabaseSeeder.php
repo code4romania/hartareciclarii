@@ -76,15 +76,19 @@ class DatabaseSeeder extends Seeder
             ->count(50)
             ->create();
 
-        if (env('SEED_POINTS', true)) {
-            $this->seedPoints($users);
-        }
+        $this->seedPoints($users);
 
         Artisan::call('scout:rebuild');
     }
 
     public function seedPoints(Collection $users): void
     {
+        if (! env('SEED_POINTS', true)) {
+            $this->command->warn('SEED_POINTS set to `false`, skipping seeding points...');
+
+            return;
+        }
+
         $serviceTypes = ServiceType::query()
             ->with(['problemTypes', 'pointTypes'])
             ->get();
