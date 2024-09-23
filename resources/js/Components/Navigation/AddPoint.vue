@@ -1,29 +1,29 @@
 <template>
     <Modal
-        :dismissable="!isStep('location') && !isStep('thanks')"
+        :dismissable="!isStep('location') && !form.wasSuccessful"
         :overlay-dismissable="false"
         form
         @submit="submit"
         :open="open"
         @open="$emit('open')"
-        @close="$emit('close')"
+        @close="closeModal"
     >
-        <template v-if="!isStep('thanks')" #title>
-            <template v-if="isStep('location')">
-                <div class="flex gap-2">
-                    <button type="button" @click="() => goToStep('type')">
-                        <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
-                    </button>
+        <template v-if="!form.wasSuccessful" #title>
+            <div v-if="isStep('location')" class="flex gap-2">
+                <button type="button" @click="() => goToStep('type')">
+                    <ArrowLeftIcon class="w-6 h-6 text-gray-400" />
+                </button>
 
-                    <span v-text="$t('add_point.type.change_pin_location')" />
-                </div>
-            </template>
+                <span v-text="$t('add_point.type.change_pin_location')" />
+            </div>
 
             <span v-else v-text="$t('add_point.title')" />
         </template>
 
         <template #default="{ close }">
-            <div class="grid gap-4">
+            <ThanksStep v-if="form.wasSuccessful" :form="form" :close="close" />
+
+            <div v-else class="grid gap-4">
                 <TypeStep
                     v-if="isStep('type')"
                     :form="form"
@@ -38,12 +38,10 @@
                 <MaterialsStep v-if="isStep('materials')" :form="form" />
 
                 <ReviewStep v-if="isStep('review')" :form="form" :serviceType="serviceType" :pointType="pointType" />
-
-                <ThanksStep v-if="isStep('thanks')" :close="close" />
             </div>
         </template>
 
-        <template v-if="!isStep('thanks')" #footer="{ close }">
+        <template v-if="!form.wasSuccessful" #footer="{ close }">
             <Button
                 :label="secondaryButtonLabel"
                 @click="() => previousStep(close)"
@@ -143,9 +141,14 @@
 
     const page = usePage();
 
-    const errors = computed(() => page.props.errors || {});
+    const closeModal = () => {
+        emit('close');
 
-    // const steps = ['type', 'location', 'details', 'materials', 'review'];
+        setTimeout(() => {
+            form.reset();
+            form.wasSuccessful = false;
+        }, 500);
+    };
 
     const originalLocation = ref({
         lat: null,
@@ -186,32 +189,32 @@
         images: [],
 
         // step 4: Materials
-        materials: {},
+        materials: [],
     });
 
     const primaryButtonLabel = computed(
         () =>
             ({
-                type: trans('add_point.action.next_step'),
-                location: trans('add_point.action.save'),
-                details: trans('add_point.action.next_step'),
-                materials: trans('add_point.action.next_step'),
-                review: trans('add_point.action.finish_steps'),
+                type: trans('action.next_step'),
+                location: trans('action.save'),
+                details: trans('action.next_step'),
+                materials: trans('action.next_step'),
+                review: trans('action.finish_steps'),
             })[form.step]
     );
 
     const secondaryButtonLabel = computed(
         () =>
             ({
-                type: trans('add_point.action.cancel'),
-                location: trans('add_point.action.reset'),
-                details: trans('add_point.action.back'),
-                materials: trans('add_point.action.back'),
-                review: trans('add_point.action.back'),
+                type: trans('action.cancel'),
+                location: trans('action.reset'),
+                details: trans('action.back'),
+                materials: trans('action.back'),
+                review: trans('action.back'),
             })[form.step]
     );
 
-    const getFieldsByStep = (step) =>
+    const getFieldsByStep = () =>
         ({
             type: [
                 //
@@ -222,12 +225,6 @@
                 'location.lat',
                 'location.lng',
             ],
-            // location: [
-            //     //
-            //     'address',
-            //     'location.lat',
-            //     'location.lng',
-            // ],
             details: [
                 'point_type_id',
                 'business_name',
@@ -246,7 +243,7 @@
                 'images',
             ],
             materials: ['materials'],
-        })[step];
+        })[form.step];
 
     const serviceTypes = computed(() =>
         page.props.service_types.map((service) => ({
@@ -300,8 +297,6 @@
 
         data.images = data.images.map((image) => image.uuid);
 
-        data.materials = Object.keys(data.materials).filter((key) => !key.startsWith('cat-'));
-
         return data;
     };
 
@@ -315,17 +310,14 @@
                 form.validateFiles();
             }
 
-            return form.transform(transform).touch(getFieldsByStep(form.step)).validate({
+            return form.transform(transform).touch(getFieldsByStep()).validate({
                 onSuccess: nextStep,
             });
         }
 
         form.transform(transform).submit({
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: nextStep,
             onError: (error) => {
-                console.log(error);
+                console.error(error);
             },
         });
     };
@@ -336,9 +328,7 @@
 
     const previousStep = (close) => {
         if (isStep('type')) {
-            close();
-            form.reset();
-            return;
+            return close();
         }
 
         if (isStep('location')) {
@@ -383,16 +373,14 @@
         if (isStep('materials')) {
             return goToStep('review');
         }
-
-        if (isStep('review')) {
-            return goToStep('thanks');
-        }
     };
 
     const cancelAddressOverride = (close) => {
         close();
 
         form.address_override = null;
+
+        form.reset('city', 'county');
 
         goToStep('type');
     };

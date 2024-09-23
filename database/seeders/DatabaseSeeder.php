@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\City;
-use App\Models\Issue;
 use App\Models\Material;
 use App\Models\Permission;
 use App\Models\Point;
+use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
@@ -71,48 +72,62 @@ class DatabaseSeeder extends Seeder
 
         $admin->givePermissionTo($this->permissions);
 
+        $users = User::factory()
+            ->count(50)
+            ->create();
+
+        $this->seedPoints($users);
+
+        Artisan::call('scout:rebuild');
+    }
+
+    public function seedPoints(Collection $users): void
+    {
+        if (! env('SEED_POINTS', true)) {
+            $this->command->warn('SEED_POINTS set to `false`, skipping seeding points...');
+
+            return;
+        }
+
         $serviceTypes = ServiceType::query()
-            ->with(['issueTypes', 'pointTypes'])
+            ->with(['problemTypes', 'pointTypes'])
             ->get();
 
         $cities = City::query()
+            ->with('county')
             ->inRandomOrder()
             ->limit(100)
             ->get();
 
         $materials = Material::all();
 
-        if (config('app.seed_points'))
-        {
-            foreach ($serviceTypes as $serviceType) {
-                $points = collect();
+        foreach ($serviceTypes as $serviceType) {
+            $points = collect();
 
-                foreach ($serviceType->pointTypes as $pointType) {
-                    $points->push(
-                        ...Point::factory(500)
+            foreach ($serviceType->pointTypes as $pointType) {
+                $points->push(
+                    ...Point::factory(100)
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
                         ->withType($serviceType, $pointType)
+                        ->create(),
+                    ...Point::factory(100)
+                        ->inCity($cities->random())
+                        ->withMaterials($materials->random(3))
+                        ->withType($serviceType, $pointType)
+                        ->unverified()
+                        ->createdByUser($users->random())
                         ->create()
-                    );
-                }
+                );
+            }
 
-                foreach ($serviceType->issueTypes as $issueType) {
-                    $point = $points->random();
-
-                    $issue = Issue::factory()
-                        ->create([
-                            'service_type_id' => $point->service_type_id,
-                            'point_id' => $point->id,
-                        ]);
-
-                    $issue->issueTypes()->attach($issueType->id, ['value' => ['test' => 'test']]);
-                }
+            foreach ($serviceType->problemTypes as $problemType) {
+                Problem::factory(['type_id' => $problemType->id])
+                    ->count(100)
+                    ->for($points->random())
+                    ->createdByUser($users->random())
+                    ->create();
             }
         }
-
-
-
-        Artisan::call('scout:rebuild');
     }
 }

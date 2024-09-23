@@ -1,9 +1,5 @@
 <template>
-    <Disclosure
-        as="header"
-        class="relative z-20 bg-white border-b border-gray-200 shadow lg:bg-gray-50"
-        v-slot="{ open }"
-    >
+    <Disclosure as="header" class="relative bg-white border-b border-gray-200 shadow lg:bg-gray-50" v-slot="{ open }">
         <div class="flex justify-between px-4 py-3 md:px-6 md:gap-6">
             <Link :href="route('front.map.index')">
                 <Icon icon="logo" class="w-32 h-11 shrink-0" />
@@ -81,7 +77,7 @@
         </div>
 
         <DisclosurePanel
-            class="absolute inset-x-0 bg-white border-b border-gray-200 shadow lg:hidden top-full"
+            class="absolute inset-x-0 z-20 bg-white border-b border-gray-200 shadow lg:hidden top-full"
             v-slot="{ close }"
         >
             <div class="px-2 pt-2 pb-3 sm:px-3" v-click-away="close">
@@ -160,7 +156,7 @@
         QuestionMarkCircleIcon,
         UserIcon,
         MapPinIcon,
-        ArrowLongLeftIcon,
+        MapIcon,
     } from '@heroicons/vue/20/solid';
 
     import Icon from '@/Components/Icon.vue';
@@ -185,9 +181,21 @@
         if (props.dashboard) {
             return [
                 {
-                    icon: ArrowLongLeftIcon,
+                    icon: MapIcon,
                     label: trans('top_menu.back'),
                     href: route('front.map.index'),
+                },
+                {
+                    icon: BookOpenIcon,
+                    label: trans('top_menu.dictionary'),
+                    href: 'https://hartareciclarii.ro/ce-si-cum-reciclez/#/category/all',
+                    external: true,
+                },
+                {
+                    icon: QuestionMarkCircleIcon,
+                    label: trans('top_menu.faq'),
+                    href: 'https://hartareciclarii.ro/despre-proiect/intrebari-frecvente/',
+                    external: true,
                 },
             ];
         }

@@ -1,21 +1,25 @@
 <template>
     <div class="space-y-1">
-        <label
-            v-if="label"
-            :for="`field-${name}`"
-            class="mb-4 text-sm font-medium"
-            :class="[errors.length ? 'text-red-600' : 'text-gray-700']"
-        >
-            <span v-text="label" />
+        <div v-if="label || $slots.action" class="flex gap-2 mb-4 text-sm">
+            <label
+                v-if="label"
+                :for="`field-${name}`"
+                class="flex-1 font-medium"
+                :class="[errors.length ? 'text-red-600' : 'text-gray-700']"
+            >
+                <span v-text="label" />
 
-            <span
-                role="presentation"
-                :title="$t('field.required')"
-                class="font-bold text-red-500 ml-0.5"
-                v-if="required && !disabled"
-                v-text="'*'"
-            />
-        </label>
+                <span
+                    role="presentation"
+                    :title="$t('field.required')"
+                    class="font-bold text-red-500 ml-0.5"
+                    v-if="required && !disabled"
+                    v-text="'*'"
+                />
+            </label>
+
+            <slot name="action" />
+        </div>
 
         <p v-if="help && helpPosition === 'top'" class="text-sm text-gray-500" v-text="help" />
 

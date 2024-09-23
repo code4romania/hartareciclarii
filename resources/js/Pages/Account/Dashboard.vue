@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto mt-10">
+    <div class="container mx-auto mt-10 space-y-12">
         <div class="flex flex-col gap-6 lg:flex-row">
             <div
                 class="flex flex-col flex-1 gap-5 p-6 overflow-hidden bg-white rounded-lg drop-shadow sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
@@ -38,72 +38,42 @@
                 </div>
             </div>
 
-            <ContributionsCounter class="shrink-0" :contributions="contributions_count" />
+            <ContributionsCounter class="shrink-0" :contributions="contributions.meta.total" />
         </div>
 
-        <h3 class="mt-10 text-2xl font-bold text-gray-900">Contributions</h3>
-        <div class="mx-auto mt-8">
-            <div class="-mx-4 -my-2 overflow-x-auto bg-white sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                    <table class="min-w-full divide-y divide-gray-300">
-                        <thead>
-                            <tr>
-                                <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                                    v-text="$t('profile.table_heading.point_id')"
-                                />
-                                <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                                    v-text="$t('profile.table_heading.contribution_type')"
-                                />
-                                <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                                    v-text="$t('profile.table_heading.item_type')"
-                                />
-                                <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                                    v-text="$t('profile.table_heading.location')"
-                                />
-                                <th
-                                    scope="col"
-                                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                                    v-text="$t('profile.table_heading.date_hour')"
-                                />
-                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                                    <span class="sr-only">Edit</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr v-for="item in contributions" :key="contributions.id">
-                                <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0">
-                                    {{ item.id }}
-                                </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ item.type }}</td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    {{ item.point_type }}
-                                </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                    {{ item.location }}
-                                </td>
-                                <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ item.date }}</td>
-                                <td
-                                    class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-0"
-                                >
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">{{
-                                        $t('profile.table_content.view_on_map')
-                                    }}</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <Table :collection="contributions">
+            <template #title>
+                {{ $t('contributions.title') }}
+            </template>
+
+            <template #contribution_type="{ contribution_type, row }">
+                <div
+                    v-if="contribution_type === 'place'"
+                    class="font-medium text-gray-900"
+                    v-text="$t('contributions.type.place')"
+                />
+
+                <div v-if="contribution_type === 'problem'">
+                    <div class="font-medium text-gray-900" v-text="$t('contributions.type.problem')" />
+                    <div v-text="row.problem_type" />
                 </div>
-            </div>
-        </div>
+            </template>
+
+            <template #actions="{ row }">
+                <Link v-if="row?.url" :href="row.url" class="text-sm font-medium text-blue-600 hover:underline">
+                    {{ $t('contributions.view_on_map') }}
+                </Link>
+            </template>
+
+            <template #empty>
+                <div class="flex items-start gap-6">
+                    <Icon icon="thanks" class="w-28 h-28" />
+                    <div class="flex-1 prose prose-lg max-w-none">
+                        <p v-for="(line, index) in $t('contributions.empty.lines')" :key="index" v-text="line" />
+                    </div>
+                </div>
+            </template>
+        </Table>
     </div>
 </template>
 
@@ -111,14 +81,12 @@
     import { Link } from '@inertiajs/vue3';
 
     import ContributionsCounter from '@/Components/Dashboard/ContributionsCounter.vue';
+    import Table from '@/Components/Table/Table.vue';
+    import Icon from '@/Components/Icon.vue';
 
     const props = defineProps({
         contributions: {
-            type: Array,
-            required: true,
-        },
-        contributions_count: {
-            type: Number,
+            type: Object,
             required: true,
         },
     });

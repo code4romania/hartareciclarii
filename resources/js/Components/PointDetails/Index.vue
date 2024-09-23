@@ -10,7 +10,7 @@
 
         <Address :address="point.address" />
 
-        <Materials v-if="point.materials" :materials="point.materials" />
+        <Materials v-if="point.materials" :materials="point.materials" class="px-6 py-4 ring-1 ring-gray-200" />
 
         <Schedule v-if="point.schedule" :schedule="point.schedule" class="px-6 py-4" />
 
@@ -26,7 +26,7 @@
 
         <Footer :point="point" />
 
-        <ReportModal :point="point" />
+        <ReportPoint :point="point" />
     </article>
 </template>
 
@@ -39,7 +39,7 @@
     import Materials from '@/Components/PointDetails/Materials.vue';
     import Observations from '@/Components/PointDetails/Observations.vue';
     import Phone from '@/Components/PointDetails/Phone.vue';
-    import ReportModal from '@/Components/ReportModal.vue';
+    import ReportPoint from '@/Components/ReportPoint.vue';
     import Schedule from '@/Components/PointDetails/Schedule.vue';
     import Subheading from '@/Components/PointDetails/Subheading.vue';
     import Website from '@/Components/PointDetails/Website.vue';

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DataTransferObjects\Location;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use NominatimLaravel\Content\Nominatim as NominatimClient;
@@ -65,6 +66,22 @@ class Nominatim
             ->map(fn (array $result) => new Location($result));
     }
 
+    public function locate(string $city, string $county): ?Location
+    {
+        $request = $this->nominatim->newSearch()
+            ->language(app()->getLocale())
+            ->addressDetails()
+            ->countryCode('ro')
+            ->format('jsonv2')
+            ->county($county)
+            ->city($city);
+
+        return collect(rescue(fn () => $this->nominatim->find($request)))
+            ->take(1)
+            ->map(fn (array $result) => new Location($result))
+            ->first();
+    }
+
     public function reverse(float $latitude, float $longitude): Location
     {
         $request = $this->nominatim->newReverse()
@@ -74,14 +91,17 @@ class Nominatim
             ->zoom(18)
             ->latlon($latitude, $longitude);
 
-        $result = $this->nominatim->find($request);
+        $result = rescue(
+            fn () => $this->nominatim->find($request),
+            fn () => abort(Response::HTTP_SERVICE_UNAVAILABLE)
+        );
 
-        abort_if(data_get($result, 'error'), 404);
+        abort_if(data_get($result, 'error'), Response::HTTP_NOT_FOUND);
 
         return new Location($result);
     }
 
-    public function maxBounds(): array
+    public function maxBounds(): ?array
     {
         return Cache::remember('max-map-bounds', now()->addDay(), function () {
             $request = $this->nominatim->newSearch()

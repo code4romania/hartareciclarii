@@ -9,11 +9,24 @@
     "top_menu.my_profile": "Profilul meu",
     "top_menu.back": "Înapoi la hartă",
 
+    "action.back": "Înapoi",
+    "action.cancel": "Renunță",
+    "action.close": "Închide",
+    "action.clear": "Șterge",
+    "action.finish_steps": "Adaugă punct",
+    "action.goto": "Mergi la locație",
+    "action.next_step": "Următorul pas",
+    "action.report": "Raportează o problemă",
+    "action.reset": "Resetează",
+    "action.save": "Salvează",
+    "action.share": "Distribuie",
+    "action.submit": "Trimite",
+
     "sidebar.search_point_label": "Caută un punct",
     "sidebar.search_material_label": "Caută material",
     "sidebar.search_point_placeholder": "Exemplu căutare",
     "sidebar.service_type_label": "Tip serviciu",
-    "sidebar.material_type_label": "Material colectat selectiv",
+    "sidebar.materials": "Material colectat",
     "sidebar.collection_point_type_label": "Tip punct de colectare",
     "sidebar.clear_filters_label": "Șterge filtre",
     "sidebar.search": "Caută",
@@ -23,6 +36,9 @@
     "sidebar.results": "{0} 0 rezultate|{1} 1 rezultat|[2,19] :count rezultate|[20,*] de rezultate",
     "sidebar.no_results_found": "Nu am găsit niciun rezultat pentru \":query\". în zona de căutare. Folosiți un alt termen de căutare sau extindeți zona prin zoom out pe hartă.",
     "sidebar.see_all_points": "Vezi toate punctele",
+
+    "pagination.next": "Înainte",
+    "pagination.previous": "Înapoi",
 
     "point_types.street_container": "Container stradal",
     "point_types.shop": "Magazin",
@@ -55,14 +71,25 @@
     "profile.welcome_back": "Bine ai revenit, ",
     "profile.register_from": "Membru din ",
     "profile.settings": "Setări cont",
-    "profile.table_heading.date_hour": "Data / ora",
-    "profile.table_heading.contribution_type": "Contribuție",
-    "profile.table_heading.item_type": "Tip",
-    "profile.table_heading.location": "Locație",
-    "profile.table_heading.point_id": "ID punct",
-    "profile.table_heading.actions": "Acțiuni",
-    "profile.table_content.view_on_map": "Vezi pe hartă",
-    "profile.table_content.pending": "În așteptare",
+
+    "contributions.title": "Contribuții pe hartă",
+    "contributions.column.id": "ID",
+    "contributions.column.point_type": "Tip punct",
+    "contributions.column.address": "Locație",
+    "contributions.column.contribution_type": "Tip contribuție",
+    "contributions.column.created_at": "Data și ora",
+
+    "contributions.type.problem": "Raportare problemă",
+    "contributions.type.place": "Adăugare punct nou",
+
+    "contributions.empty.lines": [
+        "Bine ai venit! Momentan, nu ai contribuții pe Harta Reciclării atribuite acestui cont.",
+        "Contribuie la efortul de a menține informațiile actualizate, adăugând puncte care lipsesc de pe hartă, sau raportează dacă ai întâmpinat o problemă la unul din punctele existente.",
+        "Asigură-te că ești autentificat de fiecare dată când realizezi o contribuție pe Harta Reciclării."
+    ],
+
+    "contributions.view_on_map": "Vezi pe hartă",
+
     "location": {
         "notice": "Serviciile de localizare nu sunt pornite pe acest dispozitiv. Pentru o localizare mai corectă, porniți serviciul localizare din setări.",
         "settings": "SETĂRI"
@@ -76,6 +103,9 @@
     "field.last_name": "Nume",
     "field.phone": "Telefon",
     "field.remember": "Ține-mă minte",
+    "field.material.collected": "Materiale colectate",
+    "field.material.search_placeholder": "Caută un material",
+    "field.material.search_empty": "Nu am găsit niciun material acest termen de căutare.",
 
     "auth.login": "Autentifică-te",
     "auth.recover": "Am uitat parola",
@@ -98,13 +128,6 @@
     "add_point.yes": "Da",
     "add_point.no": "Nu",
     "add_point.unknown": "Nu știu",
-
-    "add_point.action.back": "Înapoi",
-    "add_point.action.cancel": "Renunță",
-    "add_point.action.finish_steps": "Adaugă punct",
-    "add_point.action.next_step": "Următorul pas",
-    "add_point.action.reset": "Resetează",
-    "add_point.action.save": "Salvează",
 
     "add_point.placeholder.select": "Selectează",
 
@@ -130,6 +153,8 @@
     "add_point.details.subtitle": "Pasul 2: Detalii punct",
     "add_point.details.point_type": "Tip punct",
     "add_point.details.point_type_placeholder": "Selectează un tip de punct",
+    "add_point.details.business_name": "Nume business",
+    "add_point.details.business_name_placeholder": "Numele afacerii sau al punctului de lucru",
     "add_point.details.administered_by": "Administrat de",
     "add_point.details.administered_by_placeholder": "Instituția care administrează punctul",
     "add_point.details.schedule": "Orar",
@@ -140,7 +165,7 @@
     "add_point.details.email_placeholder": "Adresa de email a administratorului",
     "add_point.details.phone": "Telefon",
     "add_point.details.phone_placeholder": "Numărul de telefon al administratorului",
-
+    "add_point.details.free_of_charge": "Servicii gratuite",
     "add_point.details.collected_materials": "Materiale colectate",
     "add_point.details.closed": "Închis",
     "add_point.details.days": "Zile",
@@ -160,7 +185,6 @@
     "add_point.materials.label": "Marchează care dintre următoarele materiale se colectează la acest punct",
 
     "add_point.review.subtitle": "Pasul 4: Confirmă informațiile",
-    "add_point.review.service_administered": ":service administrat de :administrator",
 
     "add_point.review.address": "Adresa",
     "add_point.review.program": "Program",
@@ -178,11 +202,8 @@
     "add_point.thanks.view_contributions": "Vezi toate contribuțiile tale în",
     "add_point.thanks.profile": "profilul de utilizator",
     "add_point.thanks.create_account": "Creează-ți cont",
-    "add_point.thanks.close": "Închide",
 
-    "point.action.goto": "Mergi la locație",
-    "point.action.report": "Raportează o problemă",
-    "point.action.share": "Distribuie",
+    "point.service_administered": ":service administrat de :administrator",
 
     "point.offers_transport.false": "Nu oferă transport",
     "point.offers_transport.true": "Oferă transport",
@@ -196,124 +217,36 @@
     "report.title": "Raportează o problemă",
     "report.footer": "Informații incomplete? Poți raporta o problemă cu informațiile lipsă, pentru a ne ajuta să menținem platforma actualizată.",
 
-    "report_problem": {
-        "title": "Raportează o problemă",
-        "cancel": "Renunță",
-        "back": "Înapoi",
-        "next_step": "Următorul",
-        "finish_step": "Trimite sugestia",
-        "first_step": {
-            "subtitle": "Ce tip de problemă ai identificat?",
-            "issue_type_required": "Tipul de problemǎ este obligatoriu!"
-        },
-        "address_step": {
-            "title": "Adresa nu este corectă",
-            "subtitle": "Sugereaza o noua adresa sau locatie mai jos, prin modificarea adresei existente și/sau ajustarea punctului pe hartă.",
-            "exact_address_label": "Adresa exacta",
-            "exact_address_placeholder": "Introdu adresa exacta a punctului",
-            "adjust_point_on_map": "Ajusteaza punctul pe harta",
-            "place_pin": "Plaseaza pinul",
-            "address_required": "Adresa este obligatorie!",
-            "point_required": "Pinul pe harta este ogligatoriu!!",
-            "address_not_found": "Nu s-a putut gasi adresa!",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă."
-            }
-        },
-        "schedule_step": {
-            "title": "Programul nu este corect",
-            "subtitle": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
-            "description_not_found": "Vǎ rugam completați descrierea problemei!",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă."
-            }
-        },
-        "container_step": {
-            "title": "Containerul nu funcționează",
-            "subtitle": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
-            "description_not_found": "Vǎ rugam completați descrierea problemei!",
-            "add_photos_title": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
-            "add_photos_label": "Adaugă poze",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.",
-                "sub_title_under_image": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată.",
-                "website": "Website",
-                "phone": "Telefon"
-            }
-        },
-        "other_problem_step": {
-            "title": "Altă problemă",
-            "subtitle": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
-            "description_not_found": "Vǎ rugam completați descrierea problemei!",
-            "add_photos_title": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
-            "add_photos_label": "Adaugă poze",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.",
-                "sub_title_under_image": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată.",
-                "website": "Website",
-                "phone": "Telefon"
-            }
-        },
-        "takeover_step": {
-            "title": "S-a refuzat preluarea",
-            "subtitle": "Care a fost motivul refuzului?",
-            "caption": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
-            "description_not_found": "Vǎ rugam completați descrierea problemei!",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă.",
-                "sub_title_under_image": "Între timp, puteți citi mai multe despre ceea ce puteți face atunci când vi se refuză un deșeu să fie preluat, sau cum puteți evita astfel de situații",
-                "guide_label": "Ghid Reciclare"
-            }
-        },
-        "materials_options_step": {
-            "title": "Materialele nu sunt corecte",
-            "subtitle": "Care este problema sesizată legată de materiale?",
-            "options_not_found": "Trebuie selectatǎ cel puțin o opțiune!",
-            "success": {
-                "title": "Vă mulțumim pentru sesizare!",
-                "sub_title": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp punctul pe hartă."
-            }
-        },
-        "materials_not_collected_step": {
-            "title": "Nu se colectează unele materiale",
-            "subtitle": "Care dintre următoarele materiale ați identificat că <b class='underline'>NU</b> se colectează în realitate?",
-            "materials_not_found": "Trebuie selectat cel puțin un material!"
-        },
-        "materials_missing_step": {
-            "title": "Lipsesc materiale din descriere",
-            "subtitle": "Care dintre următoarele materiale ați identificat că <b class='underline'>lipsesc</b> din descrierea locației?",
-            "materials_not_found": "Trebuie selectat cel puțin un material!"
-        },
-        "materials_other_step": {
-            "title": "Altă problemă",
-            "subtitle": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
-            "add_photos_title": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei",
-            "add_photos_label": "Adaugă poze"
-        }
-    },
-    "enums.point.service_types.waste_collection": "Colectare deșeuri",
-    "enums.point.service_types.repairs": "Reparatii",
-    "enums.point.service_types.reuse": "Reutilizare",
-    "enums.point.service_types.reduction": "Reductie",
-    "enums.point.service_types.donations": "Donatii",
-    "enums.point.service_types.other": "Altele",
-    "street_container": "Container stradal",
-    "shop": "Magazin",
-    "waste_recovery": "Recuperare deșeuri",
-    "volunteer_center": "Centru de voluntariat",
-    "tailoring": "Croitorie",
-    "shoe_repairs": "Reparatii incaltaminte",
-    "watchmaking": "Ceasornicarie",
-    "jewelry_repairs": "Reparatii bijuterii",
-    "electronic_repairs": "Reparatii electronice",
-    "household_appliances_repairs": "Reparatii electrocasnice",
-    "it_repairs": "Reparatii IT",
-    "phone_repairs": "Reparatii telefoane",
-    "furniture_repairs": "Reparatii mobilier",
-    "bicycle_repairs": "Reparatii biciclete"
+    "report.type": "Ce tip de problemă ai identificat?",
+
+    "report.address.wrong_help": "Verifică dacă poziția exactă a punctului pe hartă este corectă. În caz contrar, indică poziția exactă a acestuia apăsând pe butonul “Modifică poziția pe hartă”.",
+
+    "report.address.exact_address": "Adresa exactă",
+
+    "report.materials.type": "Care este problema sesizată legată de materiale?",
+    "report.materials.add": "Marchează care dintre următoarele materiale se colectează:",
+    "report.materials.remove": "Mai jos sunt listate materialele pe care acest punct le colectează (la ultima actualizare). Marchează care dintre următoarele materiale ați identificat că NU se colectează în realitate:",
+    "report.materials.help_add": "(se colectează)",
+    "report.materials.help_remove": "(nu se colectează)",
+
+    "report.other.legend": "Altă problemă",
+
+    "report.other.images": "Adaugă poze",
+    "report.other.images_help": "Orice fel de poze sugestive sau utile pentru a susține descrierea problemei.",
+    "report.other.images_add": "Adaugă poze",
+
+    "report.rejected.reason": "Care a fost motivul refuzului?",
+    "report.narrative.help": "Vă rugăm să ne descrieți situația cu cât mai multe detalii, pentru a ne oferi posibilitatea de a corecta informația de pe hartă.",
+
+    "report.thanks.subtitle": "Mulțumim pentru contribuție!",
+    "report.thanks.intro": "Un coleg Harta Reciclării a primit problema raportată și va actualiza în cel mai scurt timp informația despre punctul raportat.",
+    "report.thanks.become_member": "Vrei să contribui mai constant la acest efort? Devino un membru activ al hărții reciclării, pentru un mediu mai verde.",
+    "report.thanks.view_contributions": "Vezi toate contribuțiile tale în",
+    "report.thanks.profile": "profilul de utilizator",
+    "report.thanks.create_account": "Creează-ți cont",
+    "report.thanks.guide": "Ghid Reciclare",
+
+    "report.count": "Există probleme raportate la acest punct (:problems). Echipa Harta Reciclării lucrează la actualizarea informațiilor pe hartă.",
+
+    "report.thanks.contact_administrator": "Între timp, vă sugerăm să contactați administratorul acestei locații, pentru a-l informa despre problemă. Astfel vă puteți asigura că problema va fi și rezolvată."
 }

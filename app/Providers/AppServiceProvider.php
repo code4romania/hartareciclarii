@@ -11,7 +11,10 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -23,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
             Model::preventLazyLoading($shouldBeEnabled);
             Model::preventAccessingMissingAttributes($shouldBeEnabled);
         });
+
+        $this->enforceMorphMap();
+
+        Number::useLocale(app()->getLocale());
 
         Filament::serving(function () {
             Filament::registerNavigationGroups([
@@ -63,5 +70,32 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         JsonResource::withoutWrapping();
+
+        // Remove next and previous links from pagination links
+        JsonResource::macro('paginationInformation', function (Request $request, $paginated, $default) {
+            array_shift($default['meta']['links']);
+            array_pop($default['meta']['links']);
+
+            return $default;
+        });
+    }
+
+    protected function enforceMorphMap(): void
+    {
+        Relation::enforceMorphMap([
+            'city' => \App\Models\City::class,
+            'county' => \App\Models\County::class,
+            'contribution' => \App\Models\Contribution::class,
+            'material' => \App\Models\Material::class,
+            'material_category' => \App\Models\MaterialCategory::class,
+            'media' => \App\Models\Media::class,
+            'place_group' => \App\Models\PointGroup::class,
+            'place_type' => \App\Models\PointType::class,
+            'place' => \App\Models\Point::class,
+            'problem' => \App\Models\Problem\Problem::class,
+            'service_type' => \App\Models\ServiceType::class,
+            'temporary_upload' => \App\Models\TemporaryUpload::class,
+            'user' => \App\Models\User::class,
+        ]);
     }
 }

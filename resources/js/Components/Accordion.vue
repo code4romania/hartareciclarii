@@ -1,5 +1,5 @@
 <template>
-    <div class="text-sm">
+    <component :is="as" class="text-sm">
         <button
             type="button"
             class="flex items-center justify-start w-full gap-2 px-2 py-3 text-left bg-gray-50"
@@ -17,10 +17,10 @@
             <ChevronDownIcon class="w-5 h-5 text-gray-500 shrink-0" :class="{ 'rotate-180': open }" />
         </button>
 
-        <div v-if="open">
+        <component :is="['ul', 'ol'].includes(as) ? 'li' : 'div'" v-if="open">
             <slot />
-        </div>
-    </div>
+        </component>
+    </component>
 </template>
 
 <script setup>
@@ -32,11 +32,13 @@
             type: Boolean,
             default: true,
         },
+        as: {
+            type: [Object, String],
+            default: 'div',
+        },
     });
 
     const open = ref(props.open);
 
     const toggle = () => (open.value = !open.value);
 </script>
-
-

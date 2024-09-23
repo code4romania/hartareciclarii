@@ -6,12 +6,14 @@ namespace App\Models;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
+use App\Models\Problem\Problem;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
@@ -52,6 +54,7 @@ class Point extends Model implements HasMedia
         'free_of_charge',
         'service_type_id',
         'point_type_id',
+        'verified_at',
         'import_id',
     ];
 
@@ -63,6 +66,7 @@ class Point extends Model implements HasMedia
         'offers_vouchers' => 'boolean',
         'offers_transport' => 'boolean',
         'free_of_charge' => 'boolean',
+        'verified_at' => 'datetime',
     ];
 
     public function registerMediaCollections(): void
@@ -80,6 +84,11 @@ class Point extends Model implements HasMedia
     public function materials(): MorphToMany
     {
         return $this->morphToMany(Material::class, 'model', 'model_has_materials');
+    }
+
+    public function problems(): HasMany
+    {
+        return $this->hasMany(Problem::class);
     }
 
     public function issues(): HasMany
@@ -117,6 +126,11 @@ class Point extends Model implements HasMedia
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function contribution(): MorphOne
+    {
+        return $this->morphOne(Contribution::class, 'model');
+    }
+
     public function import(): BelongsTo
     {
         return $this->belongsTo(Import::class);
@@ -136,11 +150,6 @@ class Point extends Model implements HasMedia
                 'coordinates' => "@{$this->location->latitude},{$this->location->longitude},18z",
             ])
         );
-    }
-
-    public function changeStatus(Status $status): void
-    {
-        $this->update(['status' => $status]);
     }
 
     public function changeGroup(int $groupId): void
@@ -278,5 +287,20 @@ class Point extends Model implements HasMedia
                 'query_by' => 'point_id, service_type, point_type, business_name, administered_by, address, materials, material_categories, city, county, email, phone, observations',
             ],
         ];
+    }
+
+    public function status(): Attribute
+    {
+        return Attribute::make(function () {
+            if (! $this->verified_at) {
+                return Status::UNVERIFIED;
+            }
+
+            if ($this->problems()->whereOpen()->exists()) {
+                return Status::WITH_PROBLEMS;
+            }
+
+            return Status::VERIFIED;
+        });
     }
 }

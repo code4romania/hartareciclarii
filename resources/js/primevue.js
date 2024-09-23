@@ -130,7 +130,7 @@ export default {
     },
     checkbox: {
         root: {
-            class: ['relative', 'inline-flex', 'align-bottom', 'w-5', 'h-5', 'select-none'],
+            class: ['inline-flex', 'align-bottom', 'w-5', 'h-5', 'shrink-0', 'select-none'],
         },
         box: ({ props, context }) => ({
             class: [
@@ -160,25 +160,7 @@ export default {
             ],
         }),
         input: ({ props, context }) => ({
-            class: [
-                'peer',
-                'w-full ',
-                'h-full',
-                'absolute',
-                'top-0 left-0',
-                'z-10',
-                'p-0',
-                'm-0',
-                'opacity-0',
-                'rounded',
-                'outline-none',
-                'border border-gray-300',
-                'appearance-none',
-                {
-                    'cursor-default': props.disabled,
-                    'cursor-pointer': !props.disabled,
-                },
-            ],
+            class: ['peer', 'hidden '],
         }),
         icon: ({ context, state }) => ({
             class: [

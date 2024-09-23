@@ -13,7 +13,7 @@ export default {
         },
         extend: {
             colors: {
-                primary: colors.sky,
+                primary: colors.green,
             },
         },
     },

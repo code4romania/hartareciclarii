@@ -36,7 +36,8 @@ class RebuildScoutCommand extends Command
      */
     public function handle(): int
     {
-        collect($this->models)
+        collect(config('scout.typesense.model-settings'))
+            ->keys()
             ->each(function (string $model): void {
                 $this->call('scout:flush', ['model' => $model]);
                 $this->call('scout:import', ['model' => $model]);

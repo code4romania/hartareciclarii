@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Http\Resources\IssueResource;
-use App\Http\Resources\MapPointResource;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -80,7 +78,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
                     Arr::query([
                         'name' => Str::initials($this->full_name),
                         'color' => 'FFFFFF',
-                        'background' => '075985',
+                        'background' => '166534',
                     ])
                 )
             )
@@ -108,56 +106,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         return auth()->user()->can('admin_login');
     }
 
-    public function getContributions()
-    {
-        $mapPoints = MapPointResource::collection(MapPoint::with('type', 'service', 'fields.field')->where('created_by', $this->id)->get());
-        $issues = IssueResource::collection(IssueOld::with('type', 'map_point', 'map_point.fields.field')->where('reporter_id', $this->id)->get());
-
-        $contributions = [];
-        if (! empty($mapPoints)) {
-            foreach ($mapPoints->collection->toArray() as $mapPoint) {
-                $contributions[] =
-                [
-                    'date' => $mapPoint['created_at'],
-                    'type' => __('common.contribution_types.point'),
-                    'item_type' => $mapPoint['service']['display_name'] . ' (' . $mapPoint['type']['display_name'] . ')',
-                    'location' => self::getAddress($mapPoint['fields']),
-                    'status' => $mapPoint['status'],
-                    'point_id' => $mapPoint['id'],
-                ];
-            }
-        }
-
-        if (! empty($issues)) {
-            foreach ($issues->collection->toArray() as $issue) {
-                $contributions[] =
-                    [
-                        'date' => $issue['created_at'],
-                        'type' => __('common.contribution_types.issue'),
-                        'item_type' => $issue['type']['title'],
-                        'location' => self::getAddress($issue['map_point']['fields']),
-                        'status' => $issue['status'],
-                        'point_id' => $issue['point_id'],
-                    ];
-            }
-        }
-
-        return $contributions;
-    }
-
-    private static function getAddress($fields)
-    {
-        if (! empty($fields)) {
-            foreach ($fields as $field) {
-                if ($field['field']['field_name'] == 'address') {
-                    return $field['value'];
-                }
-            }
-        }
-
-        return null;
-    }
-
     public function issues(): HasMany
     {
         return $this->hasMany(Issue::class);
@@ -166,6 +114,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
     public function points(): HasMany
     {
         return $this->hasMany(Point::class, 'created_by');
+    }
+
+    public function contributions(): HasMany
+    {
+        return $this->hasMany(Contribution::class);
     }
 
     public function userGroup(): BelongsTo

@@ -1,5 +1,5 @@
 <template>
-    <form class="relative z-20" @submit.prevent="search" v-click-away="close">
+    <form @submit.prevent="search" v-click-away="close">
         <div class="relative z-20">
             <MagnifyingGlassIcon
                 class="absolute inset-y-2.5 w-6 h-6 pointer-events-none left-4"
@@ -198,11 +198,6 @@
         loading.value = false;
         suggesting.value = false;
         input.value.blur();
-    };
-
-    const fitBounds = (result) => {
-        console.log(result);
-        emit('fitBounds', result.bounds);
     };
 
     const closeSearch = () => {

@@ -12,13 +12,13 @@
                 <ArrowTurnUpRightIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.goto')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.goto')" />
         </a>
 
         <Link
             :href="route('front.map.report', { point, coordinates })"
             class="gap-2 text-center group focus:outline-none"
-            :only="['report']"
+            :only="['report', 'problem_types']"
         >
             <div
                 class="inline-flex items-center justify-center w-12 h-12 p-3 bg-gray-100 rounded-full text-blue-950 group-hover:bg-blue-800 group-hover:text-white group-focus:bg-blue-800 group-focus:text-white group-focus:ring-2 group-focus:ring-blue-800 ring-offset-2"
@@ -26,7 +26,7 @@
                 <FlagIcon class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.report')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.report')" />
         </Link>
 
         <button type="button" class="gap-2 text-center group focus:outline-none" @click="shareOrCopy">
@@ -37,7 +37,7 @@
                 <LinkIcon v-else class="w-full h-full" />
             </div>
 
-            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('point.action.share')" />
+            <div class="mt-2 text-xs font-medium text-sky-900" v-text="$t('action.share')" />
         </button>
     </div>
 </template>

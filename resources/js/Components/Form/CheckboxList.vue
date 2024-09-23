@@ -1,5 +1,5 @@
 <template>
-    <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled">
+    <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
         <div class="grid gap-2">
             <Checkbox
                 v-for="(option, index) in options"
@@ -8,7 +8,6 @@
                 v-model="modelValue"
                 :value="option.value"
                 :label="option.label"
-                :required="required"
                 :disabled="disabled"
             />
         </div>
@@ -16,8 +15,7 @@
 </template>
 
 <script setup>
-    import { computed, ref } from 'vue';
-    import { CheckIcon } from '@heroicons/vue/16/solid';
+    import { computed } from 'vue';
     import Checkbox from '@/Components/Form/Checkbox.vue';
     import FormField from '@/Components/Form/Field.vue';
 
@@ -57,6 +55,10 @@
         modelValue: {
             type: Array,
             default: [],
+        },
+        errors: {
+            type: Array,
+            default: () => [],
         },
     });
 

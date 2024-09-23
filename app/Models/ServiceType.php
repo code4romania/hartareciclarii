@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Problem\ProblemType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ServiceType extends Model
@@ -31,11 +33,6 @@ class ServiceType extends Model
         'can_collect_materials' => 'boolean',
     ];
 
-    public function issueTypes(): HasMany
-    {
-        return $this->hasMany(IssueType::class, 'service_type_id');
-    }
-
     public function pointTypes(): HasMany
     {
         return $this->hasMany(PointType::class, 'service_type_id');
@@ -46,8 +43,8 @@ class ServiceType extends Model
         return $this->hasMany(Point::class, 'service_type_id');
     }
 
-    public function issues(): HasMany
+    public function problemTypes(): BelongsToMany
     {
-        return $this->hasMany(Issue::class, 'service_type_id');
+        return $this->belongsToMany(ProblemType::class);
     }
 }

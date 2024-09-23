@@ -12,28 +12,15 @@
             required
         />
 
-        <FormField name="address" :label="$t('add_point.type.exact_address')" :errors="[form.errors.address]" required>
-            <template #default="{ invalid }">
-                <AutoComplete
-                    v-model="address"
-                    class="w-full"
-                    :placeholder="$t('add_point.type.exact_address_placeholder')"
-                    :suggestions="suggestions"
-                    @complete="complete"
-                    :invalid="invalid"
-                    optionLabel="name"
-                    fluid
-                >
-                    <template #option="slotProps">
-                        <div class="flex w-full gap-2 text-sm text-left">
-                            <MapPinIcon class="w-5 h-5 fill-gray-400" />
-
-                            <span class="flex-1 truncate" v-text="slotProps.option.name" />
-                        </div>
-                    </template>
-                </AutoComplete>
-            </template>
-        </FormField>
+        <AddressLookup
+            name="address"
+            :label="$t('add_point.type.exact_address')"
+            :errors="[form.errors.address]"
+            v-model="form.address"
+            @update:point="updatePoint"
+            @update:city="updateCity"
+            required
+        />
 
         <UseGeolocation class="flex justify-end" @located="located" />
 
@@ -50,25 +37,13 @@
 </template>
 
 <script setup>
-    import axios from 'axios';
-    import { computed, ref, watch, nextTick } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
-    import { useDebounceFn } from '@vueuse/core';
-    import { LMap, LControl, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
-    import AutoComplete from 'primevue/autocomplete';
-    import route from '@/Helpers/useRoute.js';
     import { reverse } from '@/Helpers/useReverse.js';
 
     import Button from '@/Components/Button.vue';
-    import Modal from '@/Components/Modal.vue';
-    import FormField from '@/Components/Form/Field.vue';
+    import AddressLookup from '@/Components/Form/AddressLookup.vue';
     import MapPreview from '@/Components/Form/MapPreview.vue';
     import Select from '@/Components/Form/Select.vue';
     import UseGeolocation from '@/Components/UseGeolocation.vue';
-
-    import { MapPinIcon } from '@heroicons/vue/16/solid';
-
-    const page = usePage();
 
     const props = defineProps({
         form: {
@@ -83,54 +58,28 @@
 
     const emit = defineEmits(['changePinLocation']);
 
-    const address = computed({
-        get: () => props.form.address,
-        set: (address) => {
-            if (typeof address === 'string') {
-                props.form.address = address;
-
-                return;
-            }
-
-            props.form.address = address.name;
-            props.form.city = address.city;
-            props.form.county = address.county;
-
-            updatePoint(address.center[0], address.center[1]);
-        },
-    });
-
     const located = async ({ lat, lng }) => {
-        updatePoint(lat, lng);
+        updatePoint({ lat, lng });
 
-        props.form.address = await reverse({ lat, lng });
+        const response = await reverse({ lat, lng });
+
+        props.form.address = response.name;
+        props.form.city = response.city;
+        props.form.county = response.county;
     };
 
-    const updatePoint = (lat, lng) => {
+    const updateCity = ({ city, county }) => {
+        props.form.defaults({ city, county });
+
+        props.form.reset('city', 'county');
+    };
+
+    const updatePoint = ({ lat, lng }) => {
         props.form.location.lat = lat;
         props.form.location.lng = lng;
     };
 
-    const suggestions = ref([]);
-
-    const complete = useDebounceFn(() => {
-        axios
-            .get(
-                route('front.map.suggest', {
-                    query: address.value,
-                    type: 'location',
-                })
-            )
-            .then((response) => {
-                if (Array.isArray(response.data)) {
-                    suggestions.value = response.data;
-                }
-            });
-    }, 500);
-
     const ready = (leafletObject) => {
-        const center = leafletObject.getCenter();
-
-        updatePoint(center.lat, center.lng);
+        updatePoint(leafletObject.getCenter());
     };
 </script>

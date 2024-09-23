@@ -1,62 +1,30 @@
 <template>
-    <div class="flex h-full">
-        <TransitionRoot as="template" :show="sidebarOpen">
-            <Dialog as="div" class="relative lg:hidden" @close="sidebarOpen = false">
-                <TransitionChild
-                    as="template"
-                    enter="transition-opacity ease-linear duration-300"
-                    enter-from="opacity-0"
-                    enter-to="opacity-100"
-                    leave="transition-opacity ease-linear duration-300"
-                    leave-from="opacity-100"
-                    leave-to="opacity-0"
-                >
-                    <div class="fixed inset-0 bg-gray-900/80" />
-                </TransitionChild>
-
-                <div class="fixed inset-0 flex">
-                    <TransitionChild
-                        as="template"
-                        enter="transition ease-in-out duration-300 transform"
-                        enter-from="-translate-x-full"
-                        enter-to="translate-x-0"
-                        leave="transition ease-in-out duration-300 transform"
-                        leave-from="translate-x-0"
-                        leave-to="-translate-x-full"
-                    >
-                        <DialogPanel class="relative flex flex-1 w-full max-w-xs mr-16">
-                            <TransitionChild
-                                as="template"
-                                enter="ease-in-out duration-300"
-                                enter-from="opacity-0"
-                                enter-to="opacity-100"
-                                leave="ease-in-out duration-300"
-                                leave-from="opacity-100"
-                                leave-to="opacity-0"
-                            >
-                                <div class="absolute top-0 flex justify-center w-16 pt-5 left-full">
-                                    <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
-                                        <span class="sr-only">Close sidebar</span>
-                                        <XMarkIcon class="w-6 h-6 text-white" aria-hidden="true" />
-                                    </button>
-                                </div>
-                            </TransitionChild>
-
-                            <Sidebar class="flex" @select-point="selectPoint" />
-                        </DialogPanel>
-                    </TransitionChild>
-                </div>
-            </Dialog>
-        </TransitionRoot>
-
+    <div class="relative flex flex-1 overflow-hidden">
         <!-- Static sidebar for desktop -->
-        <Sidebar class="hidden border-r border-gray-200 lg:flex" @select-point="selectPoint" />
+        <Sidebar class="hidden border-r border-gray-200 lg:flex w-80" @select-point="selectPoint" />
 
         <div class="relative flex-1">
             <div
-                class="absolute z-10 flex flex-col gap-4 overflow-hidden pointer-events-none inset-3 lg:left-6 lg:top-4 lg:right-auto sm:w-80 md:w-96"
+                class="absolute inset-0 z-10 flex flex-col gap-4 overflow-hidden pointer-events-none lg:inset-3 lg:left-6 lg:top-4 lg:right-auto lg:w-96"
             >
-                <Search class="z-20 pointer-events-auto" :map="map" @locate="locate" />
+                <div
+                    class="relative flex gap-4 px-4 py-3 bg-white shadow pointer-events-auto lg:bg-transparent lg:p-0 lg:shadow-none"
+                >
+                    <Search class="relative flex-1" :map="map" @locate="locate" />
+
+                    <button
+                        type="button"
+                        @click="sidebarOpen = !sidebarOpen"
+                        v-text="$t('sidebar.filters')"
+                        class="font-medium uppercase appearance-none text-primary-800 lg:hidden"
+                    />
+                </div>
+
+                <Sidebar
+                    v-if="sidebarOpen"
+                    class="flex flex-1 w-full -mt-4 pointer-events-auto lg:hidden"
+                    @select-point="selectPoint"
+                />
 
                 <slot :map="map" />
             </div>
@@ -119,7 +87,6 @@
 <script setup>
     import L from 'leaflet';
 
-    import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
     import { XMarkIcon } from '@heroicons/vue/24/outline';
 
     import { LMap, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
@@ -179,7 +146,6 @@
     );
 
     const locate = (value) => {
-        console.log(value);
         center.value = value.center;
         bounds.value = value.bounds;
     };

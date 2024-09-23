@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\MapController;
-use App\Http\Controllers\SubmitController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\ReportPointController;
+use App\Http\Controllers\SubmitPointController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
@@ -34,11 +36,19 @@ Route::group([
 Route::group([
     'prefix' => 'submit',
     'as' => 'submit.',
-    'controller' => SubmitController::class,
+    'middleware' => HandlePrecognitiveRequests::class,
 ], function () {
-    Route::post('/point', 'point')->name('point')->middleware(HandlePrecognitiveRequests::class);
-    Route::post('/image', 'image')->name('image');
-    Route::delete('/image/{media:uuid}', 'deleteImage')->name('deleteImage');
+    Route::post('/point', SubmitPointController::class)->name('point');
+    Route::post('/report/{point}', ReportPointController::class)->name('report');
+});
+
+Route::group([
+    'prefix' => 'media',
+    'as' => 'media.',
+    'controller' => MediaController::class,
+], function () {
+    Route::post('/', 'upload')->name('upload');
+    Route::delete('/{media:uuid}', 'delete')->name('delete');
 });
 
 Route::group([
@@ -49,7 +59,7 @@ Route::group([
     Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
     Route::get('/reverse/{coordinates?}', 'reverse')->name('reverse');
 
-    Route::get('/point/{point}/{coordinates?}/report', 'point')->name('report')->middleware('auth');
+    Route::get('/point/{point}/{coordinates?}/report', 'report')->name('report')->middleware('auth');
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
     Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');

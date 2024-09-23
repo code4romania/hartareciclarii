@@ -35,7 +35,7 @@ PL_08,ABS,Plastic & PET,Altele,,Poliierarhie cu locație primara in Plastic,Yes
 SB_01,Sticle,Sticlă ,,5,,Yes
 SB_02,Borcane,Sticlă ,,,,
 SB_03,Alte tipuri de sticlă,Sticlă ,,,,
-AM_07	,Parbrize / geamuri auto (sticlă) ,Auto-moto,Sticlă,,Poliierarhie cu locație primara in Auto Moto,Yes
+AM_07,Parbrize/ geamuri auto (sticlă) ,Auto-moto,Sticlă,,Poliierarhie cu locație primara in Auto Moto,Yes
 MA_01,Doze de aluminiu,Metal & aluminiu,,3,,Yes
 MA_02,Folie de aluminiu,Metal & aluminiu,,,,Yes
 MA_03,Capsule de cafea,Metal & aluminiu,,,,No
@@ -71,7 +71,7 @@ PER_04,Pesticide,Periculoase,,,,Yes
 PER_05,Erbicide,Periculoase,,,,Yes
 PER_06,Îngrășăminte,Periculoase,,,,Yes
 PER_07,Dispozitive medicale de uz personal,Periculoase,,,,No
-MA_04,Tuburi de aluminiu cu aerosoli,Metal si Aluminiu,Periculoase,,Poliierarhie cu locație primara in Metal & Aluminiu,No 
+MA_04,Tuburi de aluminiu cu aerosoli,Metal si Aluminiu,Periculoase,,Poliierarhie cu locație primara in Metal & Aluminiu,No
 ALT_01,ABS,Plastic,Altele,15,Poliierarhie cu locație primara in Plastic,Yes
 ALT_02,Filtre de apă,Altele,,,,Yes
 ALT_03,Fibră optică,Altele,,,,Yes

@@ -11,7 +11,7 @@
 
             <p v-else>
                 {{ $t('add_point.thanks.view_contributions') }}
-                <Link href="{{ route('dashboard') }}" class="inline-block underline">
+                <Link :href="route('front.account.dashboard')" class="inline-block underline">
                     {{ $t('add_point.thanks.profile') }}
                 </Link>
             </p>
@@ -26,21 +26,20 @@
                 primary
             />
 
-            <Button :label="$t('add_point.thanks.close')" @click="close" class="w-full" />
+            <Button :label="$t('action.close')" @click="close" class="w-full" />
         </div>
     </div>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
-    import { MapPinIcon } from '@heroicons/vue/20/solid';
+    import { Link } from '@inertiajs/vue3';
     import Icon from '@/Components/Icon.vue';
     import Button from '@/Components/Button.vue';
 
     const props = defineProps({
-        close: Function,
+        close: {
+            type: Function,
+            required: true,
+        },
     });
-
-    const page = usePage();
 </script>

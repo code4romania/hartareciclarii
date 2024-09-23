@@ -17,36 +17,44 @@ class PointDetailsResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $issues = $this->status->is(Status::WITH_PROBLEMS)
-         /*
-          * @todo: Implement the following method:
-          *
-          * $this->issues()
-          * ->pending()
-          * ->get()
-          */
-            ? collect()
+        $problems = $this->status->is(Status::WITH_PROBLEMS)
+            ? $this->problems()
+                ->with('type')
+                ->whereOpen()
+                ->get(['id', 'type_id'])
             : collect();
+
+        $materials = $this->materials()
+            ->with('categories.media')
+            ->get(['id', 'name', 'url']);
 
         return [
             'id' => $this->id,
             'name' => $this->pointType->name,
             'status' => [
                 'color' => $this->status->getColor(),
-                'label' => $this->status->getLabel(),
+                'label' => $this->status->is(Status::WITH_PROBLEMS)
+                    ? trans_choice('enums.point_status.problems_count', $problems->count())
+                    : $this->status->getLabel(),
                 'icon' => $this->status->getIcon(),
-                'issues_count' => $issues->count(),
-                'issues' => $issues,
+                'problems' => $problems
+                    ->pluck('type.name')
+                    ->unique()
+                    ->values(),
             ],
             'latlng' => [$this->location->latitude, $this->location->longitude],
-            'subheading' => $this->pointType->name . ' administrat de ' . $this->administered_by,
+            'subheading' => __('point.service_administered', [
+                'service' => $this->serviceType->name,
+                'administrator' => $this->administered_by,
+            ]),
             'address' => $this->address,
             'phone' => $this->phone,
             'email' => $this->email,
             'website' => $this->website,
             'observations' => $this->observations,
             'schedule' => $this->schedule,
-            'materials' => $this->getMaterialsByCategory(),
+            'materials' => $this->getMaterialsByCategory($materials),
+            'material_ids' => $materials->pluck('id'),
             'service' => $this->serviceType->slug,
             'info' => collect([
                 'offers_money' => $this->offers_money,
@@ -57,18 +65,12 @@ class PointDetailsResource extends JsonResource
         ];
     }
 
-    protected function getMaterialsByCategory(): Collection
+    protected function getMaterialsByCategory(Collection $materials): Collection
     {
-        $materials = $this->materials()
-            ->with('categories')
-            ->get(['id', 'name', 'url']);
-
-        $categories = $materials
+        return $materials
             ->pluck('categories')
             ->flatten()
-            ->unique('id');
-
-        return $categories
+            ->unique('id')
             ->map(fn (MaterialCategory $category) => [
                 'name' => $category->name,
                 'icon' => $category->getFirstMediaUrl() ?: null,
@@ -77,7 +79,7 @@ class PointDetailsResource extends JsonResource
                     ->map(fn (Material $material) => [
                         'id' => $material->id,
                         'name' => $material->name,
-                        'url' => filled($material->url) ? $material->url : null,
+                        'url' => $material->url,
                     ])
                     ->values(),
             ])

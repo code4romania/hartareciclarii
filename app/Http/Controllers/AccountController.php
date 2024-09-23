@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Resources\ContributionResource;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,18 +15,41 @@ class AccountController extends Controller
 {
     public function dashboard(): Response
     {
-        return Inertia::render('Account/Dashboard', [
-            'contributions_count' => rand(1, 1234),
+        $query = auth()->user()
+            ->contributions()
+            ->withPointData()
+            ->paginate();
 
-            'contributions' => [
-                [
-                    'id' => 1,
-                    'type' => 'Adaugare punct nou',
-                    'point_type' => 'Punct colectare selectivă deșeuri (Container stradal)',
-                    'location' => 'Strada Mihai Eminescu, nr. 1, București',
-                    'date' => '2021-09-01 12:00:00',
-                ],
-            ],
+        return Inertia::render('Account/Dashboard', [
+            'contributions' => ContributionResource::collection($query)
+                ->additional([
+                    'columns' => [
+                        [
+                            'key' => 'id',
+                            'label' => __('contributions.column.id'),
+                        ],
+                        [
+                            'key' => 'point_type',
+                            'label' => __('contributions.column.point_type'),
+                            'highlight' => true,
+                        ],
+                        [
+                            'key' => 'address',
+                            'label' => __('contributions.column.address'),
+                        ],
+                        [
+                            'key' => 'contribution_type',
+                            'label' => __('contributions.column.contribution_type'),
+                        ],
+                        [
+                            'key' => 'created_at',
+                            'label' => __('contributions.column.created_at'),
+                        ],
+                        [
+                            'key' => 'actions',
+                        ],
+                    ],
+                ]),
         ]);
     }
 

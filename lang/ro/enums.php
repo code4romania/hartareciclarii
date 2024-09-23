@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 return [
 
+    'problem_status' => [
+        'new' => 'Nerezolvată',
+        'pending' => 'În rezolvare',
+        'closed' => 'Rezolvată',
+    ],
+
     'issue_status' => [
         'new' => 'Nou',
         'solved' => 'Rezolvat',
         'pending' => 'In asteptare',
         'denied' => 'Respins',
     ],
+
     'point_status' => [
         'verified' => 'Verificat',
-        'needs_verification' => 'Necesita verificare',
-        'with_problems' => 'Cu probleme',
+        'unverified' => 'Necesita verificare',
+        'problems' => 'Probleme raportate',
+        'problems_count' => '{1} 1 problemă raportată|[2,19] :count probleme raportate|[20,*] :count de probleme raportate',
     ],
     'days' => [
         'monday' => 'Luni',

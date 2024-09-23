@@ -12,7 +12,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 transition-opacity bg-black/30" />
+                <div class="fixed inset-0 transition-opacity bg-black/50" />
             </TransitionChild>
 
             <div class="fixed inset-0">
@@ -27,7 +27,7 @@
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
                         <DialogPanel
-                            class="w-full h-screen sm:py-8 sm:max-w-lg"
+                            class="w-full h-screen sm:py-4 md:py-8 sm:max-w-lg"
                             :as="form ? 'form' : 'div'"
                             @submit.prevent="submit"
                         >
@@ -48,7 +48,7 @@
                                 <button
                                     v-if="dismissable"
                                     type="button"
-                                    class="absolute text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
+                                    class="absolute z-10 text-gray-400 rounded-md top-4 right-4 hover:text-gray-500 focus:outline-none focus:text-gray-900"
                                     @click="close"
                                 >
                                     <span class="sr-only">Close</span>
@@ -57,7 +57,10 @@
 
                                 <div
                                     class="relative flex-1 px-4 py-px overflow-y-auto sm:px-6"
-                                    :class="{ 'pb-5': !$slots.footer }"
+                                    :class="{
+                                        'pb-5': !$slots.footer,
+                                        'pb-1': $slots.footer,
+                                    }"
                                 >
                                     <slot :close="close" />
                                 </div>

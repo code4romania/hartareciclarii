@@ -12,10 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class MaterialsImport implements ToCollection, WithHeadingRow
 {
-    /**
-     * @param Collection $collection
-     */
-    public function collection(Collection $collection)
+    public function collection(Collection $collection): void
     {
         MaterialCategory::insert(
             $collection

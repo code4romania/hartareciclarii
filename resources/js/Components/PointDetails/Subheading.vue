@@ -2,10 +2,16 @@
     <div class="p-6 pt-2">
         <p v-if="subheading" class="mb-4 text-sm" v-text="subheading" />
 
-        <div class="inline-flex items-center gap-1">
+        <div
+            ref="badge"
+            class="inline-flex flex-wrap items-center gap-1 px-2 py-1 transition-colors duration-75"
+            :class="{
+                'cursor-default hover:bg-gray-100 rounded-full': tooltip,
+            }"
+        >
             <Icon
                 :icon="statusIcon"
-                class="w-4 h-4 shrink-0"
+                class="w-4 h-4 shrink-0 -ms-0.5"
                 :class="{
                     'text-green-500': status.color === 'success',
                     'text-yellow-500': status.color === 'warning',
@@ -22,14 +28,21 @@
                 }"
                 v-text="status.label"
             />
+
+            <div v-if="tooltip" class="absolute h-7">
+                <Tooltip :show="showTooltip" position="bottom" :text="tooltip" class="w-60" arrow />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
+    import { trans } from 'laravel-vue-i18n';
     import { ExclamationTriangleIcon, QuestionMarkCircleIcon, CheckCircleIcon } from '@heroicons/vue/16/solid';
     import Icon from '@/Components/Icon.vue';
+    import Tooltip from '@/Components/Tooltip.vue';
+    import { useElementHover } from '@vueuse/core';
 
     const props = defineProps({
         subheading: {
@@ -50,4 +63,19 @@
             'heroicon-m-exclamation-triangle': ExclamationTriangleIcon,
         }[props.status.icon];
     });
+
+    const tooltip = computed(() => {
+        if (!props.status.problems.length) {
+            return null;
+        }
+
+        return trans('report.count', { problems: props.status.problems.join(', ') });
+    });
+
+    const badge = ref(null);
+    const showTooltip = ref(false);
+
+    const hovered = useElementHover(badge);
+
+    watch(hovered, (hovered) => (showTooltip.value = hovered));
 </script>

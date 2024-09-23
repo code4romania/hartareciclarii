@@ -1,6 +1,6 @@
 <template>
-    <div class="px-6 py-4 ring-1 ring-gray-200">
-        <h2 class="font-medium">Materiale colectate</h2>
+    <div>
+        <h2 class="font-medium" v-text="$t('field.material.collected')" />
 
         <div class="mt-4 grid gap-0.5">
             <Accordion v-for="(category, index) in materials" :key="`category-${index}`">
@@ -42,5 +42,3 @@
         },
     });
 </script>
-
-

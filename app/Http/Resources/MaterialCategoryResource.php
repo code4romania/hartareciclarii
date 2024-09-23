@@ -12,11 +12,9 @@ class MaterialCategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'key' => "cat-{$this->id}",
-            'label' => $this->name,
-            'type' => 'category',
+            'id' => $this->id,
+            'name' => $this->name,
             'icon' => $this->getFirstMediaUrl() ?: null,
-            'children' => MaterialResource::collection($this->materials),
         ];
     }
 }

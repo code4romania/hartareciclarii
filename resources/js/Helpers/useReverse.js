@@ -8,9 +8,9 @@ export const reverse = async ({ lat, lng, zoom = 18 }) => {
     try {
         const response = await axios.get(route('front.map.reverse', { coordinates }));
 
-        return response.data.name;
+        return response.data;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return null;
     }
 };
