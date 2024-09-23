@@ -167,7 +167,11 @@ class ViewMapPoint extends ViewRecord
                                     $this->refreshFormData([
                                         'address', 'notes', 'location',
                                     ]);
-                                }),
+                                })->fillForm([
+                                    'location' => ['lat' => $this->record->location->latitude, 'lng' => $this->record->location->longitude],
+                                    'nominatim_autocomplete' => $this->record->address,
+                                    'notes' => $this->record->notes,
+                                ]),
                         ]
                     )->columnSpan(3),
 
@@ -176,6 +180,7 @@ class ViewMapPoint extends ViewRecord
                     ->state(fn ($record) => ['lat' => $record?->location->latitude, 'lng' => $record?->location->longitude])
                     ->draggable(false)
                     ->zoom(18)
+                    ->extraAttributes(['class' => 'h-full'])
                     ->columnSpan(9),
 
                 Section::make(__('map_points.sections.details'))

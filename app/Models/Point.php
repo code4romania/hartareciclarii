@@ -55,6 +55,7 @@ class Point extends Model implements HasMedia
         'service_type_id',
         'point_type_id',
         'verified_at',
+        'import_id',
     ];
 
     protected $casts = [
@@ -128,6 +129,11 @@ class Point extends Model implements HasMedia
     public function contribution(): MorphOne
     {
         return $this->morphOne(Contribution::class, 'model');
+    }
+
+    public function import(): BelongsTo
+    {
+        return $this->belongsTo(Import::class);
     }
 
     public function scopeWhereMatchesCoordinates(Builder $query, MapCoordinates $mapCoordinates): Builder

@@ -12,6 +12,7 @@ use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
@@ -69,12 +70,21 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory(['email' => 'admin@example.com'])
             ->create();
 
+        $admin->givePermissionTo($this->permissions);
+
         $users = User::factory()
             ->count(50)
             ->create();
 
-        $admin->givePermissionTo($this->permissions);
+        if (env('SEED_POINTS', true)) {
+            $this->seedPoints($users);
+        }
 
+        Artisan::call('scout:rebuild');
+    }
+
+    public function seedPoints(Collection $users): void
+    {
         $serviceTypes = ServiceType::query()
             ->with(['problemTypes', 'pointTypes'])
             ->get();
@@ -97,7 +107,6 @@ class DatabaseSeeder extends Seeder
                         ->withMaterials($materials->random(3))
                         ->withType($serviceType, $pointType)
                         ->create(),
-
                     ...Point::factory(100)
                         ->inCity($cities->random())
                         ->withMaterials($materials->random(3))
@@ -116,7 +125,5 @@ class DatabaseSeeder extends Seeder
                     ->create();
             }
         }
-
-        Artisan::call('scout:rebuild');
     }
 }

@@ -26,7 +26,7 @@ class PointDetailsResource extends JsonResource
 
         $materials = $this->materials()
             ->with('categories.media')
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'url']);
 
         return [
             'id' => $this->id,
@@ -79,6 +79,7 @@ class PointDetailsResource extends JsonResource
                     ->map(fn (Material $material) => [
                         'id' => $material->id,
                         'name' => $material->name,
+                        'url' => $material->url,
                     ])
                     ->values(),
             ])
