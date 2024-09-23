@@ -28,7 +28,7 @@
         "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-debugbar": "^3.14",
         "barryvdh/laravel-ide-helper": "^3.1",
         "friendsofphp/php-cs-fixer": "^3.63",
         "bennett-treptow/laravel-migration-generator": "^4.3",

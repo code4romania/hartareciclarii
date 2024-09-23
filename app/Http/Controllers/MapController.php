@@ -199,12 +199,6 @@ class MapController extends Controller
                 ),
             ],
 
-            // 'materials' => fn () => MaterialCategoryResource::collection(
-            //     MaterialCategory::query()
-            //         ->with('media', 'materials')
-            //         ->get()
-            // ),
-
             'statuses' => collect(Status::options())
                 ->reject(fn ($value, $key) => Status::WITH_PROBLEMS->is($key))
                 ->map(fn ($value, $key) => [
