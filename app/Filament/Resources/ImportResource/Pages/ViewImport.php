@@ -25,6 +25,7 @@ class ViewImport extends ViewRecord
             PointsRelationManager::class,
         ];
     }
+
     public function getHeading(): string
     {
         return __('import.view_heading', ['id' => $this->record->id]);
@@ -79,9 +80,9 @@ class ViewImport extends ViewRecord
                             TextEntry::make('error_rows')
                                 ->label(__('import.columns.failed'))
                                 ->hiddenLabel()
-                                ->formatStateUsing(fn()=>__('import.failed.no_failed_description'))
+                                ->formatStateUsing(fn () => __('import.failed.no_failed_description'))
                                 ->columnSpanFull()
-                                ->hidden($this->record->error_rows >0),
+                                ->hidden($this->record->error_rows > 0),
 
                         ]
                     )->columnSpan(1)

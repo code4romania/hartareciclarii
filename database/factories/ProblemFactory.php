@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Models\Point;
 use App\Models\Problem\Problem;
-use App\Models\Problem\ProblemType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

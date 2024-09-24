@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\IssuesResource\Pages;
+namespace App\Filament\Resources\ProblemResource\Pages;
 
-use App\Filament\Resources\IssuesResource;
+use App\Filament\Resources\ProblemResource;
 use App\Models\ServiceType;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListIssues extends ListRecords
+class ListProblem extends ListRecords
 {
-    protected static string $resource = IssuesResource::class;
+    protected static string $resource = ProblemResource::class;
 
     protected function getHeaderActions(): array
     {

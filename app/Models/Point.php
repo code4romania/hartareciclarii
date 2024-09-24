@@ -91,11 +91,6 @@ class Point extends Model implements HasMedia
         return $this->hasMany(Problem::class);
     }
 
-    public function issues(): HasMany
-    {
-        return $this->hasMany(Issue::class);
-    }
-
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);

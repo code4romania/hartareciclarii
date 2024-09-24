@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models\Problem;
 
-use App\Models\Point;
 use App\Models\ServiceType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

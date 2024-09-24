@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\IssueStatus;
-use App\Filament\Resources\IssuesResource\Pages;
-use App\Models\Issue;
+use App\Filament\Resources\ProblemResource\Pages;
+use App\Models\Problem\Problem;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
@@ -20,9 +20,9 @@ use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
-class IssuesResource extends Resource
+class ProblemResource extends Resource
 {
-    protected static ?string $model = Issue::class;
+    protected static ?string $model = Problem::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bell-alert';
 
@@ -136,21 +136,21 @@ class IssuesResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListIssues::route('/'),
-            'create' => Pages\CreateIssues::route('/create'),
-            'edit' => Pages\EditIssues::route('/{record}/edit'),
-            'view' => Pages\ViewIssue::route('/{record}'),
+            'index' => Pages\ListProblem::route('/'),
+            'create' => Pages\CreateProblem::route('/create'),
+            'edit' => Pages\EditProblem::route('/{record}/edit'),
+            'view' => Pages\ViewProblem::route('/{record}'),
         ];
     }
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) static::getModel()::whereStatus(0)->count();
+        return (string) static::getModel()::whereNull('closed_at')->count();
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return (string) static::getModel()::whereStatus(0)->count() > 1 ? 'danger' : 'primary';
+        return (string) static::getModel()::whereNull('closed_at')->count() > 1 ? 'danger' : 'primary';
     }
 
     public static function getLabel(): ?string

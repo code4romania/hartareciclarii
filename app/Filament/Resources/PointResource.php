@@ -191,7 +191,7 @@ class PointResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('materials')->withCount('issues');
+        return parent::getEloquentQuery()->with('materials')->withCount('problems');
     }
 
     public static function getNavigationBadge(): ?string
@@ -249,7 +249,7 @@ class PointResource extends Resource
                 ->badge()
                 ->color(fn (Status $state) => $state->getColor())
                 ->formatStateUsing(function (Status $state, $record) {
-                    if ($record->issues_count > 0) {
+                    if ($record->problems_count > 0) {
                         return Status::WITH_PROBLEMS->getLabel();
                     }
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\IssuesResource\Pages;
+namespace App\Filament\Resources\ProblemResource\Pages;
 
 // use Filament\Actions\Action;
 use App\Enums\IssueStatus;
-use App\Filament\Resources\IssuesResource;
 use App\Filament\Resources\PointResource;
+use App\Filament\Resources\ProblemResource;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
@@ -15,9 +15,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ViewIssue extends ViewRecord
+class ViewProblem extends ViewRecord
 {
-    protected static string $resource = IssuesResource::class;
+    protected static string $resource = ProblemResource::class;
 
     public function getTitle(): string|Htmlable
     {

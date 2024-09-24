@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\IssuesResource\Pages;
+namespace App\Filament\Resources\ProblemResource\Pages;
 
-use App\Filament\Resources\IssuesResource;
+use App\Filament\Resources\ProblemResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditIssues extends EditRecord
+class EditProblem extends EditRecord
 {
-    protected static string $resource = IssuesResource::class;
+    protected static string $resource = ProblemResource::class;
 
     protected function getHeaderActions(): array
     {
