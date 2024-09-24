@@ -30,12 +30,14 @@
     "sidebar.collection_point_type_label": "Tip punct de colectare",
     "sidebar.clear_filters_label": "Șterge filtre",
     "sidebar.search": "Caută",
-    "sidebar.filters": "Filtre",
-    "sidebar.filters_title": "FILTREAZĂ REZULTATELE",
-    "sidebar.filters_short_title": "Filtreazǎ",
     "sidebar.results": "{0} 0 rezultate|{1} 1 rezultat|[2,19] :count rezultate|[20,*] de rezultate",
     "sidebar.no_results_found": "Nu am găsit niciun rezultat pentru \":query\". în zona de căutare. Folosiți un alt termen de căutare sau extindeți zona prin zoom out pe hartă.",
     "sidebar.see_all_points": "Vezi toate punctele",
+
+    "filter.title": "Filtre",
+    "filter.service_type": "Tip serviciu",
+    "filter.status": "Status punct",
+    "filter.clear": "Șterge filtre",
 
     "pagination.next": "Înainte",
     "pagination.previous": "Înapoi",
@@ -106,6 +108,9 @@
     "field.material.collected": "Materiale colectate",
     "field.material.search_placeholder": "Caută un material",
     "field.material.search_empty": "Nu am găsit niciun material acest termen de căutare.",
+
+    "field.search": "Caută",
+    "field.search_placeholder": "Caută o adresă, un punct sau un material",
 
     "auth.login": "Autentifică-te",
     "auth.recover": "Am uitat parola",

@@ -13,8 +13,8 @@
                 type="search"
                 name="search"
                 ref="input"
-                class="block w-full rounded-full border-0 pl-12 pr-4 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6 shadow [&::-webkit-search-cancel-button]:hidden"
-                placeholder="Caută"
+                class="block w-full rounded-full border-0 px-12 py-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6 shadow [&::-webkit-search-cancel-button]:hidden"
+                :placeholder="$t('field.search')"
                 autocomplete="off"
                 v-model="query"
                 @keydown.esc.stop="clear"
@@ -43,9 +43,11 @@
                 v-if="suggesting"
                 class="absolute z-10 w-full pt-10 -mt-10 overflow-hidden text-sm bg-white border border-gray-300 shadow-lg rounded-2xl empty:hidden"
             >
-                <div v-if="!queryIsValid" class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52">
-                    Caută o adresă, un punct, sau un material
-                </div>
+                <div
+                    v-if="!queryIsValid"
+                    class="px-4 py-10 mx-auto text-center text-gray-400 max-w-52"
+                    v-text="$t('field.search_placeholder')"
+                />
 
                 <ArrowPathIcon v-else-if="loading" class="w-5 h-5 m-4 mx-auto text-gray-400 animate-spin" />
 

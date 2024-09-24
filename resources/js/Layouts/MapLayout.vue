@@ -15,7 +15,7 @@
                     <button
                         type="button"
                         @click="sidebarOpen = !sidebarOpen"
-                        v-text="$t('sidebar.filters')"
+                        v-text="$t('filter.title')"
                         class="font-medium uppercase appearance-none text-primary-800 lg:hidden"
                     />
                 </div>
@@ -87,15 +87,13 @@
 <script setup>
     import L from 'leaflet';
 
-    import { XMarkIcon } from '@heroicons/vue/24/outline';
-
     import { LMap, LControlScale, LControlZoom, LIcon, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
     import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
 
     import 'leaflet/dist/leaflet.css';
     import 'vue-leaflet-markercluster/dist/style.css';
 
-    import { ref, computed, watch, inject } from 'vue';
+    import { ref, computed, watch, provide, inject } from 'vue';
 
     import { refreshPoints, openPoint, fetchPoint, cancelMapVisits } from '@/Helpers/useMap.js';
     import useLocate from '@/Helpers/useLocate.js';
@@ -137,6 +135,8 @@
     const bounds = ref(null);
     const center = ref(null);
     const locationMarker = ref(null);
+
+    provide('map', map);
 
     const points = computed(() =>
         props.points.map((point) => ({
