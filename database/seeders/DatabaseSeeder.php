@@ -8,7 +8,6 @@ use App\Models\City;
 use App\Models\Material;
 use App\Models\Permission;
 use App\Models\Point;
-use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -96,38 +95,32 @@ class DatabaseSeeder extends Seeder
         $cities = City::query()
             ->with('county')
             ->inRandomOrder()
-            ->limit(100)
+            ->limit(10)
             ->get();
 
         $materials = Material::all();
 
         foreach ($serviceTypes as $serviceType) {
-            $points = collect();
+            Point::factory(100)
+                ->inRandomCity($cities)
+                ->withMaterials($materials)
+                ->withType($serviceType)
+                ->create();
 
-            foreach ($serviceType->pointTypes as $pointType) {
-                $points->push(
-                    ...Point::factory(100)
-                        ->inCity($cities->random())
-                        ->withMaterials($materials->random(3))
-                        ->withType($serviceType, $pointType)
-                        ->create(),
-                    ...Point::factory(100)
-                        ->inCity($cities->random())
-                        ->withMaterials($materials->random(3))
-                        ->withType($serviceType, $pointType)
-                        ->unverified()
-                        ->createdByUser($users->random())
-                        ->create()
-                );
-            }
+            Point::factory(100)
+                ->inRandomCity($cities)
+                ->withMaterials($materials)
+                ->withType($serviceType)
+                ->withProblems($serviceType->problemTypes, $users)
+                ->create();
 
-            foreach ($serviceType->problemTypes as $problemType) {
-                Problem::factory(['type_id' => $problemType->id])
-                    ->count(100)
-                    ->for($points->random())
-                    ->createdByUser($users->random())
-                    ->create();
-            }
+            Point::factory(100)
+                ->inRandomCity($cities)
+                ->withMaterials($materials)
+                ->withType($serviceType)
+                ->unverified()
+                ->createdByUser($users->random())
+                ->create();
         }
     }
 }

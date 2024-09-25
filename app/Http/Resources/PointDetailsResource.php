@@ -24,9 +24,11 @@ class PointDetailsResource extends JsonResource
                 ->get(['id', 'type_id'])
             : collect();
 
-        $materials = $this->materials()
-            ->with('categories.media')
-            ->get(['id', 'name', 'url']);
+        $materials = $this->serviceType->can_collect_materials
+            ? $this->materials()
+                ->with('categories.media')
+                ->get(['id', 'name', 'url'])
+            : collect();
 
         return [
             'id' => $this->id,

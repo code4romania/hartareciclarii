@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\Point\Source;
-use App\Models\City;
 use App\Models\Point;
 use App\Models\PointGroup;
-use App\Models\PointType;
+use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\User;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use MatanYadaev\EloquentSpatial\Objects\Point as SpatialPoint;
 
 /**
@@ -60,42 +60,48 @@ class PointFactory extends Factory
         ]);
     }
 
-    public function withType(ServiceType $serviceType, PointType $pointType): static
+    public function withType(ServiceType $serviceType): static
     {
         return $this->state(fn (array $attributes) => [
             'business_name' => $serviceType->can_have_business_name ? fake()->company() : null,
             'service_type_id' => $serviceType->id,
-            'point_type_id' => $pointType->id,
+            'point_type_id' => $serviceType->pointTypes->random()->id,
         ]);
     }
 
     public function withMaterials(Collection $materials): static
     {
         return $this->afterCreating(function (Point $point) use ($materials) {
-            $point->materials()->attach($materials);
+            if (! $point->serviceType->can_collect_materials) {
+                return;
+            }
+
+            $point->materials()->attach($materials->random(3));
         });
     }
 
-    public function inCity(City $city): static
+    public function inRandomCity(Collection $cities): static
     {
-        $location = Nominatim::make()->locate($city->name, $city->county->name);
+        return $this->state(function (array $attributes) use ($cities) {
+            $city = $cities->random();
 
-        if (blank($location)) {
-            return $this->state(fn (array $attributes) => [
+            $location = Cache::driver('array')
+                ->rememberForever(
+                    "factory-location-$city->id",
+                    fn () => Nominatim::make()->locate($city->name, $city->county->name)
+                );
+
+            return[
                 'county_id' => $city->county_id,
                 'city_id' => $city->id,
-
-            ]);
-        }
-
-        return $this->state(fn (array $attributes) => [
-            'county_id' => $city->county_id,
-            'city_id' => $city->id,
-            'location' => new SpatialPoint(
-                fake()->latitude(min: $location->bounds[0], max: $location->bounds[1]),
-                fake()->longitude(min: $location->bounds[2], max: $location->bounds[3])
-            ),
-        ]);
+                'location' => blank($location)
+                    ? $attributes['location']
+                    : new SpatialPoint(
+                        fake()->latitude(min: $location->bounds[0], max: $location->bounds[1]),
+                        fake()->longitude(min: $location->bounds[2], max: $location->bounds[3])
+                    ),
+            ];
+        });
     }
 
     public function createdByUser(?User $user = null): static
@@ -104,6 +110,26 @@ class PointFactory extends Factory
             $point->contribution()->create([
                 'user_id' => $user?->id || User::factory(),
             ]);
+        });
+    }
+
+    public function withProblems(Collection $problemTypes, Collection $users): static
+    {
+        return $this->afterCreating(function (Point $point) use ($problemTypes, $users) {
+            if ($problemTypes->isEmpty()) {
+                return;
+            }
+
+            $count = fake()->numberBetween(1, $problemTypes->count());
+
+            Problem::factory()
+                ->count($count)
+                ->sequence(fn () => [
+                    'type_id' => $problemTypes->random()->id,
+                ])
+                ->for($point)
+                ->createdByUser($users->random())
+                ->create();
         });
     }
 

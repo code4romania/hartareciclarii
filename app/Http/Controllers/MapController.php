@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
+use App\Http\Filters\Filters;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\PointDetailsResource;
@@ -27,6 +28,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MapController extends Controller
 {
@@ -99,7 +101,7 @@ class MapController extends Controller
                     ->take(5)
                     ->query(
                         fn (Builder $query) => $query
-                            ->with('categories')
+                            ->with('categories.media')
                             ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
                     )
                     ->get()
@@ -207,19 +209,24 @@ class MapController extends Controller
                 ])
                 ->values(),
 
+            'filter' => Filters::selected(request()),
+
             'points' => function () use ($coordinates) {
                 if (! $coordinates->hasBounds()) {
                     return [];
                 }
 
+                $query = QueryBuilder::for(Point::class)
+                    ->with('serviceType:id,slug')
+                    ->whereMatchesCoordinates($coordinates)
+                    ->allowedFilters(Filters::allowed())
+                    ->take(2000);
+
                 return PointResource::collection(
-                    Point::query()
-                        ->with('serviceType:id,slug')
-                        ->whereMatchesCoordinates($coordinates)
-                        ->take(2000)
-                        ->get(['id', 'location', 'service_type_id'])
+                    $query->get(['id', 'location', 'service_type_id'])
                 );
             },
+
             ...$props,
         ]);
     }
