@@ -59,7 +59,6 @@ class ProblemResource extends Resource
                     )->hidden(fn (Problem $record) => blank($record->subTypes)),
 
                 Section::make(__('issues.columns.description'))
-                    ->columnSpan(1)
                     ->heading()
                     ->schema(
                         [
