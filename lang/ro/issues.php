@@ -15,7 +15,17 @@ return [
     'columns' => [
         'reporter' => 'Utilizator',
         'created_at' => 'Raportat la',
-        'issue_type' => 'Tip problema',
+        'issue_type' => 'Ce tip de problemă ai identificat?',
+        'selected_subtypes' => 'Probleme identificate',
+        'current_location' => 'Locatie curentǎ',
+        'new_location' => 'Locație noua',
+        'current_address' => 'Adresa curenta',
+        'new_address' => 'Adresa noua',
+        'collected_materials' => 'Materiale colectate',
+        'collected_materials_hint' => 'Materiale colectate dar care lipsesc din lista',
+        'not_collected_materials' => 'Materiale ne-colectate',
+        'not_collected_materials_hint' => 'Materiale care nu sunt colectate dar sunt  in lista',
+        'description' => 'Descrie problema',
         'service_type' => 'Tip serviciu',
         'status' => 'Status problema',
         'map_point_id' => 'ID punct',
@@ -58,12 +68,12 @@ return [
         'status_changed' => 'Statusul problemei a fost modificat',
     ],
     'actions' => [
-        'delete' => 'Sterge problema',
+        'delete' => 'Şterge problema',
         'edit_point' => 'Editeaza punct',
         'change_status' => 'Schimba status',
     ],
     'filters' => [
-        'period' => 'Perioada: ',
+        'period' => 'Perioada: :created_from - :created_until',
     ],
 
 ];

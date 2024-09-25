@@ -40,7 +40,7 @@ class PointsRelationManager extends RelationManager
                 //
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                $query->withCount('issues');
+                $query->withCount('problems');
             })
             ->actions([
                 ViewAction::make()

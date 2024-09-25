@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Imports;
 
 use App\Enums\Point\Source;
-use App\Enums\Point\Status;
 use App\Models\City;
 use App\Models\Material;
 use App\Models\Point;
@@ -249,7 +248,6 @@ class PointImporter extends Importer
         $this->record->service_type_id = $this->options['service_type_id'];
         $this->record->created_by = auth()->id();
         $this->record->source = Source::IMPORT;
-        $this->record->status = Status::VERIFIED;
         $this->record->import_id = $this->import->id;
     }
 

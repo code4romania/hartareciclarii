@@ -123,6 +123,20 @@ class Problem extends Model implements HasMedia
         ]);
     }
 
+    protected function collectedMaterials(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->materials->where('pivot.flag', true)->pluck('name'),
+        );
+    }
+
+    protected function notCollectedMaterials(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->materials->where('pivot.flag', false)->pluck('name'),
+        );
+    }
+
     public function status(): Attribute
     {
         return Attribute::make(function () {
