@@ -33,12 +33,15 @@ class Filter
 
         if (\is_array($value)) {
             return collect($value)
-                ->map(fn ($valueValue) => self::getValue($valueValue))
+                ->map(fn ($v) => self::getValue($v))
                 ->all();
         }
 
         if (Str::contains($value, ',')) {
-            return explode(',', $value);
+            return Str::of($value)
+                ->explode(',')
+                ->map(fn ($v) => self::getValue($v))
+                ->all();;
         }
 
         if ($value === 'true') {

@@ -199,8 +199,6 @@
             data.can = pickBy(data.can);
             data.materials = pickBy(data.materials);
 
-            data = pickBy(data);
-
             return pickBy(data);
         };
 
