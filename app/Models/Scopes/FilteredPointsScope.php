@@ -96,8 +96,15 @@ class FilteredPointsScope implements Scope
             // Filter by characteristics
             if ($this->filters->has('can')) {
                 $can = collect(data_get($this->filters->get('can'), $serviceType->slug))
-                    ->map(fn (string $characteristic) => "can_{$characteristic}")
-                    ->filter(fn (string $characteristic) => Filter::isAllowedCharacteristic($characteristic));
+                    ->map(fn (string $characteristic) => match ($characteristic) {
+                        'offer_money' => 'offers_money',
+                        'offer_vouchers' => 'offers_vouchers',
+                        'offer_transport' => 'offers_transport',
+                        'request_payment' => 'free_of_charge',
+                        default => null,
+                    })
+                    ->filter()
+                    ->values();
 
                 if (filled($can)) {
                     $query->where(function (Builder $query) use ($can) {

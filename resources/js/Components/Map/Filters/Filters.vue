@@ -96,12 +96,17 @@
 
     const statuses = computed(() => page.props.statuses || []);
 
-    const getFilterValue = (key, defaultValue) => {
-        if (!page.props.filter.hasOwnProperty(key)) {
+    const getFilterValue = (key, defaultValue, prefix) => {
+        let filter =
+            isString(prefix) && page.props.filter.hasOwnProperty(prefix)
+                ? page.props.filter[prefix]
+                : page.props.filter;
+
+        if (!filter.hasOwnProperty(key)) {
             return defaultValue;
         }
 
-        let value = page.props.filter[key];
+        let value = filter[key];
 
         if (isNumber(value)) {
             return [value];
@@ -122,10 +127,12 @@
                 label: trans(`filter.characteristics.${key}`),
             }));
 
-    const reduceWithFilterValue = (acc, { slug }) => ({
-        ...acc,
-        [slug]: getFilterValue(slug, []),
-    });
+    const reduceWithFilterValue = (prefix) => {
+        return (acc, { slug }) => ({
+            ...acc,
+            [slug]: getFilterValue(slug, [], prefix),
+        });
+    };
 
     const form = useForm({
         filter: {
@@ -133,17 +140,17 @@
             service: getFilterValue('service', []),
 
             // Point types
-            ...serviceTypesWithMultiplePointTypes.value.reduce(reduceWithFilterValue, {}),
+            ...serviceTypesWithMultiplePointTypes.value.reduce(reduceWithFilterValue(), {}),
 
             // Materials
             materials: serviceTypes.value
                 .filter((serviceType) => serviceType.can.collect_materials)
-                .reduce(reduceWithFilterValue, {}),
+                .reduce(reduceWithFilterValue('materials'), {}),
 
             // Characteristics
             can: serviceTypes.value
                 .filter((serviceType) => characteristics(serviceType).length)
-                .reduce(reduceWithFilterValue, {}),
+                .reduce(reduceWithFilterValue('can'), {}),
 
             // Status
             status: getFilterValue('status', []),
@@ -180,14 +187,6 @@
     };
 
     const applyFilters = (form, leafletObject) => {
-        const objectNotEmpty = (value) => {
-            if (isObject(value)) {
-                return Object.keys(value).length > 0;
-            }
-
-            return false;
-        };
-
         const transform = (data) => {
             data = cloneDeep(data);
 
@@ -195,12 +194,10 @@
                 data.filter[key] = setFilterValue(value);
             });
 
-            // data.filter.can = pickBy(data.filter.can, objectNotEmpty);
-            // data.filter.materials = pickBy(data.filter.materials, objectNotEmpty);
+            data.filter.can = pickBy(data.filter.can);
+            data.filter.materials = pickBy(data.filter.materials);
 
             data.filter = pickBy(data.filter);
-
-            console.log(data.filter);
 
             return pickBy(data);
         };
@@ -256,20 +253,18 @@
     watch(
         () => page.props.filter,
         (filter) => {
-            // console.log(filter);
-            // if (Array.isArray(filter) && !filter.length) {
-            //     shouldApply.value = false;
-            //     form.reset();
-            //     nextTick(() => (shouldApply.value = true));
-            // }
+            if (isArray(filter) && !filter.length) {
+                shouldApply.value = false;
+                clearFilters();
+                nextTick(() => (shouldApply.value = true));
+            }
         },
         { deep: true }
     );
 
     watch(
         () => form.filter,
-        (data) => {
-            console.log(data);
+        () => {
             if (shouldApply.value) {
                 applyFilters(form, map.value.leafletObject);
             }

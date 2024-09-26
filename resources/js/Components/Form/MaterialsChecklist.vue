@@ -29,6 +29,7 @@
                         <li v-for="({ item }, index) in category.materials" :key="`material-${index}`" class="pl-12">
                             <label class="relative flex py-1 gap-x-2">
                                 <input
+                                    :ref="refs.set"
                                     type="checkbox"
                                     class="absolute top-0 left-0 z-10 w-full h-full p-0 m-0 border border-gray-300 rounded outline-none opacity-0 appearance-none cursor-pointer peer disabled:cursor-default"
                                     v-model="modelValue"
@@ -47,16 +48,16 @@
                                         'border-red-500': invalid,
                                     }"
                                 >
-                                    <component v-if="checked(item)" :is="!remove ? CheckIcon : XMarkIcon" />
+                                    <component :is="!remove ? CheckIcon : XMarkIcon" />
                                 </div>
 
                                 <span
                                     class="flex-1 text-sm font-medium text-gray-700"
-                                    :class="{ 'line-through': checked(item) && remove }"
+                                    :class="{ 'line-through': checked(index) && remove }"
                                     v-text="item.name"
                                 />
 
-                                <slot name="help" :checked="checked(item)" :disabled="item?.disabled" />
+                                <slot name="help" :checked="checked(index)" :disabled="item?.disabled" />
                             </label>
                         </li>
                     </ul>
@@ -69,8 +70,9 @@
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { computed, useTemplateRef } from 'vue';
     import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid';
+    import { useTemplateRefsList } from '@vueuse/core';
 
     import useMaterials from '@/Helpers/useMaterials.js';
     import Accordion from '@/Components/Accordion.vue';
@@ -145,7 +147,9 @@
         },
     });
 
-    const checked = (material) => material.checked === true || modelValue.value.includes(material.id);
+    const refs = useTemplateRefsList();
+
+    const checked = (index) => refs.value[index]?.checked || false;
 
     const { query, results } = useMaterials(props.materials);
 </script>
