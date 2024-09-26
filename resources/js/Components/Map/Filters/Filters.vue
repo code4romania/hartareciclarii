@@ -159,12 +159,7 @@
         status: getFilterValue('status', []),
     });
 
-    const hasFilters = computed(() =>
-        Object.entries(form)
-            .map(([key, value]) => value)
-            .flat()
-            .some(Boolean)
-    );
+    const hasFilters = computed(() => form.service.length || form.status.length);
 
     const setFilterValue = (value) => {
         if (isObject(value)) {
