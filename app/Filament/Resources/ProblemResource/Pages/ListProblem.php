@@ -31,12 +31,14 @@ class ListProblem extends ListRecords
         return $dedicatedServiceTypes
             ->mapWithKeys(fn (ServiceType $serviceType) => [
                 $serviceType->slug => Tab::make($serviceType->name)
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type_id', $serviceType->id)),
+                    ->modifyQueryUsing(
+                        fn (Builder $query) => $query->whereHas('point', fn (Builder $query) => $query->where('service_type_id', $serviceType->id))
+                    ),
             ])
             ->put(
                 'other',
                 Tab::make(__('point_types.other'))
-                    ->modifyQueryUsing(fn (Builder $query) => $query->whereNotIn('service_type_id', $dedicatedServiceTypes->pluck('id')))
+                    ->modifyQueryUsing(fn (Builder $query) => $query->whereDoesntHave('point', fn (Builder $query) => $query->whereNotIn('service_type_id', $dedicatedServiceTypes->pluck('id'))))
             )
             ->all();
     }

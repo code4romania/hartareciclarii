@@ -32,9 +32,6 @@ class ViewProblem extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make()->label(__('issues.actions.delete')),
-            Action::make('editPoint')->label(__('issues.actions.edit_point'))
-                ->url(PointResource::getUrl('view', ['record' => $this->record->point_id]), shouldOpenInNewTab: true),
             Action::make('changeStatus')
                 ->label(__('issues.actions.change_status'))
                 ->form([
@@ -42,7 +39,7 @@ class ViewProblem extends ViewRecord
                         ->options(IssueStatus::options())
                         ->default($this->record->status->value),
                 ])
-                ->color('warning')
+                ->color('primary')
                 ->action(
                     function (array $data) {
                         $this->record->changeStatus($data['status']);
@@ -51,6 +48,15 @@ class ViewProblem extends ViewRecord
                             ->send();
                     }
                 ),
+
+            Action::make('editPoint')
+                ->label(__('issues.actions.edit_point'))
+                ->outlined()
+                ->url(PointResource::getUrl('view', ['record' => $this->record->point_id]), shouldOpenInNewTab: true),
+
+            DeleteAction::make()
+                ->label(__('issues.actions.delete'))
+                ->outlined(),
 
         ];
     }
