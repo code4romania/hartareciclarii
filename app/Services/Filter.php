@@ -15,12 +15,25 @@ class Filter
         'reuse',
         'waste_collection',
         'materials',
+        'can',
         'status',
+    ];
+
+    protected static array $allowedCharacteristics = [
+        'can_offer_money',
+        'can_offer_vouchers',
+        'can_offer_transport',
+        'can_request_payment',
     ];
 
     public static function isAllowed(string $filter): bool
     {
         return \in_array($filter, self::$allowedFilters);
+    }
+
+    public static function isAllowedCharacteristic(string $characteristic): bool
+    {
+        return \in_array($characteristic, self::$allowedCharacteristics);
     }
 
     /** @return array|float|int|string|bool|null */

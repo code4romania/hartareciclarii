@@ -39,6 +39,19 @@
     "filter.point_type.repairs": "Tip punct reparații",
     "filter.point_type.reuse": "Tip punct reutilizare",
     "filter.point_type.waste_collection": "Tip punct colectare",
+
+    "filter.characteristics.other": "Caracteristici punct",
+    "filter.characteristics.donations": "Caracteristici punct donații",
+    "filter.characteristics.reduce": "Caracteristici punct reducere deșeuri",
+    "filter.characteristics.repairs": "Caracteristici punct reparații",
+    "filter.characteristics.reuse": "Caracteristici punct reutilizare",
+    "filter.characteristics.waste_collection": "Caracteristici reciclator",
+
+    "filter.characteristics.offer_transportation": "Oferă transport",
+    "filter.characteristics.offer_money": "Oferă bani",
+    "filter.characteristics.offer_vouchers": "Oferă voucher",
+    "filter.characteristics.request_payment": "Oferă servicii gratis",
+
     "filter.materials": "Material colectat",
     "filter.status": "Status punct",
     "filter.clear": "Șterge filtre",

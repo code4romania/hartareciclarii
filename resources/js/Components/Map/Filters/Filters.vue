@@ -16,13 +16,38 @@
             class="py-6"
         />
 
-        <template v-for="type in serviceTypes" :key="type.slug">
-            <Component
-                v-if="form.filter.service.includes(type.id)"
-                :is="getFilterComponent(type.slug)"
-                :service-type="type"
-                :form="form"
-            />
+        <template v-for="serviceType in serviceTypes" :key="serviceType.slug">
+            <template v-if="form.filter.service.includes(serviceType.id)">
+                <CheckboxList
+                    v-if="serviceType.point_types.length > 1"
+                    :name="`${serviceType.slug}.type`"
+                    :label="$t(`filter.point_type.${serviceType.slug}`)"
+                    v-model="form.filter[serviceType.slug]"
+                    :options="serviceType.point_types"
+                    option-value-key="id"
+                    option-label-key="name"
+                    class="py-6"
+                />
+
+                <MaterialsChecklist
+                    v-if="serviceType.can.collect_materials"
+                    name="materials"
+                    v-model="form.filter.materials[serviceType.slug]"
+                    :label="$t('filter.materials')"
+                    class="py-6"
+                    searchable
+                    clearable
+                />
+
+                <CheckboxList
+                    v-if="characteristics(serviceType).length"
+                    :name="`${serviceType.slug}.type`"
+                    :label="$t(`filter.characteristics.${serviceType.slug}`)"
+                    v-model="form.filter.can[serviceType.slug]"
+                    :options="characteristics(serviceType)"
+                    class="py-6"
+                />
+            </template>
         </template>
 
         <CheckboxList
@@ -50,17 +75,16 @@
     import { computed, ref, watch, inject, nextTick } from 'vue';
     import { FunnelIcon, XMarkIcon } from '@heroicons/vue/24/outline';
     import { usePage, useForm } from '@inertiajs/vue3';
-    import CheckboxList from '@/Components/Form/CheckboxList.vue';
-    import Reduce from '@/Components/Map/Filters/Reduce.vue';
-    import Reuse from '@/Components/Map/Filters/Reuse.vue';
-    import Repairs from '@/Components/Map/Filters/Repairs.vue';
-    import WasteCollection from '@/Components/Map/Filters/WasteCollection.vue';
     import cloneDeep from 'lodash.clonedeep';
     import pickBy from 'lodash.pickby';
     import route from '@/Helpers/useRoute.js';
-    import typeOf from '@/Helpers/typeOf.js';
+    import { isArray, isNumber, isString } from '@/Helpers/checkType.js';
     import { getCoordinatesParameter } from '@/Helpers/useCoordinates.js';
     import { headers, onCancelToken } from '@/Helpers/useMap.js';
+    import CheckboxList from '@/Components/Form/CheckboxList.vue';
+    import MaterialsChecklist from '@/Components/Form/MaterialsChecklist.vue';
+    import { trans } from 'laravel-vue-i18n';
+    import { isObject } from '@vueuse/core';
 
     const page = usePage();
 
@@ -72,14 +96,6 @@
 
     const statuses = computed(() => page.props.statuses || []);
 
-    const getFilterComponent = (name) =>
-        ({
-            reduce: Reduce,
-            reuse: Reuse,
-            repairs: Repairs,
-            waste_collection: WasteCollection,
-        })[name] || null;
-
     const getFilterValue = (key, defaultValue) => {
         if (!page.props.filter.hasOwnProperty(key)) {
             return defaultValue;
@@ -87,12 +103,29 @@
 
         let value = page.props.filter[key];
 
-        if (typeof value === 'string') {
+        if (isNumber(value)) {
+            return [value];
+        }
+
+        if (isString(value)) {
             return value.split(',');
         }
 
         return value || defaultValue;
     };
+
+    const characteristics = (serviceType) =>
+        Object.entries(serviceType.can)
+            .filter(([key, value]) => !['have_business_name', 'collect_materials'].includes(key) && value)
+            .map(([key, value]) => ({
+                value: key,
+                label: trans(`filter.characteristics.${key}`),
+            }));
+
+    const reduceWithFilterValue = (acc, { slug }) => ({
+        ...acc,
+        [slug]: getFilterValue(slug, []),
+    });
 
     const form = useForm({
         filter: {
@@ -100,14 +133,19 @@
             service: getFilterValue('service', []),
 
             // Point types
-            ...serviceTypesWithMultiplePointTypes.value.reduce(
-                (acc, { slug }) => ({
-                    ...acc,
-                    [slug]: getFilterValue(slug, []),
-                }),
-                {}
-            ),
+            ...serviceTypesWithMultiplePointTypes.value.reduce(reduceWithFilterValue, {}),
 
+            // Materials
+            materials: serviceTypes.value
+                .filter((serviceType) => serviceType.can.collect_materials)
+                .reduce(reduceWithFilterValue, {}),
+
+            // Characteristics
+            can: serviceTypes.value
+                .filter((serviceType) => characteristics(serviceType).length)
+                .reduce(reduceWithFilterValue, {}),
+
+            // Status
             status: getFilterValue('status', []),
         },
     });
@@ -120,7 +158,7 @@
     );
 
     const setFilterValue = (value) => {
-        if (typeOf(value) === Object) {
+        if (isObject(value)) {
             return Object.entries(value).reduce(
                 (acc, [key, value]) => ({
                     [key]: setFilterValue(value),
@@ -130,11 +168,11 @@
             );
         }
 
-        if (typeOf(value) === String) {
+        if (isString(value)) {
             return value;
         }
 
-        if (typeOf(value) === Array && value.length) {
+        if (isArray(value) && value.length) {
             return [...new Set(value)].join(',');
         }
 
@@ -142,40 +180,68 @@
     };
 
     const applyFilters = (form, leafletObject) => {
-        const url = route('front.map.index', {
-            coordinates: getCoordinatesParameter(leafletObject.getCenter(), leafletObject.getZoom()),
-        });
+        const objectNotEmpty = (value) => {
+            if (isObject(value)) {
+                return Object.keys(value).length > 0;
+            }
 
-        form.transform((data) => {
+            return false;
+        };
+
+        const transform = (data) => {
             data = cloneDeep(data);
 
             Object.entries(data.filter).forEach(([key, value]) => {
                 data.filter[key] = setFilterValue(value);
             });
 
+            // data.filter.can = pickBy(data.filter.can, objectNotEmpty);
+            // data.filter.materials = pickBy(data.filter.materials, objectNotEmpty);
+
             data.filter = pickBy(data.filter);
 
-            // console.log(data.filter.type);
+            console.log(data.filter);
 
             return pickBy(data);
-        }).get(url, {
-            headers: headers(leafletObject),
-            only: ['points', 'mapOptions', 'filter'],
-            onCancelToken,
-        });
+        };
+
+        form.transform(transform).get(
+            route('front.map.index', {
+                coordinates: getCoordinatesParameter(leafletObject.getCenter(), leafletObject.getZoom()),
+            }),
+            {
+                headers: headers(leafletObject),
+                only: ['points', 'mapOptions', 'filter'],
+                onCancelToken,
+            }
+        );
     };
 
     const clearFilters = () => {
+        let callback = (acc, { slug }) => ({
+            ...acc,
+            [slug]: [],
+        });
+
         form.defaults({
             filter: {
+                // Service types
                 service: [],
-                ...serviceTypesWithMultiplePointTypes.value.reduce(
-                    (acc, { slug }) => ({
-                        ...acc,
-                        [slug]: [],
-                    }),
-                    {}
-                ),
+
+                // Point types
+                ...serviceTypesWithMultiplePointTypes.value.reduce(callback, {}),
+
+                // Materials
+                materials: serviceTypes.value
+                    .filter((serviceType) => serviceType.can.collect_materials)
+                    .reduce(callback, {}),
+
+                // Characteristics
+                can: serviceTypes.value
+                    .filter((serviceType) => characteristics(serviceType).length)
+                    .reduce(callback, {}),
+
+                // Status
                 status: [],
             },
         });
@@ -190,13 +256,12 @@
     watch(
         () => page.props.filter,
         (filter) => {
-            console.log(filter);
-            if (Array.isArray(filter) && !filter.length) {
-                shouldApply.value = false;
-                form.reset();
-
-                nextTick(() => (shouldApply.value = true));
-            }
+            // console.log(filter);
+            // if (Array.isArray(filter) && !filter.length) {
+            //     shouldApply.value = false;
+            //     form.reset();
+            //     nextTick(() => (shouldApply.value = true));
+            // }
         },
         { deep: true }
     );
@@ -204,6 +269,7 @@
     watch(
         () => form.filter,
         (data) => {
+            console.log(data);
             if (shouldApply.value) {
                 applyFilters(form, map.value.leafletObject);
             }

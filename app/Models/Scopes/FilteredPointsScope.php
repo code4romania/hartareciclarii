@@ -6,6 +6,7 @@ namespace App\Models\Scopes;
 
 use App\Enums\Point\Status;
 use App\Models\ServiceType;
+use App\Services\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -29,69 +30,14 @@ class FilteredPointsScope implements Scope
 
         $this->filterByStatus($builder);
 
-        if (! $this->filters->has('service')) {
-            return;
+        if ($this->filters->has('service')) {
+            $builder->where(
+                fn (Builder $query) => ServiceType::query()
+                    ->whereIn('id', Arr::wrap($this->filters->get('service')))
+                    ->get()
+                    ->each(fn (ServiceType $serviceType) => $this->filterByServiceType($query, $serviceType))
+            );
         }
-
-        $builder->where(function (Builder $query) {
-            ServiceType::query()
-                ->whereIn('id', Arr::wrap($this->filters->get('service')))
-                ->get()
-                ->each(
-                    fn (ServiceType $serviceType) => $query
-                        ->orWhere(function (Builder $query) use ($serviceType) {
-                            $query
-                                ->where('service_type_id', $serviceType->id)
-                                ->when(
-                                    $this->filters->has($serviceType->slug),
-                                    fn (Builder $query) => $query->whereIn('point_type_id', Arr::wrap($this->filters->get($serviceType->slug)))
-                                );
-
-                            match ($serviceType->slug) {
-                                'waste_collection' => $this->filterByWasteCollection($query, $serviceType),
-                                'repairs' => $this->filterByRepairs($query, $serviceType),
-                                'reuse' => $this->filterByReuse($query, $serviceType),
-                                'reduce' => $this->filterByReduce($query, $serviceType),
-                                'donations' => $this->filterByDonations($query, $serviceType),
-                                'other' => $this->filterByOther($query, $serviceType),
-                            };
-                        })
-                );
-        });
-    }
-
-    public function filterByWasteCollection(Builder $builder, ServiceType $serviceType): void
-    {
-        if ($this->filters->has('materials')) {
-            $builder->whereHas('materials', function (Builder $query) {
-                $query->whereIn('id', Arr::wrap($this->filters->get('materials')));
-            });
-        }
-    }
-
-    public function filterByRepairs(Builder $builder, ServiceType $serviceType): void
-    {
-        //
-    }
-
-    public function filterByReuse(Builder $builder, ServiceType $serviceType): void
-    {
-        // noop
-    }
-
-    public function filterByReduce(Builder $builder, ServiceType $serviceType): void
-    {
-        // noop
-    }
-
-    public function filterByDonations(Builder $builder, ServiceType $serviceType): void
-    {
-        // noop
-    }
-
-    public function filterByOther(Builder $builder, ServiceType $serviceType): void
-    {
-        // noop
     }
 
     protected function filterByStatus(Builder $builder): void
@@ -121,5 +67,44 @@ class FilteredPointsScope implements Scope
             Status::VERIFIED => $builder->whereVerified(),
             Status::UNVERIFIED => $builder->whereUnverified(),
         };
+    }
+
+    protected function filterByServiceType(Builder $query, ServiceType $serviceType): void
+    {
+        $query->orWhere(function (Builder $query) use ($serviceType) {
+            // Service type
+            $query->where('service_type_id', $serviceType->id);
+
+            // Point types
+            if ($this->filters->has($serviceType->slug)) {
+                $pointTypes = Arr::wrap($this->filters->get($serviceType->slug));
+
+                if (filled($pointTypes)) {
+                    $query->whereIn('point_type_id', $pointTypes);
+                }
+            }
+
+            // Filter by materials
+            if ($this->filters->has('materials')) {
+                $materials = Arr::wrap(data_get($this->filters->get('materials'), $serviceType->slug));
+
+                if (filled($materials)) {
+                    $query->whereHas('materials', fn (Builder $q) => $q->whereIn('id', $materials));
+                }
+            }
+
+            // Filter by characteristics
+            if ($this->filters->has('can')) {
+                $can = collect(data_get($this->filters->get('can'), $serviceType->slug))
+                    ->map(fn (string $characteristic) => "can_{$characteristic}")
+                    ->filter(fn (string $characteristic) => Filter::isAllowedCharacteristic($characteristic));
+
+                if (filled($can)) {
+                    $query->where(function (Builder $query) use ($can) {
+                        $can->each(fn (string $characteristic) => $query->where($characteristic, true));
+                    });
+                }
+            }
+        });
     }
 }
