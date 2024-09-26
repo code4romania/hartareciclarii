@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import route from '@/Helpers/useRoute.js';
 import { getCoordinatesParameter } from '@/Helpers/useCoordinates';
+import { isNull, isUndefined } from '@/Helpers/checkType';
 
 const page = usePage();
 
@@ -61,7 +62,11 @@ export const fetchPoint = (leafletObject, pointId) => {
     });
 };
 
-export const closePanel = () => {
+export const closePanel = (leafletObject) => {
+    if (['filter', 'search'].includes(page.props.context) && !isNull(page.props.point) && !isUndefined(leafletObject)) {
+        return fetchPoint(leafletObject, null);
+    }
+
     const props = page.props.mapOptions;
     const coordinates = getCoordinatesParameter(props.center, props.zoom);
 

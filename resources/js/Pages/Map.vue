@@ -34,7 +34,7 @@
             return true;
         }
 
-        if (props.context === 'search' && point.value !== null) {
+        if (['filter', 'search'].includes(props.context) && point.value !== null) {
             return true;
         }
 

@@ -27,13 +27,21 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
+use Inertia\LazyProp;
 use Inertia\Response;
 
 class MapController extends Controller
 {
-    public function index(MapCoordinates $coordinates): Response
+    public function index(Request $request, MapCoordinates $coordinates): Response
     {
-        return $this->render($coordinates);
+        if ($request->filters()->isEmpty()) {
+            return $this->render($coordinates);
+        }
+
+        return $this->render($coordinates, [
+            'context' => 'filter',
+            'point' => $this->lazyFetchPoint($request),
+        ]);
     }
 
     public function point(Point $point, MapCoordinates $coordinates): Response
@@ -153,9 +161,7 @@ class MapController extends Controller
                         ->get()
                 );
             },
-            'point' => Inertia::lazy(fn () => PointDetailsResource::make(
-                Point::findOrFail($request->header('Map-Point'))
-            )),
+            'point' => $this->lazyFetchPoint($request),
         ]);
     }
 
@@ -165,7 +171,7 @@ class MapController extends Controller
             ->with('pointTypes')
             ->get();
 
-        return Inertia::render('Home', [
+        return Inertia::render('Map', [
             'mapOptions' => [
                 'bounds' => $coordinates->getBoundsBBox(),
                 'center' => [
@@ -227,5 +233,18 @@ class MapController extends Controller
 
             ...$props,
         ]);
+    }
+
+    protected function lazyFetchPoint(Request $request): LazyProp
+    {
+        return Inertia::lazy(function () use ($request) {
+            if (! $request->hasHeader('Map-Point')) {
+                return null;
+            }
+
+            return PointDetailsResource::make(
+                Point::findOrFail($request->header('Map-Point'))
+            );
+        });
     }
 }

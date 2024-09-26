@@ -9,7 +9,7 @@
         <CheckboxList
             name="service_types"
             :label="$t('filter.service_type')"
-            v-model="form.filter.service"
+            v-model="form.service"
             :options="serviceTypes"
             option-value-key="id"
             option-label-key="name"
@@ -17,12 +17,12 @@
         />
 
         <template v-for="serviceType in serviceTypes" :key="serviceType.slug">
-            <template v-if="form.filter.service.includes(serviceType.id)">
+            <template v-if="form.service.includes(serviceType.id)">
                 <CheckboxList
                     v-if="serviceType.point_types.length > 1"
                     :name="`${serviceType.slug}.type`"
                     :label="$t(`filter.point_type.${serviceType.slug}`)"
-                    v-model="form.filter[serviceType.slug]"
+                    v-model="form[serviceType.slug]"
                     :options="serviceType.point_types"
                     option-value-key="id"
                     option-label-key="name"
@@ -32,7 +32,7 @@
                 <MaterialsChecklist
                     v-if="serviceType.can.collect_materials"
                     name="materials"
-                    v-model="form.filter.materials[serviceType.slug]"
+                    v-model="form.materials[serviceType.slug]"
                     :label="$t('filter.materials')"
                     class="py-6"
                     searchable
@@ -43,7 +43,7 @@
                     v-if="characteristics(serviceType).length"
                     :name="`${serviceType.slug}.type`"
                     :label="$t(`filter.characteristics.${serviceType.slug}`)"
-                    v-model="form.filter.can[serviceType.slug]"
+                    v-model="form.can[serviceType.slug]"
                     :options="characteristics(serviceType)"
                     class="py-6"
                 />
@@ -53,7 +53,7 @@
         <CheckboxList
             name="status"
             :label="$t('filter.status')"
-            v-model="form.filter.status"
+            v-model="form.status"
             :options="statuses"
             class="py-6"
         />
@@ -97,6 +97,10 @@
     const statuses = computed(() => page.props.statuses || []);
 
     const getFilterValue = (key, defaultValue, prefix) => {
+        if (!page.props.hasOwnProperty('filter')) {
+            return defaultValue;
+        }
+
         let filter =
             isString(prefix) && page.props.filter.hasOwnProperty(prefix)
                 ? page.props.filter[prefix]
@@ -135,30 +139,28 @@
     };
 
     const form = useForm({
-        filter: {
-            // Service types
-            service: getFilterValue('service', []),
+        // Service types
+        service: getFilterValue('service', []),
 
-            // Point types
-            ...serviceTypesWithMultiplePointTypes.value.reduce(reduceWithFilterValue(), {}),
+        // Point types
+        ...serviceTypesWithMultiplePointTypes.value.reduce(reduceWithFilterValue(), {}),
 
-            // Materials
-            materials: serviceTypes.value
-                .filter((serviceType) => serviceType.can.collect_materials)
-                .reduce(reduceWithFilterValue('materials'), {}),
+        // Materials
+        materials: serviceTypes.value
+            .filter((serviceType) => serviceType.can.collect_materials)
+            .reduce(reduceWithFilterValue('materials'), {}),
 
-            // Characteristics
-            can: serviceTypes.value
-                .filter((serviceType) => characteristics(serviceType).length)
-                .reduce(reduceWithFilterValue('can'), {}),
+        // Characteristics
+        can: serviceTypes.value
+            .filter((serviceType) => characteristics(serviceType).length)
+            .reduce(reduceWithFilterValue('can'), {}),
 
-            // Status
-            status: getFilterValue('status', []),
-        },
+        // Status
+        status: getFilterValue('status', []),
     });
 
     const hasFilters = computed(() =>
-        Object.entries(form.filter)
+        Object.entries(form)
             .map(([key, value]) => value)
             .flat()
             .some(Boolean)
@@ -190,14 +192,14 @@
         const transform = (data) => {
             data = cloneDeep(data);
 
-            Object.entries(data.filter).forEach(([key, value]) => {
-                data.filter[key] = setFilterValue(value);
+            Object.entries(data).forEach(([key, value]) => {
+                data[key] = setFilterValue(value);
             });
 
-            data.filter.can = pickBy(data.filter.can);
-            data.filter.materials = pickBy(data.filter.materials);
+            data.can = pickBy(data.can);
+            data.materials = pickBy(data.materials);
 
-            data.filter = pickBy(data.filter);
+            data = pickBy(data);
 
             return pickBy(data);
         };
@@ -208,7 +210,7 @@
             }),
             {
                 headers: headers(leafletObject),
-                only: ['points', 'mapOptions', 'filter'],
+                only: ['context', 'points', 'mapOptions', 'filter'],
                 onCancelToken,
             }
         );
@@ -221,26 +223,22 @@
         });
 
         form.defaults({
-            filter: {
-                // Service types
-                service: [],
+            // Service types
+            service: [],
 
-                // Point types
-                ...serviceTypesWithMultiplePointTypes.value.reduce(callback, {}),
+            // Point types
+            ...serviceTypesWithMultiplePointTypes.value.reduce(callback, {}),
 
-                // Materials
-                materials: serviceTypes.value
-                    .filter((serviceType) => serviceType.can.collect_materials)
-                    .reduce(callback, {}),
+            // Materials
+            materials: serviceTypes.value
+                .filter((serviceType) => serviceType.can.collect_materials)
+                .reduce(callback, {}),
 
-                // Characteristics
-                can: serviceTypes.value
-                    .filter((serviceType) => characteristics(serviceType).length)
-                    .reduce(callback, {}),
+            // Characteristics
+            can: serviceTypes.value.filter((serviceType) => characteristics(serviceType).length).reduce(callback, {}),
 
-                // Status
-                status: [],
-            },
+            // Status
+            status: [],
         });
 
         form.reset();
@@ -251,7 +249,7 @@
     const shouldApply = ref(true);
 
     watch(
-        () => page.props.filter,
+        () => page.props?.filter,
         (filter) => {
             if (isArray(filter) && !filter.length) {
                 shouldApply.value = false;
@@ -263,7 +261,7 @@
     );
 
     watch(
-        () => form.filter,
+        () => form.data(),
         () => {
             if (shouldApply.value) {
                 applyFilters(form, map.value.leafletObject);

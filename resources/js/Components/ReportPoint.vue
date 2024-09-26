@@ -141,6 +141,7 @@
     import { trans } from 'laravel-vue-i18n';
     import { ArrowLeftIcon } from '@heroicons/vue/20/solid';
     import route from '@/Helpers/useRoute.js';
+    import { isUndefined } from '@/Helpers/checkType';
     import Button from '@/Components/Button.vue';
     import Modal from '@/Components/Modal.vue';
 
@@ -292,7 +293,7 @@
     const sortedMaterialTypes = computed(() => form.sub_types.sort());
 
     const getMaterialsTypeStep = (id) => {
-        if (problemType.value.slug !== 'materials' || typeof id === 'undefined') {
+        if (problemType.value.slug !== 'materials' || isUndefined(id)) {
             return null;
         }
 

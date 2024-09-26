@@ -2,7 +2,7 @@
     <article
         class="relative max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
     >
-        <Heading :service="point.service" :name="point.name" @close="closePanel" />
+        <Heading :service="point.service" :name="point.name" @close="closePanel(map.leafletObject)" />
 
         <Subheading :subheading="point.subheading" :status="point.status" />
 
@@ -35,6 +35,9 @@
 </template>
 
 <script setup>
+    import { inject } from 'vue';
+    import { closePanel } from '@/Helpers/useMap.js';
+
     import Actions from '@/Components/PointDetails/Actions.vue';
     import Address from '@/Components/PointDetails/Address.vue';
     import Email from '@/Components/PointDetails/Email.vue';
@@ -48,7 +51,7 @@
     import Subheading from '@/Components/PointDetails/Subheading.vue';
     import Website from '@/Components/PointDetails/Website.vue';
 
-    import { closePanel } from '@/Helpers/useMap.js';
+    const map = inject('map');
 
     const props = defineProps({
         point: {

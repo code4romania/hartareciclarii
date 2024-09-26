@@ -109,7 +109,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerRequestMacros(): void
     {
         Request::macro('filters', function () {
-            $filterParts = $this->input('filter', []);
+            $filterParts = $this->query();
 
             if (\is_string($filterParts)) {
                 return collect();
