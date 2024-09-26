@@ -127,8 +127,6 @@
 
     const loading = ref(false);
 
-    const objectUrl = (file) => window.URL.createObjectURL(file);
-
     onChange((files) => {
         if (!files) {
             return;

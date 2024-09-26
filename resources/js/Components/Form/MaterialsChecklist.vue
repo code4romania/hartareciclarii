@@ -38,7 +38,7 @@
                                 />
 
                                 <div
-                                    class="flex items-center justify-center w-4 h-4 my-0.5 border border-gray-300 bg-white text-white rounded peer-checked:border-transparent peer-disabled:bg-gray-400 peer-disabled:select-none peer-disabled:pointer-events-none peer-disabled:cursor-default peer-focus-visible:z-10 peer-focus-visible:outline-none peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary-500"
+                                    class="flex items-center justify-center w-4 h-4 my-0.5 border border-gray-300 bg-white text-white rounded peer-checked:border-transparent peer-disabled:bg-gray-400 peer-disabled:select-none peer-disabled:pointer-events-none peer-disabled:cursor-default peer-focus-visible:z-10 peer-focus-visible:outline-none peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2"
                                     :class="{
                                         'peer-checked:ring-red-700 peer-checked:bg-red-700 peer-focus-visible:ring-red-500':
                                             remove,

@@ -6,11 +6,15 @@
 
         <Subheading :subheading="point.subheading" :status="point.status" />
 
-        <Actions :point="point" />
+        <Actions :point="point" class="border-t border-b border-gray-200" />
 
         <Address :address="point.address" />
 
-        <Materials v-if="point.materials" :materials="point.materials" class="px-6 py-4 ring-1 ring-gray-200" />
+        <Materials
+            v-if="point.materials?.length"
+            :materials="point.materials"
+            class="px-6 py-4 border-t border-b border-gray-200"
+        />
 
         <Schedule v-if="point.schedule" :schedule="point.schedule" class="px-6 py-4" />
 

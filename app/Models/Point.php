@@ -137,6 +137,16 @@ class Point extends Model implements HasMedia
             ->orderByDistance('location', $mapCoordinates->getCenter());
     }
 
+    public function scopeWhereVerified(Builder $query): Builder
+    {
+        return $query->whereNotNull('verified_at');
+    }
+
+    public function scopeWhereUnverified(Builder $query): Builder
+    {
+        return $query->whereNull('verified_at');
+    }
+
     public function url(): Attribute
     {
         return Attribute::make(
@@ -179,6 +189,9 @@ class Point extends Model implements HasMedia
                 $this->location->longitude,
             ],
             'service_type' => $this->serviceType->name,
+            'service_type_id' => (string) $this->serviceType->id,
+            'point_type' => $this->pointType->name,
+            'point_type_id' => (string) $this->pointType->id,
             'address' => $this->address,
             'point_type' => $this->pointType->name,
             'materials' => $this->materials
@@ -223,7 +236,15 @@ class Point extends Model implements HasMedia
                         'type' => 'string',
                     ],
                     [
+                        'name' => 'service_type_id',
+                        'type' => 'string',
+                    ],
+                    [
                         'name' => 'point_type',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'point_type_id',
                         'type' => 'string',
                     ],
                     [

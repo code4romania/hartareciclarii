@@ -7,33 +7,35 @@ const page = usePage();
 
 const cancelTokens = ref([]);
 
-export const updateMap = (leafletObject, routeName, routeParams = {}, options = {}) => {
-    const center = leafletObject.getCenter();
-    const zoom = leafletObject.getZoom();
-    const bounds = leafletObject.getBounds();
+export const onCancelToken = (cancelToken) => cancelTokens.value.push(cancelToken);
 
-    Object.assign(routeParams, {
-        coordinates: getCoordinatesParameter(center, zoom),
-    });
-
-    let headers = {
-        'Map-Bounds': bounds.toBBoxString(),
+export const headers = (leafletObject, options = {}) => {
+    const headers = {
+        'Map-Bounds': leafletObject.getBounds().toBBoxString(),
     };
 
     if (options.hasOwnProperty('headers')) {
-        headers = { ...headers, ...options.headers };
+        Object.assign(headers, options.headers);
         delete options.headers;
     }
 
+    return headers;
+};
+
+export const updateMap = (leafletObject, routeName, routeParams = {}, options = {}) => {
+    Object.assign(routeParams, {
+        coordinates: getCoordinatesParameter(leafletObject.getCenter(), leafletObject.getZoom()),
+    });
+
     router.visit(route(routeName, routeParams), {
-        headers,
-        onCancelToken: (cancelToken) => cancelTokens.value.push(cancelToken),
+        headers: headers(leafletObject, options),
+        onCancelToken,
         ...options,
     });
 };
 export const refreshPoints = (leafletObject) => {
     updateMap(leafletObject, route().current(), route().params, {
-        only: ['points', 'mapOptions'],
+        only: ['points', 'mapOptions', 'filter'],
         replace: true,
     });
 };

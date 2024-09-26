@@ -1,6 +1,6 @@
 <template>
     <FormField :name="name" :label="label" :help="help" :required="required" :disabled="disabled" :errors="errors">
-        <div class="grid gap-2">
+        <div class="grid w-full gap-2">
             <Checkbox
                 v-for="(option, index) in options"
                 :key="index"

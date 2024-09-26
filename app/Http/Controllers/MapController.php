@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\DataTransferObjects\MapCoordinates;
 use App\Enums\Point\Status;
-use App\Http\Filters\Filters;
 use App\Http\Resources\MaterialCategoryResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\PointDetailsResource;
@@ -20,6 +19,7 @@ use App\Models\Material;
 use App\Models\MaterialCategory;
 use App\Models\Point;
 use App\Models\Problem\ProblemType;
+use App\Models\Scopes\FilteredPointsScope;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +28,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class MapController extends Controller
 {
@@ -209,21 +208,20 @@ class MapController extends Controller
                 ])
                 ->values(),
 
-            'filter' => Filters::selected(request()),
+            'filter' => request()->filters(),
 
             'points' => function () use ($coordinates) {
                 if (! $coordinates->hasBounds()) {
                     return [];
                 }
 
-                $query = QueryBuilder::for(Point::class)
-                    ->with('serviceType:id,slug')
-                    ->whereMatchesCoordinates($coordinates)
-                    ->allowedFilters(Filters::allowed())
-                    ->take(2000);
-
                 return PointResource::collection(
-                    $query->get(['id', 'location', 'service_type_id'])
+                    Point::query()
+                        ->with('serviceType:id,slug')
+                        ->whereMatchesCoordinates($coordinates)
+                        ->withGlobalScope('filtered', new FilteredPointsScope(request()->filters()))
+                        ->take(2000)
+                        ->get(['id', 'location', 'service_type_id'])
                 );
             },
 
