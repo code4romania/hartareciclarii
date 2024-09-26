@@ -24,46 +24,6 @@
 
             <address class="flex-1 text-sm not-italic" v-text="point.address" />
         </div>
-
-        <!-- <div class="flex flex-col items-start self-stretch justify-start gap-2 h-14">
-            <div class="inline-flex items-start justify-start gap-1">
-                <div class="pl-1 pr-2 py-0.5 bg-gray-50 rounded-full justify-start items-center gap-1 flex">
-                    <div class="flex items-center justify-center w-5 h-5 px-1 py-1">
-                        <div class="w-3 h-3.5 relative flex-col justify-start items-start flex">
-                            <div class="relative w-5 h-5">
-                                <div class="w-3 h-3.5 left-[3.86px] top-[3.35px] absolute"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-gray-900 text-xs font-normal font-['Inter']">Hârtie și carton</div>
-                </div>
-                <div class="pl-1 pr-2 py-0.5 bg-gray-50 rounded-full justify-start items-center gap-1 flex">
-                    <div class="flex items-center justify-center w-5 h-5 px-1 py-1">
-                        <div class="w-3 h-3.5 relative flex-col justify-start items-start flex">
-                            <div class="relative w-5 h-5">
-                                <div class="w-3 h-3.5 left-[3.86px] top-[3.35px] absolute"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-gray-900 text-xs font-normal font-['Inter']">Plastic și PET</div>
-                </div>
-            </div>
-            <div class="inline-flex items-start justify-start gap-1">
-                <div class="pl-1 pr-2 py-0.5 bg-gray-50 rounded-full justify-start items-center gap-1 flex">
-                    <div class="flex items-center justify-center w-5 h-5 px-1 py-1">
-                        <div class="w-3 h-3.5 relative flex-col justify-start items-start flex">
-                            <div class="relative w-5 h-5">
-                                <div class="w-3 h-3.5 left-[3.86px] top-[3.35px] absolute"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-gray-900 text-xs font-normal font-['Inter']">DEEE (Electronice &...</div>
-                </div>
-                <div class="self-stretch px-2 py-0.5 bg-gray-50 rounded-full justify-start items-center gap-1 flex">
-                    <div class="text-gray-900 text-xs font-normal font-['Inter']">+3</div>
-                </div>
-            </div>
-        </div> -->
     </button>
 </template>
 

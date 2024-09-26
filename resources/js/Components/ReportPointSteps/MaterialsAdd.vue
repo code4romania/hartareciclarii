@@ -21,7 +21,7 @@
 <script setup>
     import { computed } from 'vue';
     import { usePage } from '@inertiajs/vue3';
-    import { groupMaterialsByCategory } from '@/Helpers/useMaterials.js';
+    import cloneDeep from 'lodash.clonedeep';
     import MaterialsChecklist from '@/Components/Form/MaterialsChecklist.vue';
 
     const props = defineProps({
@@ -43,11 +43,13 @@
 
     const materials = computed(() =>
         page.props.materials.items.map((material) => {
-            material = { ...material };
+            material = cloneDeep(material);
+
             if (props.preselectedMaterials.includes(material.id)) {
                 material.checked = true;
                 material.disabled = true;
             }
+
             return material;
         })
     );

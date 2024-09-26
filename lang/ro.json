@@ -26,7 +26,6 @@
     "sidebar.search_material_label": "Caută material",
     "sidebar.search_point_placeholder": "Exemplu căutare",
     "sidebar.service_type_label": "Tip serviciu",
-    "sidebar.materials": "Material colectat",
     "sidebar.collection_point_type_label": "Tip punct de colectare",
     "sidebar.clear_filters_label": "Șterge filtre",
     "sidebar.search": "Caută",
@@ -36,6 +35,24 @@
 
     "filter.title": "Filtre",
     "filter.service_type": "Tip serviciu",
+    "filter.point_type.reduce": "Tip punct reducere deșeuri",
+    "filter.point_type.repairs": "Tip punct reparații",
+    "filter.point_type.reuse": "Tip punct reutilizare",
+    "filter.point_type.waste_collection": "Tip punct colectare",
+
+    "filter.characteristics.other": "Caracteristici punct",
+    "filter.characteristics.donations": "Caracteristici punct donații",
+    "filter.characteristics.reduce": "Caracteristici punct reducere deșeuri",
+    "filter.characteristics.repairs": "Caracteristici punct reparații",
+    "filter.characteristics.reuse": "Caracteristici punct reutilizare",
+    "filter.characteristics.waste_collection": "Caracteristici reciclator",
+
+    "filter.characteristics.offer_transport": "Oferă transport",
+    "filter.characteristics.offer_money": "Oferă bani",
+    "filter.characteristics.offer_vouchers": "Oferă voucher",
+    "filter.characteristics.request_payment": "Oferă servicii gratis",
+
+    "filter.materials": "Material colectat",
     "filter.status": "Status punct",
     "filter.clear": "Șterge filtre",
 

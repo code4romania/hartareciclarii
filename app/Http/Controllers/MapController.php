@@ -19,6 +19,7 @@ use App\Models\Material;
 use App\Models\MaterialCategory;
 use App\Models\Point;
 use App\Models\Problem\ProblemType;
+use App\Models\Scopes\FilteredPointsScope;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
@@ -99,7 +100,7 @@ class MapController extends Controller
                     ->take(5)
                     ->query(
                         fn (Builder $query) => $query
-                            ->with('categories')
+                            ->with('categories.media')
                             ->whereHas('points', fn (Builder $query) => $query->orderByDistance('location', $coordinates->getCenter()))
                     )
                     ->get()
@@ -207,6 +208,8 @@ class MapController extends Controller
                 ])
                 ->values(),
 
+            'filter' => request()->filters(),
+
             'points' => function () use ($coordinates) {
                 if (! $coordinates->hasBounds()) {
                     return [];
@@ -216,10 +219,12 @@ class MapController extends Controller
                     Point::query()
                         ->with('serviceType:id,slug')
                         ->whereMatchesCoordinates($coordinates)
+                        ->withGlobalScope('filtered', new FilteredPointsScope(request()->filters()))
                         ->take(2000)
                         ->get(['id', 'location', 'service_type_id'])
                 );
             },
+
             ...$props,
         ]);
     }

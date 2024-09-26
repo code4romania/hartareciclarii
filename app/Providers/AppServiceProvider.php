@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\Filter;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Notifications\Livewire\DatabaseNotifications;
@@ -55,9 +56,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
-            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
-            ->join(''));
+        $this->registerStrMacros();
+        $this->registerRequestMacros();
 
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
 
@@ -97,5 +97,27 @@ class AppServiceProvider extends ServiceProvider
             'temporary_upload' => \App\Models\TemporaryUpload::class,
             'user' => \App\Models\User::class,
         ]);
+    }
+
+    protected function registerStrMacros(): void
+    {
+        Str::macro('initials', fn (?string $value) => collect(explode(' ', (string) $value))
+            ->map(fn (string $word) => Str::upper(Str::substr($word, 0, 1)))
+            ->join(''));
+    }
+
+    protected function registerRequestMacros(): void
+    {
+        Request::macro('filters', function () {
+            $filterParts = $this->input('filter', []);
+
+            if (\is_string($filterParts)) {
+                return collect();
+            }
+
+            return collect($filterParts)
+                ->filter(fn (mixed $value, string $name) => Filter::isAllowed($name))
+                ->map(fn (mixed $value) => Filter::getValue($value));
+        });
     }
 }

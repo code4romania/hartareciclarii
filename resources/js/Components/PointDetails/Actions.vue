@@ -1,5 +1,5 @@
 <template>
-    <div class="grid items-start justify-between grid-cols-3 gap-10 px-6 py-4 ring-1 ring-gray-200">
+    <div class="grid items-start justify-between grid-cols-3 gap-10 px-6 py-4">
         <a
             :href="googleMapsUrl"
             target="_blank"
