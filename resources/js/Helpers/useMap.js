@@ -36,7 +36,7 @@ export const updateMap = (leafletObject, routeName, routeParams = {}, options = 
 };
 export const refreshPoints = (leafletObject) => {
     updateMap(leafletObject, route().current(), route().params, {
-        only: ['points', 'mapOptions', 'filter'],
+        only: ['points', 'filter'],
         replace: true,
     });
 };
