@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-    import { computed, useTemplateRef } from 'vue';
+    import { computed } from 'vue';
     import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid';
     import { useTemplateRefsList } from '@vueuse/core';
 

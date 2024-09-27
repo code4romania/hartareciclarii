@@ -245,11 +245,17 @@
     watch(
         () => page.props?.filter,
         (filter) => {
-            if (isArray(filter) && !filter.length) {
-                shouldApply.value = false;
-                clearFilters();
-                nextTick(() => (shouldApply.value = true));
+            if (!isArray(filter)) {
+                return;
             }
+
+            shouldApply.value = false;
+
+            if (!filter.length) {
+                clearFilters();
+            }
+
+            nextTick(() => (shouldApply.value = true));
         },
         { deep: true }
     );

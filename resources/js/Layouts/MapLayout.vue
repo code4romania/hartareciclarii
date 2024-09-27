@@ -10,7 +10,7 @@
                 <div
                     class="relative flex gap-4 px-4 py-3 bg-white shadow pointer-events-auto lg:bg-transparent lg:p-0 lg:shadow-none"
                 >
-                    <Search class="relative flex-1" :map="map" @locate="locate" />
+                    <Search class="relative flex-1" @locate="locate" />
 
                     <button
                         type="button"

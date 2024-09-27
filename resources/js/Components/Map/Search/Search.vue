@@ -57,6 +57,7 @@
                             v-if="result.type !== 'location'"
                             :href="result.url"
                             class="flex w-full gap-2 px-4 py-2 text-sm hover:bg-gray-100"
+                            :headers="mapBoundsHeader"
                             @click="clear"
                         >
                             <Icon
@@ -99,19 +100,16 @@
     import axios from 'axios';
     import route from '@/Helpers/useRoute.js';
     import { MagnifyingGlassIcon, MapPinIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/vue/16/solid';
-    import { computed, ref, watch } from 'vue';
-    import { router, usePage, Link } from '@inertiajs/vue3';
+    import { computed, inject, ref, watch } from 'vue';
+    import { usePage, Link } from '@inertiajs/vue3';
     import { useDebounceFn } from '@vueuse/core';
     import Icon from '@/Components/Icon.vue';
     import { getCoordinatesParameter } from '@/Helpers/useCoordinates.js';
-    import { updateMap, closePanel } from '@/Helpers/useMap.js';
+    import { headers, updateMap, closePanel } from '@/Helpers/useMap.js';
 
     const emit = defineEmits(['locate']);
 
-    const props = defineProps({
-        map: Object,
-    });
-
+    const map = inject('map');
     const page = usePage();
 
     const input = ref(null);
@@ -131,10 +129,12 @@
         return true;
     });
 
+    const mapBoundsHeader = computed(() => headers(map.value.leafletObject));
+
     const queryIsValid = computed(() => query.value !== null && query.value.length);
 
     const search = (event) => {
-        updateMap(props.map.leafletObject, 'front.map.search', {
+        updateMap(map.value.leafletObject, 'front.map.search', {
             query: query.value,
         });
 
@@ -152,9 +152,8 @@
         suggesting.value = true;
         loading.value = true;
 
-        const center = props.map.leafletObject.getCenter();
-        const zoom = props.map.leafletObject.getZoom();
-        const bounds = props.map.leafletObject.getBounds();
+        const center = map.value.leafletObject.getCenter();
+        const zoom = map.value.leafletObject.getZoom();
 
         axios
             .get(
@@ -162,11 +161,7 @@
                     coordinates: getCoordinatesParameter(center, zoom),
                     query: query.value,
                 }),
-                {
-                    headers: {
-                        'Map-Bounds': bounds.toBBoxString(),
-                    },
-                }
+                { headers: mapBoundsHeader }
             )
             .then((response) => {
                 if (Array.isArray(response.data)) {

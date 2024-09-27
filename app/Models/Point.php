@@ -194,6 +194,11 @@ class Point extends Model implements HasMedia
             'point_type_id' => (string) $this->pointType->id,
             'address' => $this->address,
             'point_type' => $this->pointType->name,
+
+            'material_ids' => $this->materials
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id),
+
             'materials' => $this->materials
                 ->pluck('name'),
 
@@ -250,6 +255,10 @@ class Point extends Model implements HasMedia
                     [
                         'name' => 'address',
                         'type' => 'string',
+                    ],
+                    [
+                        'name' => 'material_ids',
+                        'type' => 'string[]',
                     ],
                     [
                         'name' => 'materials',
