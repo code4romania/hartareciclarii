@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
 use Inertia\LazyProp;
 use Inertia\Response;
+use Laravel\Scout\Builder as ScoutBuilder;
 
 class MapController extends Controller
 {
@@ -46,6 +47,9 @@ class MapController extends Controller
 
     public function point(Point $point, MapCoordinates $coordinates): Response
     {
+        seo()
+            ->title($point->pointType->name);
+
         return $this->render($coordinates, [
             'context' => 'point',
             'report' => false,
@@ -66,14 +70,6 @@ class MapController extends Controller
                     ->with('children')
                     ->get()
             ),
-        ]);
-    }
-
-    public function material(Material $material, MapCoordinates $coordinates): Response
-    {
-        return $this->render($coordinates, [
-            'context' => 'material',
-            'material' => $material,
         ]);
     }
 
@@ -139,6 +135,7 @@ class MapController extends Controller
     {
         $attributes = $request->validate([
             'query' => ['required', 'string'],
+            'material' => ['nullable', 'integer'],
         ]);
 
         return $this->render($coordinates, [
@@ -149,8 +146,11 @@ class MapController extends Controller
                     return [];
                 }
 
+                $material = data_get($attributes, 'material');
+
                 return SearchResultResource::collection(
                     Point::search($attributes['query'])
+                        ->when($material, fn (ScoutBuilder $query) => $query->where('material_ids', $material))
                         ->take(100)
                         ->query(
                             fn (Builder $query) => $query

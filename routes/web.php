@@ -36,7 +36,7 @@ Route::group([
 Route::group([
     'prefix' => 'submit',
     'as' => 'submit.',
-    'middleware' => HandlePrecognitiveRequests::class,
+    'middleware' => [HandlePrecognitiveRequests::class, 'throttle:submit'],
 ], function () {
     Route::post('/point', SubmitPointController::class)->name('point');
     Route::post('/report/{point}', ReportPointController::class)->name('report');
@@ -46,22 +46,22 @@ Route::group([
     'prefix' => 'media',
     'as' => 'media.',
     'controller' => MediaController::class,
+    'middleware' => 'throttle:media',
 ], function () {
     Route::post('/', 'upload')->name('upload');
     Route::delete('/{media:uuid}', 'delete')->name('delete');
 });
 
 Route::group([
-    // 'prefix' => 'map',
     'as' => 'map.',
     'controller' => MapController::class,
+    'middleware' => 'throttle:map',
 ], function () {
     Route::get('/suggest/{coordinates?}', 'suggest')->name('suggest');
     Route::get('/reverse/{coordinates?}', 'reverse')->name('reverse');
 
     Route::get('/point/{point}/{coordinates?}/report', 'report')->name('report')->middleware('auth');
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
-    Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');
     Route::get('/{coordinates?}', 'index')->name('index');
 });

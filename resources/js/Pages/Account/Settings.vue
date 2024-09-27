@@ -1,4 +1,6 @@
 <template>
+    <Head :title="$t('profile.settings')" />
+
     <div class="container grid gap-10 mx-auto mt-10">
         <div>
             <Link
@@ -24,4 +26,5 @@
     import { ArrowLongLeftIcon } from '@heroicons/vue/20/solid';
     import UpdateProfileForm from '@/Components/Dashboard/UpdateProfileForm.vue';
     import ChangePasswordForm from '@/Components/Dashboard/ChangePasswordForm.vue';
+    import Head from '@/Components/Head.vue';
 </script>

@@ -36,13 +36,47 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('register', function (Request $request) {
-            return Limit::perMinute(config('throttle.register_limit'))->by($request->ip());
-        });
+        RateLimiter::for(
+            'register',
+            fn (Request $request) => Limit::perMinute(config('throttle.register'))
+                ->by($request->ip())
+        );
 
-        RateLimiter::for('login', function (Request $request) {
-            return Limit::perMinute(config('throttle.login_limit'))->by($request->ip());
-        });
+        RateLimiter::for(
+            'login',
+            fn (Request $request) => Limit::perMinute(config('throttle.login'))
+                ->by($request->ip())
+        );
+
+        RateLimiter::for(
+            'forgot-password',
+            fn (Request $request) => Limit::perMinute(config('throttle.forgot-password'))
+                ->by($request->ip())
+        );
+
+        RateLimiter::for(
+            'reset-password',
+            fn (Request $request) => Limit::perMinute(config('throttle.reset-password'))
+                ->by($request->ip())
+        );
+
+        RateLimiter::for(
+            'submit',
+            fn (Request $request) => Limit::perMinute(config('throttle.submit'))
+                ->by($request->user()?->id ?: $request->ip())
+        );
+
+        RateLimiter::for(
+            'media',
+            fn (Request $request) => Limit::perMinute(config('throttle.media'))
+                ->by($request->user()?->id ?: $request->ip())
+        );
+
+        RateLimiter::for(
+            'map',
+            fn (Request $request) => Limit::perMinute(config('throttle.map'))
+                ->by($request->user()?->id ?: $request->ip())
+        );
     }
 
     public static function getDashboardUrl(): string

@@ -1,8 +1,10 @@
 <template>
+    <Head :title="$t('sidebar.search_term', { query: $page.props.query })" />
+
     <div class="flex items-center justify-start gap-2 px-4 pt-4">
         <MagnifyingGlassIcon class="w-6 h-6 text-gray-900" />
 
-        <div class="font-semibold text-gray-900">{{ results.length }} rezultate</div>
+        <div class="font-semibold text-gray-900" v-text="$tChoice('sidebar.results', results.length)" />
     </div>
 
     <div v-if="results.length" class="flex flex-col items-stretch flex-1 overflow-y-scroll divide-y divide-gray-300">
@@ -13,11 +15,12 @@
 </template>
 
 <script setup>
-    import { computed, ref, watch, defineAsyncComponent } from 'vue';
+    import { computed } from 'vue';
     import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
     import { usePage } from '@inertiajs/vue3';
     import Result from '@/Components/Map/Search/Result.vue';
     import EmptyState from '@/Components/Map/Search/EmptyState.vue';
+    import Head from '@/Components/Head.vue';
 
     const emit = defineEmits(['selectPoint']);
 

@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Validator;
 use MatanYadaev\EloquentSpatial\Objects\LineString;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Objects\Polygon;
+use Stringable;
 
-class MapCoordinates
+class MapCoordinates implements Stringable
 {
     public float $latitude = 44.4327;
 
@@ -130,5 +131,10 @@ class MapCoordinates
     public function getZoom(): int
     {
         return $this->zoom;
+    }
+
+    public function __toString(): string
+    {
+        return \sprintf('@%s,%s,%sz', $this->latitude, $this->longitude, $this->zoom);
     }
 }

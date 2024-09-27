@@ -20,34 +20,38 @@ class SuggestionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return match (\get_class($this->resource)) {
-            Point::class => $this->getPointArray(),
-            Material::class => $this->getMaterialArray(),
-            Location::class => $this->getLocationArray(),
+            Point::class => $this->getPointArray($request),
+            Material::class => $this->getMaterialArray($request),
+            Location::class => $this->getLocationArray($request),
         };
     }
 
-    protected function getPointArray(): array
+    protected function getPointArray(Request $request): array
     {
         return [
             'name' => $this->business_name ?? $this->pointType->name,
             'description' => $this->address,
-            'url' => route('front.map.point', $this),
             'type' => 'point',
             'icon' => $this->serviceType->slug,
+            'url' => $this->url,
         ];
     }
 
-    protected function getMaterialArray(): array
+    protected function getMaterialArray(Request $request): array
     {
         return [
             'name' => $this->name,
-            'url' => route('front.map.material', $this),
             'type' => 'material',
             'icon' => $this->icon,
+            'url' => route('front.map.search', [
+                'coordinates' => $request->coordinates,
+                'query' => $this->name,
+                'material' => $this->id,
+            ]),
         ];
     }
 
-    protected function getLocationArray(): array
+    protected function getLocationArray(Request $request): array
     {
         return [
             'name' => $this->name,
