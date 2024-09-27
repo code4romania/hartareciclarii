@@ -15,8 +15,16 @@
                 @keydown.enter.prevent
             />
 
-            <ul v-if="results.length" class="grid gap-0.5 w-full" :class="{ 'mt-4': !searchable }">
-                <Accordion v-for="category in results" :key="`category-${category.id}`" as="ul">
+            <ul
+                v-if="results.length"
+                class="grid w-full"
+                :class="{
+                    'mt-4': !searchable,
+                    'gap-0.5': !simple,
+                    'gap-4': simple,
+                }"
+            >
+                <Accordion v-for="category in results" :key="`category-${category.id}`" as="ul" :simple="simple">
                     <template #icon>
                         <img :src="category.icon" alt="" />
                     </template>
@@ -25,8 +33,15 @@
                         {{ category.name }}
                     </template>
 
-                    <ul class="divide-y divide-gray-200">
-                        <li v-for="({ item }, index) in category.materials" :key="`material-${index}`" class="pl-12">
+                    <ul :class="{ 'divide-y divide-gray-200': !simple }">
+                        <li
+                            v-for="({ item }, index) in category.materials"
+                            :key="`material-${index}`"
+                            :class="{
+                                'pl-6': simple,
+                                'pl-12': !simple,
+                            }"
+                        >
                             <label class="relative flex py-1 gap-x-2">
                                 <input
                                     :ref="refs.set"
@@ -97,6 +112,10 @@
             default: false,
         },
         clearable: {
+            type: Boolean,
+            default: false,
+        },
+        simple: {
             type: Boolean,
             default: false,
         },

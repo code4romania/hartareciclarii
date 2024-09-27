@@ -37,6 +37,7 @@
                     class="py-6"
                     searchable
                     clearable
+                    simple
                 />
 
                 <CheckboxList
