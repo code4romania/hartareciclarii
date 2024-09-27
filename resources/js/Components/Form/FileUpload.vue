@@ -87,18 +87,6 @@
             type: String,
             default: null,
         },
-        options: {
-            type: Array,
-            default: () => [],
-        },
-        optionValueKey: {
-            type: String,
-            default: 'value',
-        },
-        optionLabelKey: {
-            type: String,
-            default: 'label',
-        },
         modelValue: {
             type: [Array],
             default: () => [],

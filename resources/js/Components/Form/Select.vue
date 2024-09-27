@@ -19,7 +19,6 @@
 
 <script setup>
     import { computed, ref } from 'vue';
-    import { CheckIcon } from '@heroicons/vue/16/solid';
     import Select from 'primevue/select';
     import FormField from '@/Components/Form/Field.vue';
 

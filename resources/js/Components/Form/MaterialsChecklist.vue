@@ -63,7 +63,7 @@
                                         'border-red-500': invalid,
                                     }"
                                 >
-                                    <component :is="!remove ? CheckIcon : XMarkIcon" />
+                                    <component :is="!remove ? CheckIcon : XMarkIcon" class="w-full h-full" />
                                 </div>
 
                                 <span
