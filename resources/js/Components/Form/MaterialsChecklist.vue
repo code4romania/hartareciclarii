@@ -25,7 +25,7 @@
                 }"
             >
                 <Accordion v-for="category in results" :key="`category-${category.id}`" as="ul" :simple="simple">
-                    <template #icon>
+                    <template v-if="!simple" #icon>
                         <img :src="category.icon" alt="" />
                     </template>
 
