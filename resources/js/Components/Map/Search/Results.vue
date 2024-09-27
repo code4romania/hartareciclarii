@@ -1,4 +1,6 @@
 <template>
+    <Head :title="$t('sidebar.search_term', { query: $page.props.query })" />
+
     <div class="flex items-center justify-start gap-2 px-4 pt-4">
         <MagnifyingGlassIcon class="w-6 h-6 text-gray-900" />
 
@@ -18,6 +20,7 @@
     import { usePage } from '@inertiajs/vue3';
     import Result from '@/Components/Map/Search/Result.vue';
     import EmptyState from '@/Components/Map/Search/EmptyState.vue';
+    import Head from '@/Components/Head.vue';
 
     const emit = defineEmits(['selectPoint']);
 

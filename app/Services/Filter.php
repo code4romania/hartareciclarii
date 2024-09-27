@@ -41,7 +41,7 @@ class Filter
             return Str::of($value)
                 ->explode(',')
                 ->map(fn ($v) => self::getValue($v))
-                ->all();;
+                ->all();
         }
 
         if ($value === 'true') {

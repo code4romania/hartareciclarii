@@ -30,6 +30,7 @@
     "sidebar.clear_filters_label": "Șterge filtre",
     "sidebar.search": "Caută",
     "sidebar.results": "{0} 0 rezultate|{1} 1 rezultat|[2,19] :count rezultate|[20,*] de rezultate",
+    "sidebar.search_term": "Căutare după \":query\"",
     "sidebar.no_results_found": "Nu am găsit niciun rezultat pentru \":query\". în zona de căutare. Folosiți un alt termen de căutare sau extindeți zona prin zoom out pe hartă.",
     "sidebar.see_all_points": "Vezi toate punctele",
 

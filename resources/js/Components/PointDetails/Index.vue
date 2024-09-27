@@ -2,6 +2,8 @@
     <article
         class="relative max-h-full overflow-x-hidden overflow-y-auto text-sm bg-white border border-gray-300 shadow pointer-events-auto rounded-2xl"
     >
+        <Head :title="point.name" />
+
         <Heading :service="point.service" :name="point.name" @close="closePanel(map.leafletObject)" />
 
         <Subheading :subheading="point.subheading" :status="point.status" />
@@ -50,6 +52,7 @@
     import Schedule from '@/Components/PointDetails/Schedule.vue';
     import Subheading from '@/Components/PointDetails/Subheading.vue';
     import Website from '@/Components/PointDetails/Website.vue';
+    import Head from '@/Components/Head.vue';
 
     const map = inject('map');
 

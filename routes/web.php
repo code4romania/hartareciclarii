@@ -61,7 +61,6 @@ Route::group([
 
     Route::get('/point/{point}/{coordinates?}/report', 'report')->name('report')->middleware('auth');
     Route::get('/point/{point}/{coordinates?}', 'point')->name('point');
-    Route::get('/material/{material}/{coordnates?}', 'material')->name('material');
     Route::get('/search/{coordinates}', 'search')->name('search');
     Route::get('/{coordinates?}', 'index')->name('index');
 });

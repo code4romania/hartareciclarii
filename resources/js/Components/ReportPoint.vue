@@ -13,6 +13,8 @@
         </template>
 
         <template #default>
+            <Head :title="$t('report.title')" />
+
             <ThanksStep v-if="form.wasSuccessful" :problem-type="problemType" :point="point" :close="close" />
 
             <div v-else class="grid gap-4">
@@ -158,6 +160,7 @@
     import MaterialsRemoveStep from '@/Components/ReportPointSteps/MaterialsRemove.vue';
     import MaterialsOtherStep from '@/Components/ReportPointSteps/MaterialsOther.vue';
     import ThanksStep from '@/Components/ReportPointSteps/Thanks.vue';
+    import Head from '@/Components/Head.vue';
 
     const page = usePage();
 

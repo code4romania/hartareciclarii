@@ -1,4 +1,6 @@
 <template>
+    <Head />
+
     <div
         class="flex flex-col overflow-hidden bg-gray-100"
         :class="{
@@ -17,6 +19,7 @@
 <script setup>
     import { computed } from 'vue';
     import route from '@/Helpers/useRoute';
+    import Head from '@/Components/Head.vue';
     import EmailVerifiedAlert from '@/Components/EmailVerifiedAlert.vue';
     import Header from '@/Components/Navigation/Header.vue';
     import { usePage } from '@inertiajs/vue3';

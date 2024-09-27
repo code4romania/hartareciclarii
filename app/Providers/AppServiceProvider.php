@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\Filter;
-use Filament\Facades\Filament;
-use Filament\Navigation\NavigationGroup;
 use Filament\Notifications\Livewire\DatabaseNotifications;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
@@ -32,23 +30,7 @@ class AppServiceProvider extends ServiceProvider
 
         Number::useLocale(app()->getLocale());
 
-        Filament::serving(function () {
-            Filament::registerNavigationGroups([
-                NavigationGroup::make()
-                    ->label('Settings')
-                    // ->icon('heroicon-s-cog')
-                    ->collapsed(),
-            ]);
-
-            Filament::registerNavigationItems([
-            ]);
-        });
-
-        Filament::registerNavigationGroups([
-            'Harta' => NavigationGroup::make()->label(__('nav.harta')),
-            'Rapoarte' => NavigationGroup::make()->label(__('nav.reports')),
-            'Settings' => NavigationGroup::make()->label(__('nav.settings')),
-        ]);
+        $this->setSeoDefaults();
     }
 
     /**
@@ -97,6 +79,21 @@ class AppServiceProvider extends ServiceProvider
             'temporary_upload' => \App\Models\TemporaryUpload::class,
             'user' => \App\Models\User::class,
         ]);
+    }
+
+    protected function setSeoDefaults(): void
+    {
+        seo()
+            ->withUrl()
+            ->title(
+                default: config('app.name'),
+                modifier: fn (string $title) => $title . ' — ' . config('app.name')
+            )
+            // TODO: Add a default description
+            // ->description(default: '')
+            ->locale(app()->getLocale())
+            ->favicon()
+            ->twitter();
     }
 
     protected function registerStrMacros(): void

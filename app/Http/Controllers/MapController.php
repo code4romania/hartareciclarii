@@ -47,6 +47,9 @@ class MapController extends Controller
 
     public function point(Point $point, MapCoordinates $coordinates): Response
     {
+        seo()
+            ->title($point->pointType->name);
+
         return $this->render($coordinates, [
             'context' => 'point',
             'report' => false,

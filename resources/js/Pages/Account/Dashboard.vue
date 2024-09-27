@@ -1,4 +1,6 @@
 <template>
+    <Head :title="$t('profile.my_profile')" />
+
     <div class="container mx-auto mt-10 space-y-12">
         <div class="flex flex-col gap-6 lg:flex-row">
             <div
@@ -83,6 +85,7 @@
     import ContributionsCounter from '@/Components/Dashboard/ContributionsCounter.vue';
     import Table from '@/Components/Table/Table.vue';
     import Icon from '@/Components/Icon.vue';
+    import Head from '@/Components/Head.vue';
 
     const props = defineProps({
         contributions: {
