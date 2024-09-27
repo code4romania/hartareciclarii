@@ -70,14 +70,6 @@ class MapController extends Controller
         ]);
     }
 
-    public function material(Material $material, MapCoordinates $coordinates): Response
-    {
-        return $this->render($coordinates, [
-            'context' => 'material',
-            'material' => $material,
-        ]);
-    }
-
     public function suggest(Request $request, MapCoordinates $coordinates): JsonResource
     {
         $attributes = $request->validate([
