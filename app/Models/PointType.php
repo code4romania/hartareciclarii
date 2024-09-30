@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PointType extends Model
 {
@@ -15,4 +17,14 @@ class PointType extends Model
         'name',
         'service_type_id',
     ];
+
+    public function serviceType(): BelongsTo
+    {
+        return $this->belongsTo(ServiceType::class);
+    }
+
+    public function points(): HasMany
+    {
+        return $this->hasMany(Point::class);
+    }
 }
