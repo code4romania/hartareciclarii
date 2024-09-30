@@ -100,6 +100,6 @@ class PointTypeResource extends Resource
      */
     public static function isDiscovered(): bool
     {
-        return false;
+        return true;
     }
 }
