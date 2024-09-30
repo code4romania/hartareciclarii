@@ -32,7 +32,7 @@ class Material extends Model
 
     public function icon(): Attribute
     {
-        return new Attribute(fn () => $this->categories->first()->getFirstMediaUrl());
+        return new Attribute(fn () => $this->categories->first()?->getFirstMediaUrl());
     }
 
     protected function makeAllSearchableUsing(Builder $query): Builder
