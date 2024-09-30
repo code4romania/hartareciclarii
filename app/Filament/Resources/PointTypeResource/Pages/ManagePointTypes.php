@@ -8,10 +8,10 @@ use App\Filament\Resources\PointTypeResource;
 use App\Models\ServiceType;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListPointTypes extends ListRecords
+class ManagePointTypes extends ManageRecords
 {
     protected static string $resource = PointTypeResource::class;
 

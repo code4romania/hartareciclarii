@@ -91,7 +91,7 @@ class PointTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPointTypes::route('/'),
+            'index' => Pages\ManagePointTypes::route('/'),
         ];
     }
 
@@ -100,6 +100,6 @@ class PointTypeResource extends Resource
      */
     public static function isDiscovered(): bool
     {
-     return false;
+        return false;
     }
 }

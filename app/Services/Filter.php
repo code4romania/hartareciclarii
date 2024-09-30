@@ -14,6 +14,8 @@ class Filter
         'repairs',
         'reuse',
         'waste_collection',
+        'donations',
+        'other',
         'materials',
         'can',
         'status',

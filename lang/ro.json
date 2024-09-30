@@ -40,6 +40,8 @@
     "filter.point_type.repairs": "Tip punct reparații",
     "filter.point_type.reuse": "Tip punct reutilizare",
     "filter.point_type.waste_collection": "Tip punct colectare",
+    "filter.point_type.donations": "Tip punct donații",
+    "filter.point_type.other": "Tip alt punct",
 
     "filter.characteristics.other": "Caracteristici punct",
     "filter.characteristics.donations": "Caracteristici punct donații",
