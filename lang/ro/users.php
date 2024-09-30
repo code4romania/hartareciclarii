@@ -24,7 +24,7 @@ return [
     'password' => 'Parola',
     'roles' => 'Roluri',
     'points_count' => 'Numar puncte adǎugate',
-    'issues_count' => 'Numar probleme adǎugate',
+    'problems_count' => 'Numar probleme adǎugate',
     'last_login_date' => 'Ultima datǎ de conectare',
 
 ];

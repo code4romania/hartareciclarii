@@ -98,9 +98,9 @@ class UserResource extends Resource
                     ->counts('points')
                     ->sortable(),
 
-                TextColumn::make('issues_count')
+                TextColumn::make('problems_count')
                     ->label(__('users.issues_count'))
-                    ->counts('issues')
+                    ->counts('problems')
                     ->sortable(),
 
                 TextColumn::make('last_login_date')->date('Y-m-d H:i:s')

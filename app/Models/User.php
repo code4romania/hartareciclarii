@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Problem\Problem;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -106,9 +107,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName, 
         return auth()->user()->can('admin_login');
     }
 
-    public function issues(): HasMany
+    public function problems(): HasMany
     {
-        return $this->hasMany(Issue::class);
+        return $this->hasMany(Problem::class);
     }
 
     public function points(): HasMany
