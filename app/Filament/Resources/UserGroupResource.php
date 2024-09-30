@@ -20,11 +20,13 @@ class UserGroupResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Settings';
-
     public static function getModelLabel(): string
     {
         return __('users.group.singular');
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
     }
 
     public static function getPluralLabel(): string

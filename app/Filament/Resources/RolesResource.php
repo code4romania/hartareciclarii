@@ -24,9 +24,12 @@ class RolesResource extends Resource
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-adjustments-horizontal';
 
-    protected static ?string $navigationGroup = 'Settings';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
+    }
 
     public static function form(Form $form): Form
     {

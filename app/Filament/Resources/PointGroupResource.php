@@ -19,9 +19,12 @@ class PointGroupResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
-    protected static ?string $navigationGroup = 'Settings';
-
     protected static ?int $navigationSort = 5;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
+    }
 
     public static function getModelLabel(): string
     {

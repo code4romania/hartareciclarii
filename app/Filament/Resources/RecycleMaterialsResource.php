@@ -22,7 +22,6 @@ class RecycleMaterialsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
 
-    protected static ?string $navigationGroup = 'Settings';
 
     public static function getModelLabel(): string
     {
@@ -32,6 +31,10 @@ class RecycleMaterialsResource extends Resource
     public static function getPluralLabel(): string
     {
         return  __('materials.plural');
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
     }
 
     protected static ?int $navigationSort = 4;

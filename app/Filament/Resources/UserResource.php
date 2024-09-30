@@ -26,9 +26,12 @@ class UserResource extends Resource
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-users';
 
-    protected static ?string $navigationGroup = 'Settings';
-
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): ?string
+    {
+     return __('nav.settings');
+    }
 
     public static function form(Form $form): Form
     {

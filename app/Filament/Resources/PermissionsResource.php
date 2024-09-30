@@ -23,9 +23,12 @@ class PermissionsResource extends Resource
 
     protected static ?string $activeNavigationIcon = 'heroicon-s-no-symbol';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?int $navigationSort = 6;
 
-    protected static ?int $navigationSort = 1;
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
+    }
 
     public static function form(Form $form): Form
     {
