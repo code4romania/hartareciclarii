@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
+use Illuminate\Validation\ValidationException;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
 
 class PointImporter extends Importer
@@ -60,7 +61,17 @@ class PointImporter extends Importer
                 ->example('București')
                 ->label(__('map_points.county'))
                 ->validationAttribute('county')
-                ->relationship(name:'county', resolveUsing: 'name')
+                ->fillRecordUsing(function (Point $record, string $state) {
+                    $city = City::search($state)->where('county', $state)->first();
+                    if (! $city) {
+                        throw ValidationException::withMessages(
+                            [
+                                'county' => __('validation.county_city_exists'),
+                            ]
+                        );
+                    }
+                    $record->county_id = $city->county_id;
+                })
                 ->rules(
                     [
                         'required',
@@ -68,15 +79,22 @@ class PointImporter extends Importer
                     ]
                 ),
 
-            ImportColumn::make('city_id')
+            ImportColumn::make('city')
                 ->label(__('map_points.city'))
                 ->example('Sector 2')
                 ->validationAttribute('city')
                 ->fillRecordUsing(function (Point $record, string $state) {
-                    $cityId = City::search($state)->where('county', $record->county->name)->first()?->id ?? 0;
-                    if ($cityId !== 0) {
-                        $record->city_id = $cityId;
+                    $cityId = City::search($state)->where('county', $record->county->name)->first()?->id;
+                    if (! $cityId) {
+                        throw ValidationException::withMessages(
+                            [
+                                'city' => __('validation.exists', [
+                                    'attribute' => __('map_points.city'),
+                                ]),
+                            ]
+                        );
                     }
+                    $record->city_id = $cityId;
                 })
                 ->requiredMapping()
                 ->rules(
@@ -263,5 +281,28 @@ class PointImporter extends Importer
             $this->import->service_type_id = $this->options['service_type_id'];
             $this->import->save();
         }
+    }
+
+    public function getValidationAttributes(): array
+    {
+        return [
+            'latitude' => __('map_points.fields.latitude'),
+            'longitude' => __('map_points.fields.longitude'),
+            'pointType' => __('map_points.fields.point_type'),
+            'county' => __('map_points.county'),
+            'city' => __('map_points.city'),
+            'address' => __('map_points.fields.address'),
+            'notes' => __('map_points.fields.notes'),
+            'observations' => __('map_points.fields.observations'),
+            'administered_by' => __('map_points.fields.administered_by'),
+            'business_name' => __('map_points.fields.business_name'),
+            'offers_money' => __('map_points.fields.offers_money'),
+            'offers_transport' => __('map_points.fields.offers_transport'),
+            'schedule' => __('map_points.fields.schedule'),
+            'email' => __('map_points.fields.email'),
+            'website' => __('map_points.fields.website'),
+            'materials' => __('map_points.fields.materials'),
+
+        ];
     }
 }

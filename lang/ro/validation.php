@@ -42,6 +42,7 @@ return [
     'ends_with' => 'Câmpul :attribute trebuie să se încheie cu una din următoarele valori: :values',
     'enum' => 'Câmpul :attribute selectat nu este valid.',
     'exists' => 'Câmpul :attribute selectat nu este valid.',
+    'county_city_exists' => 'Nu am putut găsi județul sau localitatea introduse.',
     'file' => 'Câmpul :attribute trebuie să fie un fișier.',
     'filled' => 'Câmpul :attribute trebuie completat.',
     'gt' => [
