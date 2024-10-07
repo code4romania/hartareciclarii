@@ -10,6 +10,7 @@ use App\Models\Material;
 use App\Models\Point;
 use App\Models\PointGroup;
 use App\Models\ServiceType;
+use Carbon\CarbonInterface;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -141,6 +142,11 @@ class PointImporter extends Importer
                 ->ignoreBlankState(),
 
         ];
+    }
+
+    public function getJobRetryUntil(): ?CarbonInterface
+    {
+        return null;
     }
 
     public function resolveRecord(): ?Point
