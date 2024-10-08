@@ -11,6 +11,7 @@ use Laravel\Scout\Searchable;
 class County extends Model
 {
     use Searchable;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -21,5 +22,39 @@ class County extends Model
     public function cities(): HasMany
     {
         return $this->hasMany(City::class);
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => (string) $this->id,
+            'name' => $this->name,
+        ];
+    }
+
+    public static function getTypesenseModelSettings(): array
+    {
+        return [
+            'collection-schema' => [
+                'fields' => [
+                    [
+                        'name' => 'id',
+                        'type' => 'string',
+                    ],
+                    [
+                        'name' => 'name',
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+            'search-parameters' => [
+                'query_by' => 'name',
+            ],
+        ];
     }
 }

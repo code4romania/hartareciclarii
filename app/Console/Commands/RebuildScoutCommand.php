@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\City;
-use App\Models\Material;
-use App\Models\Point;
 use Illuminate\Console\Command;
 
 class RebuildScoutCommand extends Command
@@ -24,12 +21,6 @@ class RebuildScoutCommand extends Command
      * @var string
      */
     protected $description = 'Rebuilds the search index for all searchable models';
-
-    protected array $models = [
-        City::class,
-        Material::class,
-        Point::class,
-    ];
 
     /**
      * Execute the console command.
