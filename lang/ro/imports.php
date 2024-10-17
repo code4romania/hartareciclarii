@@ -15,6 +15,7 @@ return [
     'import_map_points_label' => 'Adauga o lista de import de format .xlsx',
     'sub_heading' => 'Import initiat de %s la %s finalizat la %s',
     'not_imported' => 'Neimportate (%s)',
+    'remove_points' => 'Sterge punctele',
     'imported' => 'Importate (%s)',
     'import_record_label' => 'Import Report #',
     'status' => [

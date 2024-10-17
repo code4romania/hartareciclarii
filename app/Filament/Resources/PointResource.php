@@ -216,6 +216,8 @@ class PointResource extends Resource
 
             TextColumn::make('administered_by')
                 ->label(__('map_points.managed_by'))
+                ->searchable()
+                ->sortable()
                 ->wrap(),
 
             TextColumn::make('materials.name')

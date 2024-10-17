@@ -7,11 +7,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ImportResource\Pages;
 use App\Models\Import;
 use Carbon\Carbon;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ImportResource extends Resource
@@ -40,7 +42,7 @@ class ImportResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return  (string) Cache::remember('import_count', now()->addMinutes(5), function () {
-            return Import::whereNull('completed_at')->count();
+            return Import::count();
         });
     }
 
@@ -70,7 +72,7 @@ class ImportResource extends Resource
                     ->label(__('import.columns.completed_at'))
                     ->placeholder(__('import.status.processing'))
                     ->formatStateUsing(function (string $state) {
-                        return $state ? Carbon::createFromTimestamp($state)->format('Y-m-d H:m:s') : 'N/A';
+                        return $state ? Carbon::createFromTimestamp($state)->diffForHumans() : 'N/A';
                     })
                     ->searchable(),
 
@@ -118,7 +120,19 @@ class ImportResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->form([
+                            Toggle::make('remove_points')
+                                ->label(__('imports.remove_points'))
+                                ->default(false),
+                        ])->action(function (Collection $records, array $data) {
+                        $records->each(function (Import $record) use ($data) {
+                            if ($data['remove_points']) {
+                                $record->points()->delete();
+                            }
+                            $record->delete();
+                        });
+                    }),
                 ]),
             ]);
     }
