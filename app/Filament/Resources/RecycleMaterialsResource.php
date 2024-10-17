@@ -13,6 +13,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -84,16 +87,13 @@ class RecycleMaterialsResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make()->action(function ($record) {
-                        $record->aliases()->delete();
-                        $record->delete();
-                    }),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
