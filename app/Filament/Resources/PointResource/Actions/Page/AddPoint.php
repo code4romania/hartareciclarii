@@ -145,7 +145,6 @@ class AddPoint extends Action
                 'location' => new PointObject($data['location']['lat'], $data['location']['lng']),
                 'county_id' => $data['county_id'],
                 'city_id' => $data['city_id'],
-                'status' => Status::VERIFIED,
                 'address' => $data['address'],
                 'business_name' => $data['business_name'] ?? null,
                 'administered_by' => $data['administered_by'] ?? null,
@@ -155,6 +154,7 @@ class AddPoint extends Action
                 'offers_vouchers' => $data['offers_vouchers'] ?? null,
                 'free_of_charge' => $data['free_of_charge'] ?? null,
                 'website' => $data['website'] ?? null,
+                'verified_at' => now(),
                 'email' => $data['email'] ?? null,
                 'phone' => $data['phone'] ?? null,
             ]);

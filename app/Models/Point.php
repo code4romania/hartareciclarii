@@ -328,4 +328,5 @@ class Point extends Model implements HasMedia
             return Status::VERIFIED;
         });
     }
+
 }

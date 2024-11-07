@@ -31,6 +31,8 @@ return [
     'point_save_success' => 'Punct salvat cu succes',
     'import_materials' => 'Importa materiale',
     'use_default_values' => 'Foloseste valorile implicite',
+    'proximity_points' => 'Puncte in apropiere care au accealeasi caracteristici',
+    'distance' => 'Distanță',
 
     'subheading' => ':serviceType :pointType administrat de :administeredBy alocat la grup :group',
 

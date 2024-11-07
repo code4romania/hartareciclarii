@@ -120,8 +120,12 @@ class ViewMapPoint extends ViewRecord
                 Section::make(__('map_points.sections.location'))
                     ->schema(
                         [
+
                             TextEntry::make('address')
                                 ->icon('heroicon-s-map-pin')
+                                ->formatStateUsing(function (string $state, $record) {
+                                    return  \sprintf('%s, %s, %s', $record->address, $record->city->name, $record->county->name);
+                                })
                                 ->label(__('map_points.fields.address')),
 
                             TextEntry::make('location')
@@ -334,36 +338,13 @@ class ViewMapPoint extends ViewRecord
         )->columns(12);
     }
 
-    public function table(Table $table): Table
+    protected function getFooterWidgets(): array
     {
-        return $table
-            ->query(ActionLogModel::whereModel(\get_class($this->getRecord()))->whereModelId($this->getRecord()->id)->orderBy('created_at', 'desc'))
-            ->columns([
-                TextColumn::make('user.name')
-                    ->formatStateUsing(function (string $state, $record) {
-                    })
-                    ->html(),
-                TextColumn::make('action')
-                    ->formatStateUsing(function (string $state, $record) {
-                        return trans('actions.' . $record->action);
-                    })
-                    ->html(),
-                TextColumn::make('old_values')
-                    ->formatStateUsing(function (string $state, $record) {
-                        return ActionLogModel::formatValuesText($record, 'old_values');
-                    })
-                    ->wrap()
-                    ->html(),
-                TextColumn::make('new_values')
-                    ->formatStateUsing(function (string $state, $record) {
-                        return ActionLogModel::formatValuesText($record, 'new_values');
-                    })
-                    ->wrap()
-                    ->html(),
-                TextColumn::make('created_at'),
-
-            ]);
+     return [
+       PointResource\Widgets\PointFromProximity::class
+     ];
     }
+
 
     private function showField(string $string): bool
     {
