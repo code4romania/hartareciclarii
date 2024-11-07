@@ -71,9 +71,7 @@ export const closePanel = (leafletObject) => {
     const coordinates = getCoordinatesParameter(props.center, props.zoom);
 
     router.visit(route('front.map.index', { coordinates }), {
-        headers: {
-            'Map-Bounds': props.bounds,
-        },
+        headers: headers(leafletObject),
     });
 };
 
