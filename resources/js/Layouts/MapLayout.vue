@@ -50,7 +50,7 @@
                 <LControlScale position="bottomleft" :imperial="false" />
 
                 <LTileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                     layer-type="base"
                     subdomains="abcd"
                     name="OpenStreetMap"

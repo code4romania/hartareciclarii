@@ -42,7 +42,7 @@ return [
     'ends_with' => 'Câmpul :attribute trebuie să se încheie cu una din următoarele valori: :values',
     'enum' => 'Câmpul :attribute selectat nu este valid.',
     'exists' => 'Câmpul :attribute selectat nu este valid.',
-    'county_city_exists' => 'Nu am putut găsi județul sau localitatea introduse.',
+    'county' => 'Nu am putut găsi județul introdus.',
     'file' => 'Câmpul :attribute trebuie să fie un fișier.',
     'filled' => 'Câmpul :attribute trebuie completat.',
     'gt' => [
@@ -117,6 +117,8 @@ return [
     'prohibited_unless' => 'Câmpul :attribute este interzis, cu excepția cazului în care :other este în :values.',
     'prohibits' => 'Câmpul :attribute nu permite ca :other să fie prezent.',
     'regex' => 'Câmpul :attribute nu are un format valid.',
+    'regex_valid_latitude' => 'Campul latitudine nu are o forma valida.',
+    'regex_valid_longitude' => 'Campul longitudine nu are o forma valida.',
     'required' => 'Câmpul este obligatoriu.',
     'required_array_keys' => 'Câmpul :attribute trebuie să conțină valori pentru: :values.',
     'required_if' => 'Câmpul :attribute este necesar când :other este :value.',

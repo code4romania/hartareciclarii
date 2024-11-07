@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
 
@@ -61,12 +62,14 @@ class PointImporter extends Importer
                 ->example('București')
                 ->label(__('map_points.county'))
                 ->validationAttribute('county')
-                ->fillRecordUsing(function (Point $record, string $state) {
-                    $city = City::search($state)->where('county', $state)->first();
+                ->fillRecordUsing(function (Point $record, string $state, Get $get) {
+                    $city = City::search()
+                        ->where('county', $state)
+                        ->first();
                     if (! $city) {
                         throw ValidationException::withMessages(
                             [
-                                'county' => __('validation.county_city_exists'),
+                                'county' => __('validation.county'),
                             ]
                         );
                     }
@@ -169,6 +172,17 @@ class PointImporter extends Importer
 
     public function resolveRecord(): ?Point
     {
+        Validator::make(
+            ['latitude' => $this->data['latitude'], 'longitude' => $this->data['longitude']],
+            [
+                'latitude' => ['required', 'regex:^\d{2}\.\d{5}\d*^'],
+                'longitude' => ['required', 'regex:^\d{2}\.\d{5}\d*^'],
+            ],
+            [
+                'latitude.regex' => __('validation.regex_valid_latitude'),
+                'longitude.regex' => __('validation.regex_valid_longitude'),
+            ]
+        )->validate();
         $this->data['location'] = new PointObject((float) $this->data['latitude'], (float) $this->data['longitude']);
         unset($this->data['latitude'], $this->data['longitude']);
 
