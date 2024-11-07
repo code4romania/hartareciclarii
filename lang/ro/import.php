@@ -12,7 +12,7 @@ return [
         'created_at' => 'Creat la',
         'started_at' => 'Inceput la',
         'completed_at' => 'Finalizat la',
-        'processed' => 'Adaugate',
+        'processed' => 'Numar de randuri procesate',
         'failed' => 'Abandonate',
         'duration' => 'Durata',
         'status' => 'Status',

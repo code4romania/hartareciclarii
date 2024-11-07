@@ -79,6 +79,9 @@ class ImportResource extends Resource
                 Tables\Columns\TextColumn::make('successful_rows')
                     ->label(__('import.columns.processed'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('points_count')
+            ->counts('points')
+            ->label(__('common.points_count')),
 
                 Tables\Columns\TextColumn::make('error_rows')
                     ->label(__('import.columns.failed')),
