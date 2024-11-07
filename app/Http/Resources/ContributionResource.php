@@ -23,6 +23,9 @@ class ContributionResource extends JsonResource
             (new Point)->getMorphClass() => $this->model,
             (new Problem)->getMorphClass() => $this->model->point,
         };
+        if (!$point) {
+            return [];
+        }
 
         return [
             'id' => $point->id,
