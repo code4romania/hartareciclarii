@@ -32,6 +32,7 @@ return [
     'import_materials' => 'Importa materiale',
     'use_default_values' => 'Foloseste valorile implicite',
     'proximity_points' => 'Puncte in apropiere care au accealeasi caracteristici',
+    'proximity_count' => 'Numar puncte posibil duplicate',
     'distance' => 'Distanță',
 
     'subheading' => ':serviceType :pointType administrat de :administeredBy alocat la grup :group',

@@ -211,6 +211,7 @@ class PointResource extends Resource
                 ->label(__('map_points.id'))
                 ->sortable()
                 ->searchable(),
+
             TextColumn::make('serviceType.name')
                 ->label(__('map_points.point_type')),
 
@@ -223,8 +224,7 @@ class PointResource extends Resource
             TextColumn::make('materials.name')
                 ->label(__('map_points.materials'))
                 ->searchable()
-                ->limitList(2)
-                ->sortable(),
+                ->limitList(2),
 
             TextColumn::make('county.name')
                 ->label(__('map_points.county'))
@@ -245,6 +245,11 @@ class PointResource extends Resource
                 ->label(__('map_points.group'))
                 ->sortable()
                 ->wrap(),
+
+            TextColumn::make('proximity_count')
+                ->badge()
+                ->color(fn ($state) => $state > 0 ? 'warning' : 'success')
+                ->label(__('map_points.proximity_count')),
 
             TextColumn::make('status')
                 ->sortable()

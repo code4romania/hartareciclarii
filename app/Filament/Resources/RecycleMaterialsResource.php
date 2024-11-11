@@ -25,7 +25,6 @@ class RecycleMaterialsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
 
-
     public static function getModelLabel(): string
     {
         return  __('materials.singular');
@@ -35,6 +34,7 @@ class RecycleMaterialsResource extends Resource
     {
         return  __('materials.plural');
     }
+
     public static function getNavigationGroup(): ?string
     {
         return __('nav.settings');

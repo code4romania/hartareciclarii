@@ -23,7 +23,7 @@ return [
     'phone' => 'Telefon',
     'password' => 'Parola',
     'roles' => 'Roluri',
-    'contributions_count'=> 'Numar contributii',
+    'contributions_count' => 'Numar contributii',
     'last_login_date' => 'Ultima datǎ de conectare',
 
 ];

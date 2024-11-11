@@ -9,15 +9,12 @@ use App\Models\Point;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 
 class PointFromProximity extends BaseWidget
 {
     public ?Point $record = null;
 
-    protected int | string | array $columnSpan='full';
+    protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

@@ -24,6 +24,7 @@ class UserGroupResource extends Resource
     {
         return __('users.group.singular');
     }
+
     public static function getNavigationGroup(): ?string
     {
         return __('nav.settings');

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources\PointResource\Actions\Page;
 
 use App\Enums\Point\Source;
-use App\Enums\Point\Status;
 use App\Filament\Forms\Components\LeafletAutocomplete;
 use App\Models\MaterialCategory;
 use App\Models\Point;

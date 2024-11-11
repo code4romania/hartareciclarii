@@ -80,8 +80,8 @@ class ImportResource extends Resource
                     ->label(__('import.columns.processed'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('points_count')
-            ->counts('points')
-            ->label(__('common.points_count')),
+                    ->counts('points')
+                    ->label(__('common.points_count')),
 
                 Tables\Columns\TextColumn::make('error_rows')
                     ->label(__('import.columns.failed')),
@@ -129,13 +129,13 @@ class ImportResource extends Resource
                                 ->label(__('imports.remove_points'))
                                 ->default(false),
                         ])->action(function (Collection $records, array $data) {
-                        $records->each(function (Import $record) use ($data) {
-                            if ($data['remove_points']) {
-                                $record->points()->delete();
-                            }
-                            $record->delete();
-                        });
-                    }),
+                            $records->each(function (Import $record) use ($data) {
+                                if ($data['remove_points']) {
+                                    $record->points()->delete();
+                                }
+                                $record->delete();
+                            });
+                        }),
                 ]),
             ]);
     }

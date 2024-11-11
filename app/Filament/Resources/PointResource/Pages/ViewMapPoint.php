@@ -7,7 +7,6 @@ namespace App\Filament\Resources\PointResource\Pages;
 use App\Enums\Point\Status;
 use App\Filament\Forms\Components\LeafletAutocomplete;
 use App\Filament\Resources\PointResource;
-use App\Models\ActionLog as ActionLogModel;
 use App\Models\PointType;
 use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Actions\Action;
@@ -26,8 +25,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 
@@ -340,11 +337,10 @@ class ViewMapPoint extends ViewRecord
 
     protected function getFooterWidgets(): array
     {
-     return [
-       PointResource\Widgets\PointFromProximity::class
-     ];
+        return [
+            PointResource\Widgets\PointFromProximity::class,
+        ];
     }
-
 
     private function showField(string $string): bool
     {

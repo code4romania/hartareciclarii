@@ -69,6 +69,10 @@ class Point extends Model implements HasMedia
         'verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'proximity_count',
+    ];
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('default')
@@ -329,4 +333,18 @@ class Point extends Model implements HasMedia
         });
     }
 
+    public function getProximityCountAttribute(): int
+    {
+        return self::query()
+            ->withCount('problems')
+            ->where('administered_by', $this->administered_by)
+            ->where('id', '!=', $this->id)
+            ->where('point_type_id', $this->point_type_id)
+            ->where('city_id', $this->city_id)
+            ->where('county_id', $this->county_id)
+            ->where('service_type_id', $this->service_type_id)
+            ->withDistanceSphere('location', $this->location)
+            ->whereDistance('location', $this->location, '<', 100)
+            ->count();
+    }
 }
