@@ -38,7 +38,7 @@ class SubmitPointRequest extends FormRequest
             'business_name' => ['nullable', 'string', 'max:50'],
             'administered_by' => ['exclude_if:administered_by_unknown,true', 'required_if:administered_by_unknown,false', 'nullable', 'string', 'max:50'],
             'administered_by_unknown' => ['boolean'],
-            'schedule' => ['exclude_if:schedule_unknown,true', 'required_if:schedule_unknown,false', 'nullable', 'string', 'max:50'],
+            'schedule' => ['exclude_if:schedule_unknown,true', 'required_if:schedule_unknown,false', 'nullable', 'string', 'max:75'],
             'schedule_unknown' => ['boolean'],
 
             'offers_money' => ['nullable', Rule::excludeIf(fn () => $this->offers_money === -1), 'boolean'],
@@ -46,7 +46,7 @@ class SubmitPointRequest extends FormRequest
             'offers_transport' => ['nullable', Rule::excludeIf(fn () => $this->offers_transport === -1), 'boolean'],
             'free_of_charge' => ['nullable', Rule::excludeIf(fn () => $this->free_of_charge === -1), 'boolean'],
 
-            'website' => ['nullable', 'url', 'max:50'],
+            'website' => ['nullable', 'url', 'max:224'],
             'email' => ['nullable', 'email', 'max:50'],
             'phone' => ['nullable', 'numeric', 'max_digits:14'],
             'observations' => ['nullable', 'string', 'max:500'],
