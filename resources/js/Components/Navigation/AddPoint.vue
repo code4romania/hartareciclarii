@@ -319,6 +319,7 @@
             onError: (error) => {
                 console.error(error);
             },
+            onSuccess: () => form.reset()
         });
     };
 
