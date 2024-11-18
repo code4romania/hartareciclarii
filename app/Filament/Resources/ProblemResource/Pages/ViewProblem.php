@@ -56,6 +56,12 @@ class ViewProblem extends ViewRecord
 
             DeleteAction::make()
                 ->label(__('issues.actions.delete'))
+                ->action(function (){
+                    $this->record->contribution()->delete();
+                    $this->record->delete();
+                    $this->redirect(ProblemResource::getUrl('index'));
+                })
+//                ->successRedirectUrl(ProblemResource::getUrl('index'))
                 ->outlined(),
 
         ];
