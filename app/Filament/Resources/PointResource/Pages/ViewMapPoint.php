@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -21,6 +22,7 @@ use Filament\Forms\Set;
 use Filament\Infolists\Components\Actions\Action as InfolistAction;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
@@ -246,6 +248,9 @@ class ViewMapPoint extends ViewRecord
                             ->inlineLabel()
                             ->label(__('map_points.fields.free_of_charge')),
 
+                        SpatieMediaLibraryImageEntry::make('images')
+                            ->label(__('map_points.fields.images')),
+
                     ])
                     ->columns(3)
                     ->columnSpan(12)
@@ -309,6 +314,7 @@ class ViewMapPoint extends ViewRecord
 
                                     Textarea::make('observations')
                                         ->label(__('map_points.fields.observations')),
+
                                     Group::make(
                                         [
                                             Toggle::make('offers_transport')
@@ -325,6 +331,12 @@ class ViewMapPoint extends ViewRecord
                                                 ->label(__('map_points.fields.free_of_charge')),
                                         ]
                                     )->columns(4),
+
+                                    SpatieMediaLibraryFileUpload::make('images')
+                                        ->previewable()
+                                        ->collection('default')
+                                        ->label(__('map_points.fields.images'))
+                                        ->multiple(),
 
                                 ]
                             )->label(__('map_points.buttons.edit_details'))

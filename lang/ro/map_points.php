@@ -82,6 +82,7 @@ return [
         'offers_money' => 'Oferǎ bani',
         'offers_vouchers' => 'Ofera vouchere',
         'free_of_charge' => 'Oferă servicii gratuite',
+        'images' => 'Imagini',
         'business_name' => 'Nume business',
 
     ],
