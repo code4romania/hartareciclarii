@@ -156,6 +156,12 @@ class PointResource extends Resource
 
                     DeleteBulkAction::make()
                         ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->contribution()->delete();
+                                $record->delete();
+                            });
+                        })
                         ->label(__('map_points.buttons.delete')),
 
                 ]),

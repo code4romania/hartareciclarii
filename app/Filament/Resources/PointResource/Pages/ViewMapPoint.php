@@ -82,7 +82,8 @@ class ViewMapPoint extends ViewRecord
             Action::make('delete')
                 ->requiresConfirmation()
                 ->action(function () {
-                    $this->getRecord()->delete();
+                    $this->record->contribution()->delete();
+                    $this->record->delete();
 
                     return redirect($this->getResource()::getUrl('index'));
                 })
