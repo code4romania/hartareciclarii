@@ -60,6 +60,13 @@
         />
     </form>
 
+    <div class="px-4 py-3 border-t">
+        <p class="mb-2 text-sm font-medium text-gray-500">O soluție realizată împreună cu</p>
+        <a href="https://code4.ro" target="_blank" rel="noopener" class="hover:opacity-75" title="Code for Romania">
+            <Icon icon="code4romania" class="w-32 h-10" />
+        </a>
+    </div>
+
     <button
         v-if="hasFilters"
         type="button"
@@ -86,6 +93,7 @@
     import MaterialsChecklist from '@/Components/Form/MaterialsChecklist.vue';
     import { trans } from 'laravel-vue-i18n';
     import { isObject } from '@vueuse/core';
+    import Icon from '@/Components/Icon.vue';
 
     const page = usePage();
 
