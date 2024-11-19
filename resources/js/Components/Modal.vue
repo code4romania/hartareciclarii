@@ -15,8 +15,7 @@
                 <div class="fixed inset-0 transition-opacity bg-black/50" />
             </TransitionChild>
 
-            <div class="fixed inset-0">
-                <div class="flex items-start justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
+            <div class="fixed inset-0 flex flex-col items-start justify-start p-4 text-center sm:items-center sm:p-0">
                     <TransitionChild
                         as="template"
                         enter="ease-out duration-300"
@@ -27,7 +26,7 @@
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
                         <DialogPanel
-                            class="w-full h-screen sm:py-4 md:py-8 sm:max-w-lg"
+                            class="w-full max-h-full sm:py-4 md:py-8 sm:max-w-lg"
                             :as="form ? 'form' : 'div'"
                             @submit.prevent="submit"
                         >
@@ -74,7 +73,6 @@
                             </div>
                         </DialogPanel>
                     </TransitionChild>
-                </div>
             </div>
         </Dialog>
     </TransitionRoot>
