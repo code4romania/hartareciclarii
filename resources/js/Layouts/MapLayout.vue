@@ -57,7 +57,7 @@
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                 />
 
-                <LMarkerClusterGroup :icon-create-function="iconCreateFunction">
+                <LMarkerClusterGroup :icon-create-function="iconCreateFunction"  :showCoverageOnHover="false">
                     <LMarker
                         v-for="point in points"
                         :key="`${point.id}-${point.current ? 'current' : 'default'}`"
