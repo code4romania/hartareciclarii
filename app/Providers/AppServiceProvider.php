@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\Filter;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Livewire\DatabaseNotifications;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
@@ -42,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
         $this->registerRequestMacros();
 
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
+
+        FileUpload::configureUsing(function (FileUpload $fileUpload){
+            $fileUpload->visibility('public');
+        });
 
         FilamentAsset::register([
             Js::make('custom-script', resource_path('js/admin.js')),
