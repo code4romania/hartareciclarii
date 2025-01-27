@@ -100,6 +100,21 @@ class Problem extends Model implements HasMedia
         return $query->whereNotNull('closed_at');
     }
 
+    public function changeStatus(string $status): self
+    {
+        $status = ProblemStatus::tryFrom($status);
+
+        $problem = match ($status) {
+            ProblemStatus::NEW => $this->markAsNew(),
+            ProblemStatus::PENDING => $this->markAsPending(),
+            ProblemStatus::CLOSED => $this->markAsClosed(),
+            default => throw new \Exception('Unexpected match value'),
+        };
+        $problem->save();
+
+        return $problem;
+    }
+
     public function markAsNew(): self
     {
         return $this->fill([

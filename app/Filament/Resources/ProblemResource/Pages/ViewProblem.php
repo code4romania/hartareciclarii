@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ProblemResource\Pages;
 
 // use Filament\Actions\Action;
-use App\Enums\IssueStatus;
+use App\Enums\ProblemStatus;
 use App\Filament\Resources\PointResource;
 use App\Filament\Resources\ProblemResource;
 use Filament\Actions\Action;
@@ -36,7 +36,7 @@ class ViewProblem extends ViewRecord
                 ->label(__('issues.actions.change_status'))
                 ->form([
                     Select::make('status')
-                        ->options(IssueStatus::options())
+                        ->options(ProblemStatus::options())
                         ->default($this->record->status->value),
                 ])
                 ->color('primary')
@@ -56,7 +56,7 @@ class ViewProblem extends ViewRecord
 
             DeleteAction::make()
                 ->label(__('issues.actions.delete'))
-                ->action(function (){
+                ->action(function () {
                     $this->record->contribution()->delete();
                     $this->record->delete();
                     $this->redirect(ProblemResource::getUrl('index'));

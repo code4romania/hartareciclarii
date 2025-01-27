@@ -17,9 +17,22 @@ class ReportsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 
-    protected static ?string $navigationGroup = 'Rapoarte';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('nav.reports');
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('nav.reports');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('nav.reports');
+    }
 
     public static function table(Table $table): Table
     {
@@ -56,20 +69,5 @@ class ReportsResource extends Resource
             'saved' => Pages\ListReport::route('/'),
             'view' => Pages\ViewReport::route('/{record}'),
         ];
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('nav.reports');
-    }
-
-    public static function getLabel(): ?string
-    {
-        return __('nav.reports');
-    }
-
-    public static function getPluralLabel(): ?string
-    {
-        return __('nav.reports');
     }
 }

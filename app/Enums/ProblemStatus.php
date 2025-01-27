@@ -23,4 +23,10 @@ enum ProblemStatus: string implements HasLabel
             self::CLOSED => __('enums.problem_status.closed'),
         };
     }
+
+    /** @deprecated use getLabel() */
+    public function label(): ?string
+    {
+        return $this->getLabel();
+    }
 }
