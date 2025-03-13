@@ -51,6 +51,7 @@ return [
         'change_status' => 'Schimba status',
         'update_location' => 'Editeaza locatia',
         'confirm_info' => 'Confirma informatiile',
+        'bulk_update' => 'Actualizeaza în masǎ',
     ],
     'sections' => [
         'location' => 'Localizare',
@@ -102,6 +103,15 @@ return [
         'step_2' => 'Detalii punct',
         'step_3' => 'Materiale',
     ],
+
+    'bulk_change' => [
+        'title' => 'Actualizeaza in masǎ',
+        'description' => 'Actualizeaza in masǎ punctele selectate',
+        'change_type' => 'Tipul de actualizare',
+
+
+    ],
+
     'new_point' => 'Punct nou',
     'edit_point' => 'Modificǎ punct',
     'new_address' => 'Adresa nouǎ:',

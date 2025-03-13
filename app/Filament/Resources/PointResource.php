@@ -126,6 +126,8 @@ class PointResource extends Resource
                         ->icon('heroicon-o-check')
                         ->color('warning')
                         ->requiresConfirmation(),
+
+
                     BulkAction::make('allocate_to_group')
                         ->label(__('map_points.buttons.set_group'))
                         ->form([
