@@ -32,4 +32,15 @@ return [
         'saturday' => 'Sambata',
         'sunday' => 'Duminica',
     ],
+    'change_types' => [
+        'administered_by' => 'Administrat de',
+
+        'point_type' => 'Tip punct',
+        'materials' => 'Materiale',
+    ],
+    'model_type' => [
+        'place' => 'Loc',
+        'point' => 'Punct',
+        'problem' => 'Problema',
+    ],
 ];

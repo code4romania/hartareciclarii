@@ -33,6 +33,11 @@ class Contribution extends Pivot
         return $this->morphTo();
     }
 
+    public function getKey(): string
+    {
+        return 'user_id';
+    }
+
     public function scopeWithPointData(Builder $query): Builder
     {
         return $query->with('model', function (MorphTo $morphTo) {

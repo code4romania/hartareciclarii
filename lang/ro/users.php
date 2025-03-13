@@ -17,6 +17,7 @@ return [
         'name' => 'Nume',
         'users_count' => 'Numar utilizatori',
     ],
+    'contribution_type' => 'Tip contribuție',
     'role' => 'Rol',
     'email' => 'Email',
     'name' => 'Nume',
