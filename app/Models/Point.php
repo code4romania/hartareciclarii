@@ -69,10 +69,6 @@ class Point extends Model implements HasMedia
         'verified_at' => 'datetime',
     ];
 
-    protected $appends = [
-        'proximity_count',
-    ];
-
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('default')

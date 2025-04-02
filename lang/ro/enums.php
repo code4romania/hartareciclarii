@@ -43,4 +43,15 @@ return [
         'point' => 'Punct',
         'problem' => 'Problema',
     ],
+    'report_type' => [
+        'points' => 'Puncte',
+        'problems' => 'Probleme',
+        'user_activity' => 'Activitate utilizator',
+        'top_users' => 'Top contribuitori',
+    ],
+    'report_status' => [
+        'pending' => 'In asteptare',
+        'in_progress' => 'In curs de generare',
+        'completed' => 'Generat',
+    ],
 ];
