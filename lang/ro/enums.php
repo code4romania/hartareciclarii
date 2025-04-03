@@ -21,6 +21,7 @@ return [
         'verified' => 'Punct verificat',
         'unverified' => 'Necesita verificare',
         'problems' => 'Probleme raportate',
+        'with_problems' => 'Punct cu probleme',
         'problems_count' => '{1} 1 problemă raportată|[2,19] :count probleme raportate|[20,*] :count de probleme raportate',
     ],
     'days' => [
@@ -42,5 +43,16 @@ return [
         'place' => 'Loc',
         'point' => 'Punct',
         'problem' => 'Problema',
+    ],
+    'report_type' => [
+        'points' => 'Puncte',
+        'problems' => 'Probleme',
+        'user_activity' => 'Activitate utilizator',
+        'top_users' => 'Top contribuitori',
+    ],
+    'report_status' => [
+        'pending' => 'In asteptare',
+        'in_progress' => 'In curs de generare',
+        'completed' => 'Generat',
     ],
 ];
