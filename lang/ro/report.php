@@ -74,6 +74,7 @@ return [
         'material' => 'Toate materialele',
         'status' => 'Toate statusurile',
         'materials' => 'Toate materialele',
+        'issue_type' => 'Toate tipurile de probleme',
     ],
     'tabs' => [
         'map_points' => 'Puncte',

@@ -21,6 +21,7 @@ return [
         'verified' => 'Punct verificat',
         'unverified' => 'Necesita verificare',
         'problems' => 'Probleme raportate',
+        'with_problems' => 'Punct cu probleme',
         'problems_count' => '{1} 1 problemă raportată|[2,19] :count probleme raportate|[20,*] :count de probleme raportate',
     ],
     'days' => [

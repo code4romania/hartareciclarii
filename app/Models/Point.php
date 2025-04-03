@@ -60,7 +60,6 @@ class Point extends Model implements HasMedia
 
     protected $casts = [
         'schedule' => 'array',
-        'status' => Status::class,
         'location' => SpatialPoint::class,
         'offers_money' => 'boolean',
         'offers_vouchers' => 'boolean',
