@@ -9,6 +9,7 @@ use App\Enums\ReportStatus;
 use App\Filament\Resources\ReportResource;
 use App\Models\City;
 use App\Models\County;
+use App\Models\Material;
 use App\Models\Point;
 use App\Models\PointType;
 use App\Models\Report;
@@ -46,7 +47,6 @@ class PointsReports implements ShouldQueue
         $groupBy = $structure['group_by'];
 
         $query = Point::query()
-            ->select([DB::raw('count(*) as total'), $groupBy])
             ->whereDate('created_at', '>=', $dates['start_date'])
             ->whereDate('created_at', '<=', $dates['end_date'])
 
@@ -88,12 +88,27 @@ class PointsReports implements ShouldQueue
                 }
             }
         }
+
+        match ($groupBy) {
+            'service_type_id' => $query->select([DB::raw('count(*) as total'), 'service_type_id'])->groupBy('service_type_id'),
+            'point_type_id' => $query->select([DB::raw('count(*) as total'), 'point_type_id'])->groupBy('point_type_id'),
+            'city_id' => $query->select([DB::raw('count(*) as total'), 'city_id'])->groupBy('city_id'),
+            'county_id' => $query->select([DB::raw('count(*) as total'), 'county_id'])->groupBy('county_id'),
+            'status' => $query->select(
+                DB::raw('count(*) as total'),
+                DB::raw('IF(verified_at IS NULL, "unverified", IF(verified_at IS NOT NULL, "verified", IF((SELECT count(id) from problems where problems.point_id = points.id) > 0, "with_problems", "verified"))) as compute_status')
+            )->groupBy('compute_status'),
+            'materials' => $query->select([DB::raw('count(*) as total'), 'model_has_materials.material_id'])->join('model_has_materials', 'points.id', '=', 'model_has_materials.model_id')
+                ->where('model_has_materials.model_type', (new Point())->getMorphClass())
+                ->groupBy('model_has_materials.material_id')
+        };
+
         if ($groupBy === 'status') {
-            $query->select(DB::raw('count(*) as total, IF(verified_at IS NULL, "unverified", IF(verified_at IS NOT NULL, "verified", IF((SELECT count(id) from problems where problems.point_id = points.id) > 0, "with_problems", "verified"))) as compute_status'))
-                ->groupBy('compute_status');
             $groupBy = 'compute_status';
-        } else {
-            $query->groupBy($groupBy);
+        }
+
+        if ($groupBy === 'materials') {
+            $groupBy = 'material_id';
         }
 
         $points = $query->get()->pluck('total', $groupBy);
@@ -102,7 +117,8 @@ class PointsReports implements ShouldQueue
             'point_type_id' => PointType::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
             'city_id' => City::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
             'county_id' => County::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'compute_status' => Status::options()
+            'compute_status' => Status::options(),
+            'material_id' => Material::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
         };
 
         $data = [];
@@ -116,6 +132,7 @@ class PointsReports implements ShouldQueue
             'city_id' => __('report.column.city'),
             'county_id' => __('report.column.county'),
             'compute_status' => __('report.column.status'),
+            'material_id' => __('report.column.materials'),
         };
         $this->report->update([
             'results' => $data,

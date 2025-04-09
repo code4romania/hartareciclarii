@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Jobs\Reports;
 
-use App\Enums\Point\Status;
+use App\Enums\ProblemStatus;
 use App\Enums\ReportStatus;
 use App\Filament\Resources\ReportResource;
 use App\Models\City;
 use App\Models\County;
 use App\Models\PointType;
 use App\Models\Problem\Problem;
+use App\Models\Problem\ProblemType;
 use App\Models\Report;
 use App\Models\ServiceType;
 use Filament\Notifications\Actions\Action;
@@ -43,40 +44,91 @@ class ProblemReports implements ShouldQueue
         $dates['start_date'] = $this->report->filters['start_date'];
         $dates['end_date'] = $this->report->filters['end_date'];
         $structure = $this->report->filters['structure'];
-        $group_by = $structure['group_by'];
+        $groupBy = $structure['group_by'];
 
-        $points = Problem::query()
-            ->addSelect(DB::raw('count(*) as total'))
-            ->addSelect($group_by)
-            ->when(filled($dates['start_date']), fn (Builder $query) => $query->whereDate('created_at', '>=', $dates['start_date']))
-            ->when(filled($dates['end_date']), fn (Builder $query) => $query->whereDate('created_at', '<=', $dates['end_date']))
-            ->when(filled($structure['type_ids']), fn (Builder $query) => $query->whereIn('type_id', $structure['service_ids']))
-            ->when(filled($structure['city_ids']), fn (Builder $query) => $query->whereIn('city_id', $structure['city_ids']))
-            ->when(filled($structure['county_ids']), fn (Builder $query) => $query->whereIn('county_id', $structure['county_ids']))
-            ->groupBy($group_by)
-            ->when(filled($structure['status']), fn (Builder $query) => $query->whereIn('status', $structure['status']));
+        $query = Problem::query()
+            ->whereDate('problems.created_at', '>=', $dates['start_date'])
+            ->whereDate('problems.created_at', '<=', $dates['end_date'])
+            ->when(
+                $structure['service_ids'],
+                fn (Builder $query) => $query->whereHas(
+                    'point',
+                    fn (Builder $query) => $query->whereIn('service_type_id', $structure['service_ids'])
+                )
+            )
+            ->when(
+                $structure['point_type_ids'],
+                fn (Builder $query) => $query->whereHas(
+                    'point',
+                    fn (Builder $query) => $query->whereIn('point_type_id', $structure['point_type_ids'])
+                )
+            )
 
-        $points = $points->get()->pluck('total', $group_by);
+            ->when(
+                $structure['city_ids'],
+                fn (Builder $query) => $query->whereHas(
+                    'point',
+                    fn (Builder $query) => $query->whereIn('city_id', $structure['city_ids'])
+                )
+            )
+            ->when(
+                $structure['county_ids'],
+                fn (Builder $query) => $query->whereHas(
+                    'point',
+                    fn (Builder $query) => $query->whereIn('city_id', $structure['county_ids'])
+                )
+            )
+            ->when(
+                $structure['problem_type_ids'],
+                fn (Builder $query) => $query->whereIn('type_id', $structure['problem_type_ids'])
+            );
 
-        $names = match ($group_by) {
-            'service_type_id' => ServiceType::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'point_type_id' => PointType::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'city_id' => City::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'county_id' => County::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'status' => Status::options(),
+        match ($groupBy) {
+            'service_type_id' => $query->select([DB::raw('count(problems.id) as total'), 'points.service_type_id'])->join('points', 'problems.point_id', '=', 'points.id')->groupBy('points.service_type_id'),
+            'point_type_id' => $query->select([DB::raw('count(*) as total'), 'points.point_type_id'])->join('points', 'problems.point_id', '=', 'points.id')->groupBy('points.point_type_id'),
+            'city_id' => $query->select([DB::raw('count(*) as total'), 'points.city_id'])->join('points', 'problems.point_id', '=', 'points.id')->groupBy('points.city_id'),
+            'county_id' => $query->select([DB::raw('count(*) as total'), 'points.county_id'])->join('points', 'problems.point_id', '=', 'points.id')->groupBy('points.county_id'),
+            'problem_type_id' => $query->select([DB::raw('count(*) as total'), 'type_id as problem_type_id'])->groupBy('problem_type_id'),
+            'status' => $query->select(
+                DB::raw('count(*) as total'),
+                DB::raw("CASE
+                WHEN started_at IS NULL AND closed_at IS NULL THEN 'new'
+                WHEN started_at IS NOT NULL AND closed_at IS NULL THEN 'pending'
+                WHEN started_at IS NOT NULL AND closed_at IS NOT NULL THEN 'closed'
+                END AS 'compute_status'
+                ")
+            )
+                ->groupBy('compute_status')
+        };
+        if ($groupBy === 'status') {
+            $groupBy = 'compute_status';
+        }
+
+        try {
+        $problems = $query->get()->pluck('total', $groupBy);
+        $names = match ($groupBy) {
+            'service_type_id' => ServiceType::query()->whereIn('id', $problems->keys())->pluck('name', 'id'),
+            'point_type_id' => PointType::query()->whereIn('id', $problems->keys())->pluck('name', 'id'),
+            'city_id' => City::query()->whereIn('id', $problems->keys())->pluck('name', 'id'),
+            'county_id' => County::query()->whereIn('id', $problems->keys())->pluck('name', 'id'),
+            'problem_type_id' => ProblemType::query()->whereIn('id', $problems->keys())->pluck('name', 'id'),
+            'compute_status' => ProblemStatus::options(),
         };
         $data = [];
 
-        foreach ($points as $id => $value) {
-            $data[$names[$id]] = $value;
+        foreach ($problems as $id => $value) {
+            if (isset($names[$id])) {
+                $data[$names[$id]] = $value;
+            }
         }
 
-        $key = match ($group_by) {
+        $key = match ($groupBy) {
             'service_type_id' => __('report.column.service_type'),
             'point_type_id' => __('report.column.point_type'),
             'city_id' => __('report.column.city'),
             'county_id' => __('report.column.county'),
-            'status' => __('report.column.status'),
+            'compute_status' => __('report.column.status'),
+            'problem_type_id' => __('report.column.problem_type'),
         };
         $this->report->update([
             'results' => $data,
@@ -94,5 +146,23 @@ class ProblemReports implements ShouldQueue
             ->success()
             ->send()
             ->toDatabase();
+        } catch (\Exception $exception) {
+            $this->report->update([
+                'results' => [],
+                'label' => '',
+                'status' => ReportStatus::FAILED,
+            ]);
+            Notification::make()
+                ->title(__('report.notification.title'))
+                ->body(__('report.notification.body'))
+                ->actions([
+                    Action::make(__('report.action.export'))
+                        ->url(ReportResource::getUrl('view', ['record' => $this->report]), true)
+                        ->color('danger'),
+                ])
+                ->danger()
+                ->send()
+                ->toDatabase();
+        }
     }
 }

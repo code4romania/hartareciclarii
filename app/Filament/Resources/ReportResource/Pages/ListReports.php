@@ -20,6 +20,7 @@ use App\Models\ServiceType;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -185,7 +186,7 @@ class ListReports extends ListRecords
                 ->options([
                     'service_type_id' => __('report.column.service_type'),
                     'point_type_id' => __('report.column.point_type'),
-                    'materials' => __('report.column.materials'),
+                    'problem_type_id' => __('report.column.problem_type'),
                     'county_id' => __('report.column.county'),
                     'city_id' => __('report.column.city'),
                     'status' => __('report.column.status'),
@@ -200,6 +201,8 @@ class ListReports extends ListRecords
                 ->label(__('report.action.generate'))
                 ->form(
                     [
+                        Hidden::make('created_by_id')
+                            ->default(auth()->user()->id),
                         Select::make('type')
                             ->options(ReportType::options())
                             ->required()

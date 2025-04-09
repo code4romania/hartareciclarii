@@ -16,9 +16,11 @@ return [
         'city' => 'Oras',
         'filter_dates_by' => 'Filtreaza datele dupa',
         'county' => 'Judet',
+        'problem_type' => 'Tip problema',
         'range_start' => 'Adaugat incepand cu',
         'range_end' => 'Adaugat sfarsind cu',
         'created_at' => 'Creat la',
+        'group_by' => 'Grupat dupa',
         'created_by' => 'Creat de',
         'range' => 'Perioada',
         'status_options' => [

@@ -28,6 +28,11 @@ class ReportResource extends Resource
                     ->label(__('report.column.status'))
                     ->badge(),
 
+                TextColumn::make('label')
+                    ->label(__('report.column.group_by'))
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->label(__('report.column.created_at'))
