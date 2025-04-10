@@ -9,6 +9,11 @@ return [
         'materials' => 'Materiale (pentru CSID)',
         'location' => 'Locatie',
         'admin' => 'Administratori',
+        'user' => 'Utilizator',
+        'guest' => 'Vizitator',
+        'points' => 'Puncte',
+        'contribution_type' => 'Tip contributie',
+        'problems' => 'Probleme',
         'results' => 'Rezultate',
         'status' => 'Status',
         'date_from' => 'Adaugat in perioada',
@@ -23,25 +28,6 @@ return [
         'group_by' => 'Grupat dupa',
         'created_by' => 'Creat de',
         'range' => 'Perioada',
-        'status_options' => [
-            -1 => 'Orice status',
-            0 => 'Necesita verifcare',
-            1 => 'Verificat',
-        ],
-        'issues_options' => [
-            -1 => 'Orice status',
-
-        ],
-        'users_type' => [
-            -1 => 'Orice utilizator',
-            0 => 'Autentificat',
-            1 => 'Neautentificat',
-        ],
-        'activities_options' => [
-            -1 => 'Toate evenimentele',
-            0 => 'Adaugare punct',
-            1 => 'Raportare problema',
-        ],
         'user_type' => 'Tip utilizator',
         'issue_type' => 'Tip problema',
         'activity_type' => 'Tip contributie',

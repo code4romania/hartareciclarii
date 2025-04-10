@@ -27,118 +27,78 @@ class PointsReports implements ShouldQueue
 
     private Report $report;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(Report $report)
     {
         $this->report = $report;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $this->report->update(['status' => ReportStatus::IN_PROGRESS]);
-        $dates['start_date'] = $this->report->filters['start_date'];
-        $dates['end_date'] = $this->report->filters['end_date'];
-        $structure = $this->report->filters['structure'];
+        $filters = $this->report->filters;
+        $dates = ['start_date' => $filters['start_date'], 'end_date' => $filters['end_date']];
+        $structure = $filters['structure'];
         $groupBy = $structure['group_by'];
 
         $query = Point::query()
             ->whereDate('created_at', '>=', $dates['start_date'])
             ->whereDate('created_at', '<=', $dates['end_date'])
+            ->when($structure['service_ids'], fn (Builder $q) => $q->whereIn('service_type_id', $structure['service_ids']))
+            ->when($structure['point_type_ids'], fn (Builder $q) => $q->whereIn('point_type_id', $structure['point_type_ids']))
+            ->when(! empty($structure['material_ids']), fn (Builder $q) => $q->whereHas('materials', fn (Builder $q) => $q->whereIn('material_id', $structure['material_ids'])))
+            ->when($structure['city_ids'], fn (Builder $q) => $q->whereIn('city_id', $structure['city_ids']))
+            ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
 
-            ->when(
-                $structure['service_ids'],
-                fn (Builder $query) => $query->whereIn('service_type_id', $structure['service_ids'])
-            )
-            ->when(
-                $structure['point_type_ids'],
-                fn (Builder $query) => $query->whereIn('point_type_id', $structure['point_type_ids'])
-            )
-            ->when(
-                isset($structure['material_ids']) && \count($structure['material_ids']) > 0,
-                fn (Builder $query) => $query->whereHas(
-                    'materials',
-                    fn (Builder $query) => $query->whereIn('material_id', $structure['material_ids'])
-                )
-            )
-            ->when(
-                $structure['city_ids'],
-                fn (Builder $query) => $query->whereIn('city_id', $structure['city_ids'])
-            )
-            ->when(
-                $structure['county_ids'],
-                fn (Builder $query) => $query->whereIn('county_id', $structure['county_ids'])
-            );
-
-        if (isset($structure['status'])) {
+        if (! empty($structure['status'])) {
             foreach ($structure['status'] as $status) {
-                $status = Status::tryFrom($status);
-                if ($status === Status::VERIFIED) {
-                    $query->wherenotNull('verified_at');
-                }
-                if ($status === Status::UNVERIFIED) {
-                    $query->whereNull('verified_at');
-                }
-                if ($status === Status::WITH_PROBLEMS) {
-                    $query->whereHas('problems');
-                }
+                match (Status::tryFrom($status)) {
+                    Status::VERIFIED => $query->whereNotNull('verified_at'),
+                    Status::UNVERIFIED => $query->whereNull('verified_at'),
+                    Status::WITH_PROBLEMS => $query->whereHas('problems'),
+                    default => null,
+                };
             }
         }
 
-        match ($groupBy) {
-            'service_type_id' => $query->select([DB::raw('count(*) as total'), 'service_type_id'])->groupBy('service_type_id'),
-            'point_type_id' => $query->select([DB::raw('count(*) as total'), 'point_type_id'])->groupBy('point_type_id'),
-            'city_id' => $query->select([DB::raw('count(*) as total'), 'city_id'])->groupBy('city_id'),
-            'county_id' => $query->select([DB::raw('count(*) as total'), 'county_id'])->groupBy('county_id'),
+        $query = match ($groupBy) {
+            'service_type_id', 'point_type_id', 'city_id', 'county_id' => $query->select([DB::raw('count(*) as total'), $groupBy])->groupBy($groupBy),
             'status' => $query->select(
                 DB::raw('count(*) as total'),
-                DB::raw('IF(verified_at IS NULL, "unverified", IF(verified_at IS NOT NULL, "verified", IF((SELECT count(id) from problems where problems.point_id = points.id) > 0, "with_problems", "verified"))) as compute_status')
+                DB::raw('IF(verified_at IS NULL, "unverified", IF(verified_at IS NOT NULL, "verified", IF((SELECT count(id) FROM problems WHERE problems.point_id = points.id) > 0, "with_problems", "verified"))) as compute_status')
             )->groupBy('compute_status'),
-            'materials' => $query->select([DB::raw('count(*) as total'), 'model_has_materials.material_id'])->join('model_has_materials', 'points.id', '=', 'model_has_materials.model_id')
+            'materials' => $query->select([DB::raw('count(*) as total'), 'model_has_materials.material_id'])
+                ->join('model_has_materials', 'points.id', '=', 'model_has_materials.model_id')
                 ->where('model_has_materials.model_type', (new Point())->getMorphClass())
-                ->groupBy('model_has_materials.material_id')
+                ->groupBy('model_has_materials.material_id'),
         };
 
-        if ($groupBy === 'status') {
-            $groupBy = 'compute_status';
-        }
-
-        if ($groupBy === 'materials') {
-            $groupBy = 'material_id';
-        }
+        $groupBy = $groupBy === 'status' ? 'compute_status' : ($groupBy === 'materials' ? 'material_id' : $groupBy);
 
         $points = $query->get()->pluck('total', $groupBy);
         $names = match ($groupBy) {
-            'service_type_id' => ServiceType::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'point_type_id' => PointType::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'city_id' => City::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
-            'county_id' => County::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
+            'service_type_id' => ServiceType::whereIn('id', $points->keys())->pluck('name', 'id'),
+            'point_type_id' => PointType::whereIn('id', $points->keys())->pluck('name', 'id'),
+            'city_id' => City::whereIn('id', $points->keys())->pluck('name', 'id'),
+            'county_id' => County::whereIn('id', $points->keys())->pluck('name', 'id'),
             'compute_status' => Status::options(),
-            'material_id' => Material::query()->whereIn('id', $points->keys())->pluck('name', 'id'),
+            'material_id' => Material::whereIn('id', $points->keys())->pluck('name', 'id'),
         };
 
-        $data = [];
-        foreach ($points as $id => $value) {
-            $data[$names[$id]] = $value;
-        }
+        $data = $points->mapWithKeys(fn ($value, $id) => [$names[$id] => $value])->toArray();
 
-        $key = match ($groupBy) {
-            'service_type_id' => __('report.column.service_type'),
-            'point_type_id' => __('report.column.point_type'),
-            'city_id' => __('report.column.city'),
-            'county_id' => __('report.column.county'),
-            'compute_status' => __('report.column.status'),
-            'material_id' => __('report.column.materials'),
-        };
         $this->report->update([
             'results' => $data,
-            'label' => $key,
+            'label' => match ($groupBy) {
+                'service_type_id' => __('report.column.service_type'),
+                'point_type_id' => __('report.column.point_type'),
+                'city_id' => __('report.column.city'),
+                'county_id' => __('report.column.county'),
+                'compute_status' => __('report.column.status'),
+                'material_id' => __('report.column.materials'),
+            },
             'status' => ReportStatus::COMPLETED,
         ]);
+
         Notification::make()
             ->title(__('report.notification.title'))
             ->body(__('report.notification.body'))

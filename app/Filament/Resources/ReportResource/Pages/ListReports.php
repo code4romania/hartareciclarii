@@ -18,6 +18,7 @@ use App\Models\Problem\ProblemType;
 use App\Models\Report;
 use App\Models\ServiceType;
 use Filament\Actions;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -33,6 +34,47 @@ use Illuminate\Database\Eloquent\Builder;
 class ListReports extends ListRecords
 {
     protected static string $resource = ReportResource::class;
+
+    private static function getUserActivityForm(): array
+    {
+        return [
+            Group::make(
+                [
+                    CheckboxList::make('user_types')
+                        ->label(__('report.column.user_type'))
+                        ->default(['user','guest'])
+                        ->options([
+                            'user' => __('report.column.user'),
+                            'guest' => __('report.column.guest'),
+                        ]),
+                    CheckboxList::make('contribution_type')
+                        ->label(__('report.column.contribution_type'))
+                        ->options([
+                            'points' => __('report.column.points'),
+                            'problems' => __('report.column.problems'),
+                        ]),
+                    Select::make('county_ids')
+                        ->label(__('report.column.county'))
+                        ->multiple()
+                        ->live()
+                        ->searchable()
+                        ->placeholder(__('report.placeholder.county'))
+                        ->options(fn (Get $get) => County::query()
+                            ->pluck('name', 'id')),
+
+                    Select::make('city_ids')
+                        ->label(__('report.column.city'))
+                        ->multiple()
+                        ->searchable()
+                        ->placeholder(__('report.placeholder.city'))
+                        ->options(fn (Get $get) => City::query()
+                            ->when($get('county_ids'), fn (Builder $query) => $query->whereIn('county_id', $get('county_ids')))
+                            ->pluck('name', 'id')),
+
+                ]
+            )->columns(4),
+        ];
+    }
 
     private static function getPointForm(): array
     {
@@ -230,9 +272,15 @@ class ListReports extends ListRecords
                             ->statePath('filters.structure')
                             ->schema(self::getProblemForm())
                             ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::PROBLEMS->value),
+                        Section::make(__('report.section.filter_dates_by'))
+                            ->compact()
+                            ->statePath('filters.structure')
+                            ->schema(self::getUserActivityForm())
+                            ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
 
                     ]
                 )->action(function (array $data) {
+                    dd($data);
                     $data['created_by'] = auth()->user()->id;
                     $report = Report::create($data);
                     $type = ReportType::tryFrom($report->type);
