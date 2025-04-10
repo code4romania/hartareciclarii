@@ -67,8 +67,7 @@ export const closePanel = (leafletObject) => {
         return fetchPoint(leafletObject, null);
     }
 
-    const props = page.props.mapOptions;
-    const coordinates = getCoordinatesParameter(props.center, props.zoom);
+    const coordinates = getCoordinatesParameter(leafletObject.getCenter(), leafletObject.getZoom());
 
     router.visit(route('front.map.index', { coordinates }), {
         headers: headers(leafletObject),
