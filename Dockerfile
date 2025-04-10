@@ -16,6 +16,7 @@ RUN apk update && \
     #
     # install extensions
     install-php-extensions \
+    excimer \
     gd \
     pdo_mysql \
     zip \
@@ -71,10 +72,12 @@ COPY docker/s6-rc.d /etc/s6-overlay/s6-rc.d
 
 COPY --from=assets --chown=www-data:www-data /build/public/build /var/www/public/build
 
-ENV APP_ENV production
-ENV APP_DEBUG false
-ENV LOG_CHANNEL stderr
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+ENV LOG_CHANNEL=stderr
 
-ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME 0
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
+
+ENV SENTRY_SAMPLE_RATE=1.0
 
 EXPOSE 80
