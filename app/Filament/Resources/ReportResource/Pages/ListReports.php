@@ -280,7 +280,6 @@ class ListReports extends ListRecords
 
                     ]
                 )->action(function (array $data) {
-                    dd($data);
                     $data['created_by'] = auth()->user()->id;
                     $report = Report::create($data);
                     $type = ReportType::tryFrom($report->type);
