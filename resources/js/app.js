@@ -2,7 +2,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { ZiggyVue } from '@/Helpers/useRoute';
 import { i18nVue } from 'laravel-vue-i18n';
-import VueClickAway from 'vue3-click-away';
+import VueClickAway from '@/Plugins/vue-click-away';
 import PrimeVue from 'primevue/config';
 import pt from './primevue.js';
 import DefaultLayout from '@/Layouts/DefaultLayout.vue';
