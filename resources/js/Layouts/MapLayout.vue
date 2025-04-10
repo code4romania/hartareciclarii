@@ -187,12 +187,17 @@
 
     const { locateControl } = useLocate();
 
-    const ready = (leafletObject) =>
-        locateControl({
+    const ready = (leafletObject) => {
+        const control = locateControl({
             onLocationError: () => refreshPoints(map.value.leafletObject),
-        })
-            .addTo(leafletObject)
-            .start();
+        }) .addTo(leafletObject);
+
+        if (props.context === 'point') {
+            refreshPoints(leafletObject);
+        } else {
+            control.start();
+        }
+    }
 
     const getMapPinIcon = (point, size) => props.icons[point.service][size];
 
