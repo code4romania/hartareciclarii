@@ -32,7 +32,7 @@
             <LMap
                 ref="map"
                 :min-zoom="8"
-                :max-zoom="18"
+                :max-zoom="20"
                 :center="mapOptions.center"
                 :zoom="mapOptions.zoom"
                 :max-bounds="maxBounds"
@@ -55,6 +55,7 @@
                     subdomains="abcd"
                     name="OpenStreetMap"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    :max-zoom="20"
                 />
 
                 <LMarkerClusterGroup :icon-create-function="iconCreateFunction"  :showCoverageOnHover="false">
