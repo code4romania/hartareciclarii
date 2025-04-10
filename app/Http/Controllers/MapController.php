@@ -23,6 +23,7 @@ use App\Models\Scopes\FilteredPointsScope;
 use App\Models\ServiceType;
 use App\Services\Nominatim;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
@@ -55,6 +56,11 @@ class MapController extends Controller
             'report' => false,
             'point' => PointDetailsResource::make($point),
         ]);
+    }
+
+    public function redirect(Point $point): RedirectResponse
+    {
+        return redirect()->to($point->url);
     }
 
     public function report(Point $point, MapCoordinates $coordinates): Response

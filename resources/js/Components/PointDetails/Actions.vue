@@ -59,7 +59,7 @@
 
     const { coordinates } = route().params;
 
-    const url = computed(() => route('front.map.point', { point: props.point, coordinates }));
+    const url = computed(() => route('front.map.redirect', { point: props.point }));
 
     const { share, isSupported: shareIsSupported } = useShare();
     const { text, copy, copied } = useClipboard({ legacy: true });
