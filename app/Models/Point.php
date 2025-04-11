@@ -342,4 +342,12 @@ class Point extends Model implements HasMedia
             ->whereDistance('location', $this->location, '<', 100)
             ->count();
     }
+
+    public function getCoordinatesAttribute(): array
+    {
+        return [
+            'lat' => $this->location->latitude,
+            'lng' => $this->location->longitude,
+        ];
+    }
 }
