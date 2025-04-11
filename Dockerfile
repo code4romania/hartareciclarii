@@ -34,7 +34,7 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-FROM node:18-alpine as assets
+FROM node:22-alpine as assets
 
 WORKDIR /build
 
@@ -48,8 +48,6 @@ COPY \
 RUN npm ci --no-audit --ignore-scripts
 
 COPY --from=vendor /var/www /build
-
-ENV VITE_API_URL="https://harta-reciclarii.staging.heroesof.tech/api"
 
 
 RUN npm run build
