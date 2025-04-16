@@ -34,6 +34,8 @@ class ViewMapPoint extends ViewRecord
 {
     protected static string $resource = PointResource::class;
 
+    public array $coordinates = [];
+
     public function mount(int|string $record): void
     {
         parent::mount($record);
@@ -79,6 +81,7 @@ class ViewMapPoint extends ViewRecord
                 })
                 ->icon('heroicon-o-user-group')
                 ->color('info'),
+
             Action::make('delete')
                 ->requiresConfirmation()
                 ->action(function () {
@@ -115,76 +118,95 @@ class ViewMapPoint extends ViewRecord
 
     public function infolist(Infolist $infolist): Infolist
     {
-        return $infolist->schema(
-            [
+        return $infolist
+            ->columns(12)
+            ->schema([
                 Section::make(__('map_points.sections.location'))
-                    ->schema(
-                        [
+                    ->schema([
+                        TextEntry::make('address')
+                            ->icon('heroicon-s-map-pin')
+                            ->formatStateUsing(function (string $state, $record) {
+                                return  \sprintf('%s, %s, %s', $record->address, $record->city->name, $record->county->name);
+                            })
+                            ->label(__('map_points.fields.address')),
 
-                            TextEntry::make('address')
-                                ->icon('heroicon-s-map-pin')
-                                ->formatStateUsing(function (string $state, $record) {
-                                    return  \sprintf('%s, %s, %s', $record->address, $record->city->name, $record->county->name);
-                                })
-                                ->label(__('map_points.fields.address')),
+                        TextEntry::make('location')
+                            ->icon('heroicon-s-ellipsis-horizontal-circle')
+                            ->label(__('map_points.fields.coordinate')),
 
-                            TextEntry::make('location')
-                                ->icon('heroicon-s-ellipsis-horizontal-circle')
-                                ->label(__('map_points.fields.coordinate')),
+                        TextEntry::make('notes')
+                            ->icon('heroicon-s-pencil-square')
+                            ->label(__('map_points.fields.notes')),
+                    ])
+                    ->headerActions([
+                        InfolistAction::make('updateLocation')
+                            ->hiddenLabel()
+                            ->icon('heroicon-s-pencil-square')
+                            ->form([
+                                LeafletAutocomplete::make('location')
+                                    ->hiddenLabel(),
 
-                            TextEntry::make('notes')
-                                ->icon('heroicon-s-pencil-square')
-                                ->label(__('map_points.fields.notes')),
-                        ]
-                    )
-                    ->headerActions(
-                        [
-                            InfolistAction::make('updateLocation')
-                                ->hiddenLabel()
-                                ->icon('heroicon-s-pencil-square')
-                                ->fillForm($this->record->toArray())
-                                ->form(
-                                    [
-                                        LeafletAutocomplete::make('location')
-                                            ->hiddenLabel(),
-                                        Textarea::make('notes')
-                                            ->label(__('map_points.fields.notes')),
+                                Textarea::make('notes')
+                                    ->label(__('map_points.fields.notes')),
+                            ])
+                            ->fillForm([
+                                'location' => [
+                                    'lat' => $this->record->location->latitude,
+                                    'lng' => $this->record->location->longitude,
+                                ],
+                                'county_id' => $this->record->county_id,
+                                'city_id' => $this->record->city_id,
+                                'nominatim_autocomplete' => $this->record->address,
+                                'address' => $this->record->address,
+                                'notes' => $this->record->notes,
+                            ])
+                            ->action(function (array $data, self $livewire) {
+                                $this->record->fill([
+                                    'address' => $data['address'],
+                                    'notes' => $data['notes'],
+                                    'city_id' => $data['city_id'],
+                                    'county_id' => $data['county_id'],
+                                ]);
 
-                                    ]
-                                )->action(function (array $data, $livewire) {
-                                    $this->record->update([
-                                        'address' => $data['address'],
-                                        'notes' => $data['notes'],
-                                        'city_id' => $data['city_id'],
-                                        'county_id' => $data['county_id'],
+                                $this->record->location->latitude = (float) $data['location']['lat'];
+                                $this->record->location->longitude = (float) $data['location']['lng'];
 
-                                    ]);
+                                $this->record->save();
 
-                                    $this->record->location->latitude = (float) $data['location']['lat'];
-                                    $this->record->location->longitude = (float) $data['location']['lng'];
-                                    $this->record->save();
-                                    $livewire->dispatch('refreshMap');
-                                    Notification::make()
-                                        ->title(__('map_points.point_save_success'))
-                                        ->success()
-                                        ->send();
-                                    $this->refreshFormData([
-                                        'address', 'notes', 'location',
-                                    ]);
-                                })->fillForm([
-                                    'location' => ['lat' => $this->record->location->latitude, 'lng' => $this->record->location->longitude],
-                                    'nominatim_autocomplete' => $this->record->address,
-                                    'notes' => $this->record->notes,
-                                ]),
-                        ]
-                    )->columnSpan(3),
+                                $livewire->dispatch('refreshMap');
+                                $livewire->dispatch('refreshCoordinates', [
+                                    'lat' => $data['location']['lat'],
+                                    'lng' => $data['location']['lng'],
+                                ]);
+
+                                Notification::make()
+                                    ->title(__('map_points.point_save_success'))
+                                    ->body(__('map_points.point_save_success_body'))
+                                    ->success()
+                                    ->send();
+
+                                $this->refreshFormData([
+                                    'address', 'notes', 'data.location', 'coordinates',
+                                ]);
+                            }),
+                    ])->columnSpan(3),
 
                 MapEntry::make('location')
                     ->label(__('map_points.sections.map'))
-                    ->state(fn ($record) => ['lat' => $record?->location->latitude, 'lng' => $record?->location->longitude])
-                    ->draggable(false)
-                    ->zoom(18)
+                    ->liveLocation()
+                    ->hiddenLabel()
+                    ->statePath('data.location')
+                    ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
+                    ->defaultLocation(latitude: $this->getRecord()->location->latitude, longitude: $this->getRecord()->location->longitude)
+                    ->state([
+                        'lat' => $this->getRecord()->location->latitude,
+                        'lng' => $this->getRecord()->location->longitude,
+                    ])
+//                    ->statePath('data.location')
                     ->extraAttributes(['class' => 'h-full'])
+                    ->draggable(false)
+                    ->detectRetina()
+                    ->zoom(20)
                     ->columnSpan(9),
 
                 Section::make(__('map_points.sections.details'))
@@ -251,101 +273,104 @@ class ViewMapPoint extends ViewRecord
 
                         SpatieMediaLibraryImageEntry::make('images')
                             ->label(__('map_points.fields.images')),
-
                     ])
                     ->columns(3)
                     ->columnSpan(12)
                     ->headerActions([
                         InfolistAction::make('editDetails')
+                            ->label(__('map_points.buttons.edit_details'))
+                            ->action(fn (array $data) => $this->record->update($data))
                             ->fillForm($this->record->toArray())
-                            ->form(
-                                [
-                                    Select::make('point_type_id')
-                                        ->label(__('map_points.fields.point_type'))
-                                        ->relationship('pointType', 'name')
-                                        ->options(PointType::where('service_type_id', $this->record->service_type_id)->get()->pluck('name', 'id')->toArray())
-                                        ->required(),
-                                    Select::make('materials')
-                                        ->label(__('map_points.fields.materials'))
-                                        ->hidden($this->showField('can_collect_materials'))
-                                        ->relationship('materials', 'name')
-                                        ->multiple()
-                                        ->required(),
-                                    TextInput::make('business_name')
-                                        ->label(__('map_points.fields.business_name'))
-                                        ->hidden(fn () => $this->showField('can_have_business_name')),
+                            ->form([
+                                Select::make('point_type_id')
+                                    ->label(__('map_points.fields.point_type'))
+                                    ->relationship('pointType', 'name')
+                                    ->options(PointType::where('service_type_id', $this->record->service_type_id)->get()->pluck('name', 'id')->toArray())
+                                    ->required(),
 
-                                    TextInput::make('administered_by')
-                                        ->label(__('map_points.fields.administered_by'))
-                                        ->disabled(fn (Get $get) => $get('unknown_administered_by'))
-                                        ->required(fn (Get $get) => $get('unknown_administered_by') === false),
-                                    Checkbox::make('unknown_administered_by')
-                                        ->live()
-                                        ->afterStateUpdated(function (Set $set) {
-                                            $set('administered_by', null);
-                                        })
-                                        ->label(__('add_point.details.unknown_program'))
-                                        ->default(false),
+                                Select::make('materials')
+                                    ->label(__('map_points.fields.materials'))
+                                    ->hidden($this->showField('can_collect_materials'))
+                                    ->relationship('materials', 'name')
+                                    ->multiple()
+                                    ->required(),
 
-                                    TextInput::make('schedule')
-                                        ->label(__('map_points.fields.schedule'))
-                                        ->disabled(fn (Get $get) => $get('unknown_schedule'))
-                                        ->required(fn (Get $get) => $get('unknown_schedule') === false),
-                                    Checkbox::make('unknown_schedule')
-                                        ->live()
-                                        ->afterStateUpdated(function (Set $set) {
-                                            $set('schedule', null);
-                                        })
-                                        ->label(__('add_point.details.unknown_program'))
-                                        ->default(false),
+                                TextInput::make('business_name')
+                                    ->label(__('map_points.fields.business_name'))
+                                    ->hidden(fn () => $this->showField('can_have_business_name')),
 
-                                    TextInput::make('website')
-                                        ->url()
-                                        ->label(__('map_points.fields.website'))
-                                        ->hidden(fn () => $this->showField('can_have_business_name')),
+                                TextInput::make('administered_by')
+                                    ->label(__('map_points.fields.administered_by'))
+                                    ->disabled(fn (Get $get) => $get('unknown_administered_by'))
+                                    ->required(fn (Get $get) => $get('unknown_administered_by') === false),
 
-                                    TextInput::make('email')
-                                        ->label(__('map_points.fields.email'))
-                                        ->email()
-                                        ->hidden(fn () => $this->showField('can_have_business_name')),
+                                Checkbox::make('unknown_administered_by')
+                                    ->live()
+                                    ->afterStateUpdated(function (Set $set) {
+                                        $set('administered_by', null);
+                                    })
+                                    ->label(__('add_point.details.unknown_program'))
+                                    ->default(false),
 
-                                    TextInput::make('phone')
-                                        ->label(__('map_points.fields.phone'))
-                                        ->hidden(fn () => $this->showField('can_have_business_name')),
+                                TextInput::make('schedule')
+                                    ->label(__('map_points.fields.schedule'))
+                                    ->disabled(fn (Get $get) => $get('unknown_schedule'))
+                                    ->required(fn (Get $get) => $get('unknown_schedule') === false),
 
-                                    Textarea::make('observations')
-                                        ->label(__('map_points.fields.observations')),
+                                Checkbox::make('unknown_schedule')
+                                    ->live()
+                                    ->afterStateUpdated(function (Set $set) {
+                                        $set('schedule', null);
+                                    })
+                                    ->label(__('add_point.details.unknown_program'))
+                                    ->default(false),
 
-                                    Group::make(
-                                        [
-                                            Toggle::make('offers_transport')
-                                                ->hidden($this->showField('can_offer_transport'))
-                                                ->label(__('map_points.fields.offers_transport')),
-                                            Toggle::make('offers_money')
-                                                ->hidden($this->showField('can_offer_money'))
-                                                ->label(__('map_points.fields.offers_money')),
-                                            Toggle::make('offers_vouchers')
-                                                ->hidden($this->showField('can_offer_vouchers'))
-                                                ->label(__('map_points.fields.offers_vouchers')),
-                                            Toggle::make('free_of_charge')
-                                                ->hidden($this->showField('can_request_payment'))
-                                                ->label(__('map_points.fields.free_of_charge')),
-                                        ]
-                                    )->columns(4),
+                                TextInput::make('website')
+                                    ->url()
+                                    ->label(__('map_points.fields.website'))
+                                    ->hidden(fn () => $this->showField('can_have_business_name')),
 
-                                    SpatieMediaLibraryFileUpload::make('images')
-                                        ->previewable()
-                                        ->collection('default')
-                                        ->label(__('map_points.fields.images'))
-                                        ->multiple(),
+                                TextInput::make('email')
+                                    ->label(__('map_points.fields.email'))
+                                    ->email()
+                                    ->hidden(fn () => $this->showField('can_have_business_name')),
 
-                                ]
-                            )->label(__('map_points.buttons.edit_details'))
-                            ->action(fn (array $data) => $this->record->update($data)),
+                                TextInput::make('phone')
+                                    ->label(__('map_points.fields.phone'))
+                                    ->hidden(fn () => $this->showField('can_have_business_name')),
+
+                                Textarea::make('observations')
+                                    ->label(__('map_points.fields.observations')),
+
+                                Group::make()
+                                    ->columns(4)
+                                    ->schema([
+                                        Toggle::make('offers_transport')
+                                            ->hidden($this->showField('can_offer_transport'))
+                                            ->label(__('map_points.fields.offers_transport')),
+
+                                        Toggle::make('offers_money')
+                                            ->hidden($this->showField('can_offer_money'))
+                                            ->label(__('map_points.fields.offers_money')),
+
+                                        Toggle::make('offers_vouchers')
+                                            ->hidden($this->showField('can_offer_vouchers'))
+                                            ->label(__('map_points.fields.offers_vouchers')),
+
+                                        Toggle::make('free_of_charge')
+                                            ->hidden($this->showField('can_request_payment'))
+                                            ->label(__('map_points.fields.free_of_charge')),
+                                    ]),
+
+                                SpatieMediaLibraryFileUpload::make('images')
+                                    ->previewable()
+                                    ->collection('default')
+                                    ->label(__('map_points.fields.images'))
+                                    ->multiple(),
+                            ]),
                     ]),
 
-            ]
-        )->columns(12);
+            ]);
     }
 
     protected function getFooterWidgets(): array
