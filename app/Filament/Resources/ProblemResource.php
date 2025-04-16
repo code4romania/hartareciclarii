@@ -115,17 +115,19 @@ class ProblemResource extends Resource
 
                 Grid::make()
                     ->schema(
-                        [
+                        fn (Problem $problem) => [
                             MapEntry::make('point.location')
                                 ->label(__('issues.columns.current_location'))
-                                ->state(fn (Problem $problem) => ['lat' => $problem->point->location->latitude, 'lng' => $problem->point->location->longitude])
-                                ->zoom(16)
+                                ->defaultLocation($problem->point->location->latitude, $problem->point->location->longitude)
+                                ->zoom(20)
+                                ->statePath('data.point.location')
                                 ->hint(fn (Problem $problem) => $problem->point->location),
 
                             MapEntry::make('location')
                                 ->label(__('issues.columns.new_location'))
-                                ->state(fn (Problem $problem) => ['lat' => $problem->location->latitude, 'lng' => $problem->location->longitude])
-                                ->zoom(16)
+                                ->defaultLocation($problem->location->latitude, $problem->location->longitude)
+                                ->zoom(20)
+                                ->statePath('data.point.location')
                                 ->hint(fn (Problem $problem) => $problem->location),
 
                         ]

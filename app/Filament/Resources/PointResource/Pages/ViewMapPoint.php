@@ -173,7 +173,12 @@ class ViewMapPoint extends ViewRecord
 
                                 $this->record->save();
 
+
                                 $livewire->dispatch('refreshMap');
+                                $livewire->dispatch('refreshCoordinates', [
+                                    'lat' => $data['location']['lat'],
+                                    'lng' => $data['location']['lng'],
+                                ]);
 
                                 Notification::make()
                                     ->title(__('map_points.point_save_success'))
@@ -181,17 +186,23 @@ class ViewMapPoint extends ViewRecord
                                     ->send();
 
                                 $this->refreshFormData([
-                                    'address', 'notes', 'location', 'coordinates',
+                                    'address', 'notes', 'data.location', 'coordinates',
                                 ]);
                             }),
                     ])->columnSpan(3),
 
-                MapEntry::make('coordinates')
+                MapEntry::make('location')
                     ->label(__('map_points.sections.map'))
                     ->liveLocation()
                     ->hiddenLabel()
+                    ->statePath('data.location')
                     ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
-                    // ->defaultLocation(latitude: $this->getRecord()->location->latitude, longitude: $this->getRecord()->location->longitude)
+                    ->defaultLocation(latitude: $this->getRecord()->location->latitude, longitude: $this->getRecord()->location->longitude)
+                    ->state([
+                        'lat' => $this->getRecord()->location->latitude,
+                        'lng' => $this->getRecord()->location->longitude,
+                    ])
+//                    ->statePath('data.location')
                     ->extraAttributes(['class' => 'h-full'])
                     ->draggable(false)
                     ->detectRetina()
