@@ -173,7 +173,6 @@ class ViewMapPoint extends ViewRecord
 
                                 $this->record->save();
 
-
                                 $livewire->dispatch('refreshMap');
                                 $livewire->dispatch('refreshCoordinates', [
                                     'lat' => $data['location']['lat'],
@@ -182,6 +181,7 @@ class ViewMapPoint extends ViewRecord
 
                                 Notification::make()
                                     ->title(__('map_points.point_save_success'))
+                                    ->body(__('map_points.point_save_success_body'))
                                     ->success()
                                     ->send();
 

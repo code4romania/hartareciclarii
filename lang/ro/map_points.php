@@ -29,6 +29,7 @@ return [
     'offers_money' => 'Ofera bani',
     'suggest_new_point' => 'Sugereaza un nou punct pe harta',
     'point_save_success' => 'Punct salvat cu succes',
+    'point_save_success_body' => 'Pentru a vedea modificarile in pagina va rugam sa reincarcati pagina.',
     'import_materials' => 'Importa materiale',
     'use_default_values' => 'Foloseste valorile implicite',
     'proximity_points' => 'Puncte in apropiere care au accealeasi caracteristici',
@@ -108,7 +109,6 @@ return [
         'title' => 'Actualizeaza in masǎ',
         'description' => 'Actualizeaza in masǎ punctele selectate',
         'change_type' => 'Tipul de actualizare',
-
 
     ],
 
