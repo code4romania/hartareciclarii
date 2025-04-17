@@ -354,7 +354,7 @@ class GenerateReport extends Action
         match ($type) {
             ReportType::POINTS => PointsReports::dispatch($report),
             ReportType::PROBLEMS => ProblemReports::dispatch($report),
-            ReportType::USER_ACTIVITY => UserActivityReports::dispatch($report),
+//            ReportType::USER_ACTIVITY => UserActivityReports::dispatch($report),
             ReportType::TOP_USERS => TopUsersReports::dispatch($report),
         };
         Notification::make()

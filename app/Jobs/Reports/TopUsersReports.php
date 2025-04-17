@@ -13,7 +13,7 @@ use App\Models\User;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 
@@ -45,8 +45,8 @@ class TopUsersReports implements ShouldQueue
             ->select([DB::raw('count(*) as total'), 'user_id'])
             ->whereDate('created_at', '>=', $dates['start_date'])
             ->whereDate('created_at', '<=', $dates['end_date'])
-            ->when($structure['contribution_type'] === 'points', fn (Builder $q) => $q->where('contribution_type', 'points'))
-            ->when($structure['contribution_type'] === 'problems', fn (Builder $q) => $q->where('contribution_type', 'problems'))
+            ->when($structure['contribution_type'] === 'points', fn (Builder $q) => $q->where('model_type', 'place'))
+            ->when($structure['contribution_type'] === 'problems', fn (Builder $q) => $q->where('model_type', 'problem'))
             ->groupBy('user_id');
 
 //        $query = $query
