@@ -9,6 +9,7 @@ use App\Filament\Resources\ReportResource;
 use App\Models\Point;
 use App\Models\Problem\Problem;
 use App\Models\Report;
+use App\Models\User;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -49,9 +50,13 @@ class TopUsersReports implements ShouldQueue
 
         try {
             $tmpData = [];
+            $names = User::whereIn('id', $data->keys())->get()->pluck('name', 'id');
             foreach ($data as $key => $value) {
                 if (empty($key)) {
                     $key = 'N/A';
+                }else
+                {
+                    $key= $names[$key] ?? 'N/A';
                 }
                 $tmpData[$key] = $value;
             }

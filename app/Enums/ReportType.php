@@ -13,7 +13,7 @@ enum ReportType: string implements HasLabel
 
     case POINTS = 'points';
     case PROBLEMS = 'problems';
-    case USER_ACTIVITY = 'user_activity';
+//    case USER_ACTIVITY = 'user_activity';
     case TOP_USERS = 'top_users';
 
     public function getLabel(): ?string

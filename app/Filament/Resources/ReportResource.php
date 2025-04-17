@@ -18,6 +18,16 @@ class ReportResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('report.plural');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('report.singular');
+    }
+
     public static function table(Table $table): Table
     {
         return $table

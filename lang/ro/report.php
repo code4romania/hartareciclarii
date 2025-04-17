@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 return [
+
+    'singular' => 'Raport',
+    'plural' => 'Rapoarte',
+
     'column' => [
         'service_type' => 'Tip serviciu',
         'point_type' => 'Tip punct',
