@@ -41,12 +41,20 @@ class TopUsersReports implements ShouldQueue
 
         $data = [];
 
-        if ($structure['contribution_type'] === 'points') {
-            $data = $this->getPointContribution($dates, $structure, $groupBy);
-        }
-        if ($structure['contribution_type'] === 'problems') {
-            $data = $this->getProblemContribution($dates, $structure);
-        }
+        $query = DB::table('contributions')
+            ->select([DB::raw('count(*) as total'), 'user_id'])
+            ->whereDate('created_at', '>=', $dates['start_date'])
+            ->whereDate('created_at', '<=', $dates['end_date'])
+            ->when($structure['contribution_type'] === 'points', fn (Builder $q) => $q->where('contribution_type', 'points'))
+            ->when($structure['contribution_type'] === 'problems', fn (Builder $q) => $q->where('contribution_type', 'problems'))
+            ->groupBy('user_id');
+
+//        $query = $query
+//            ->when($structure['city_ids'],  (Builder $q) => $q->('city_id', $structure['city_ids']))
+//            ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
+//
+
+        $data = $query->get()->pluck('total', 'user_id');
 
         try {
             $tmpData = [];
@@ -95,33 +103,4 @@ class TopUsersReports implements ShouldQueue
         }
     }
 
-    private function getPointContribution(array $dates, array $structure)
-    {
-        $query = Point::query()
-            ->select([DB::raw('count(*) as total'), 'created_by'])
-            ->whereDate('created_at', '>=', $dates['start_date'])
-            ->whereDate('created_at', '<=', $dates['end_date'])
-            ->groupBy('created_by');
-
-        $query = $query
-            ->when($structure['city_ids'], fn (Builder $q) => $q->whereIn('city_id', $structure['city_ids']))
-            ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
-
-        return $query->get()->pluck('total', 'created_by');
-    }
-
-    private function getProblemContribution(array $dates, mixed $structure)
-    {
-        $query = Problem::query()
-            ->select([DB::raw('count(*) as total'), 'reported_by'])
-            ->whereDate('created_at', '>=', $dates['start_date'])
-            ->whereDate('created_at', '<=', $dates['end_date'])
-            ->groupBy('reported_by');
-
-        $query = $query
-            ->when($structure['city_ids'], fn (Builder $q) => $q->whereIn('city_id', $structure['city_ids']))
-            ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
-
-        return $query->get()->pluck('total', 'reported_by');
-    }
 }
