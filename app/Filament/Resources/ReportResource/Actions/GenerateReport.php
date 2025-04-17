@@ -9,6 +9,7 @@ use App\Enums\ProblemStatus;
 use App\Enums\ReportType;
 use App\Jobs\Reports\PointsReports;
 use App\Jobs\Reports\ProblemReports;
+use App\Jobs\Reports\TopUsersReports;
 use App\Jobs\Reports\UserActivityReports;
 use App\Models\City;
 use App\Models\County;
@@ -84,6 +85,11 @@ class GenerateReport extends Action
                     ->statePath('filters.structure')
                     ->schema(self::getUserActivityForm())
                     ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
+                Section::make(__('report.section.filter_dates_by'))
+                    ->compact()
+                    ->statePath('filters.structure')
+                    ->schema(self::getTopUsersForm())
+                    ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::TOP_USERS->value),
 
             ]
         );
@@ -303,6 +309,40 @@ class GenerateReport extends Action
                     'city_id' => __('report.column.city'),
                     'status' => __('report.column.status'),
                 ]),
+        ];
+    }
+
+    private static function getTopUsersForm()
+    {
+        return [
+            Group::make(
+                [
+                    Select::make('contribution_type')
+                        ->label(__('report.column.contribution_type'))
+                        ->options([
+                            'points' => __('report.column.points'),
+                            'problems' => __('report.column.problems'),
+                        ]),
+                    Select::make('county_ids')
+                        ->label(__('report.column.county'))
+                        ->multiple()
+                        ->live()
+                        ->searchable()
+                        ->placeholder(__('report.placeholder.county'))
+                        ->options(fn (Get $get) => County::query()
+                            ->pluck('name', 'id')),
+
+                    Select::make('city_ids')
+                        ->label(__('report.column.city'))
+                        ->multiple()
+                        ->searchable()
+                        ->placeholder(__('report.placeholder.city'))
+                        ->options(fn (Get $get) => City::query()
+                            ->when($get('county_ids'), fn (Builder $query) => $query->whereIn('county_id', $get('county_ids')))
+                            ->pluck('name', 'id')),
+
+                ],
+            )->columns(3),
         ];
     }
 

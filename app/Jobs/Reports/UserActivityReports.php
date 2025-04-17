@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\County;
 use App\Models\Point;
 use App\Models\PointType;
+use App\Models\Problem\Problem;
 use App\Models\Problem\ProblemType;
 use App\Models\Report;
 use App\Models\ServiceType;
@@ -44,6 +45,7 @@ class UserActivityReports implements ShouldQueue
         $groupBy = $structure['group_by'];
 
         $data = [];
+
         foreach ($structure['contribution_type'] as $cotribution) {
             if ($cotribution === 'points') {
                 $data = $this->getPointContribution($dates, $structure, $groupBy);
@@ -52,8 +54,10 @@ class UserActivityReports implements ShouldQueue
             if ($cotribution === 'problems') {
                 $data = $this->getProblemContribution($dates, $structure, $groupBy);
             }
+
+
         }
-        dd($data);
+
 
         try {
             $names = match ($groupBy) {
@@ -131,7 +135,32 @@ class UserActivityReports implements ShouldQueue
             ->when($structure['city_ids'], fn (Builder $q) => $q->whereIn('city_id', $structure['city_ids']))
             ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
 
-        $problems = $query->get()->pluck('total', $groupBy);
-        dd($problems);
+        return $query->get()->pluck('total', $groupBy);
+    }
+
+    private function getProblemContribution(array $dates, mixed $structure, mixed $groupBy)
+    {
+        $query = Problem::query()
+            ->select([DB::raw('count(*) as total'), $groupBy])
+            ->whereDate('created_at', '>=', $dates['start_date'])
+            ->whereDate('created_at', '<=', $dates['end_date'])
+            ->groupBy($groupBy);
+
+        if (filled($structure['user_types'])) {
+            if (\count($structure['user_types']) !== 2) {
+                foreach ($structure['user_types'] as $type) {
+                    match ($type) {
+                        'user' => $query->whereNotNull('created_by'),
+                        'guest' => $query->whereNull('created_by'),
+                    };
+                }
+            }
+        }
+
+        $query = $query
+            ->when($structure['city_ids'], fn (Builder $q) => $q->whereIn('city_id', $structure['city_ids']))
+            ->when($structure['county_ids'], fn (Builder $q) => $q->whereIn('county_id', $structure['county_ids']));
+
+        return $query->get()->pluck('total', $groupBy);
     }
 }
