@@ -80,11 +80,11 @@ class GenerateReport extends Action
                     ->statePath('filters.structure')
                     ->schema(self::getProblemForm())
                     ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::PROBLEMS->value),
-                Section::make(__('report.section.filter_dates_by'))
-                    ->compact()
-                    ->statePath('filters.structure')
-                    ->schema(self::getUserActivityForm())
-                    ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
+//                Section::make(__('report.section.filter_dates_by'))
+//                    ->compact()
+//                    ->statePath('filters.structure')
+//                    ->schema(self::getUserActivityForm())
+//                    ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
                 Section::make(__('report.section.filter_dates_by'))
                     ->compact()
                     ->statePath('filters.structure')
