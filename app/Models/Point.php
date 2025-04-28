@@ -180,6 +180,7 @@ class Point extends Model implements HasMedia
      */
     public function toSearchableArray(): array
     {
+        $this->loadMissing(['serviceType:id,name', 'pointType:id,name', 'materials:id,name']);
         return [
             'id' => (string) $this->id,
             'point_id' => (string) $this->id,
@@ -189,7 +190,6 @@ class Point extends Model implements HasMedia
             ],
             'service_type' => $this->serviceType->name,
             'service_type_id' => (string) $this->serviceType->id,
-            'point_type' => $this->pointType->name,
             'point_type_id' => (string) $this->pointType->id,
             'address' => $this->address,
             'point_type' => $this->pointType->name,

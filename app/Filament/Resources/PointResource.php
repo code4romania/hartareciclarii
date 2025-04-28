@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\Point\Status;
+use App\Filament\Resources\PointResource\Actions\Table\BulkAddMaterials;
+use App\Filament\Resources\PointResource\Actions\Table\BulkRemoveMaterials;
+use App\Filament\Resources\PointResource\Actions\Table\BulkUpdateInfo;
 use App\Filament\Resources\PointResource\Pages;
 use App\Models\Point;
 use App\Models\PointGroup;
@@ -62,6 +65,13 @@ class PointResource extends Resource
                     ->label(__('map_points.county'))
                     ->relationship('county', 'name')
                     ->multiple(),
+
+                SelectFilter::make('materials')
+                    ->label(__('map_points.fields.materials'))
+                    ->relationship('materials', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
 
                 TrashedFilter::make(),
 
@@ -127,6 +137,9 @@ class PointResource extends Resource
                         ->color('warning')
                         ->requiresConfirmation(),
 
+                    BulkUpdateInfo::make(),
+                    BulkAddMaterials::make(),
+                    BulkRemoveMaterials::make(),
 
                     BulkAction::make('allocate_to_group')
                         ->label(__('map_points.buttons.set_group'))

@@ -105,11 +105,25 @@ return [
         'step_3' => 'Materiale',
     ],
 
-    'bulk_change' => [
-        'title' => 'Actualizeaza in masǎ',
-        'description' => 'Actualizeaza in masǎ punctele selectate',
-        'change_type' => 'Tipul de actualizare',
+    'actions' => [
+        'bulk_add_materials' => [
+            'title' => 'Adaugǎ materiale',
+            'success' => 'Materiale adǎugate cu succes la :count puncte',
+            'error' => 'Materialele nu au putut fi adǎugate asigurate-te ca punctele selectate au tipul de serviciu corect',
+        ],
 
+        'bulk_remove_materials' => [
+            'title' => 'Sterge materiale',
+            'success' => 'Materiale sterse cu succes de la :count puncte',
+            'error' => 'Materialele nu au putut fi sterse asigurate-te ca punctele au materialele selectate',
+        ],
+        'bulk_update_info' => [
+            'title' => 'Actualizeaza informatiile',
+            'field' => 'Câmp',
+            'field_value' => 'Valoare câmp',
+            'success' => 'Informațiile au fost actualizate cu succes pentru :count puncte',
+            'error' => 'Informațiile nu au putut fi actualizate, te rugam sa incerci din nou mai tarziu, daca problema persista contacteaza echipa de suport',
+        ],
     ],
 
     'new_point' => 'Punct nou',
