@@ -191,7 +191,7 @@ class AddPoint extends Action
         return ! $get('chosenService.' . $string);
     }
 
-    private function getMaterialsFields(): array
+    public static function getMaterialsFields(): array
     {
         $categories = MaterialCategory::with('materials')->orderBy('position')->get();
         $fields = [];
