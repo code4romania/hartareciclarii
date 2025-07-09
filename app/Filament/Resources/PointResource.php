@@ -14,8 +14,10 @@ use App\Models\PointGroup;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -101,40 +103,49 @@ class PointResource extends Resource
                 ]
             )
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-
-                    BulkAction::make('change-status')
-                        ->label(__('map_points.buttons.change_status'))
-                        ->form([
-                            Select::make('status')
-                                ->label(__('map_points.fields.status'))
-                                ->options(Status::options())
-                                ->required(),
-                        ])
-                        ->action(function (array $data, Collection $records): void {
+                BulkActionGroup::make([
+                    BulkAction::make('change-status-verified')
+                        ->label(__('map_points.buttons.change_status_verified'))
+                        ->action(function (Collection $records): void {
                             $recordsWithoutIssues = $records->filter(function ($record) {
-                                return $record->issues->isEmpty();
+                                $record->load('problems');
+
+                                return $record->problems->isEmpty();
                             });
-
-                            $recordsWithoutIssues->map->changeStatus(Status::from($data['status']));
-
-                            if ($records->count() === $recordsWithoutIssues->count()) {
-                                Notification::make('success_status_changed')
-                                    ->body(__('map_points.notifications.status_changed.success'))
-                                    ->success()
-                                    ->send();
-                            } else {
-                                Notification::make('warning_status_changed')
-                                    ->body(__('map_points.notifications.status_changed.warning', [
-                                        'count' => $records->count() - $recordsWithoutIssues->count(),
-                                    ]))
-                                    ->warning()
-                                    ->send();
-                            }
+                            Point::whereIn('id', $recordsWithoutIssues->pluck('id')->toArray())
+                                ->update([
+                                    'verified_at' => now(),
+                                ]);
+                            Notification::make('success_status_changed')
+                                ->body(__('map_points.notifications.status_change_verified'))
+                                ->success()
+                                ->send();
                         })
                         ->deselectRecordsAfterCompletion()
                         ->icon('heroicon-o-check')
-                        ->color('warning')
+                        ->color('primary')
+                        ->requiresConfirmation(),
+
+                    BulkAction::make('change-status-unverified')
+                        ->label(__('map_points.buttons.change_status_unverified'))
+                        ->action(function (Collection $records): void {
+                            $recordsWithoutIssues = $records->filter(function ($record) {
+                                $record->load('problems');
+
+                                return $record->problems->isEmpty();
+                            });
+                            Point::whereIn('id', $recordsWithoutIssues->pluck('id')->toArray())
+                                ->update([
+                                    'verified_at' => null,
+                                ]);
+                            Notification::make('success_status_changed')
+                                ->body(__('map_points.notifications.status_change_verified'))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->color('danger')
                         ->requiresConfirmation(),
 
                     BulkUpdateInfo::make(),
@@ -178,8 +189,9 @@ class PointResource extends Resource
                             });
                         })
                         ->label(__('map_points.buttons.delete')),
+                ])
+                    ->dropdownWidth(MaxWidth::Medium->value),
 
-                ]),
             ])
             ->deferLoading();
     }

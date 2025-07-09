@@ -49,7 +49,8 @@ return [
         'edit' => 'Modifica punct',
         'edit_details' => 'Modifica detalii',
         'validate' => 'Marcheaza ca verificat',
-        'change_status' => 'Schimba status',
+        'change_status_verified' => 'Seteaza statusul: verificat',
+        'change_status_unverified' => 'Seteaza statusul: neverificat',
         'update_location' => 'Editeaza locatia',
         'confirm_info' => 'Confirma informatiile',
         'bulk_update' => 'Actualizeaza în masǎ',
@@ -93,6 +94,8 @@ return [
             'success' => 'Statusu actualizat cu succes',
             'warning' => 'Statusul nu a putut fi actualizat pentru :count puncte',
         ],
+        'status_change_verified' => 'Statusul a fost setat verificat la toate punctele care nu au probleme raportate',
+        'status_change_unverified' => 'Statusul a fost setat neverificat la toate punctele care nu au probleme raportate',
 
         'point_allocated_to_group' => 'Punctele (:number) au fost alocat cu succes la grupul :group',
 

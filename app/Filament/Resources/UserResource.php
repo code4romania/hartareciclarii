@@ -52,15 +52,14 @@ class UserResource extends Resource
                             ->maxLength(255),
                         TextInput::make('email')
                             ->required()
+                            ->unique('users', 'email', fn (User $record) => $record)
                             ->maxLength(255),
                         TextInput::make('password')
                             ->password()
                             ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                             ->dehydrated(fn (?string $state): bool => filled($state))
                             ->required(fn (string $operation): bool => $operation === 'create'),
-                        Select::make('roles')
-                            ->relationship('roles', 'name')
-                            ->preload(),
+
                         Select::make('user_group_id')
                             ->label(__('users.group.singular'))
                             ->relationship('userGroup', 'name')
