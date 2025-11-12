@@ -98,6 +98,7 @@ class MaterialCategoryResource extends Resource
             ->filters([
                 //
             ])
+            ->reorderable('position')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

@@ -83,6 +83,11 @@ class PointResource extends Resource
                 Tables\Actions\ViewAction::make()
                     ->label(__('map_points.buttons.details'))
                     ->icon('heroicon-m-eye'),
+                Tables\Actions\Action::make('view_point_on_map')
+                    ->label(__('map_points.buttons.view_on_map'))
+                    ->url(fn (Point $record) => route('front.map.redirect', $record) )
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-m-map-pin'),
             ])
             ->headerActions(
                 [

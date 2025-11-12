@@ -44,6 +44,12 @@ class ViewMapPoint extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+
+            Action::make('view_point_on_map')
+                ->label(__('map_points.buttons.view_on_map'))
+                ->icon('heroicon-m-map')
+                ->url(fn () => route('front.map.redirect', $this->record))
+                ->openUrlInNewTab(),
             Action::make('changeStatus')
                 ->label(__('map_points.buttons.change_status'))
                 ->icon('heroicon-m-arrows-right-left')
