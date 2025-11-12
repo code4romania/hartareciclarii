@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine as vendor
+FROM php:8.4-fpm-alpine as vendor
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
