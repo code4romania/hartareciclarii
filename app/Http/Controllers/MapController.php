@@ -190,6 +190,10 @@ class MapController extends Controller
             'service_types' => ServiceTypeResource::collection($serviceTypes),
             'icons' => fn () => [
                 'markercluster' => Vite::asset('resources/images/map/markercluster.svg'),
+                'sgr' => [
+                    'sm' => Vite::asset('resources/images/map/sgr-sm.svg'),
+                    'lg' => Vite::asset('resources/images/map/sgr-lg.svg'),
+                ],
                 ...$serviceTypes
                     ->mapWithKeys(fn (ServiceType $serviceType) => [
                         $serviceType->slug => [
@@ -229,11 +233,11 @@ class MapController extends Controller
 
                 return PointResource::collection(
                     Point::query()
-                        ->with('serviceType:id,slug')
+                        ->with(['serviceType:id,slug', 'pointType:id,is_sgr'])
                         ->whereMatchesCoordinates($coordinates)
                         ->withGlobalScope('filtered', new FilteredPointsScope(request()->filters()))
                         ->take(2000)
-                        ->get(['id', 'location', 'service_type_id'])
+                        ->get(['id', 'location', 'service_type_id', 'point_type_id'])
                 );
             },
 

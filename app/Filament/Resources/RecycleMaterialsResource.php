@@ -17,6 +17,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class RecycleMaterialsResource extends Resource
@@ -72,7 +73,6 @@ class RecycleMaterialsResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('categories.name')
-                    ->sortable()
                     ->searchable(),
                 TextColumn::make('points_count')
                     ->counts('points')
@@ -83,7 +83,11 @@ class RecycleMaterialsResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('categories')
+                    ->label(__('materials.categories.plural'))
+                    ->preload()
+                    ->relationship('categories', 'name')
+                    ->multiple(),
             ])
             ->actions([
                 ActionGroup::make([

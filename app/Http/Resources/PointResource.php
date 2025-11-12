@@ -20,6 +20,7 @@ class PointResource extends JsonResource
             'id' => $this->id,
             'service' => $this->serviceType->slug,
             'latlng' => [$this->location->latitude, $this->location->longitude],
+            'is_sgr' => $this->pointType->is_sgr,
         ];
     }
 }

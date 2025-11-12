@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\ProblemStatus;
 use App\Filament\Resources\ProblemResource\Pages;
 use App\Models\Problem\Problem;
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
@@ -154,14 +156,27 @@ class ProblemResource extends Resource
                     ->html(),
                 TextColumn::make('status')
                     ->label(__('issues.columns.status'))
-                    ->sortable()
                     ->formatStateUsing(fn (Problem $record) => $record->status->getLabel()),
 
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
+                SelectFilter::make('type')
                     ->label(__('issues.columns.issue_type'))
                     ->relationship('type', 'name'),
+
+                SelectFilter::make('status')
+                    ->label(__('issues.columns.status'))
+                    ->query(function (Builder $query, $data) {
+                        $status = ProblemStatus::tryFrom($data['value']);
+
+                        return match ($status) {
+                            ProblemStatus::NEW => $query->whereNull('started_at')->whereNull('closed_at'),
+                            ProblemStatus::PENDING => $query->whereNotNull('started_at')->whereNull('closed_at'),
+                            ProblemStatus::CLOSED => $query->whereNotNull('closed_at'),
+                            default => $query,
+                        };
+                    })
+                    ->options(ProblemStatus::options()),
 
                 Filter::make('created_period')
                     ->label(__('issues.columns.created_at'))

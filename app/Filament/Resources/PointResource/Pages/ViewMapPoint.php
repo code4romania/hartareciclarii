@@ -52,12 +52,17 @@ class ViewMapPoint extends ViewRecord
                         ->label(__('map_points.fields.status'))
                         ->options(Status::options())
                         ->default($this->record->status->value)
+                        ->disableOptionWhen(fn (string $value): bool => $value === 'with_problems')
                         ->required(),
                 ])
                 ->modal()
                 ->action(function (array $data): void {
                     $status = Status::tryFrom($data['status']);
-                    $this->record->changeStatus($status);
+                    match ($status) {
+                        Status::UNVERIFIED => $this->record->verified_at = null,
+                        Status::VERIFIED => $this->record->verified_at = now(),
+                    };
+                    $this->record->save();
                     Notification::make()
                         ->title(__('map_points.point_save_success'))
                         ->success()

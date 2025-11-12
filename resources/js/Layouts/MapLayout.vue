@@ -67,14 +67,14 @@
                     >
                         <LIcon
                             v-if="point.current"
-                            :icon-url="getMapPinIcon(point, 'lg')"
+                            :icon-url="getMapPinIcon(point, 'lg', point.is_sgr)"
                             :icon-size="[32, 43]"
                             :icon-anchor="[16, 43]"
                         />
 
                         <LIcon
                             v-else
-                            :icon-url="getMapPinIcon(point, 'sm')"
+                            :icon-url="getMapPinIcon(point, 'sm', point.is_sgr)"
                             :icon-size="[32, 32]"
                             :icon-anchor="[16, 16]"
                         />
@@ -200,7 +200,13 @@
         }
     }
 
-    const getMapPinIcon = (point, size) => props.icons[point.service][size];
+    const getMapPinIcon = (point, size, is_sgr) => {
+        if (is_sgr) {
+            console.log(props.icons)
+            return props.icons['sgr'][size];
+        }
+        return  props.icons[point.service][size];
+    }
 
     const iconCreateFunction = (cluster) =>
         new L.Icon({

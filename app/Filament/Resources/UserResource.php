@@ -99,13 +99,11 @@ class UserResource extends Resource
                 TextColumn::make('contributions_count')
                     ->counts('contributions')
                     ->label(__('users.contributions_count'))
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
 
                 TextColumn::make('last_login_date')->date('Y-m-d H:i:s')
                     ->label(__('users.last_login_date'))
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->sortable()
                     ->searchable(),

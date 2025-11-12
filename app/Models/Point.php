@@ -155,7 +155,6 @@ class Point extends Model implements HasMedia
             ])
         );
     }
-
     public function changeGroup(int $groupId): void
     {
         $this->update(['point_group_id' => $groupId]);

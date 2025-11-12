@@ -16,6 +16,7 @@ class PointType extends Model
     protected $fillable = [
         'name',
         'service_type_id',
+        'is_sgr',
     ];
 
     public function serviceType(): BelongsTo

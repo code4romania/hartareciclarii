@@ -128,6 +128,17 @@ return [
             'error' => 'Informațiile nu au putut fi actualizate, te rugam sa incerci din nou mai tarziu, daca problema persista contacteaza echipa de suport',
         ],
     ],
+    'buttons' => [
+        'set_group' => 'Aloca la grup',
+        'create' => 'Adauga punct nou',
+        'details' => 'Detalii punct',
+        'delete' => 'Sterge punct',
+        'view_on_map' => 'Vezi pe harta',
+        'edit' => 'Modifica punct',
+        'validate' => 'Marcheaza ca verificat',
+        'change_status' => 'Schimba statusul',
+        'update_location' => 'Editeaza locatia',
+    ],
 
     'new_point' => 'Punct nou',
     'edit_point' => 'Modificǎ punct',
