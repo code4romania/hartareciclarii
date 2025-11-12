@@ -4,7 +4,7 @@
     >
         <Head :title="point.name" />
 
-        <Heading :service="point.service" :name="point.name" @close="closePanel(map.leafletObject)" />
+        <Heading :service="point.service" :name="point.name" @close="closePanel(map.leafletObject)" :is_sgr="point.is_sgr" />
 
         <Subheading :subheading="point.subheading" :status="point.status" />
 
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-    import { inject } from 'vue';
+import {inject, onMounted} from 'vue';
     import { closePanel } from '@/Helpers/useMap.js';
 
     import Actions from '@/Components/PointDetails/Actions.vue';

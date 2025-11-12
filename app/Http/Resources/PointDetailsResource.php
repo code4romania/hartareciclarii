@@ -33,6 +33,7 @@ class PointDetailsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->pointType->name,
+            'is_sgr' => (bool)$this->pointType->is_sgr,
             'status' => [
                 'color' => $this->status->getColor(),
                 'label' => $this->status->is(Status::WITH_PROBLEMS)
