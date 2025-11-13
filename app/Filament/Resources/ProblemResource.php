@@ -167,7 +167,7 @@ class ProblemResource extends Resource
                 SelectFilter::make('status')
                     ->label(__('issues.columns.status'))
                     ->query(function (Builder $query, $data) {
-                        $status = ProblemStatus::tryFrom($data['value']);
+                        $status = ProblemStatus::tryFrom($data['value'] ?? '');
 
                         return match ($status) {
                             ProblemStatus::NEW => $query->whereNull('started_at')->whereNull('closed_at'),
