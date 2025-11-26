@@ -104,9 +104,11 @@ class LeafletAutocomplete extends Component
             ->live()
             ->hiddenLabel()
             ->liveLocation()
+            ->visible(fn (Get $get) => $get('location.lat') && $get('location.lng'))
+            ->defaultLocation(45.9432, 24.9668)
             ->zoom(18)
             ->draggable(false)
-            ->showMyLocationButton()
+            ->showMyLocationButton(false)
             ->hintAction(
                 Action::make('change_pin_location')
                     ->label(__('map_points.change_pin_location'))
@@ -119,6 +121,8 @@ class LeafletAutocomplete extends Component
                             ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
                             ->label(__('map_points.new_point'))
                             ->liveLocation()
+                            ->showMyLocationButton(false)
+
                             ->live()
                             ->afterStateUpdated(function (?array $state, Set $set) {
                                 $set('new_lat', $state['lat']);
