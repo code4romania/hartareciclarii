@@ -172,11 +172,6 @@ class AddPoint extends Action
             }
             Notification::make(__('map_points.notifications.point_added'))
                 ->body(__('map_points.notifications.point_added_body', ['point' => $point->id]))
-                ->actions([
-                    NotificationAction::make('view_on_map')
-                        ->label(__('map_points.buttons.view_on_map'))
-                        ->url(route('map.point', $point), true),
-                ])
                 ->success()
                 ->send();
         });
