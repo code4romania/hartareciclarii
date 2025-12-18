@@ -175,7 +175,7 @@ class AddPoint extends Action
                 ->actions([
                     NotificationAction::make('view_on_map')
                         ->label(__('map_points.buttons.view_on_map'))
-                        ->url(route('front.map.point', $point), true),
+                        ->url(route('map.point', $point), true),
                 ])
                 ->success()
                 ->send();
