@@ -55,4 +55,50 @@ return [
         'in_progress' => 'In curs de generare',
         'completed' => 'Generat',
     ],
+
+    'issue' => [
+        'default_issue_types' => [
+            'default_incorrect_address' => 'Adresa nu este corectă',
+            'default_incorrect_map_point' => 'Locația punctului pe hartă nu este corectă',
+            'default_other' => 'Altă problemă',
+        ],
+
+        'repairs_issue_types' => [
+            'repairs_issues_incorrect_address' => 'Adresa nu este corectă',
+            'repairs_issues_incorrect_map_point' => 'Locația punctului pe hartă nu este corectă',
+            'repairs_issues_incorrect_repaired_products' => 'Produsele reparate nu sunt corecte',
+            'repairs_issues_incorrect_schedule' => 'Programul nu este corect',
+            'repairs_issues_refused_repair' => 'Reparație refuzată',
+            'repairs_issues_other' => 'Altă problemă',
+        ],
+
+        'fields' => [
+            'address' => 'Adresă',
+            'latitude' => 'Latitudine',
+            'longitude' => 'Longitudine',
+            'schedule' => 'Program',
+            'container' => 'Container',
+            'repaired_products_refused' => 'Produse refuzate pentru reparație',
+            'repaired_products_not_repaired' => 'Produse care nu sunt reparate',
+            'repaired_products_other' => 'Alte produse',
+            'incorrect_materials_missing' => 'Materiale lipsă din listă',
+            'incorrect_materials_extra' => 'Materiale în plus față de listă',
+            'incorrect_materials_other' => 'Alte materiale',
+            'refused_collection_type_of_material' => 'Tip de material refuzat',
+            'refused_collection_quantity' => 'Cantitate refuzată',
+            'refused_collection_other' => 'Alte motive de refuz',
+        ],
+    ],
+
+    'issues' => [
+        'waste_collection_issue_types' => [
+            'waste_collection_incorrect_address' => 'Adresa nu este corectă',
+            'waste_collection_incorrect_map_point' => 'Locația punctului pe hartă nu este corectă',
+            'waste_collection_incorrect_materials' => 'Materialele nu sunt corecte',
+            'waste_collection_incorrect_schedule' => 'Programul nu este corect',
+            'waste_collection_malfunctioning_container' => 'Container defect',
+            'waste_collection_refused_collection' => 'Colectare refuzată',
+            'other' => 'Altă problemă',
+        ],
+    ],
 ];

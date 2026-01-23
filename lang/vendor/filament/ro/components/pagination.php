@@ -4,7 +4,7 @@ return [
 
     'label' => 'Navigare',
 
-    'overview' => 'Afișare :first-:last din :total rezultate',
+    'overview' => '{1} Afișare 1 rezultat|[2,*] Afișare :first-:last din :total rezultate',
 
     'fields' => [
 

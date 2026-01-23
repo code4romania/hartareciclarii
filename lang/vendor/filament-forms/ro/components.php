@@ -15,7 +15,7 @@ return [
             ],
 
             'add_between' => [
-                'label' => 'Inserează',
+                'label' => 'Inserează între blocuri',
             ],
 
             'delete' => [
@@ -336,7 +336,7 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'Adăugare opțiune',
+                    'heading' => 'Creare',
 
                     'actions' => [
 
@@ -345,7 +345,7 @@ return [
                         ],
 
                         'create_another' => [
-                            'label' => 'Creați și creați altul',
+                            'label' => 'Creează și creează altul',
                         ],
 
                     ],
