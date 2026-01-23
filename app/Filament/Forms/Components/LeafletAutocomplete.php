@@ -62,7 +62,7 @@ class LeafletAutocomplete extends Component
             ->live()
             ->searchDebounce(500) // 2 seconds
             ->searchingMessage(__(''))
-            ->searchPrompt(__('Type to search...'))
+            ->searchPrompt(__('map_points.fields.search_prompt'))
             ->searchable()
             ->hint(new HtmlString(Blade::render('<x-filament::loading-indicator class="w-5 h-5" wire:loading wire:target="data.google_autocomplete" />')))
             ->columnSpanFull()

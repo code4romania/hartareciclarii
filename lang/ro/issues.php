@@ -56,6 +56,7 @@ return [
         'reported_at' => 'la :created_at ',
         'issue_with_point' => 'Problema cu punctul #:point_id',
         'address_is_not_correct' => 'Sugestie adresa',
+        'original_address' => 'Adresa originală',
         'issue_type' => 'Tip problema',
         'material_issue_missing' => 'Care din urmatoarele materiale ati identificat ca <strong>lipsesc</strong> din descrierea locatiei?',
         'material_issue_extra' => 'Care din urmatoarele materiale ati identificat ca se colecteaza <strong>in plus</strong> fata de descrierea locatiei?',

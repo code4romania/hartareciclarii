@@ -26,6 +26,10 @@ return [
             'label' => 'Selectează/Deselectează elementul :key pentru operațiuni in masă.',
         ],
 
+        'bulk_select_group' => [
+            'label' => 'Selectează/Deselectează grupul :title pentru operațiuni in masă.',
+        ],
+
         'search' => [
             'label' => 'Căutare',
             'placeholder' => 'Căutare',

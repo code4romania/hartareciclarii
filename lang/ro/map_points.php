@@ -49,6 +49,7 @@ return [
         'edit' => 'Modifica punct',
         'edit_details' => 'Modifica detalii',
         'validate' => 'Marcheaza ca verificat',
+        'change_status' => 'Schimba statusul',
         'change_status_verified' => 'Seteaza statusul: verificat',
         'change_status_unverified' => 'Seteaza statusul: neverificat',
         'update_location' => 'Editeaza locatia',
@@ -87,6 +88,7 @@ return [
         'free_of_charge' => 'Oferă servicii gratuite',
         'images' => 'Imagini',
         'business_name' => 'Nume business',
+        'search_prompt' => 'Începeți să tastați pentru a căuta...',
 
     ],
     'notifications' => [
@@ -99,6 +101,7 @@ return [
 
         'point_allocated_to_group' => 'Punctele (:number) au fost alocat cu succes la grupul :group',
 
+        'point_added' => 'Punct adăugat cu succes',
         'point_added_body' => 'Punctul a fost adǎugat cu succes. :point',
     ],
 
@@ -127,17 +130,6 @@ return [
             'success' => 'Informațiile au fost actualizate cu succes pentru :count puncte',
             'error' => 'Informațiile nu au putut fi actualizate, te rugam sa incerci din nou mai tarziu, daca problema persista contacteaza echipa de suport',
         ],
-    ],
-    'buttons' => [
-        'set_group' => 'Aloca la grup',
-        'create' => 'Adauga punct nou',
-        'details' => 'Detalii punct',
-        'delete' => 'Sterge punct',
-        'view_on_map' => 'Vezi pe harta',
-        'edit' => 'Modifica punct',
-        'validate' => 'Marcheaza ca verificat',
-        'change_status' => 'Schimba statusul',
-        'update_location' => 'Editeaza locatia',
     ],
 
     'new_point' => 'Punct nou',
