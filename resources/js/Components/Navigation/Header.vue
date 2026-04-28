@@ -1,9 +1,16 @@
 <template>
     <Disclosure as="header" class="relative bg-white border-b border-gray-200 shadow lg:bg-gray-50" v-slot="{ open }">
         <div class="flex justify-between px-4 py-3 md:px-6 md:gap-6">
-            <a href="https://hartareciclarii.ro/" target="_blank">
-                <Icon icon="logo" class="w-32 h-11 shrink-0" />
-            </a>
+            <div class="grid grid-cols-2">
+                <a href="https://hartareciclarii.ro/" target="_blank">
+                    <Icon icon="logo" class="w-32 h-11" />
+                </a>
+                <a href="https://dupanoi.ro/" target="_blank">
+                    <img src="../../../images/cola.png" class="w-auto h-11"  />
+
+                </a>
+
+            </div>
 
             <AddPoint
                 v-if="!dashboard"
