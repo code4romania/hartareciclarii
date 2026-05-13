@@ -293,18 +293,26 @@ class ViewMapPoint extends ViewRecord
                             ->action(fn (array $data) => $this->record->update($data))
                             ->fillForm($this->record->toArray())
                             ->form([
+                                Select::make('service_type_id')
+                                    ->label(__('map_points.fields.service_type'))
+                                    ->relationship('serviceType', 'name')
+                                    ->live()
+                                    ->required(),
+
                                 Select::make('point_type_id')
                                     ->label(__('map_points.fields.point_type'))
                                     ->relationship('pointType', 'name')
-                                    ->options(PointType::where('service_type_id', $this->record->service_type_id)->get()->pluck('name', 'id')->toArray())
+                                    ->options(fn (Get $get) => PointType::query()
+                                        ->where('service_type_id', $get('service_type_id') ?? $this->record->service_type_id)
+                                        ->get()
+                                        ->pluck('name', 'id')->toArray())
                                     ->required(),
 
                                 Select::make('materials')
                                     ->label(__('map_points.fields.materials'))
                                     ->hidden($this->showField('can_collect_materials'))
                                     ->relationship('materials', 'name')
-                                    ->multiple()
-                                    ->required(),
+                                    ->multiple(),
 
                                 TextInput::make('business_name')
                                     ->label(__('map_points.fields.business_name'))
