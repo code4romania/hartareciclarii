@@ -68,6 +68,11 @@ class PointResource extends Resource
                     ->relationship('county', 'name')
                     ->multiple(),
 
+                SelectFilter::make('created_by')
+                    ->label(__('map_points.fields.created_by'))
+                    ->relationship('createdBy', 'full_name')
+                    ->multiple(),
+
                 SelectFilter::make('materials')
                     ->label(__('map_points.fields.materials'))
                     ->relationship('materials', 'name')
@@ -85,7 +90,7 @@ class PointResource extends Resource
                     ->icon('heroicon-m-eye'),
                 Tables\Actions\Action::make('view_point_on_map')
                     ->label(__('map_points.buttons.view_on_map'))
-                    ->url(fn (Point $record) => route('front.map.redirect', $record) )
+                    ->url(fn (Point $record) => route('front.map.redirect', $record))
                     ->openUrlInNewTab()
                     ->icon('heroicon-m-map-pin'),
             ])
@@ -259,6 +264,11 @@ class PointResource extends Resource
                 ->sortable()
                 ->wrap(),
 
+            TextColumn::make('createdBy.full_name')
+                ->label(__('map_points.fields.created_by'))
+                ->toggleable()
+                ->wrap(),
+
             TextColumn::make('materials.name')
                 ->label(__('map_points.materials'))
                 ->searchable()
@@ -286,6 +296,7 @@ class PointResource extends Resource
 
             TextColumn::make('proximity_count')
                 ->badge()
+                ->toggleable()
                 ->color(fn ($state) => $state > 0 ? 'warning' : 'success')
                 ->label(__('map_points.proximity_count')),
 

@@ -222,6 +222,11 @@ class ViewMapPoint extends ViewRecord
 
                 Section::make(__('map_points.sections.details'))
                     ->schema([
+
+                        TextEntry::make('createdBy.full_name')
+                            ->default('Admin HR')
+                            ->label(__('map_points.fields.created_by')),
+
                         TextEntry::make('pointType.name')
                             ->label(__('map_points.fields.point_type')),
 
