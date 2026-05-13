@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -120,6 +121,18 @@ class Point extends Model implements HasMedia
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function createdBy(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            User::class,
+            Contribution::class,
+            'model_id',
+            'id',
+            'id',
+            'user_id'
+        )->where((new Contribution())->getTable() . '.model_type', (new static)->getMorphClass());
+    }
+
     public function contribution(): MorphOne
     {
         return $this->morphOne(Contribution::class, 'model');
@@ -155,6 +168,7 @@ class Point extends Model implements HasMedia
             ])
         );
     }
+
     public function changeGroup(int $groupId): void
     {
         $this->update(['point_group_id' => $groupId]);
@@ -180,6 +194,7 @@ class Point extends Model implements HasMedia
     public function toSearchableArray(): array
     {
         $this->loadMissing(['serviceType:id,name', 'pointType:id,name', 'materials:id,name']);
+
         return [
             'id' => (string) $this->id,
             'point_id' => (string) $this->id,

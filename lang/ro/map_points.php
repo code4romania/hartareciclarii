@@ -72,6 +72,7 @@ return [
         'latitude' => 'Latitudine',
         'longitude' => 'Longitudine',
         'point_type' => 'Tip punct',
+        'created_by' => 'Creat de',
         'materials' => 'Materiale',
         'website' => 'Website',
         'phone' => 'Telefon',
