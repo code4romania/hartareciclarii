@@ -159,6 +159,16 @@ class ViewMapPoint extends ViewRecord
 
                                 Textarea::make('notes')
                                     ->label(__('map_points.fields.notes')),
+                                \Filament\Forms\Components\Section::make(__('map_points.fields.manual_location'))
+                                    ->collapsed()
+                                    ->schema([
+                                        TextInput::make('address')
+                                            ->label(__('map_points.fields.address')),
+                                        TextInput::make('location.lat')
+                                            ->label(__('map_points.fields.latitude')),
+                                        TextInput::make('location.lng')
+                                            ->label(__('map_points.fields.longitude')),
+                                    ]),
                             ])
                             ->fillForm([
                                 'location' => [

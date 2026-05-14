@@ -63,6 +63,7 @@ return [
 
     ],
     'fields' => [
+        'manual_location'=> 'Seteaza manual locatia',
         'address' => 'Adresǎ',
         'coordinate' => 'Coordonate',
         'notes' => 'Notițe localizare (private)',
