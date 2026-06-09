@@ -74,6 +74,7 @@ return [
         'longitude' => 'Longitudine',
         'point_type' => 'Tip punct',
         'created_by' => 'Creat de',
+        'created_at' => 'Creat la',
         'materials' => 'Materiale',
         'website' => 'Website',
         'phone' => 'Telefon',

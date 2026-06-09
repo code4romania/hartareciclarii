@@ -234,8 +234,16 @@ class ViewMapPoint extends ViewRecord
                     ->schema([
 
                         TextEntry::make('createdBy.full_name')
-                            ->default('Admin HR')
+
+                            ->default('-')
                             ->label(__('map_points.fields.created_by')),
+
+                        TextEntry::make('createdBy.email')
+                            ->default('-')
+                            ->label(__('map_points.fields.created_by')),
+
+                        TextEntry::make('created_at')
+                            ->label('map_points.fields.created_at'),
 
                         TextEntry::make('pointType.name')
                             ->label(__('map_points.fields.point_type')),
