@@ -36,8 +36,9 @@ class ContributionRelationManager extends RelationManager
                     ->label(__('map_points.address'))
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('model.created_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->label(__('contributions.column.created_at'))
+                    ->dateTime('Y-m-d H:i:s')
                     ->sortable(),
 
             ])

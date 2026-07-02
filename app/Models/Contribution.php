@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Problem\Problem;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -15,6 +16,8 @@ class Contribution extends Pivot
     protected $table = 'contributions';
 
     public const UPDATED_AT = null;
+
+    public $incrementing = false;
 
     protected static function booted(): void
     {
@@ -35,7 +38,42 @@ class Contribution extends Pivot
 
     public function getKey(): string
     {
-        return 'user_id';
+        return "{$this->user_id}-{$this->model_id}-{$this->model_type}";
+    }
+
+    public function getPoint(): ?Point
+    {
+        return match ($this->model_type) {
+            (new Point)->getMorphClass() => $this->model,
+            (new Problem)->getMorphClass() => $this->model?->point,
+            default => null,
+        };
+    }
+
+    protected function pointId(): Attribute
+    {
+        return Attribute::get(fn (): ?int => $this->getPoint()?->id);
+    }
+
+    protected function pointTypeName(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->getPoint()?->pointType?->name);
+    }
+
+    protected function problemTypeName(): Attribute
+    {
+        return Attribute::get(function (): ?string {
+            if ($this->model_type !== (new Problem)->getMorphClass()) {
+                return null;
+            }
+
+            return $this->model?->type?->name;
+        });
+    }
+
+    protected function contributionAddress(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->getPoint()?->address);
     }
 
     public function scopeWithPointData(Builder $query): Builder
