@@ -140,9 +140,12 @@ class ContributionResource extends Resource
                         ? PointResource::getUrl('view', ['record' => $record->model_id])
                         : ProblemResource::getUrl('view', ['record' => $record->model_id])),
             ])
+            ->defaultSort('created_at', 'desc')
             ->headerActions([
                 ExportAction::make()->exports([
-                    ExcelExport::make('contributions')->fromTable(),
+                    ExcelExport::make('contributions')
+                        ->fromTable()
+                        ->modifyQueryUsing(fn (Builder $query): Builder => $query->reorder('created_at', 'desc')),
                 ]),
             ])
             ->bulkActions([]);
