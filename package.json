@@ -23,7 +23,7 @@
         "laravel-vite-plugin": "^1.2.0",
         "laravel-vue-i18n": "^2.8.0",
         "leaflet": "^1.9.4",
-        "leaflet.locatecontrol": "^0.84.1",
+        "leaflet.locatecontrol": "^0.90.1",
         "lodash.clonedeep": "^4.5.0",
         "lodash.pickby": "^4.6.0",
         "postcss": "^8.5.26",
