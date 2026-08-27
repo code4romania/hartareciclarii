@@ -100,7 +100,7 @@ class LeafletAutocomplete extends Component
             ->content(fn (Get $get) => $get('new_address'));
 
         $components[] = Map::make('location')
-            ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
+            ->tilesUrl(config('services.leaflet_basemap_url'))
             ->live()
             ->hiddenLabel()
             ->liveLocation()
@@ -118,7 +118,7 @@ class LeafletAutocomplete extends Component
                     ->form(fn (Get $get) => [
                         Map::make('new_point')
                             ->defaultLocation($get('location.lat'), $get('location.lng'))
-                            ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
+                            ->tilesUrl(config('services.leaflet_basemap_url'))
                             ->label(__('map_points.new_point'))
                             ->liveLocation()
                             ->showMyLocationButton(false)

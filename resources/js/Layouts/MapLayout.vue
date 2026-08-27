@@ -50,7 +50,7 @@
                 <LControlScale position="bottomleft" :imperial="false" />
 
                 <LTileLayer
-                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                    :url="basemapUrl"
                     layer-type="base"
                     subdomains="abcd"
                     name="OpenStreetMap"
@@ -130,6 +130,7 @@
         },
     });
 
+    const basemapUrl = inject('leaflet_basemap_url');
     const maxBounds = inject('max_map_bounds');
 
     const map = ref(null);
