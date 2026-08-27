@@ -53,4 +53,6 @@ return [
     ],
 
     'google_analytics_tracking_id' => env('GOOGLE_ANALYTICS_TRACKING_ID'),
+
+    'leaflet_basemap_url' => env('LEAFLET_BASEMAP_URL', 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'),
 ];

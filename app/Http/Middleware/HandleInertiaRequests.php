@@ -33,6 +33,7 @@ class HandleInertiaRequests extends Middleware
 
         return [
             'recaptcha_site_key' => config('recaptcha.api_site_key'),
+            'leaflet_basemap_url' => config('services.leaflet_basemap_url'),
             'max_map_bounds' => Nominatim::make()->maxBounds(),
         ];
     }

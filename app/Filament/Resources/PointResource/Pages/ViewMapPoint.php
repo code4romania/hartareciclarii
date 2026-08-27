@@ -217,7 +217,7 @@ class ViewMapPoint extends ViewRecord
                     ->liveLocation()
                     ->hiddenLabel()
                     ->statePath('data.location')
-                    ->tilesUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
+                    ->tilesUrl(config('services.leaflet_basemap_url'))
                     ->defaultLocation(latitude: $this->getRecord()->location->latitude, longitude: $this->getRecord()->location->longitude)
                     ->state([
                         'lat' => $this->getRecord()->location->latitude,

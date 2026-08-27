@@ -23,6 +23,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .provide('recaptcha_site_key', props.initialPage.props.recaptcha_site_key)
+            .provide('leaflet_basemap_url', props.initialPage.props.leaflet_basemap_url)
             .provide('max_map_bounds', props.initialPage.props.max_map_bounds)
             .use(PrimeVue, {
                 unstyled: true,
