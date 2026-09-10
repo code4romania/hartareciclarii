@@ -42,6 +42,7 @@ return [
         'set_group' => 'Aloca la grup',
         'location_type' => 'Tip locatie',
         'create' => 'Adauga punct nou',
+        'export_statistics' => 'Exportă statistică',
         'import' => 'Importǎ puncte',
         'details' => 'Detalii punct',
         'delete' => 'Sterge punct',
@@ -63,7 +64,7 @@ return [
 
     ],
     'fields' => [
-        'manual_location'=> 'Seteaza manual locatia',
+        'manual_location' => 'Seteaza manual locatia',
         'address' => 'Adresǎ',
         'coordinate' => 'Coordonate',
         'notes' => 'Notițe localizare (private)',
@@ -133,6 +134,10 @@ return [
             'success' => 'Informațiile au fost actualizate cu succes pentru :count puncte',
             'error' => 'Informațiile nu au putut fi actualizate, te rugam sa incerci din nou mai tarziu, daca problema persista contacteaza echipa de suport',
         ],
+    ],
+
+    'tabs' => [
+        'all' => 'Toate',
     ],
 
     'new_point' => 'Punct nou',

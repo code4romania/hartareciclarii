@@ -234,7 +234,9 @@ class PointResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('materials')->withCount('problems');
+        return parent::getEloquentQuery()
+            ->with(['materials', 'serviceType', 'pointType'])
+            ->withCount('problems');
     }
 
     public static function getNavigationBadge(): ?string
@@ -256,7 +258,10 @@ class PointResource extends Resource
                 ->searchable(),
 
             TextColumn::make('serviceType.name')
-                ->label(__('map_points.point_type')),
+                ->label(__('map_points.fields.service_type')),
+
+            TextColumn::make('pointType.name')
+                ->label(__('map_points.fields.point_type')),
 
             TextColumn::make('administered_by')
                 ->label(__('map_points.managed_by'))

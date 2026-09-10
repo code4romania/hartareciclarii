@@ -6,6 +6,7 @@ namespace App\Filament\Resources\PointResource\Pages;
 
 use App\Filament\Resources\PointResource;
 use App\Filament\Resources\PointResource\Actions\Page\AddPoint;
+use App\Filament\Resources\PointResource\Actions\Page\ExportMapStatistics;
 use App\Models\ServiceType;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
@@ -18,18 +19,23 @@ class ListMapPoints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ExportMapStatistics::make(),
             AddPoint::make(),
         ];
     }
 
     public function getTabs(): array
     {
-        return ServiceType::all()
-            ->mapWithKeys(fn (ServiceType $serviceType) => [
-                $serviceType->slug => Tab::make($serviceType->slug)
-                    ->label($serviceType->name)
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type_id', $serviceType->id)),
-            ])
-            ->all();
+        return collect([
+            'all' => Tab::make('all')
+                ->label(__('map_points.tabs.all')),
+        ])->merge(
+            ServiceType::all()
+                ->mapWithKeys(fn (ServiceType $serviceType) => [
+                    $serviceType->slug => Tab::make($serviceType->slug)
+                        ->label($serviceType->name)
+                        ->modifyQueryUsing(fn (Builder $query) => $query->where('service_type_id', $serviceType->id)),
+                ])
+        )->all();
     }
 }

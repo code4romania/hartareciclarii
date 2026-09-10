@@ -20,6 +20,7 @@ return [
     'buttons' => [
         'set_group' => 'Assign to group',
         'create' => 'Add new point',
+        'export_statistics' => 'Export statistics',
         'details' => 'Point details',
         'delete' => 'Remove point',
         'view_on_map' => 'View on map',
@@ -27,6 +28,10 @@ return [
         'validate' => 'Mark as verified',
         'change_status' => 'Change status',
         'update_location' => 'Edit location',
+    ],
+
+    'tabs' => [
+        'all' => 'All',
     ],
 
 ];
