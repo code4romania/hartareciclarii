@@ -12,7 +12,7 @@
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.20",
-        "@vitejs/plugin-vue": "^5.2.3",
+        "@vitejs/plugin-vue": "^6.0.8",
         "@vue-leaflet/vue-leaflet": "^0.10.1",
         "@vueuse/core": "^11.1.0",
         "@vueuse/integrations": "^11.1.0",
