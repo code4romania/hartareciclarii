@@ -37,6 +37,6 @@
         "vite-plugin-svg-icons": "^2.0.1",
         "vue": "^3.5.43",
         "vue-leaflet-markercluster": "^0.6.1",
-        "ziggy-js": "^2.6.4"
+        "ziggy-js": "^2.6.5"
     }
 }
