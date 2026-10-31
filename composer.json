@@ -20,7 +20,7 @@
         "laravel/framework": "^12.8",
         "laravel/scout": "^10.14",
         "laravel/tinker": "^2.10",
-        "league/flysystem-aws-s3-v3": "^3.29",
+        "league/flysystem-aws-s3-v3": "^3.35",
         "matanyadaev/laravel-eloquent-spatial": "^4.5",
         "pxlrbt/filament-excel": "^2.4",
         "sentry/sentry-laravel": "^4.13",
