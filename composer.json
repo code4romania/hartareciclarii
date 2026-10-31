@@ -25,7 +25,7 @@
         "pxlrbt/filament-excel": "^2.4",
         "sentry/sentry-laravel": "^4.13",
         "spatie/laravel-permission": "^6.17",
-        "tightenco/ziggy": "^2.5",
+        "tightenco/ziggy": "^2.6",
         "typesense/typesense-php": "^5.0"
     },
     "require-dev": {
