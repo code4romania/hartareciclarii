@@ -23,7 +23,7 @@
         "league/flysystem-aws-s3-v3": "^3.35",
         "matanyadaev/laravel-eloquent-spatial": "^4.8",
         "pxlrbt/filament-excel": "^2.4",
-        "sentry/sentry-laravel": "^4.13",
+        "sentry/sentry-laravel": "^4.29",
         "spatie/laravel-permission": "^6.17",
         "tightenco/ziggy": "^2.6",
         "typesense/typesense-php": "^5.0"
