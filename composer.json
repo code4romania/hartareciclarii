@@ -18,7 +18,7 @@
         "inertiajs/inertia-laravel": "^2.0",
         "jbohme/nominatim-laravel": "^1.0",
         "laravel/framework": "^12.8",
-        "laravel/scout": "^10.14",
+        "laravel/scout": "^11.9",
         "laravel/tinker": "^2.10",
         "league/flysystem-aws-s3-v3": "^3.35",
         "matanyadaev/laravel-eloquent-spatial": "^4.8",
