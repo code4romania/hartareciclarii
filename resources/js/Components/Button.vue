@@ -122,7 +122,7 @@
         }
 
         return {
-            sm: 'shadow-sm',
+            sm: 'shadow-xs',
             md: 'shadow',
             lg: 'shadow-lg',
         }[props.size];
@@ -134,7 +134,7 @@
         }
 
         return props.primary
-            ? 'bg-primary-800 text-white ring-primary-800 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 focus:outline-none disabled:hover:bg-primary-800'
+            ? 'bg-primary-800 text-white ring-primary-800 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 focus:outline-hidden disabled:hover:bg-primary-800'
             : 'ring-1 bg-white text-gray-700 ring-gray-300 hover:bg-gray-50 disabled:bg-gray-200 disabled:hover:bg-gray-200 ';
     });
 

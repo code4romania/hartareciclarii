@@ -28,7 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Vite;
 use Inertia\Inertia;
-use Inertia\LazyProp;
+use Inertia\OptionalProp;
 use Inertia\Response;
 use Laravel\Scout\Builder as ScoutBuilder;
 
@@ -245,9 +245,9 @@ class MapController extends Controller
         ]);
     }
 
-    protected function lazyFetchPoint(Request $request): LazyProp
+    protected function lazyFetchPoint(Request $request): OptionalProp
     {
-        return Inertia::lazy(function () use ($request) {
+        return Inertia::optional(function () use ($request) {
             if (! $request->hasHeader('Map-Point')) {
                 return null;
             }

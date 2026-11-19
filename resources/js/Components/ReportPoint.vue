@@ -138,8 +138,7 @@
 
 <script setup>
     import { computed, ref } from 'vue';
-    import { router, usePage } from '@inertiajs/vue3';
-    import { useForm } from 'laravel-precognition-vue-inertia';
+    import { router, useForm, usePage } from '@inertiajs/vue3';
     import { trans } from 'laravel-vue-i18n';
     import { ArrowLeftIcon } from '@heroicons/vue/20/solid';
     import route from '@/Helpers/useRoute.js';

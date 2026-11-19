@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import tailwindcss from '@tailwindcss/vite';
 import manifestSRI from 'vite-plugin-manifest-sri';
-import DefineOptions from 'unplugin-vue-define-options/vite';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'path';
 
@@ -13,7 +13,7 @@ export default defineConfig({
             detectTls: true,
             refresh: true,
         }),
-        DefineOptions(),
+        tailwindcss(),
         manifestSRI(),
         vue({
             template: {
@@ -28,4 +28,5 @@ export default defineConfig({
             symbolId: 'icon-[name]',
         }),
     ],
+    assetsInclude: ['**/*.svg', '**/*.webmanifest'],
 });

@@ -49,7 +49,7 @@
                         leave-to-class="transform scale-95 opacity-0"
                     >
                         <MenuItems
-                            class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            class="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-hidden"
                         >
                             <MenuItem
                                 v-for="item in userNavigation"
@@ -73,7 +73,7 @@
             <div class="flex items-center -mr-2 lg:hidden">
                 <!-- Mobile menu button -->
                 <DisclosureButton
-                    class="relative inline-flex items-center justify-center p-2 text-gray-400 bg-white rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                    class="relative inline-flex items-center justify-center p-2 text-gray-400 bg-white rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                 >
                     <span class="absolute -inset-0.5" />
                     <span class="sr-only">Open main menu</span>
@@ -114,7 +114,7 @@
 
                 <div v-if="$page.props.auth" class="pt-4 pb-3 border-t border-gray-200">
                     <div class="flex items-center px-4">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <img class="w-10 h-10 rounded-full" :src="$page.props.auth.avatar" alt="" />
                         </div>
                         <div class="ml-3">

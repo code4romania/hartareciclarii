@@ -109,8 +109,7 @@
 
 <script setup>
     import { computed, ref } from 'vue';
-    import { usePage } from '@inertiajs/vue3';
-    import { useForm } from 'laravel-precognition-vue-inertia';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     import { trans } from 'laravel-vue-i18n';
     import route from '@/Helpers/useRoute';

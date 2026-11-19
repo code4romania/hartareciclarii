@@ -9,7 +9,11 @@ import DefaultLayout from '@/Layouts/DefaultLayout.vue';
 
 import 'virtual:svg-icons-register';
 
-import.meta.glob(['../images/**']);
+import.meta.glob('../images/**/*.{png,jpg,jpeg,svg,gif,webp,webmanifest}', {
+    eager: true,
+    query: '?url',
+    import: 'default',
+});
 
 createInertiaApp({
     resolve: (name) => {

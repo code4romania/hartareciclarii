@@ -39,7 +39,7 @@
                 <Link
                     v-if="canResetPassword"
                     :href="route('auth.password.request')"
-                    class="text-sm underline rounded-md text-primary-500 hover:text-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    class="text-sm underline rounded-md text-primary-500 hover:text-primary-400 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
                     {{ $t('auth.recover') }}
                 </Link>

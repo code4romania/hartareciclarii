@@ -44,7 +44,7 @@ export default {
                 { 'border-red-500': props.invalid },
                 // States
                 { 'hover:border-gray-400': !props.invalid },
-                { 'outline-none outline-offset-0 z-10 ring-1 ring-primary-500': state.focused },
+                { 'outline-hidden outline-offset-0 z-10 ring-1 ring-primary-500': state.focused },
                 // Transition
                 'transition duration-200 ease-in-out',
                 // Misc
@@ -58,7 +58,7 @@ export default {
             class: 'flex-auto inline-flex pt-1 pb-1',
         },
         input: {
-            class: 'border-none outline-none bg-transparent m-0 p-0 shadow-none rounded-none w-full',
+            class: 'border-none outline-hidden bg-transparent m-0 p-0 shadow-none rounded-none w-full',
         },
         dropdown: {
             class: [
@@ -70,7 +70,7 @@ export default {
                 'text-primary-contrast',
                 'bg-primary',
                 'border border-primary',
-                'focus:outline-none focus:outline-offset-0 focus:ring-1 ',
+                'focus:outline-hidden focus:outline-offset-0 focus:ring-1 ',
                 'hover:bg-primary-emphasis hover:border-primary-emphasis',
                 'focus:ring-primary-500',
             ],
@@ -153,7 +153,7 @@ export default {
                 { 'ring-red-500': props.invalid },
                 // States
                 {
-                    'peer-focus-visible:z-10 peer-focus-visible:outline-none peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-primary-500':
+                    'peer-focus-visible:z-10 peer-focus-visible:outline-hidden peer-focus-visible:outline-offset-0 peer-focus-visible:ring-1 peer-focus-visible:ring-primary-500':
                         !props.disabled,
                     'bg-gray-200 select-none pointer-events-none cursor-default': props.disabled,
                 },
@@ -205,7 +205,7 @@ export default {
                 // States
                 {
                     'hover:border-gray-400': !context.disabled && !props.invalid,
-                    'focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10':
+                    'focus:outline-hidden focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10':
                         !context.disabled,
                     'bg-gray-200 select-none pointer-events-none cursor-default': context.disabled,
                 },
@@ -244,7 +244,7 @@ export default {
                 'duration-200',
                 // States
                 { 'hover:border-gray-400': !props.invalid },
-                { 'outline-none outline-offset-0 ring-1 ring-primary-500 z-10': state.focused },
+                { 'outline-hidden outline-offset-0 ring-1 ring-primary-500 z-10': state.focused },
                 // Misc
                 'cursor-pointer',
                 'select-none',
@@ -278,7 +278,7 @@ export default {
                     'transition',
                     'duration-200',
                     // States
-                    'focus:outline-none focus:shadow-none',
+                    'focus:outline-hidden focus:shadow-none',
                     // Filled State *for FloatLabel
                     {
                         filled:
@@ -288,7 +288,7 @@ export default {
                     // Misc
                     'relative',
                     'cursor-pointer',
-                    'overflow-hidden overflow-ellipsis',
+                    'overflow-hidden text-ellipsis',
                     'whitespace-nowrap',
                     'appearance-none',
                 ],
@@ -399,7 +399,7 @@ export default {
                 // States
                 {
                     'hover:border-gray-400': !context.disabled && !props.invalid,
-                    'focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10':
+                    'focus:outline-hidden focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10':
                         !context.disabled,
                     'bg-gray-200 select-none pointer-events-none cursor-default': context.disabled,
                 },
@@ -425,7 +425,7 @@ export default {
         }),
 
         node: {
-            class: ['focus:outline-none'],
+            class: ['focus:outline-hidden'],
         },
         nodeContent: ({ context, props }) => ({
             class: [
@@ -461,7 +461,7 @@ export default {
                     invisible: context.leaf,
                 },
                 // States
-                'focus:outline-none',
+                'focus:outline-hidden',
                 // Transition
                 'transition duration-200',
                 // Misc

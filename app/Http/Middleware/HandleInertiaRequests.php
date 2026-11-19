@@ -14,27 +14,20 @@ class HandleInertiaRequests extends Middleware
 {
     public function share(Request $request): array
     {
-        return array_merge(
-            parent::share($request),
-            $this->shareOnce($request),
-            [
-                'appName' => config('app.name'),
-                'auth' => $this->getCurrentUser($request->user()),
-                'flash' => fn () => $this->flash($request),
-            ]
-        );
+        return [
+            ...parent::share($request),
+            'appName' => config('app.name'),
+            'auth' => $this->getCurrentUser($request->user()),
+            'flash' => fn () => $this->flash($request),
+        ];
     }
 
-    protected function shareOnce(Request $request): array
+    public function shareOnce(Request $request): array
     {
-        if ($request->inertia()) {
-            return [];
-        }
-
         return [
-            'recaptcha_site_key' => config('recaptcha.api_site_key'),
-            'leaflet_basemap_url' => config('services.leaflet_basemap_url'),
-            'max_map_bounds' => Nominatim::make()->maxBounds(),
+            'recaptcha_site_key' => fn () => config('recaptcha.api_site_key'),
+            'leaflet_basemap_url' => fn () => config('services.leaflet_basemap_url'),
+            'max_map_bounds' => fn () => Nominatim::make()->maxBounds(),
         ];
     }
 

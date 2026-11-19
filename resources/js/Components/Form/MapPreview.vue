@@ -48,7 +48,7 @@
                 <img src="../../../images/map/placeholder.png" class="absolute inset-0 z-0 object-cover select-none" />
 
                 <div
-                    class="relative flex-1 px-6 py-4 text-sm bg-white bg-opacity-60"
+                    class="relative flex-1 px-6 py-4 text-sm bg-white/60"
                     v-text="$t('add_point.type.map_placeholder')"
                 />
             </div>

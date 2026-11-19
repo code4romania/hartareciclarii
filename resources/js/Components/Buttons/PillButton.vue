@@ -66,14 +66,14 @@
 
     const isLink = computed(() => props.href !== null);
 
-    const buttonBase = `flex items-center justify-center w-full ring-1 ring-inset font-medium rounded-full whitespace-nowrap focus:outline-none`;
+    const buttonBase = `flex items-center justify-center w-full ring-1 ring-inset font-medium rounded-full whitespace-nowrap focus:outline-hidden`;
 
     const iconBase = 'shrink-0';
 
     const buttonSize = computed(
         () =>
             ({
-                sm: 'gap-2 px-3 py-1.5 text-sm shadow-sm',
+                sm: 'gap-2 px-3 py-1.5 text-sm shadow-xs',
                 md: 'gap-2 px-4 py-2 text-base shadow',
                 lg: 'gap-3 px-6 py-3 text-lg shadow-lg',
             }[props.size])
