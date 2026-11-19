@@ -28,7 +28,6 @@ WORKDIR /build
 COPY \
     package.json \
     package-lock.json \
-    tailwind.config.js \
     vite.config.js \
     ./
 
