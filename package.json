@@ -27,7 +27,7 @@
         "lodash.pickby": "^4.6.0",
         "prettier": "^3.9.10",
         "prettier-plugin-tailwindcss": "^0.8.1",
-        "primevue": "^5.0.4",
+        "primevue": "^4.5.5",
         "tailwindcss": "^4.3.5",
         "vite": "^8.3.8",
         "vite-plugin-manifest-sri": "^0.2.0",
