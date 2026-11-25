@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Problems\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Filament\Resources\Problems\ProblemResource;
 use App\Models\ServiceType;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 

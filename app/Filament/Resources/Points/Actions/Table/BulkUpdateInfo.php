@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Points\Actions\Table;
 
-use Filament\Actions\BulkAction;
-use Filament\Schemas\Schema;
 use App\Models\Point;
+use Filament\Actions\BulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Collection;
 
 class BulkUpdateInfo extends BulkAction

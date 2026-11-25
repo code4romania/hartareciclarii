@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Points\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Group;
-use App\Filament\Resources\Points\Widgets\PointFromProximity;
 use App\Enums\Point\Status;
 use App\Filament\Forms\Components\LeafletAutocomplete;
 use App\Filament\Resources\Points\PointResource;
+use App\Filament\Resources\Points\Widgets\PointFromProximity;
 use App\Models\PointType;
 use Dotswan\MapPicker\Infolists\MapEntry;
 use Filament\Actions\Action;
@@ -27,6 +22,11 @@ use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 

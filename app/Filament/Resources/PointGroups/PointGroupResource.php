@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PointGroups;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\PointGroups\Pages\ListPointGroups;
+use App\Models\PointGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\PointGroups\Pages\ListPointGroups;
-use App\Filament\Resources\PointGroupResource\Pages;
-use App\Models\PointGroup;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 

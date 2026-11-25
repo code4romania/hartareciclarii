@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
-use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\RelationManagers\ContributionRelationManager;
 use App\Models\User;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -139,7 +137,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ContributionRelationManager::make()
+            ContributionRelationManager::make(),
         ];
     }
 

@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Roles;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Roles\Pages\ListRoles;
 use App\Filament\Resources\Roles\Pages\CreateRoles;
 use App\Filament\Resources\Roles\Pages\EditRoles;
-use App\Filament\Resources\RolesResource\Pages;
+use App\Filament\Resources\Roles\Pages\ListRoles;
 use App\Models\Role;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 

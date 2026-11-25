@@ -12,8 +12,6 @@ enum PointChangeType: string
     use Arrayable;
     use HasLabel;
 
-
-
     public function labelKeyPrefix(): string
     {
         return 'enums.issue_status';

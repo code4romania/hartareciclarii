@@ -17,10 +17,10 @@ class ReportsExport implements FromCollection
         $columns = $this->formatColumns();
         $exportData[] = $columns;
         $values = [];
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $record = $this->data->where('grouped_by', $column)->first();
             $value = (string) 0;
-            if($record):
+            if ($record):
                 $value = $record->total;
             endif;
             $values[] = $value;

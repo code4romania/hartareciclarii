@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use DB;
 use App\Models\County as CountyModel;
 use App\Models\MapPointService as MapPointServiceModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use App\Models\User as UserModel;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

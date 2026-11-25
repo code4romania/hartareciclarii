@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Points\Actions\Page;
 
-use Filament\Schemas\Components\Wizard\Step;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Section;
 use App\Enums\Point\Source;
 use App\Filament\Forms\Components\LeafletAutocomplete;
 use App\Models\MaterialCategory;
@@ -19,8 +15,11 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Wizard\Step;
 use MatanYadaev\EloquentSpatial\Objects\Point as PointObject;
 
 class AddPoint extends Action

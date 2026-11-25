@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Jobs\Reports;
 
-use Filament\Actions\Action;
-use Exception;
 use App\Enums\ProblemStatus;
 use App\Enums\ReportStatus;
 use App\Filament\Resources\Reports\ReportResource;
@@ -16,6 +14,8 @@ use App\Models\Problem\Problem;
 use App\Models\Problem\ProblemType;
 use App\Models\Report;
 use App\Models\ServiceType;
+use Exception;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Issues;
 
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Schemas\Schema;
 use App\Models\IssueOld;
 use App\Models\IssueType as IssueTypeModel;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 

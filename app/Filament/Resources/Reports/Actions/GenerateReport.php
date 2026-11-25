@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Reports\Actions;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
 use App\Enums\Point\Status;
 use App\Enums\ProblemStatus;
 use App\Enums\ReportType;
@@ -29,6 +25,10 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 
 class GenerateReport extends Action
@@ -80,11 +80,11 @@ class GenerateReport extends Action
                     ->statePath('filters.structure')
                     ->schema(self::getProblemForm())
                     ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::PROBLEMS->value),
-//                Section::make(__('report.section.filter_dates_by'))
-//                    ->compact()
-//                    ->statePath('filters.structure')
-//                    ->schema(self::getUserActivityForm())
-//                    ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
+                //                Section::make(__('report.section.filter_dates_by'))
+                //                    ->compact()
+                //                    ->statePath('filters.structure')
+                //                    ->schema(self::getUserActivityForm())
+                //                    ->hidden(fn (Get $get) => blank($get('type')) || $get('type') !== ReportType::USER_ACTIVITY->value),
                 Section::make(__('report.section.filter_dates_by'))
                     ->compact()
                     ->statePath('filters.structure')

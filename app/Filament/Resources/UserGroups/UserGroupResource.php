@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserGroups;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\UserGroups\Pages\ListUserGroups;
+use App\Models\UserGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\UserGroups\Pages\ListUserGroups;
-use App\Filament\Resources\UserGroupResource\Pages;
-use App\Models\UserGroup;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class UserGroupResource extends Resource

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models\Problem;
 
-use Exception;
 use App\Enums\ProblemStatus;
 use App\Models\Contribution;
 use App\Models\Material;
 use App\Models\Point;
 use App\Models\User;
 use Database\Factories\ProblemFactory;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

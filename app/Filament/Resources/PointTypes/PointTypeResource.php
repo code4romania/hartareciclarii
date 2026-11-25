@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PointTypes;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\PointTypes\Pages\ManagePointTypes;
+use App\Models\PointType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\PointTypes\Pages\ManagePointTypes;
-use App\Filament\Resources\PointTypeResource\Pages;
-use App\Models\PointType;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class PointTypeResource extends Resource

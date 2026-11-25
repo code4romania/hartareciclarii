@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Reports;
 
-use Filament\Actions\ViewAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Reports\Pages\ListReports;
 use App\Filament\Resources\Reports\Pages\ViewReport;
-use App\Filament\Resources\ReportResource\Pages;
 use App\Models\Report;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 

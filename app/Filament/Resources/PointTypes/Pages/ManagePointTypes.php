@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PointTypes\Pages;
 
-use Filament\Actions\CreateAction;
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Filament\Resources\PointTypes\PointTypeResource;
 use App\Models\ServiceType;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ManagePointTypes extends ManageRecords

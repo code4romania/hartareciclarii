@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 
 class Geolocation extends Model

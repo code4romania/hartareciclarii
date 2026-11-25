@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Reports\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\ReportType;
-use App\Filament\Resources\Reports\ReportResource;
 use App\Filament\Resources\Reports\Actions\GenerateReport;
+use App\Filament\Resources\Reports\ReportResource;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListReports extends ListRecords

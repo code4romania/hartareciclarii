@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\Components;
 
-use Filament\Schemas\Components\Component;
-use Filament\Forms\Components\Concerns\HasName;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Grid;
 use App\DataTransferObjects\Location;
 use App\Models\City;
 use App\Services\Nominatim;
 use Closure;
 use Dotswan\MapPicker\Fields\Map;
-use Filament\Forms;
-use Filament\Forms\Components\Concerns;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Concerns\HasName;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\HtmlString;
@@ -50,7 +48,7 @@ class LeafletAutocomplete extends Component
     }
 
     /**
-     * @return array<\Filament\Schemas\Components\Component>
+     * @return array<Component>
      */
     public function getChildComponents(): array
     {

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\City;
-use App\Models\County;
 use App\Models\Contribution;
+use App\Models\County;
 use App\Models\Material;
 use App\Models\MaterialCategory;
 use App\Models\Media;
+use App\Models\Point;
 use App\Models\PointGroup;
 use App\Models\PointType;
-use App\Models\Point;
 use App\Models\Problem\Problem;
 use App\Models\ServiceType;
 use App\Models\TemporaryUpload;
@@ -58,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
 
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
 
-        FileUpload::configureUsing(function (FileUpload $fileUpload){
+        FileUpload::configureUsing(function (FileUpload $fileUpload) {
             $fileUpload->visibility('public');
         });
 

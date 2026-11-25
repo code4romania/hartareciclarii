@@ -22,7 +22,6 @@ enum ReportStatus: string implements HasLabel, HasColor
         return __('enums.report_status.' . $this->value);
     }
 
-
     /** @deprecated use getLabel() */
     public function label(): ?string
     {

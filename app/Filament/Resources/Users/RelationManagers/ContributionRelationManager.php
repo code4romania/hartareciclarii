@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
 use App\Filament\Resources\Points\PointResource;
 use App\Filament\Resources\Problems\ProblemResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 

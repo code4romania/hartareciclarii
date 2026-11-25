@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\MaterialCategories;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\MaterialCategories\Pages\ListMaterialCategories;
+use App\Models\MaterialCategory;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\MaterialCategories\Pages\ListMaterialCategories;
-use App\Filament\Resources\MaterialCategoryResource\Pages;
-use App\Models\MaterialCategory;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;

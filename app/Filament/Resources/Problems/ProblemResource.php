@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Problems;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
-use Filament\Actions\ViewAction;
+use App\Enums\ProblemStatus;
 use App\Filament\Resources\Problems\Pages\ListProblem;
 use App\Filament\Resources\Problems\Pages\ViewProblem;
-use App\Enums\ProblemStatus;
-use App\Filament\Resources\ProblemResource\Pages;
 use App\Models\Problem\Problem;
 use Carbon\Carbon;
 use Dotswan\MapPicker\Infolists\MapEntry;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;

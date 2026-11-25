@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Imports\RelationManagers;
 
-use Filament\Actions\ViewAction;
+use App\Filament\Resources\Points\PointResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Points\PointResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

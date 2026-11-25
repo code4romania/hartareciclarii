@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use DB;
 use App\Models\Duplicate as DuplicateModel;
+use DB;
 use Illuminate\Console\Command;
 
 class SearchDuplicates extends Command

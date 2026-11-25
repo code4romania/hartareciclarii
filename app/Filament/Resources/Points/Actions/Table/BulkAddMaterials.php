@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Points\Actions\Table;
 
-use Filament\Actions\BulkAction;
-use Filament\Schemas\Schema;
 use App\Filament\Resources\Points\Actions\Page\AddPoint;
 use App\Models\Point;
+use Filament\Actions\BulkAction;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Collection;
 
 class BulkAddMaterials extends BulkAction
@@ -49,9 +49,8 @@ class BulkAddMaterials extends BulkAction
                 }
             });
         $numberOfChangedPoints = 0;
-        $records->each(function (Point $record) use ($materialsToAttach , &$numberOfChangedPoints) {
-            if ($record->serviceType->can_collect_materials)
-            {
+        $records->each(function (Point $record) use ($materialsToAttach, &$numberOfChangedPoints) {
+            if ($record->serviceType->can_collect_materials) {
                 $record->materials()->attach($materialsToAttach);
                 $numberOfChangedPoints++;
             }

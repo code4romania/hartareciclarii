@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\ImportExport as ImportExportModel;
 use App\Models\MapPoint as MapPointModel;
 use Illuminate\Console\Command;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ProcessImports extends Command
 {
