@@ -4,30 +4,32 @@ declare(strict_types=1);
 
 namespace App\Filament\Forms\Components;
 
+use Filament\Schemas\Components\Component;
+use Filament\Forms\Components\Concerns\HasName;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Grid;
 use App\DataTransferObjects\Location;
 use App\Models\City;
 use App\Services\Nominatim;
 use Closure;
 use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Concerns;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\HtmlString;
 
 class LeafletAutocomplete extends Component
 {
-    use Concerns\HasName;
+    use HasName;
 
-    protected string $view = 'filament-forms::components.fieldset';
+    protected string $view = 'filament-schemas::components.fieldset';
 
     protected static string $sessionKey = 'leaflet-autocomplete';
 
@@ -48,7 +50,7 @@ class LeafletAutocomplete extends Component
     }
 
     /**
-     * @return array<Component>
+     * @return array<\Filament\Schemas\Components\Component>
      */
     public function getChildComponents(): array
     {
@@ -115,7 +117,7 @@ class LeafletAutocomplete extends Component
                     ->icon('heroicon-m-map-pin')
                     ->requiresConfirmation()
                     ->hidden(fn (Get $get) => empty($get('location.lat')))
-                    ->form(fn (Get $get) => [
+                    ->schema(fn (Get $get) => [
                         Map::make('new_point')
                             ->defaultLocation($get('location.lat'), $get('location.lng'))
                             ->tilesUrl(config('services.leaflet_basemap_url'))
@@ -166,7 +168,7 @@ class LeafletAutocomplete extends Component
         $components[] = Hidden::make('address');
 
         return [
-            Forms\Components\Grid::make(1)
+            Grid::make(1)
                 ->schema($components)
                 ->hiddenLabel(),
         ];

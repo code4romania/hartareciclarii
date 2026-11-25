@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Users\RelationManagers;
+
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\Points\PointResource;
+use App\Filament\Resources\Problems\ProblemResource;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
+class ContributionRelationManager extends RelationManager
+{
+    protected static string $relationship = 'contributions';
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->with('model');
+            })
+            ->columns([
+                TextColumn::make('model.id')
+                    ->label('ID')
+                    ->prefix('#')
+                    ->sortable(),
+                TextColumn::make('model_type')
+                    ->badge()
+                    ->label(__('users.contribution_type'))
+                    ->formatStateUsing(fn ($state): string => __('enums.model_type.' . $state))
+                    ->sortable(),
+
+                TextColumn::make('model.address')
+                    ->label(__('map_points.address'))
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label(__('contributions.column.created_at'))
+                    ->dateTime('Y-m-d H:i:s')
+                    ->sortable(),
+
+            ])
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => $record->model_type === 'place' ? PointResource::getUrl('view', ['record' => $record->model_id]) : ProblemResource::getUrl('view', ['record' => $record->model_id])),
+            ]);
+    }
+}

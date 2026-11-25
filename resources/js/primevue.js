@@ -76,7 +76,7 @@ export default {
             ],
         },
         loader: {
-            class: ['text-gray-500', 'absolute top-[50%] right-[0.5rem] -mt-2 animate-spin'],
+            class: ['text-gray-500', 'absolute top-[50%] right-2 -mt-2 animate-spin'],
         },
         overlay: {
             class: ['bg-white', 'text-gray-700', 'border border-gray-300', 'rounded-md', 'shadow-md', 'overflow-auto'],
@@ -123,7 +123,7 @@ export default {
         },
         transition: {
             enterFromClass: 'opacity-0 scale-y-[0.8]',
-            enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+            enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
             leaveActiveClass: 'transition-opacity duration-100 ease-linear',
             leaveToClass: 'opacity-0',
         },
@@ -164,8 +164,8 @@ export default {
         }),
         icon: ({ context, state }) => ({
             class: [
-                'w-[0.75rem]',
-                'h-[0.75rem]',
+                'w-3',
+                'h-3',
                 {
                     'text-white': context.checked,
                     'text-primary-700': state.d_indeterminate,
@@ -230,7 +230,7 @@ export default {
                 { 'rounded-md': parent.instance.$name !== 'InputGroup' },
                 { 'first:rounded-l-md rounded-none last:rounded-r-md': parent.instance.$name == 'InputGroup' },
                 { 'border-0 border-y border-l last:border-r': parent.instance.$name == 'InputGroup' },
-                { 'first:ml-0 ml-[-1px]': parent.instance.$name == 'InputGroup' && !props.showButtons },
+                { 'first:ml-0 -ml-px': parent.instance.$name == 'InputGroup' && !props.showButtons },
                 // Color and Background
                 { 'bg-white': !props.disabled },
                 'border',
@@ -373,7 +373,7 @@ export default {
         },
         transition: {
             enterFromClass: 'opacity-0 scale-y-[0.8]',
-            enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+            enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
             leaveActiveClass: 'transition-opacity duration-100 ease-linear',
             leaveToClass: 'opacity-0',
         },

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Jobs\Reports;
 
+use Filament\Actions\Action;
+use Exception;
 use App\Enums\ProblemStatus;
 use App\Enums\ReportStatus;
-use App\Filament\Resources\ReportResource;
+use App\Filament\Resources\Reports\ReportResource;
 use App\Models\City;
 use App\Models\County;
 use App\Models\PointType;
@@ -14,7 +16,6 @@ use App\Models\Problem\Problem;
 use App\Models\Problem\ProblemType;
 use App\Models\Report;
 use App\Models\ServiceType;
-use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
@@ -103,7 +104,7 @@ class ProblemReports implements ShouldQueue
                 ->success()
                 ->send()
                 ->toDatabase();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->report->update(['results' => [], 'label' => '', 'status' => ReportStatus::FAILED]);
 
             Notification::make()

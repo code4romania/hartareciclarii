@@ -1,0 +1,325 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Points;
+
+use Filament\Actions\ViewAction;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\BulkAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Support\Enums\Width;
+use App\Filament\Resources\Points\Pages\ListMapPoints;
+use App\Filament\Resources\Points\Pages\ViewMapPoint;
+use App\Enums\Point\Status;
+use App\Filament\Resources\Points\Actions\Table\BulkAddMaterials;
+use App\Filament\Resources\Points\Actions\Table\BulkRemoveMaterials;
+use App\Filament\Resources\Points\Actions\Table\BulkUpdateInfo;
+use App\Filament\Resources\PointResource\Pages;
+use App\Models\Point;
+use App\Models\PointGroup;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+
+class PointResource extends Resource
+{
+    protected static ?string $model = Point::class;
+
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
+
+    protected static ?int $navigationSort = 1;
+
+    public ?array $data = [];
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns(self::getColumns())
+            ->filters([
+                SelectFilter::make('status')
+                    ->label(__('map_points.fields.status'))
+                    ->options(Status::options()),
+                SelectFilter::make('point_group_id')
+                    ->label(__('map_points.fields.group'))
+                    ->relationship('pointGroup', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('point_type_id')
+                    ->label(__('map_points.fields.point_type'))
+                    ->relationship('pointType', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('city_id')
+                    ->label(__('map_points.city'))
+                    ->relationship('city', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('county_id')
+                    ->label(__('map_points.county'))
+                    ->relationship('county', 'name')
+                    ->multiple(),
+
+                SelectFilter::make('created_by')
+                    ->label(__('map_points.fields.created_by'))
+                    ->relationship('createdBy', 'full_name')
+                    ->multiple(),
+
+                SelectFilter::make('materials')
+                    ->label(__('map_points.fields.materials'))
+                    ->relationship('materials', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+
+                TrashedFilter::make(),
+
+            ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
+            ->recordActions([
+                ViewAction::make()
+                    ->label(__('map_points.buttons.details'))
+                    ->icon('heroicon-m-eye'),
+                Action::make('view_point_on_map')
+                    ->label(__('map_points.buttons.view_on_map'))
+                    ->url(fn (Point $record) => route('front.map.redirect', $record))
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-m-map-pin'),
+            ])
+            ->headerActions(
+                [
+                    ExportAction::make()->exports([
+                        ExcelExport::make('table')->fromTable()
+                            ->except([
+                                'materials.getParent.icon',
+                            ])
+                            ->withColumns([
+                                Column::make('materials')
+                                    ->formatStateUsing(function ($state) {
+                                        $records = collect($state);
+
+                                        return implode(',', $records->pluck('name')->toArray());
+                                    }),
+                            ]),
+                    ]),
+                ]
+            )
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('change-status-verified')
+                        ->label(__('map_points.buttons.change_status_verified'))
+                        ->action(function (Collection $records): void {
+                            $recordsWithoutIssues = $records->filter(function ($record) {
+                                $record->load('problems');
+
+                                return $record->problems->isEmpty();
+                            });
+                            Point::whereIn('id', $recordsWithoutIssues->pluck('id')->toArray())
+                                ->update([
+                                    'verified_at' => now(),
+                                ]);
+                            Notification::make('success_status_changed')
+                                ->body(__('map_points.notifications.status_change_verified'))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->icon('heroicon-o-check')
+                        ->color('primary')
+                        ->requiresConfirmation(),
+
+                    BulkAction::make('change-status-unverified')
+                        ->label(__('map_points.buttons.change_status_unverified'))
+                        ->action(function (Collection $records): void {
+                            $recordsWithoutIssues = $records->filter(function ($record) {
+                                $record->load('problems');
+
+                                return $record->problems->isEmpty();
+                            });
+                            Point::whereIn('id', $recordsWithoutIssues->pluck('id')->toArray())
+                                ->update([
+                                    'verified_at' => null,
+                                ]);
+                            Notification::make('success_status_changed')
+                                ->body(__('map_points.notifications.status_change_verified'))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->color('danger')
+                        ->requiresConfirmation(),
+
+                    BulkUpdateInfo::make(),
+                    BulkAddMaterials::make(),
+                    BulkRemoveMaterials::make(),
+
+                    BulkAction::make('allocate_to_group')
+                        ->label(__('map_points.buttons.set_group'))
+                        ->form([
+                            Select::make('group_id')
+                                ->label(__('map_points.fields.group'))
+                                ->options(PointGroup::all()->pluck('name', 'id'))
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Collection $records): void {
+                            $group = PointGroup::find($data['group_id']);
+                            Point::whereIn('id', $records->pluck('id')->toArray())
+                                ->update([
+                                    'point_group_id' => $group->id,
+                                ]);
+
+                            Notification::make('success_point_allocated_to_group')
+                                ->body(__('map_points.notifications.point_allocated_to_group', [
+                                    'number' => $records->count(),
+                                    'group' => $group->name,
+                                ]))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->icon('heroicon-o-users')
+                        ->color('info')
+                        ->requiresConfirmation(),
+
+                    DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->contribution()->delete();
+                                $record->delete();
+                            });
+                        })
+                        ->label(__('map_points.buttons.delete')),
+                ])
+                    ->dropdownWidth(Width::Medium->value),
+
+            ])
+            ->deferLoading();
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListMapPoints::route('/'),
+            'view' => ViewMapPoint::route('/{record}'),
+
+        ];
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('map_points.title');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('map_points.title');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['materials', 'serviceType', 'pointType'])
+            ->withCount('problems');
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('nav.harta');
+    }
+
+    public static function getColumns()
+    {
+        return [
+            TextColumn::make('id')
+                ->label(__('map_points.id'))
+                ->sortable()
+                ->searchable(),
+
+            TextColumn::make('serviceType.name')
+                ->label(__('map_points.fields.service_type')),
+
+            TextColumn::make('pointType.name')
+                ->label(__('map_points.fields.point_type')),
+
+            TextColumn::make('administered_by')
+                ->label(__('map_points.managed_by'))
+                ->searchable()
+                ->sortable()
+                ->wrap(),
+
+            TextColumn::make('createdBy.full_name')
+                ->label(__('map_points.fields.created_by'))
+                ->toggleable()
+                ->wrap(),
+
+            TextColumn::make('materials.name')
+                ->label(__('map_points.materials'))
+                ->searchable()
+                ->limitList(2),
+
+            TextColumn::make('county.name')
+                ->label(__('map_points.county'))
+                ->searchable()
+                ->sortable(),
+
+            TextColumn::make('city.name')
+                ->label(__('map_points.city'))
+                ->sortable()
+                ->searchable(),
+
+            TextColumn::make('address')
+                ->label(__('map_points.address'))
+                ->searchable()
+                ->wrap(),
+
+            TextColumn::make('pointGroup.name')
+                ->label(__('map_points.group'))
+                ->sortable()
+                ->wrap(),
+
+            TextColumn::make('proximity_count')
+                ->badge()
+                ->toggleable()
+                ->color(fn ($state) => $state > 0 ? 'warning' : 'success')
+                ->label(__('map_points.proximity_count')),
+
+            TextColumn::make('status')
+                ->sortable()
+                ->badge()
+                ->color(fn (Status $state) => $state->getColor())
+                ->formatStateUsing(function (Status $state, $record) {
+                    if ($record->problems_count > 0) {
+                        return Status::WITH_PROBLEMS->getLabel();
+                    }
+
+                    return $state->getLabel();
+                }),
+        ];
+    }
+}

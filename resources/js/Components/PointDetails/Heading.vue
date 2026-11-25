@@ -5,7 +5,7 @@
         <Icon v-else :icon="`services/${service}`" class="w-8 h-8 shrink-0" />
 
         <h1
-            class="flex-1 text-2xl font-bold leading-snug break-words text-neutral-900 whitespace-break-spaces"
+            class="flex-1 text-2xl font-bold leading-snug wrap-break-word text-neutral-900 whitespace-break-spaces"
             v-text="name"
         />
 

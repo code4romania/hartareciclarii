@@ -38,7 +38,7 @@
                                     as="h3"
                                     class="sticky top-0 px-4 py-5 text-base font-semibold text-gray-900 sm:px-6 sm:text-lg"
                                     :class="{
-                                        '!pr-10': dismissable,
+                                        'pr-10!': dismissable,
                                     }"
                                 >
                                     <slot name="title" />

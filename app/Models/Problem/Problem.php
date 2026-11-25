@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Problem;
 
+use Exception;
 use App\Enums\ProblemStatus;
 use App\Models\Contribution;
 use App\Models\Material;
@@ -108,7 +109,7 @@ class Problem extends Model implements HasMedia
             ProblemStatus::NEW => $this->markAsNew(),
             ProblemStatus::PENDING => $this->markAsPending(),
             ProblemStatus::CLOSED => $this->markAsClosed(),
-            default => throw new \Exception('Unexpected match value'),
+            default => throw new Exception('Unexpected match value'),
         };
         $problem->save();
 

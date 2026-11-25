@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\Permissions\Pages;
+
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Permissions\PermissionsResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+
+class ListPermissions extends ListRecords
+{
+    protected static string $resource = PermissionsResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
+        ];
+    }
+}

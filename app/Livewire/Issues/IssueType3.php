@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Issues;
 
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
 use App\Models\IssueOld;
 use App\Models\IssueType as IssueTypeModel;
 use App\Models\IssueTypeItem as IssueTypeItemModel;
@@ -12,14 +15,13 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get as Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
 class IssueType3 extends Component implements HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public ?array $data = [];
@@ -31,10 +33,10 @@ class IssueType3 extends Component implements HasForms
         $this->form->fill($this->record->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Radio::make('reported_point_issue_type_id')
                     ->options(IssueTypeModel::all()->pluck('title', 'id')->toArray())
                     ->label(__('issues.labels.issue_type'))
@@ -49,14 +51,14 @@ class IssueType3 extends Component implements HasForms
                     ->options(RecycleMaterialModel::all()->pluck('name', 'id')->toArray())
                     ->disabled()
                     ->hidden(
-                        fn (Closure $get): bool => \count($get('material_issue_missing')) == 0
+                        fn (Get $get): bool => \count($get('material_issue_missing')) == 0
                     )->columns(4),
                 CheckboxList::make('material_issue_extra')
                     ->label(new HtmlString(__('issues.labels.material_issue_extra')))
                     ->options(RecycleMaterialModel::all()->pluck('name', 'id')->toArray())
                     ->disabled()
                     ->hidden(
-                        fn (Closure $get): bool => \count($get('material_issue_extra')) == 0
+                        fn (Get $get): bool => \count($get('material_issue_extra')) == 0
                     )->columns(4),
 
             ])
