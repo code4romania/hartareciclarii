@@ -7,16 +7,18 @@ namespace App\Livewire\Issues;
 use App\Models\IssueOld;
 use App\Models\IssueType as IssueTypeModel;
 use App\Models\IssueTypeItem as IssueTypeItemModel;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class IssueType6 extends Component implements HasForms
 {
+    use InteractsWithActions;
     use InteractsWithForms;
 
     public ?array $data = [];
@@ -28,10 +30,10 @@ class IssueType6 extends Component implements HasForms
         $this->form->fill($this->record->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Radio::make('reported_point_issue_type_id')
                     ->options(IssueTypeModel::all()->pluck('title', 'id')->toArray())
                     ->label(__('issues.labels.issue_type'))

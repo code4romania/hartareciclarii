@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Duplicate as DuplicateModel;
+use DB;
 use Illuminate\Console\Command;
 
 class SearchDuplicates extends Command
@@ -30,8 +31,8 @@ class SearchDuplicates extends Command
     {
         $this->info('Started');
         $table = (new DuplicateModel())->getTable();
-        \DB::statement('TRUNCATE ' . $table);
-        \DB::statement('
+        DB::statement('TRUNCATE ' . $table);
+        DB::statement('
         	INSERT INTO ' . $table . ' (recycle_point_1, recycle_point_2, distance, point_type_id)
 			(
 				select

@@ -6,7 +6,7 @@ namespace App\Jobs\Reports;
 
 use App\Enums\Point\Status;
 use App\Enums\ReportStatus;
-use App\Filament\Resources\ReportResource;
+use App\Filament\Resources\Reports\ReportResource;
 use App\Models\City;
 use App\Models\County;
 use App\Models\Material;
@@ -14,7 +14,7 @@ use App\Models\Point;
 use App\Models\PointType;
 use App\Models\Report;
 use App\Models\ServiceType;
-use Filament\Notifications\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;

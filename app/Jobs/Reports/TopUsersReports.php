@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Jobs\Reports;
 
 use App\Enums\ReportStatus;
-use App\Filament\Resources\ReportResource;
-use App\Models\Point;
-use App\Models\Problem\Problem;
+use App\Filament\Resources\Reports\ReportResource;
 use App\Models\Report;
 use App\Models\User;
-use Filament\Notifications\Actions\Action;
+use Exception;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Query\Builder;
@@ -62,9 +61,8 @@ class TopUsersReports implements ShouldQueue
             foreach ($data as $key => $value) {
                 if (empty($key)) {
                     $key = 'N/A';
-                }else
-                {
-                    $key= $names[$key] ?? 'N/A';
+                } else {
+                    $key = $names[$key] ?? 'N/A';
                 }
                 $tmpData[$key] = $value;
             }
@@ -86,7 +84,7 @@ class TopUsersReports implements ShouldQueue
                 ->success()
                 ->send()
                 ->toDatabase();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->report->update(['results' => [], 'label' => '', 'status' => ReportStatus::FAILED]);
 
             Notification::make()
@@ -102,5 +100,4 @@ class TopUsersReports implements ShouldQueue
                 ->toDatabase();
         }
     }
-
 }

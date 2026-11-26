@@ -19,7 +19,7 @@
             }"
         >
             <div
-                class="relative p-3 leading-tight text-white break-words whitespace-pre-line bg-gray-500 rounded-md shadow-md"
+                class="relative p-3 leading-tight text-white wrap-break-word whitespace-pre-line bg-gray-500 rounded-md shadow-md"
                 :class="{
                     'before:w-4 before:h-4 before:rotate-45 before:bg-gray-500 before:absolute before:z-0': arrow,
                     'before:-bottom-2 before:left-0 before:right-0 before:mx-auto': arrow && position === 'top',

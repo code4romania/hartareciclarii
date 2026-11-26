@@ -9,6 +9,7 @@ use App\Models\MapPointService as MapPointServiceModel;
 use App\Models\MapPointType as MapPointTypeModel;
 use App\Models\RecycleMaterial as RecycleMaterialModel;
 use App\Models\User as UserModel;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -158,10 +159,10 @@ class ImportExport extends Model
             }
         }
         if (data_get($data, 'lon') && data_get($data, 'lat') && data_get($data, 'type_id')) {
-            $duplicates = \DB::select('
+            $duplicates = DB::select('
 				select
 					rp.id as recycle_point_1,
-					ST_Distance_Sphere(rp.location, ' . \DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")')->getValue(\DB::connection()->getQueryGrammar()) . ') as distance,
+					ST_Distance_Sphere(rp.location, ' . DB::raw('ST_GeomFromText("POINT(' . data_get($data, 'lon') . ' ' . data_get($data, 'lat') . ')")')->getValue(DB::connection()->getQueryGrammar()) . ') as distance,
 					rp.point_type_id
 				from
 					recycling_points rp

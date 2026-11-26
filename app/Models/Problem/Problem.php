@@ -10,6 +10,7 @@ use App\Models\Material;
 use App\Models\Point;
 use App\Models\User;
 use Database\Factories\ProblemFactory;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -108,7 +109,7 @@ class Problem extends Model implements HasMedia
             ProblemStatus::NEW => $this->markAsNew(),
             ProblemStatus::PENDING => $this->markAsPending(),
             ProblemStatus::CLOSED => $this->markAsClosed(),
-            default => throw new \Exception('Unexpected match value'),
+            default => throw new Exception('Unexpected match value'),
         };
         $problem->save();
 

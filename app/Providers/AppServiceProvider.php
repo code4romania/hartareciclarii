@@ -4,9 +4,23 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\City;
+use App\Models\Contribution;
+use App\Models\County;
+use App\Models\Material;
+use App\Models\MaterialCategory;
+use App\Models\Media;
+use App\Models\Point;
+use App\Models\PointGroup;
+use App\Models\PointType;
+use App\Models\Problem\Problem;
+use App\Models\ServiceType;
+use App\Models\TemporaryUpload;
+use App\Models\User;
 use App\Services\Filter;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Livewire\DatabaseNotifications;
+use Filament\Schemas\Components\Section;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
@@ -44,9 +58,12 @@ class AppServiceProvider extends ServiceProvider
 
         DatabaseNotifications::trigger('notifications.database-notifications-trigger');
 
-        FileUpload::configureUsing(function (FileUpload $fileUpload){
+        FileUpload::configureUsing(function (FileUpload $fileUpload) {
             $fileUpload->visibility('public');
         });
+
+        Section::configureUsing(fn (Section $section) => $section
+            ->columnSpanFull());
 
         FilamentAsset::register([
             Js::make('custom-script', resource_path('js/admin.js')),
@@ -70,19 +87,19 @@ class AppServiceProvider extends ServiceProvider
     protected function enforceMorphMap(): void
     {
         Relation::enforceMorphMap([
-            'city' => \App\Models\City::class,
-            'county' => \App\Models\County::class,
-            'contribution' => \App\Models\Contribution::class,
-            'material' => \App\Models\Material::class,
-            'material_category' => \App\Models\MaterialCategory::class,
-            'media' => \App\Models\Media::class,
-            'place_group' => \App\Models\PointGroup::class,
-            'place_type' => \App\Models\PointType::class,
-            'place' => \App\Models\Point::class,
-            'problem' => \App\Models\Problem\Problem::class,
-            'service_type' => \App\Models\ServiceType::class,
-            'temporary_upload' => \App\Models\TemporaryUpload::class,
-            'user' => \App\Models\User::class,
+            'city' => City::class,
+            'county' => County::class,
+            'contribution' => Contribution::class,
+            'material' => Material::class,
+            'material_category' => MaterialCategory::class,
+            'media' => Media::class,
+            'place_group' => PointGroup::class,
+            'place_type' => PointType::class,
+            'place' => Point::class,
+            'problem' => Problem::class,
+            'service_type' => ServiceType::class,
+            'temporary_upload' => TemporaryUpload::class,
+            'user' => User::class,
         ]);
     }
 

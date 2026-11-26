@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 
 class Geolocation extends Model
@@ -12,7 +14,7 @@ class Geolocation extends Model
 
     public static function reverse($lat, $lng)
     {
-        $client = new \GuzzleHttp\Client();
+        $client = new Client();
         $uri = config('services.nominatim.url') . '/reverse?format=json&lat=' . $lat . '&lon=' . $lng . '&zoom=18&addressdetails=1';
         $response = $client->request('GET', $uri);
 
@@ -20,7 +22,7 @@ class Geolocation extends Model
         try {
             $contents = $response->getBody()->getContents();
             $address = json_decode($contents, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [];
         }
 
@@ -69,7 +71,7 @@ class Geolocation extends Model
 
     public static function search($address)
     {
-        $client = new \GuzzleHttp\Client();
+        $client = new Client();
         $uri = config('services.nominatim.url') . '/search?format=json&q=' . $address . '&addressdetails=1';
         $response = $client->request('GET', $uri);
 
@@ -82,7 +84,7 @@ class Geolocation extends Model
         try {
             $contents = $response->getBody()->getContents();
             $address = json_decode($contents, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         if (! empty($address)) {

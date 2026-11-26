@@ -1,0 +1,123 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\RecycleMaterials;
+
+use App\Filament\Resources\RecycleMaterials\Pages\ListRecycleMaterials;
+use App\Models\Material;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+
+class RecycleMaterialsResource extends Resource
+{
+    protected static ?string $model = Material::class;
+
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-arrow-path';
+
+    public static function getModelLabel(): string
+    {
+        return  __('materials.singular');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return  __('materials.plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('nav.settings');
+    }
+
+    protected static ?int $navigationSort = 4;
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make(__('materials.label'))
+                    ->description(__('materials.heading'))
+                    ->schema([
+                        TextInput::make('name')->required()->unique(ignoreRecord: true),
+                        TextInput::make('url')
+                            ->label(__('materials.url'))
+                            ->url(),
+                        Select::make('categories')
+                            ->relationship('categories', 'name')
+                            ->multiple()
+                            ->preload(),
+
+                    ]),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('icon')
+                    ->formatStateUsing(fn (string $state): string => __("<img src='{$state}'>"))->html(),
+                TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('categories.name')
+                    ->searchable(),
+                TextColumn::make('points_count')
+                    ->counts('points')
+                    ->label(__('common.points_count'))
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->sortable()
+                    ->searchable(),
+            ])
+            ->filters([
+                SelectFilter::make('categories')
+                    ->label(__('materials.categories.plural'))
+                    ->preload()
+                    ->relationship('categories', 'name')
+                    ->multiple(),
+            ])
+            ->recordActions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListRecycleMaterials::route('/'),
+        ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
+}

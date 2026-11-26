@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Models\ImportExport as ImportExportModel;
 use App\Models\MapPoint as MapPointModel;
 use Illuminate\Console\Command;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ProcessImports extends Command
 {
@@ -59,8 +60,8 @@ class ProcessImports extends Command
                 }
             }
 
-            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filePath);
-            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $inputFileType = IOFactory::identify($filePath);
+            $reader = IOFactory::createReader($inputFileType);
             $spreadsheet = $reader->load($filePath);
             $sheet = $spreadsheet->getSheet(0);
             $highestRow = $sheet->getHighestRow();
