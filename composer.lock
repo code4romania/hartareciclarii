@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eec242aa9501b5184528baf6272e69e9",
+    "content-hash": "07509d7f20f50167fd40e794c4f710ab",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5132,16 +5132,16 @@
         },
         {
             "name": "nyholm/psr7",
-            "version": "1.8.2",
+            "version": "1.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3"
+                "reference": "26c1581611614447a5ff753a450390a23f3e323e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
-                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/26c1581611614447a5ff753a450390a23f3e323e",
+                "reference": "26c1581611614447a5ff753a450390a23f3e323e",
                 "shasum": ""
             },
             "require": {
@@ -5194,7 +5194,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Nyholm/psr7/issues",
-                "source": "https://github.com/Nyholm/psr7/tree/1.8.2"
+                "source": "https://github.com/Nyholm/psr7/tree/1.8.3"
             },
             "funding": [
                 {
@@ -5206,7 +5206,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-09T07:06:30+00:00"
+            "time": "2026-11-26T08:19:16+00:00"
         },
         {
             "name": "openspout/openspout",
@@ -10469,16 +10469,16 @@
         },
         {
             "name": "typesense/typesense-php",
-            "version": "v6.0.0",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/typesense/typesense-php.git",
-                "reference": "e113f90449e159316a433a5509205939f271c5e2"
+                "reference": "5112ee51bf5ae362c5b889e434a900db96560b24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/typesense/typesense-php/zipball/e113f90449e159316a433a5509205939f271c5e2",
-                "reference": "e113f90449e159316a433a5509205939f271c5e2",
+                "url": "https://api.github.com/repos/typesense/typesense-php/zipball/5112ee51bf5ae362c5b889e434a900db96560b24",
+                "reference": "5112ee51bf5ae362c5b889e434a900db96560b24",
                 "shasum": ""
             },
             "require": {
@@ -10536,7 +10536,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-22T20:51:44+00:00"
+            "time": "2026-11-23T16:50:35+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
