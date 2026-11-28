@@ -14,7 +14,7 @@
         "@tailwindcss/vite": "^4.3.5",
         "@vitejs/plugin-vue": "^6.0.10",
         "@vue-leaflet/vue-leaflet": "^0.10.1",
-        "@vueuse/core": "^15.0.0",
+        "@vueuse/core": "^15.1.0",
         "@vueuse/integrations": "^15.0.0",
         "axios": "^1.21.1",
         "fast-glob": "^3.3.3",
